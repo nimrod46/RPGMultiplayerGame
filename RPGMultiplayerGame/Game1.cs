@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Windows.Forms;
 
 namespace RPGMultiplayerGame
@@ -12,11 +13,12 @@ namespace RPGMultiplayerGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
+        Form gameForm;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            gameForm = Control.FromHandle(Window.Handle) as Form;
         }
 
         /// <summary>
@@ -27,14 +29,18 @@ namespace RPGMultiplayerGame
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
             base.Initialize();
-            Form gameForm = Control.FromHandle(Window.Handle) as Form;
             gameForm.Shown += (e, s) => gameForm.Hide();
             LobbyMenu lobby = new LobbyMenu(gameForm);
             lobby.Show();
+            lobby.OnConnectionEstablished += Lobby_OnConnecting;
             lobby.FormClosing += (e, s) => Exit();
+        }
+
+        private void Lobby_OnConnecting(Form form)
+        {
+            form.Hide();
+            gameForm.Show();
         }
 
         /// <summary>

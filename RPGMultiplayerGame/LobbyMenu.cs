@@ -13,6 +13,8 @@ namespace RPGMultiplayerGame
     public partial class LobbyMenu : Form
     {
         Form gameForm;
+        public delegate void OnConnectingEvent(Form form);
+        public event OnConnectingEvent OnConnectionEstablished;
         public LobbyMenu(Form gameForm)
         {
             InitializeComponent();
@@ -24,8 +26,7 @@ namespace RPGMultiplayerGame
         {
             if (NetworkManager.Instance.Connect())
             {
-                gameForm.Show();
-                Hide();
+                OnConnectionEstablished.Invoke(this);
             }
         }
 

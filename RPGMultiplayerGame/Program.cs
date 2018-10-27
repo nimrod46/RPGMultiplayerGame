@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace RPGMultiplayerGame
 {
@@ -14,6 +15,8 @@ namespace RPGMultiplayerGame
         [STAThread]
         static void Main()
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             using (var game = new Game1())
                 game.Run();
         }
