@@ -18,8 +18,30 @@ namespace RPGMultiplayerGame
         public LobbyMenu(Form gameForm)
         {
             InitializeComponent();
+            LobbyList.OwnerDraw = true;
+            Console.WriteLine("LobbyMenu");
+            LobbyList.DrawItem += LobbyList_DrawItem;
+            LobbyList.DrawSubItem += LobbyList_DrawSubItem; ;
+            LobbyList.DrawColumnHeader += LobbyList_DrawColumnHeader;
             this.gameForm = gameForm;
             NetworkManager.Instance.Init(ref LobbyList);
+        }
+
+        private void LobbyList_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void LobbyList_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        private void LobbyList_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            e.DrawDefault = false;
+            e.Graphics.FillRectangle(Brushes.Aquamarine, e.Bounds);
+            e.DrawText();
         }
 
         private void Connect_Click(object sender, EventArgs e)
