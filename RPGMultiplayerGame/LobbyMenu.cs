@@ -13,8 +13,11 @@ namespace RPGMultiplayerGame
     public partial class LobbyMenu : Form
     {
         Form gameForm;
-        public delegate void OnConnectingEvent(Form form);
-        public event OnConnectingEvent OnConnectionEstablished;
+        public delegate void ConnectingEvent(Form form);
+        public event ConnectingEvent OnConnectionEstablished;
+        public delegate void ServerOnline(Form form);
+        public event ConnectingEvent OnServerOnline;
+
         public LobbyMenu(Form gameForm)
         {
             InitializeComponent();
@@ -54,6 +57,7 @@ namespace RPGMultiplayerGame
         private void StartServer_Click(object sender, EventArgs e)
         {
             NetworkManager.Instance.StartServer();
+            OnServerOnline.Invoke(this);
         }
 
         private void LobbyMenu_Shown(object sender, EventArgs e)

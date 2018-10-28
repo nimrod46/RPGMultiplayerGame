@@ -34,7 +34,13 @@ namespace RPGMultiplayerGame
             LobbyMenu lobby = new LobbyMenu(gameForm);
             lobby.Show();
             lobby.OnConnectionEstablished += Lobby_OnConnecting;
+            lobby.OnServerOnline += Lobby_OnServerCreated; ;
             lobby.FormClosing += (e, s) => Exit();
+        }
+
+        private void Lobby_OnServerCreated(Form form)
+        {
+            form.Hide();
         }
 
         private void Lobby_OnConnecting(Form form)
