@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RPGMultiplayerGame.Networking;
 using System;
 using System.Windows.Forms;
 
@@ -41,12 +42,16 @@ namespace RPGMultiplayerGame
         private void Lobby_OnServerCreated(Form form)
         {
             form.Hide();
+            ServerPanel panel = new ServerPanel();
+            panel.Show();
+            NetworkManager.Instance.Start();
         }
 
         private void Lobby_OnConnecting(Form form)
         {
             form.Hide();
             gameForm.Show();
+            NetworkManager.Instance.Start();
         }
 
         /// <summary>
@@ -57,7 +62,8 @@ namespace RPGMultiplayerGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            Texture2D textures = Content.Load<Texture2D>("basictiles");
+            MapManager.Instance.LoadSpriteSheet(GraphicsDevice, textures);
             // TODO: use this.Content to load your game content here
         }
 
@@ -92,9 +98,9 @@ namespace RPGMultiplayerGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
+            spriteBatch.Begin();
+            MapManager.Instance.Draw(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

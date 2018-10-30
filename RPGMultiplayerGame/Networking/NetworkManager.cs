@@ -7,6 +7,7 @@ using Networking;
 using ServerLobby;
 using System.Windows.Forms;
 using System.Threading;
+using Map;
 
 namespace RPGMultiplayerGame.Networking
 {
@@ -37,7 +38,25 @@ namespace RPGMultiplayerGame.Networking
             LobbyList = lobbyList;
             client = new Client();
             lobby = new Lobby(client, ref LobbyList, 1331, "Map editor");
-            
+            RegisterNetworkElements();
+        }
+
+        private void RegisterNetworkElements()
+        {
+            new NetBlock();
+        }
+
+        public void LoadMap(GameMap gameMap)
+        {
+            foreach (Block block in gameMap.blocks)
+            {
+                string[] objs = new string[4];
+                objs[0] = block.ImageIndex.ToString();
+                objs[1] = block.Location.X.ToString();
+                objs[2] = block.Location.Y.ToString();
+                objs[3] = block.Layer.ToString();
+                NetBehavior.spawnWithServerAuthority(typeof(NetBlock), objs);
+            }
         }
 
         public void Start()
