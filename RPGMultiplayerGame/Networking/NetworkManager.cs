@@ -50,12 +50,14 @@ namespace RPGMultiplayerGame.Networking
         {
             foreach (Block block in gameMap.blocks)
             {
-                string[] objs = new string[4];
-                objs[0] = block.ImageIndex.ToString();
-                objs[1] = block.Location.X.ToString();
-                objs[2] = block.Location.Y.ToString();
-                objs[3] = block.Layer.ToString();
-                NetBehavior.spawnWithServerAuthority(typeof(NetBlock), objs);
+                NetBlock netBlock = new NetBlock
+                {
+                    SyncTextureIndex = block.ImageIndex,
+                    SyncX = block.Location.X,
+                    SyncY = block.Location.Y,
+                    SyncLayer = block.Layer
+                };
+                NetBehavior.spawnWithServerAuthority(typeof(NetBlock), netBlock);
             }
         }
 

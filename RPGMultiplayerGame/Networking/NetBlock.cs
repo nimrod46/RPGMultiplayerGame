@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Networking
 {
     class NetBlock : NetworkIdentity
     {
-        [SyncVar()]
+        [SyncVar(hook = "OnTextureIndexSet")]
         public int SyncTextureIndex { get; set; }
         public Vector2 Location { get; set; }
         [SyncVar(hook = "OnXSet")]
@@ -23,16 +23,10 @@ namespace RPGMultiplayerGame.Networking
         public int SyncLayer { get; set; }
         private Texture2D texture;
 
-        public override void OnNetworkInitialize(params object[] objects)
+        public override void OnNetworkInitialize()
         {
-            if (objects.Length > 0)
-            {
-                SyncTextureIndex = int.Parse(objects[0].ToString());
-                SyncX = float.Parse(objects[1].ToString());
-                SyncY =  float.Parse(objects[2].ToString());
-                SyncLayer = int.Parse(objects[3].ToString());
-                texture = MapManager.Instance.textures[SyncTextureIndex];
-            }
+            texture = MapManager.Instance.textures[SyncTextureIndex];
+            Location = new Vector2(SyncX, SyncY);
             MapManager.Instance.blocks.Add(this);
         }
 
@@ -44,6 +38,11 @@ namespace RPGMultiplayerGame.Networking
         public void OnYSet()
         {
             Location = new Vector2(Location.X, SyncY);
+        }
+
+        public void OnTextureIndexSet()
+        {
+            texture = MapManager.Instance.textures[SyncTextureIndex];
         }
 
         public void Draw(SpriteBatch sprite)
