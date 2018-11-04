@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RPGMultiplayerGame
+namespace RPGMultiplayerGame.Other
 {
     class MapManager
     {
@@ -25,9 +25,10 @@ namespace RPGMultiplayerGame
                 return instance;
             }
         }
+
         static MapManager instance;
         public List<Texture2D> textures = new List<Texture2D>();
-        public List<NetBlock> blocks = new List<NetBlock>();
+        private List<GameObject> gameObjects = new List<GameObject>();
         public GameMap currentGameMap { get; set; }
         MapManager()
         {
@@ -52,11 +53,28 @@ namespace RPGMultiplayerGame
             }
         }
 
+        public void AddGameObject(GameObject gameObject)
+        {
+            lock (gameObjects)
+            {
+                gameObjects.Add(gameObject);
+            }
+        }
+
         public void Draw(SpriteBatch sprite)
         {
+            /*
             for (int i = 0; i < blocks.Count; i++)
             {
                 blocks[i].Draw(sprite);
+            }
+            */
+            lock (gameObjects)
+            {
+                foreach (GameObject obj in gameObjects)
+                {
+                    obj.Draw(sprite);
+                }
             }
         }
     }

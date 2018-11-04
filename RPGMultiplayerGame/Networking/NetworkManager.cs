@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Networking
             }
         }
         static NetworkManager instance;
-        Client client;
+        Player client;
         NetworkManager()
         {
         }
@@ -36,14 +36,15 @@ namespace RPGMultiplayerGame.Networking
         public void Init(ref ListView lobbyList)
         {
             LobbyList = lobbyList;
-            client = new Client();
-            lobby = new Lobby(client, ref LobbyList, 1331, "Map editor");
+            client = new Player();
+            lobby = new Lobby(client, ref LobbyList, 1331, "RPG Game");
             RegisterNetworkElements();
         }
 
         private void RegisterNetworkElements()
         {
             new NetBlock();
+            new Player();
         }
 
         public void LoadMap(GameMap gameMap)
@@ -68,7 +69,7 @@ namespace RPGMultiplayerGame.Networking
 
         public void StartServer()
         {
-            NetBehavior = new NetworkBehavior(new Client(), 1331);
+            NetBehavior = new NetworkBehavior(new Player(), 1331);
             NetBehavior.StartServer();
         }
 

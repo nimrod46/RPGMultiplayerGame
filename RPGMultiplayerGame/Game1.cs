@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RPGMultiplayerGame.Networking;
+using RPGMultiplayerGame.Other;
 using System;
 using System.Windows.Forms;
 
@@ -37,22 +38,7 @@ namespace RPGMultiplayerGame
             lobby.OnConnectionEstablished += Lobby_OnConnecting;
             lobby.OnServerOnline += Lobby_OnServerCreated; ;
             lobby.FormClosing += (e, s) => Exit();
-        }
-
-        private void Lobby_OnServerCreated(Form form)
-        {
-            form.Hide();
-            ServerPanel panel = new ServerPanel();
-            panel.Show();
-            NetworkManager.Instance.Start();
-        }
-
-        private void Lobby_OnConnecting(Form form)
-        {
-            form.Hide();
-            gameForm.Show();
-            NetworkManager.Instance.Start();
-        }
+        }   
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -64,6 +50,7 @@ namespace RPGMultiplayerGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Texture2D textures = Content.Load<Texture2D>("basictiles");
             MapManager.Instance.LoadSpriteSheet(GraphicsDevice, textures);
+            GameManager.Instance.LoadTextures(GraphicsDevice, Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -89,6 +76,7 @@ namespace RPGMultiplayerGame
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+            GameManager.Instance.Update(gameTime);
         }
 
         /// <summary>
@@ -102,6 +90,21 @@ namespace RPGMultiplayerGame
             MapManager.Instance.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        private void Lobby_OnServerCreated(Form form)
+        {
+            form.Hide();
+            ServerPanel panel = new ServerPanel();
+            panel.Show();
+            NetworkManager.Instance.Start();
+        }
+
+        private void Lobby_OnConnecting(Form form)
+        {
+            form.Hide();
+            gameForm.Show();
+            NetworkManager.Instance.Start();
         }
     }
 }
