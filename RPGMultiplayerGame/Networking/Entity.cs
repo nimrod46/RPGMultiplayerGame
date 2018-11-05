@@ -22,13 +22,16 @@ namespace RPGMultiplayerGame.Networking
         }
         protected Dictionary<Animation, List<Texture2D>> animations = new Dictionary<Animation, List<Texture2D>>();
         protected int animationDelay;
-        protected Animation currentAnimationType;
-        protected Direction direction;
+        [SyncVar(networkInterface = NetworkInterface.UDP)]
+        protected int currentAnimationType;
+        [SyncVar(networkInterface = NetworkInterface.UDP)]
+        protected int direction;
         protected EntityID entityID;
         protected float speed;
         protected int timeSinceLastFrame;
+        [SyncVar(networkInterface = NetworkInterface.UDP)]
         protected bool isMoving;
-        [SyncVar(hook = "OnAnimationIndexSet")]
+        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnAnimationIndexSet")]
         protected int currentAnimationIndex;
 
         public Entity(EntityID entityID)
@@ -44,17 +47,17 @@ namespace RPGMultiplayerGame.Networking
             }
             base.OnNetworkInitialize();
             animations = GameManager.Instance.animationsByEntities[entityID];
-            animationDelay = 50;
-            currentAnimationType = Animation.WalkDown;
+            animationDelay = 100;
+            currentAnimationType = (int) Animation.WalkDown;
             currentAnimationIndex = 0;
-            speed = 0.3f;
+            speed = 0.05f;
             isMoving = false;
-            direction = Direction.Down;
+            direction = (int) Direction.Down;
         }
 
         public void OnAnimationIndexSet()
         {
-            texture = animations[currentAnimationType][currentAnimationIndex];
+            texture = animations[(Animation) currentAnimationType][currentAnimationIndex];
         }
 
         public override void Update(GameTime gameTime)
@@ -64,37 +67,37 @@ namespace RPGMultiplayerGame.Networking
             {
                 return;
             }
-            timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
-            if (timeSinceLastFrame > animationDelay)
-            {
-                timeSinceLastFrame = 0;
-                if (currentAnimationIndex + 1 >= animations[currentAnimationType].Count)
-                {
-                    currentAnimationIndex = 0;
-                }
-                else
-                {
-                    currentAnimationIndex++;
-                }
-            }
+            
 
             if (isMoving)
             {
-                switch (direction)
+                timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
+                if (timeSinceLastFrame > animationDelay)
+                {
+                    timeSinceLastFrame = 0;
+                    if (currentAnimationIndex + 1 >= animations[(Animation) currentAnimationType].Count)
+                    {
+                        currentAnimationIndex = 0;
+                    }
+                    else
+                    {
+                        currentAnimationIndex++;
+                    }
+                }
+                double movment = speed * gameTime.ElapsedGameTime.Milliseconds;
+                switch ((Direction) direction)
                 {
                     case Direction.Up:
-                        SyncY -= speed;
+                        SyncY -= (float) movment;
                         break;
                     case Direction.Down:
-                        SyncY += speed;
+                        SyncY += (float) movment;
                         break;
                     case Direction.Left:
-                        SyncX -= speed;
+                        SyncX -= (float)movment;
                         break;
                     case Direction.Right:
-                        SyncX += speed;
-                        break;
-                    default:
+                        SyncX += (float) movment;
                         break;
                 }
             }

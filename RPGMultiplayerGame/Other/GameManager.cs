@@ -22,8 +22,8 @@ namespace RPGMultiplayerGame.Other
         {
             WalkUp,
             WalkDown,
-            WalkRight,
-            WalkLeft
+            WalkLeft,
+            WalkRight
         }
 
         public static GameManager Instance
@@ -64,7 +64,7 @@ namespace RPGMultiplayerGame.Other
                             animation.Add(content.Load<Texture2D>("Entities\\" + (EntityID)i + (Animation)j + k));
                             Console.WriteLine("Loaded: " + (EntityID)i + (Animation)j + k);
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             break;
                         }

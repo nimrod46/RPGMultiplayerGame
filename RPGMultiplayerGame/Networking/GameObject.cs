@@ -13,9 +13,9 @@ namespace RPGMultiplayerGame.Networking
     abstract class GameObject : NetworkIdentity
     {
         public Vector2 Location { get; set; }
-        [SyncVar(hook = "OnXSet")]
+        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnXSet")]
         public float SyncX { get; set; }
-        [SyncVar(hook = "OnYSet")]
+        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
         public float SyncY { get; set; }
         protected Texture2D texture;
 

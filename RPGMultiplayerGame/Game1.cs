@@ -86,7 +86,7 @@ namespace RPGMultiplayerGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
             MapManager.Instance.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
