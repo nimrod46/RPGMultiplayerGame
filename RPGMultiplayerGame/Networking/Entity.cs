@@ -24,12 +24,13 @@ namespace RPGMultiplayerGame.Networking
         protected int animationDelay;
         protected Animation currentAnimationType;
         protected Direction direction;
-        [SyncVar(hook = "OnAnimationIndexSet")]
-        protected int currentAnimationIndex;
         protected EntityID entityID;
         protected float speed;
-        private int timeSinceLastFrame;
-        private bool isMoving;
+        protected int timeSinceLastFrame;
+        protected bool isMoving;
+        [SyncVar(hook = "OnAnimationIndexSet")]
+        protected int currentAnimationIndex;
+
         public Entity(EntityID entityID)
         {
             this.entityID = entityID;
@@ -44,7 +45,7 @@ namespace RPGMultiplayerGame.Networking
             base.OnNetworkInitialize();
             animations = GameManager.Instance.animationsByEntities[entityID];
             animationDelay = 50;
-            currentAnimationType = Animation.Walk;
+            currentAnimationType = Animation.WalkDown;
             currentAnimationIndex = 0;
             speed = 0.3f;
             isMoving = false;

@@ -20,7 +20,10 @@ namespace RPGMultiplayerGame.Other
 
         public enum Animation
         {
-            Walk
+            WalkUp,
+            WalkDown,
+            WalkRight,
+            WalkLeft
         }
 
         public static GameManager Instance
@@ -57,15 +60,16 @@ namespace RPGMultiplayerGame.Other
                     {
                         try
                         {
-                            animation.Add(content.Load<Texture2D>("" + (EntityID)i + (Animation)j + k));
+
+                            animation.Add(content.Load<Texture2D>("Entities\\" + (EntityID)i + (Animation)j + k));
                             Console.WriteLine("Loaded: " + (EntityID)i + (Animation)j + k);
                         }
-                        catch (Exception)
+                        catch (Exception e)
                         {
                             break;
                         }
                     }
-                    animations.Add((Animation)i, animation);
+                    animations.Add((Animation)j, animation);
                 }
                 animationsByEntities.Add(EntityID.Player, animations);
             }
