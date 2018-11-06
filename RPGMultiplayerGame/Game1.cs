@@ -77,6 +77,7 @@ namespace RPGMultiplayerGame
 
             base.Update(gameTime);
             GameManager.Instance.Update(gameTime);
+            InputManager.Instance.Update(gameTime);
         }
 
         /// <summary>

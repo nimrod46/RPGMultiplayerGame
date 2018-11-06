@@ -5,19 +5,42 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using RPGMultiplayerGame.Other;
 using static RPGMultiplayerGame.Other.GameManager;
 
 namespace RPGMultiplayerGame.Networking
 {
     class Player : Entity
     {
-
-        public Player() : base(EntityID.Player)
+        List<Keys> currentArrowsKeysPressed = new List<Keys>();
+        Keys oldKey;
+        public Player() : base(EntityID.Player, 1)
         {
 
         }
 
-        private KeyboardState mainState;
+        public override void OnLocalPlayerInitialize()
+        {
+            InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
+        }
+
+        private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)
+        {
+            if (isDown)
+            {
+                Direction direction = (Direction)((int)key - (int)Keys.Left);
+                StartMoving(direction);
+                oldKey = key;
+            }
+            else
+            {
+                if (oldKey == key)
+                {
+                    StopMoving();
+                }
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -25,51 +48,23 @@ namespace RPGMultiplayerGame.Networking
             {
                 return;
             }
-            mainState = Keyboard.GetState();
-            if (mainState.GetPressedKeys().Contains(Keys.Up))
-            {
-                Move(Direction.Up);
-            }
-            else if(mainState.GetPressedKeys().Contains(Keys.Down))
-            {
-                Move(Direction.Down);
-            }
-            else if (mainState.GetPressedKeys().Contains(Keys.Right))
-            {
-                Move(Direction.Right);
-            }
-            else if (mainState.GetPressedKeys().Contains(Keys.Left))
-            {
-                Move(Direction.Left);
-            }
-            else
-            {
-                StopMoving();
-            }
         }
 
         private void StartMoving(Direction direction)
         {
             isMoving = true;
-            currentAnimationIndex = 0;
+            currentAnimationIndex = idleIndex;
             this.direction = (int) direction;
             currentAnimationType = (int) direction;
         }
 
-        private void Move(Direction direction)
-        {
-            if (!isMoving)
-            {
-                StartMoving(direction);
-            }
-        }
 
         private void StopMoving()
         {
             if (isMoving)
             {
                 isMoving = false;
-                currentAnimationIndex = 0;
+                currentAnimationIndex = idleIndex;
             }
         }
     }

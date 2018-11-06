@@ -69,6 +69,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Other\GameManager.cs" />
+    <Compile Include="Other\InputManager.cs" />
     <Compile Include="Other\MapManager.cs" />
     <Compile Include="Networking\Entity.cs" />
     <Compile Include="Networking\GameObject.cs" />

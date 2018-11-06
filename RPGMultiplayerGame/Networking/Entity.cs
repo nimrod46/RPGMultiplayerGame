@@ -15,28 +15,30 @@ namespace RPGMultiplayerGame.Networking
     {
         public enum Direction
         {
-            Up,
-            Down,
             Left,
-            Right
+            Up,
+            Right,
+            Down,
         }
         protected Dictionary<Animation, List<Texture2D>> animations = new Dictionary<Animation, List<Texture2D>>();
         protected int animationDelay;
-        [SyncVar(networkInterface = NetworkInterface.UDP)]
+        [SyncVar(networkInterface = NetworkInterface.TCP)]
         protected int currentAnimationType;
-        [SyncVar(networkInterface = NetworkInterface.UDP)]
+        [SyncVar(networkInterface = NetworkInterface.TCP)]
         protected int direction;
         protected EntityID entityID;
+        protected int idleIndex;
         protected float speed;
         protected int timeSinceLastFrame;
-        [SyncVar(networkInterface = NetworkInterface.UDP)]
+        [SyncVar(networkInterface = NetworkInterface.TCP)]
         protected bool isMoving;
         [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnAnimationIndexSet")]
         protected int currentAnimationIndex;
 
-        public Entity(EntityID entityID)
+        public Entity(EntityID entityID, int idleIndex)
         {
             this.entityID = entityID;
+            this.idleIndex = idleIndex;
         }
 
         public override void OnNetworkInitialize()
@@ -49,8 +51,8 @@ namespace RPGMultiplayerGame.Networking
             animations = GameManager.Instance.animationsByEntities[entityID];
             animationDelay = 100;
             currentAnimationType = (int) Animation.WalkDown;
-            currentAnimationIndex = 0;
-            speed = 0.05f;
+            currentAnimationIndex = idleIndex;
+            speed = 0.5f / 10;
             isMoving = false;
             direction = (int) Direction.Down;
         }
@@ -67,7 +69,6 @@ namespace RPGMultiplayerGame.Networking
             {
                 return;
             }
-            
 
             if (isMoving)
             {

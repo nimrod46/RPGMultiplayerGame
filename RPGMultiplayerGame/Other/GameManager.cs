@@ -20,10 +20,10 @@ namespace RPGMultiplayerGame.Other
 
         public enum Animation
         {
-            WalkUp,
-            WalkDown,
             WalkLeft,
-            WalkRight
+            WalkUp,
+            WalkRight,
+            WalkDown,
         }
 
         public static GameManager Instance
