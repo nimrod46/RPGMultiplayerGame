@@ -21,6 +21,7 @@ namespace RPGMultiplayerGame.Networking
 
         public override void OnLocalPlayerInitialize()
         {
+            Console.WriteLine("IN: " + id);
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
         }
 
@@ -52,19 +53,19 @@ namespace RPGMultiplayerGame.Networking
 
         private void StartMoving(Direction direction)
         {
-            isMoving = true;
-            currentAnimationIndex = idleIndex;
-            this.direction = (int) direction;
-            currentAnimationType = (int) direction;
+            syncIsMoving = true;
+            syncCurrentAnimationIndex = idleIndex;
+            this.syncDirection = (int) direction;
+            syncCurrentAnimationType = (int) direction;
         }
 
 
         private void StopMoving()
         {
-            if (isMoving)
+            if (syncIsMoving)
             {
-                isMoving = false;
-                currentAnimationIndex = idleIndex;
+                syncIsMoving = false;
+                syncCurrentAnimationIndex = idleIndex;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,18 +24,17 @@ namespace RPGMultiplayerGame.Networking
         protected Dictionary<Animation, List<Texture2D>> animations = new Dictionary<Animation, List<Texture2D>>();
         protected int animationDelay;
         [SyncVar(networkInterface = NetworkInterface.TCP)]
-        protected int currentAnimationType;
+        protected int syncCurrentAnimationType;
         [SyncVar(networkInterface = NetworkInterface.TCP)]
-        protected int direction;
+        protected int syncDirection;
         protected EntityID entityID;
         protected int idleIndex;
         protected float speed;
         protected int timeSinceLastFrame;
         [SyncVar(networkInterface = NetworkInterface.TCP)]
-        protected bool isMoving;
+        protected bool syncIsMoving;
         [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnAnimationIndexSet")]
-        protected int currentAnimationIndex;
-
+        protected int syncCurrentAnimationIndex;
         public Entity(EntityID entityID, int idleIndex)
         {
             this.entityID = entityID;
@@ -48,18 +48,28 @@ namespace RPGMultiplayerGame.Networking
                 return;
             }
             base.OnNetworkInitialize();
-            animations = GameManager.Instance.animationsByEntities[entityID];
-            animationDelay = 100;
-            currentAnimationType = (int) Animation.WalkDown;
-            currentAnimationIndex = idleIndex;
+            if (!hasFieldsBeenInitialized)
+            {
+                syncCurrentAnimationType = (int)Animation.WalkDown;
+                syncCurrentAnimationIndex = idleIndex;
+                syncIsMoving = false;
+                syncDirection = (int)Direction.Down;
+                Console.WriteLine("Init " + id + " " + "defaults");
+            }
+            else
+            {
+                Console.WriteLine("Init " + id + " " + syncCurrentAnimationType + " " + syncCurrentAnimationIndex);
+            }
             speed = 0.5f / 10;
-            isMoving = false;
-            direction = (int) Direction.Down;
+            animationDelay = 100;
+            animations = GameManager.Instance.animationsByEntities[entityID];
+            
+            OnAnimationIndexSet();
         }
 
         public void OnAnimationIndexSet()
         {
-            texture = animations[(Animation) currentAnimationType][currentAnimationIndex];
+            texture = animations[(Animation) syncCurrentAnimationType][syncCurrentAnimationIndex];
         }
 
         public override void Update(GameTime gameTime)
@@ -70,23 +80,23 @@ namespace RPGMultiplayerGame.Networking
                 return;
             }
 
-            if (isMoving)
+            if (syncIsMoving)
             {
                 timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
                 if (timeSinceLastFrame > animationDelay)
                 {
                     timeSinceLastFrame = 0;
-                    if (currentAnimationIndex + 1 >= animations[(Animation) currentAnimationType].Count)
+                    if (syncCurrentAnimationIndex + 1 >= animations[(Animation) syncCurrentAnimationType].Count)
                     {
-                        currentAnimationIndex = 0;
+                        syncCurrentAnimationIndex = 0;
                     }
                     else
                     {
-                        currentAnimationIndex++;
+                        syncCurrentAnimationIndex++;
                     }
                 }
                 double movment = speed * gameTime.ElapsedGameTime.Milliseconds;
-                switch ((Direction) direction)
+                switch ((Direction) syncDirection)
                 {
                     case Direction.Up:
                         SyncY -= (float) movment;

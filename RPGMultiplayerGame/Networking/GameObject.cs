@@ -23,6 +23,7 @@ namespace RPGMultiplayerGame.Networking
         {
             MapManager.Instance.AddGameObject(this);
             GameManager.Instance.AddGameObject(this);
+            Location = new Vector2(SyncX, SyncY);
         }
 
         public void OnXSet()
@@ -40,6 +41,9 @@ namespace RPGMultiplayerGame.Networking
             if (texture != null)
             {
                 sprite.Draw(texture, Location, Color.White);
+            } else
+            {
+                Console.Error.WriteLine("Cannot draw game object: " + id + " " + GetType());
             }
         }
 
