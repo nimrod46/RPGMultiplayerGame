@@ -54,16 +54,10 @@ namespace RPGMultiplayerGame.Networking
                 syncCurrentAnimationIndex = idleIndex;
                 syncIsMoving = false;
                 syncDirection = (int)Direction.Down;
-                Console.WriteLine("Init " + id + " " + "defaults");
-            }
-            else
-            {
-                Console.WriteLine("Init " + id + " " + syncCurrentAnimationType + " " + syncCurrentAnimationIndex);
             }
             speed = 0.5f / 10;
             animationDelay = 100;
             animations = GameManager.Instance.animationsByEntities[entityID];
-            
             OnAnimationIndexSet();
         }
 

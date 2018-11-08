@@ -53,6 +53,14 @@ namespace RPGMultiplayerGame.Other
             }
         }
 
+        public void RemoveGameObject(GameObject gameObject)
+        {
+            lock (gameObjects)
+            {
+                gameObjects.Remove(gameObject);
+            }
+        }
+
         public void AddGameObject(GameObject gameObject)
         {
             lock (gameObjects)

@@ -51,5 +51,12 @@ namespace RPGMultiplayerGame.Networking
         {
 
         }
+
+        public override void OnDestroyed()
+        {
+            MapManager.Instance.RemoveGameObject(this);
+            GameManager.Instance.RemoveGameObject(this);
+        }
+
     }
 }

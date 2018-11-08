@@ -75,6 +75,14 @@ namespace RPGMultiplayerGame.Other
             }
         }
 
+        internal void RemoveGameObject(GameObject gameObject)
+        {
+            lock (gameObjects)
+            {
+                gameObjects.Remove(gameObject);
+            }
+        }
+
         internal void Update(GameTime gameTime)
         {
             lock (gameObjects)
