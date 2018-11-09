@@ -8,6 +8,7 @@ using ServerLobby;
 using System.Windows.Forms;
 using System.Threading;
 using Map;
+using RPGMultiplayerGame.Other;
 
 namespace RPGMultiplayerGame.Networking
 {
@@ -49,13 +50,14 @@ namespace RPGMultiplayerGame.Networking
 
         public void LoadMap(GameMap gameMap)
         {
+            MapManager.Instance.map = gameMap;
             foreach (Block block in gameMap.blocks)
             {
                 NetBlock netBlock = new NetBlock
                 {
                     SyncTextureIndex = block.ImageIndex,
-                    SyncX = block.Location.X,
-                    SyncY = block.Location.Y,
+                    SyncX = block.Rectangle.X,
+                    SyncY = block.Rectangle.Y,
                     SyncLayer = block.Layer
                 };
                 NetBehavior.spawnWithServerAuthority(typeof(NetBlock), netBlock);

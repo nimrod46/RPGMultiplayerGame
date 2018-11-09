@@ -27,11 +27,12 @@ namespace RPGMultiplayerGame.Other
         }
 
         static MapManager instance;
+        public GameMap map;
         public List<Texture2D> textures = new List<Texture2D>();
         private List<GameObject> gameObjects = new List<GameObject>();
-        public GameMap currentGameMap { get; set; }
         MapManager()
         {
+            map = new GameMap();
         }
         public void LoadSpriteSheet(GraphicsDevice graphicsDevice, Texture2D spriteTextures)
         {
@@ -71,12 +72,6 @@ namespace RPGMultiplayerGame.Other
 
         public void Draw(SpriteBatch sprite)
         {
-            /*
-            for (int i = 0; i < blocks.Count; i++)
-            {
-                blocks[i].Draw(sprite);
-            }
-            */
             lock (gameObjects)
             {
                 foreach (GameObject obj in gameObjects)

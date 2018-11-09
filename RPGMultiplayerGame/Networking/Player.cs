@@ -14,13 +14,14 @@ namespace RPGMultiplayerGame.Networking
     {
         List<Keys> currentArrowsKeysPressed = new List<Keys>();
         Keys oldKey;
-        public Player() : base(EntityID.Player, 1)
+        public Player() : base(EntityID.Player, 1, 0, 10)
         {
 
         }
 
         public override void OnLocalPlayerInitialize()
         {
+            speed *= 2;
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
         }
 
@@ -44,10 +45,6 @@ namespace RPGMultiplayerGame.Networking
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (!hasAuthority || isServer)
-            {
-                return;
-            }
         }
 
         private void StartMoving(Direction direction)

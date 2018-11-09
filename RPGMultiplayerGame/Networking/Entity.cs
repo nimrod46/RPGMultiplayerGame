@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Map;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
@@ -35,10 +36,14 @@ namespace RPGMultiplayerGame.Networking
         protected bool syncIsMoving;
         [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnAnimationIndexSet")]
         protected int syncCurrentAnimationIndex;
-        public Entity(EntityID entityID, int idleIndex)
+        protected int collisionOffsetX;
+        protected int collisionOffsetY;
+        public Entity(EntityID entityID, int idleIndex, int collisionOffsetX, int collisionOffsetY)
         {
             this.entityID = entityID;
             this.idleIndex = idleIndex;
+            this.collisionOffsetX = collisionOffsetX;
+            this.collisionOffsetY = collisionOffsetY;
         }
 
         public override void OnNetworkInitialize()
@@ -90,22 +95,35 @@ namespace RPGMultiplayerGame.Networking
                     }
                 }
                 double movment = speed * gameTime.ElapsedGameTime.Milliseconds;
+                Vector2 newLocation = new Vector2(Location.X, Location.Y);
                 switch ((Direction) syncDirection)
                 {
                     case Direction.Up:
-                        SyncY -= (float) movment;
+                        newLocation.Y -= (float) movment;
                         break;
                     case Direction.Down:
-                        SyncY += (float) movment;
+                        newLocation.Y += (float) movment;
                         break;
                     case Direction.Left:
-                        SyncX -= (float)movment;
+                        newLocation.X -= (float)movment;
                         break;
                     case Direction.Right:
-                        SyncX += (float) movment;
+                        newLocation.X += (float) movment;
                         break;
                 }
+                Rectangle rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
+                Block block = MapManager.Instance.map.blocks.FirstOrDefault(b => b.Layer > 0 && 
+                b.Rectangle.IntersectsWith(new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height)));
+                if (block == null)
+                {
+                    SyncX = newLocation.X;
+                    SyncY = newLocation.Y;
+                }
             }
+        }
+        private Rectangle GetCollisionRect(float x, float y, int width, int height)
+        {
+            return new Rectangle((int)x + collisionOffsetX, (int)y + collisionOffsetY, width - collisionOffsetX, height - collisionOffsetY);
         }
     }
 }
