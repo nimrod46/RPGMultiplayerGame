@@ -29,6 +29,7 @@ namespace RPGMultiplayerGame.Other
         static MapManager instance;
         public GameMap map;
         public List<Texture2D> textures = new List<Texture2D>();
+        public NetBlock spawnPoint;
         private List<GameObject> gameObjects = new List<GameObject>();
         MapManager()
         {

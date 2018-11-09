@@ -73,6 +73,12 @@ namespace RPGMultiplayerGame.Networking
         {
             NetBehavior = new NetworkBehavior(new Player(), 1331);
             NetBehavior.StartServer();
+            NetBehavior.OnPlayerSynchronized += NetBehavior_OnPlayerSynchronized;
+        }
+
+        private void NetBehavior_OnPlayerSynchronized(NetworkIdentity client)
+        {
+            ((Player)client).SetSpawnPoint(MapManager.Instance.spawnPoint);
         }
 
         public bool Connect()

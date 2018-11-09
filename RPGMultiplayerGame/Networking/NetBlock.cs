@@ -5,7 +5,6 @@ using Networking;
 using RPGMultiplayerGame.Other;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +26,13 @@ namespace RPGMultiplayerGame.Networking
             if (!isInServer)
             {
                 MapManager.Instance.map.AddBlockAt(new System.Drawing.Rectangle((int)SyncX, (int)SyncY, texture.Width, texture.Height), SyncTextureIndex, SyncLayer);
+            }
+            else
+            {
+                if (MapManager.Instance.map.spawn.Rectangle.Equals(new System.Drawing.Rectangle((int)SyncX, (int)SyncY, texture.Width, texture.Height)))
+                {
+                    MapManager.Instance.spawnPoint = this;
+                }
             }
         }
 

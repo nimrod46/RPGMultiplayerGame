@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Networking;
 using RPGMultiplayerGame.Other;
 using static RPGMultiplayerGame.Other.GameManager;
 
@@ -78,6 +79,14 @@ namespace RPGMultiplayerGame.Networking
         {
             base.OnDestroyed();
             InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
+        }
+
+        [Command]
+        public void SetSpawnPoint(NetBlock spawnPoint)
+        {
+            MapManager.Instance.spawnPoint = spawnPoint;
+            SyncX = spawnPoint.SyncX;
+            SyncY = spawnPoint.SyncY;
         }
     }
 }
