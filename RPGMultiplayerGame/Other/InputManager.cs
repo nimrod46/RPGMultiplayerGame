@@ -36,15 +36,15 @@ namespace RPGMultiplayerGame.Other
             {
                 OnArrowsKeysStateChange.Invoke(Keys.Up, currentKeyState.IsKeyDown(Keys.Up));
             }
-            else if (prevKeyState.IsKeyUp(Keys.Down) && currentKeyState.IsKeyDown(Keys.Down) || prevKeyState.IsKeyDown(Keys.Down) && currentKeyState.IsKeyUp(Keys.Down))
+            if (prevKeyState.IsKeyUp(Keys.Down) && currentKeyState.IsKeyDown(Keys.Down) || prevKeyState.IsKeyDown(Keys.Down) && currentKeyState.IsKeyUp(Keys.Down))
             {
                 OnArrowsKeysStateChange.Invoke(Keys.Down, currentKeyState.IsKeyDown(Keys.Down));
             }
-            else if (prevKeyState.IsKeyUp(Keys.Right) && currentKeyState.IsKeyDown(Keys.Right) || prevKeyState.IsKeyDown(Keys.Right) && currentKeyState.IsKeyUp(Keys.Right))
+            if (prevKeyState.IsKeyUp(Keys.Right) && currentKeyState.IsKeyDown(Keys.Right) || prevKeyState.IsKeyDown(Keys.Right) && currentKeyState.IsKeyUp(Keys.Right))
             {
                 OnArrowsKeysStateChange.Invoke(Keys.Right, currentKeyState.IsKeyDown(Keys.Right));
             }
-            else if (prevKeyState.IsKeyUp(Keys.Left) && currentKeyState.IsKeyDown(Keys.Left) || prevKeyState.IsKeyDown(Keys.Left) && currentKeyState.IsKeyUp(Keys.Left))
+            if (prevKeyState.IsKeyUp(Keys.Left) && currentKeyState.IsKeyDown(Keys.Left) || prevKeyState.IsKeyDown(Keys.Left) && currentKeyState.IsKeyUp(Keys.Left))
             {
                 OnArrowsKeysStateChange.Invoke(Keys.Left, currentKeyState.IsKeyDown(Keys.Left));
             }

@@ -13,7 +13,6 @@ namespace RPGMultiplayerGame.Networking
     class Player : Entity
     {
         List<Keys> currentArrowsKeysPressed = new List<Keys>();
-        Keys oldKey;
         public Player() : base(EntityID.Player, 1, 0, 10)
         {
 
@@ -27,17 +26,27 @@ namespace RPGMultiplayerGame.Networking
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)
         {
-            if (isDown)
+            lock (currentArrowsKeysPressed)
             {
-                Direction direction = (Direction)((int)key - (int)Keys.Left);
-                StartMoving(direction);
-                oldKey = key;
-            }
-            else
-            {
-                if (oldKey == key)
+                if (isDown)
                 {
-                    StopMoving();
+                    Direction direction = (Direction)((int)key - (int)Keys.Left);
+                    StartMoving(direction);
+                    currentArrowsKeysPressed.Add(key);
+                }
+                else
+                {
+                    currentArrowsKeysPressed.RemoveAll(k => k == key);
+                    if (currentArrowsKeysPressed.Count == 0)
+                    {
+                        StopMoving();
+                    }
+                    else
+                    {
+                        key = currentArrowsKeysPressed[0];
+                        Direction direction = (Direction)((int)key - (int)Keys.Left);
+                        StartMoving(direction);
+                    }
                 }
             }
         }
