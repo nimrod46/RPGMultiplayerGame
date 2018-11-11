@@ -68,6 +68,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Networking\GraphicObject.cs" />
+    <Compile Include="Networking\MapObject.cs" />
     <Compile Include="Other\GameManager.cs" />
     <Compile Include="Other\InputManager.cs" />
     <Compile Include="Other\MapManager.cs" />

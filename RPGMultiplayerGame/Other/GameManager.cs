@@ -41,7 +41,7 @@ namespace RPGMultiplayerGame.Other
         static GameManager instance;
 
         public Dictionary<EntityID, Dictionary<Animation, List<Texture2D>>> animationsByEntities = new Dictionary<EntityID, Dictionary<Animation, List<Texture2D>>>();
-        public List<GameObject> gameObjects = new List<GameObject>();
+        private List<GameObject> gameObjects = new List<GameObject>();
 
         private GameManager()
         {
@@ -75,15 +75,23 @@ namespace RPGMultiplayerGame.Other
             }
         }
 
-        internal void RemoveGameObject(GameObject gameObject)
+        public void RemoveGameObject(GameObject gameObject)
         {
             lock (gameObjects)
             {
                 gameObjects.Remove(gameObject);
             }
         }
+        
+        public void AddObject(GameObject gameObject)
+        {
+            lock (gameObjects)
+            {
+                gameObjects.Add(gameObject);
+            }
+        }
 
-        internal void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             lock (gameObjects)
             {
@@ -94,11 +102,14 @@ namespace RPGMultiplayerGame.Other
             }
         }
 
-        public void AddGameObject(GameObject gameObject)
+        public void Draw(SpriteBatch sprite)
         {
             lock (gameObjects)
             {
-                gameObjects.Add(gameObject);
+                foreach (GraphicObject obj in gameObjects)
+                {
+                    obj.Draw(sprite);
+                }
             }
         }
     }

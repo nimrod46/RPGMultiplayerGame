@@ -82,7 +82,18 @@ namespace RPGMultiplayerGame.Networking
         }
 
         [Command]
+        public void CmdSetSpawnPoint(NetBlock spawnPoint)
+        {
+            SetSpawnPointLocaly(spawnPoint);
+        }
+
+        [BroadcastMethod]
         public void SetSpawnPoint(NetBlock spawnPoint)
+        {
+            SetSpawnPointLocaly(spawnPoint);
+        }
+
+        public void SetSpawnPointLocaly(NetBlock spawnPoint)
         {
             MapManager.Instance.spawnPoint = spawnPoint;
             SyncX = spawnPoint.SyncX;

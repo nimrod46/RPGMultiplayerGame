@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Networking
 {
-    class NetBlock : GameObject
+    public class NetBlock : MapObject
     {
         [SyncVar(hook = "OnTextureIndexSet")]
         public int SyncTextureIndex { get; set; }
@@ -32,6 +32,7 @@ namespace RPGMultiplayerGame.Networking
                 if (MapManager.Instance.map.spawn.Rectangle.Equals(new System.Drawing.Rectangle((int)SyncX, (int)SyncY, texture.Width, texture.Height)))
                 {
                     MapManager.Instance.spawnPoint = this;
+                    NetworkManager.Instance.UpdateSpawnLocation(MapManager.Instance.spawnPoint);
                 }
             }
         }
@@ -39,6 +40,10 @@ namespace RPGMultiplayerGame.Networking
         public void OnTextureIndexSet()
         {
             texture = MapManager.Instance.textures[SyncTextureIndex];
+        }
+
+        public override void Update(GameTime gameTime)
+        {
         }
     }
 }

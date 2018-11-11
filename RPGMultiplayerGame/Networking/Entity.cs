@@ -34,7 +34,7 @@ namespace RPGMultiplayerGame.Networking
         protected int timeSinceLastFrame;
         [SyncVar(networkInterface = NetworkInterface.TCP)]
         protected bool syncIsMoving;
-        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnAnimationIndexSet")]
+        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnAnimationIndexSet", invokeInServer = false)]
         protected int syncCurrentAnimationIndex;
         protected int collisionOffsetX;
         protected int collisionOffsetY;
@@ -48,7 +48,7 @@ namespace RPGMultiplayerGame.Networking
 
         public override void OnNetworkInitialize()
         {
-            if (isServer)
+            if (isServerAuthority)
             {
                 return;
             }
@@ -74,7 +74,7 @@ namespace RPGMultiplayerGame.Networking
         public override void Update(GameTime gameTime)
         {
 
-            if (!hasAuthority || isServer)
+            if (!hasAuthority || isServerAuthority)
             {
                 return;
             }

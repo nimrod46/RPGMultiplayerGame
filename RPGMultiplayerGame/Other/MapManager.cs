@@ -30,7 +30,8 @@ namespace RPGMultiplayerGame.Other
         public GameMap map;
         public List<Texture2D> textures = new List<Texture2D>();
         public NetBlock spawnPoint;
-        private List<GameObject> gameObjects = new List<GameObject>();
+        private List<MapObject> mapObjects = new List<MapObject>();
+
         MapManager()
         {
             map = new GameMap();
@@ -54,28 +55,28 @@ namespace RPGMultiplayerGame.Other
                 }
             }
         }
-
-        public void RemoveGameObject(GameObject gameObject)
+        
+        public void RemoveGameObject(MapObject gameObject)
         {
-            lock (gameObjects)
+            lock (mapObjects)
             {
-                gameObjects.Remove(gameObject);
+                mapObjects.Remove(gameObject);
             }
         }
 
-        public void AddGameObject(GameObject gameObject)
+        public void AddObject(MapObject gameObject)
         {
-            lock (gameObjects)
+            lock (mapObjects)
             {
-                gameObjects.Add(gameObject);
+                mapObjects.Add(gameObject);
             }
         }
-
+        
         public void Draw(SpriteBatch sprite)
         {
-            lock (gameObjects)
+            lock (mapObjects)
             {
-                foreach (GameObject obj in gameObjects)
+                foreach (GraphicObject obj in mapObjects)
                 {
                     obj.Draw(sprite);
                 }

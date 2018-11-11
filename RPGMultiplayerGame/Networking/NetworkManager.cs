@@ -14,6 +14,7 @@ namespace RPGMultiplayerGame.Networking
 {
     public class NetworkManager
     {
+        List<Player> players = new List<Player>();
         public NetworkBehavior NetBehavior { get; private set; }
         public Lobby lobby;
         public ListView LobbyList;
@@ -78,7 +79,11 @@ namespace RPGMultiplayerGame.Networking
 
         private void NetBehavior_OnPlayerSynchronized(NetworkIdentity client)
         {
-            ((Player)client).SetSpawnPoint(MapManager.Instance.spawnPoint);
+            players.Add(((Player)client));
+            if (MapManager.Instance.spawnPoint != null)
+            {
+                ((Player)client).CmdSetSpawnPoint(MapManager.Instance.spawnPoint);
+            }
         }
 
         public bool Connect()
@@ -104,6 +109,14 @@ namespace RPGMultiplayerGame.Networking
         public void Remove(ListViewItem item)
         {
             lobby.Remove(item);
+        }
+
+        public void UpdateSpawnLocation(NetBlock spawnPoint)
+        {
+            foreach (Player player in players)
+            {
+                player.SetSpawnPoint(spawnPoint);
+            }
         }
     }
 }
