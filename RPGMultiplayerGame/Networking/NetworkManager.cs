@@ -59,7 +59,9 @@ namespace RPGMultiplayerGame.Networking
                     SyncTextureIndex = block.ImageIndex,
                     SyncX = block.Rectangle.X,
                     SyncY = block.Rectangle.Y,
-                    SyncLayer = block.Layer
+                    SyncLayer = block.Layer,
+                    SyncHasUnder = block.HasUnder,
+                    SyncHasAbove = block.HasAbove,
                 };
                 NetBehavior.spawnWithServerAuthority(typeof(NetBlock), netBlock);
             }

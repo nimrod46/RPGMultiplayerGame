@@ -55,25 +55,7 @@ namespace RPGMultiplayerGame.Networking
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-        }
-
-        private void StartMoving(Direction direction)
-        {
-            syncIsMoving = true;
-            syncCurrentAnimationIndex = idleIndex;
-            this.syncDirection = (int) direction;
-            syncCurrentAnimationType = (int) direction;
-        }
-
-
-        private void StopMoving()
-        {
-            if (syncIsMoving)
-            {
-                syncIsMoving = false;
-                syncCurrentAnimationIndex = idleIndex;
-            }
-        }
+        }  
 
         public override void OnDestroyed()
         {

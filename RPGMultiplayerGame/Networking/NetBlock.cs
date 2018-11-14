@@ -17,6 +17,10 @@ namespace RPGMultiplayerGame.Networking
         public int SyncTextureIndex { get; set; }
         [SyncVar()]
         public int SyncLayer { get; set; }
+        [SyncVar()]
+        public bool SyncHasUnder { get; set; }
+        [SyncVar()]
+        public bool SyncHasAbove { get; set; }
 
         public override void OnNetworkInitialize()
         {

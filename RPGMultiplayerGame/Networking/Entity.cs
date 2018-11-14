@@ -121,6 +121,25 @@ namespace RPGMultiplayerGame.Networking
                 }
             }
         }
+
+        protected void StartMoving(Direction direction)
+        {
+            syncIsMoving = true;
+            syncCurrentAnimationIndex = idleIndex;
+            this.syncDirection = (int)direction;
+            syncCurrentAnimationType = (int)direction;
+        }
+
+
+        protected void StopMoving()
+        {
+            if (syncIsMoving)
+            {
+                syncIsMoving = false;
+                syncCurrentAnimationIndex = idleIndex;
+            }
+        }
+
         private Rectangle GetCollisionRect(float x, float y, int width, int height)
         {
             return new Rectangle((int)x + collisionOffsetX, (int)y + collisionOffsetY, width - collisionOffsetX, height - collisionOffsetY);
