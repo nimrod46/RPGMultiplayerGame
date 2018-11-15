@@ -84,7 +84,7 @@ namespace RPGMultiplayerGame.Networking
             players.Add(((Player)client));
             if (MapManager.Instance.spawnPoint != null)
             {
-                ((Player)client).CmdSetSpawnPoint(MapManager.Instance.spawnPoint);
+                ((Player)client).SetSpawnPoint(MapManager.Instance.spawnPoint);
             }
         }
 

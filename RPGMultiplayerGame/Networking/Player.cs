@@ -16,7 +16,6 @@ namespace RPGMultiplayerGame.Networking
         List<Keys> currentArrowsKeysPressed = new List<Keys>();
         public Player() : base(EntityID.Player, 1, 0, 10)
         {
-
         }
 
         public override void OnLocalPlayerInitialize()
@@ -33,7 +32,7 @@ namespace RPGMultiplayerGame.Networking
                 {
                     Direction direction = (Direction)((int)key - (int)Keys.Left);
                     StartMoving(direction);
-                    currentArrowsKeysPressed.Add(key);
+                    currentArrowsKeysPressed.Insert(0, key);
                 }
                 else
                 {
@@ -61,25 +60,6 @@ namespace RPGMultiplayerGame.Networking
         {
             base.OnDestroyed();
             InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
-        }
-
-        [Command]
-        public void CmdSetSpawnPoint(NetBlock spawnPoint)
-        {
-            SetSpawnPointLocaly(spawnPoint);
-        }
-
-        [BroadcastMethod]
-        public void SetSpawnPoint(NetBlock spawnPoint)
-        {
-            SetSpawnPointLocaly(spawnPoint);
-        }
-
-        public void SetSpawnPointLocaly(NetBlock spawnPoint)
-        {
-            MapManager.Instance.spawnPoint = spawnPoint;
-            SyncX = spawnPoint.SyncX;
-            SyncY = spawnPoint.SyncY;
-        }
+        } 
     }
 }

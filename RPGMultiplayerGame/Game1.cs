@@ -76,8 +76,11 @@ namespace RPGMultiplayerGame
             // TODO: Add your update logic here
 
             base.Update(gameTime);
-            GameManager.Instance.Update(gameTime);
-            InputManager.Instance.Update(gameTime);
+            if (NetworkManager.Instance.NetBehavior?.isServer != true)
+            {
+                GameManager.Instance.Update(gameTime);
+                InputManager.Instance.Update(gameTime);
+            }
         }
 
         /// <summary>
@@ -87,10 +90,13 @@ namespace RPGMultiplayerGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
-            MapManager.Instance.Draw(spriteBatch);
-            GameManager.Instance.Draw(spriteBatch);
-            spriteBatch.End();
+            if (NetworkManager.Instance.NetBehavior?.isServer != true)
+            {
+                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+                MapManager.Instance.Draw(spriteBatch);
+                GameManager.Instance.Draw(spriteBatch);
+                spriteBatch.End();
+            }
             base.Draw(gameTime);
         }
 

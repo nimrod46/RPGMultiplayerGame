@@ -14,6 +14,7 @@ namespace RPGMultiplayerGame.Networking
     {
         public override void OnNetworkInitialize()
         {
+            base.OnNetworkInitialize();
             GameManager.Instance.AddObject(this);
         }
 

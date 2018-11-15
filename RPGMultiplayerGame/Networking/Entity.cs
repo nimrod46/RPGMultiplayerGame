@@ -53,13 +53,15 @@ namespace RPGMultiplayerGame.Networking
                 return;
             }
             base.OnNetworkInitialize();
-            if (!hasFieldsBeenInitialized)
+            if (!hasFieldsBeenInitialized && hasAuthority)
             {
+                hasInitialized = true;
                 syncCurrentAnimationType = (int)Animation.WalkDown;
                 syncCurrentAnimationIndex = idleIndex;
                 syncIsMoving = false;
                 syncDirection = (int)Direction.Down;
             }
+            
             speed = 0.5f / 10;
             animationDelay = 100;
             animations = GameManager.Instance.animationsByEntities[entityID];
@@ -73,7 +75,6 @@ namespace RPGMultiplayerGame.Networking
 
         public override void Update(GameTime gameTime)
         {
-
             if (!hasAuthority || isServerAuthority)
             {
                 return;
@@ -143,6 +144,22 @@ namespace RPGMultiplayerGame.Networking
         private Rectangle GetCollisionRect(float x, float y, int width, int height)
         {
             return new Rectangle((int)x + collisionOffsetX, (int)y + collisionOffsetY, width - collisionOffsetX, height - collisionOffsetY);
+        }
+
+        [BroadcastMethod]
+        public void SetSpawnPoint(NetBlock spawnPoint)
+        {
+            if (hasAuthority)
+            {
+                SyncX = spawnPoint.SyncX;
+                SyncY = spawnPoint.SyncY;
+            }
+            SetSpawnPointLocaly(spawnPoint);
+        }
+
+        private void SetSpawnPointLocaly(NetBlock spawnPoint)
+        {
+            MapManager.Instance.spawnPoint = spawnPoint;
         }
     }
 }
