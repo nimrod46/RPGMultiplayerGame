@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:basictiles.png
 
+#begin Entities/PlayerWalkLeft2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/PlayerWalkLeft2.png
+
 #begin Entities/PlayerWalkLeft3.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -121,18 +133,6 @@
 /processorParam:TextureFormat=Color
 /build:Entities/PlayerWalkDown1.png
 
-#begin Entities/PlayerWalkDown3.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Entities/PlayerWalkDown3.png
-
 #begin Entities/PlayerWalkDown2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -145,7 +145,7 @@
 /processorParam:TextureFormat=Color
 /build:Entities/PlayerWalkDown2.png
 
-#begin Entities/PlayerWalkLeft2.png
+#begin Entities/PlayerWalkDown3.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -155,7 +155,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Entities/PlayerWalkLeft2.png
+/build:Entities/PlayerWalkDown3.png
 
 #begin Entities/PlayerWalkLeft1.png
 /importer:TextureImporter
