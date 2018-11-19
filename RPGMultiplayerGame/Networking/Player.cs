@@ -18,9 +18,14 @@ namespace RPGMultiplayerGame.Networking
         {
         }
 
+        public override void OnNetworkInitialize()
+        {
+            base.OnNetworkInitialize();
+            speed *= 2;
+        }
+
         public override void OnLocalPlayerInitialize()
         {
-            speed *= 2;
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
         }
 

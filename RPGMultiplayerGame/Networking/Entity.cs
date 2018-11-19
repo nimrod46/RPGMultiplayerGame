@@ -127,7 +127,7 @@ namespace RPGMultiplayerGame.Networking
                 {
                     currentAnimationIndex++;
                 }
-                texture = animations[(Animation)syncCurrentAnimationType][currentAnimationIndex];
+                OnAnimationIndexSet();
             }
         }
 
