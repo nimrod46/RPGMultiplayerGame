@@ -34,7 +34,7 @@ namespace RPGMultiplayerGame.Networking
             Location = new Vector2(Location.X, SyncY);
         }
 
-        public void Draw(SpriteBatch sprite)
+        public virtual void Draw(SpriteBatch sprite)
         {
             if (texture != null)
             {

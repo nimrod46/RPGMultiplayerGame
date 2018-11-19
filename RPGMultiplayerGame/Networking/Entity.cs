@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,24 +25,22 @@ namespace RPGMultiplayerGame.Networking
         }
         protected Dictionary<Animation, List<Texture2D>> animations = new Dictionary<Animation, List<Texture2D>>();
         protected int animationDelay;
-        [SyncVar(networkInterface = NetworkInterface.TCP)]
+        [SyncVar(networkInterface = NetworkInterface.TCP, hook = "OnCurrentAnimationTypeSet", invokeInServer = false)]
         protected int syncCurrentAnimationType;
         [SyncVar(networkInterface = NetworkInterface.TCP)]
         protected int syncDirection;
         protected EntityID entityID;
-        protected int idleIndex;
         protected float speed;
         protected int timeSinceLastFrame;
         [SyncVar(networkInterface = NetworkInterface.TCP)]
         protected bool syncIsMoving;
-        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnAnimationIndexSet", invokeInServer = false)]
-        protected int syncCurrentAnimationIndex;
+        protected int currentAnimationIndex;
         protected int collisionOffsetX;
         protected int collisionOffsetY;
-        public Entity(EntityID entityID, int idleIndex, int collisionOffsetX, int collisionOffsetY)
+
+        public Entity(EntityID entityID, int collisionOffsetX, int collisionOffsetY)
         {
             this.entityID = entityID;
-            this.idleIndex = idleIndex;
             this.collisionOffsetX = collisionOffsetX;
             this.collisionOffsetY = collisionOffsetY;
         }
@@ -56,12 +55,10 @@ namespace RPGMultiplayerGame.Networking
             if (!hasFieldsBeenInitialized && hasAuthority)
             {
                 hasInitialized = true;
-                syncCurrentAnimationType = (int)Animation.WalkDown;
-                syncCurrentAnimationIndex = idleIndex;
+                syncCurrentAnimationType = (int)Animation.IdleDown;
                 syncIsMoving = false;
                 syncDirection = (int)Direction.Down;
             }
-            
             speed = 0.5f / 10;
             animationDelay = 100;
             animations = GameManager.Instance.animationsByEntities[entityID];
@@ -70,74 +67,83 @@ namespace RPGMultiplayerGame.Networking
 
         public void OnAnimationIndexSet()
         {
-            texture = animations[(Animation) syncCurrentAnimationType][syncCurrentAnimationIndex];
+            texture = animations[(Animation) syncCurrentAnimationType][currentAnimationIndex];
+        }
+
+        public void OnCurrentAnimationTypeSet()
+        {
+            currentAnimationIndex = 0;
+            OnAnimationIndexSet();
+            timeSinceLastFrame = animationDelay;
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (!hasAuthority || isServerAuthority)
-            {
-                return;
-            }
-
             if (syncIsMoving)
             {
-                timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
-                if (timeSinceLastFrame > animationDelay)
+                if (hasAuthority && !isServerAuthority)
                 {
-                    timeSinceLastFrame = 0;
-                    if (syncCurrentAnimationIndex + 1 >= animations[(Animation) syncCurrentAnimationType].Count)
+                    double movment = speed * gameTime.ElapsedGameTime.Milliseconds;
+                    Vector2 newLocation = new Vector2(Location.X, Location.Y);
+                    switch ((Direction)syncDirection)
                     {
-                        syncCurrentAnimationIndex = 0;
+                        case Direction.Up:
+                            newLocation.Y -= (float)movment;
+                            break;
+                        case Direction.Down:
+                            newLocation.Y += (float)movment;
+                            break;
+                        case Direction.Left:
+                            newLocation.X -= (float)movment;
+                            break;
+                        case Direction.Right:
+                            newLocation.X += (float)movment;
+                            break;
                     }
-                    else
+                    Rectangle rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
+                    Block block = MapManager.Instance.map.blocks.FirstOrDefault(b => b.Layer > 0 &&
+                    b.Rectangle.IntersectsWith(new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height)));
+                    if (block == null)
                     {
-                        syncCurrentAnimationIndex++;
+                        SyncX = newLocation.X;
+                        SyncY = newLocation.Y;
                     }
                 }
-                double movment = speed * gameTime.ElapsedGameTime.Milliseconds;
-                Vector2 newLocation = new Vector2(Location.X, Location.Y);
-                switch ((Direction) syncDirection)
+            }
+        }
+
+        public override void Draw(SpriteBatch sprite)
+        {
+            base.Draw(sprite);
+            timeSinceLastFrame += (int)(speed * 100);
+            if (timeSinceLastFrame > animationDelay)
+            {
+                timeSinceLastFrame = 0;
+                if (currentAnimationIndex + 1 >= animations[(Animation)syncCurrentAnimationType].Count)
                 {
-                    case Direction.Up:
-                        newLocation.Y -= (float) movment;
-                        break;
-                    case Direction.Down:
-                        newLocation.Y += (float) movment;
-                        break;
-                    case Direction.Left:
-                        newLocation.X -= (float)movment;
-                        break;
-                    case Direction.Right:
-                        newLocation.X += (float) movment;
-                        break;
+                    currentAnimationIndex = 0;
                 }
-                Rectangle rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
-                Block block = MapManager.Instance.map.blocks.FirstOrDefault(b => b.Layer > 0 && 
-                b.Rectangle.IntersectsWith(new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height)));
-                if (block == null)
+                else
                 {
-                    SyncX = newLocation.X;
-                    SyncY = newLocation.Y;
+                    currentAnimationIndex++;
                 }
+                texture = animations[(Animation)syncCurrentAnimationType][currentAnimationIndex];
             }
         }
 
         protected void StartMoving(Direction direction)
         {
             syncIsMoving = true;
-            syncCurrentAnimationIndex = idleIndex;
-            this.syncDirection = (int)direction;
+            syncDirection = (int)direction;
             syncCurrentAnimationType = (int)direction;
         }
-
 
         protected void StopMoving()
         {
             if (syncIsMoving)
             {
                 syncIsMoving = false;
-                syncCurrentAnimationIndex = idleIndex;
+                syncCurrentAnimationType += (int) Enum.GetValues(typeof(Direction)).Cast<Direction>().Max() + 1;
             }
         }
 

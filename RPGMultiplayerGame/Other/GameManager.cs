@@ -24,6 +24,10 @@ namespace RPGMultiplayerGame.Other
             WalkUp,
             WalkRight,
             WalkDown,
+            IdleLeft,
+            IdleUp,
+            IdleRight,
+            IdleDown,
         }
 
         public static GameManager Instance

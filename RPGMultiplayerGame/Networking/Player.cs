@@ -14,7 +14,7 @@ namespace RPGMultiplayerGame.Networking
     class Player : Entity
     {
         List<Keys> currentArrowsKeysPressed = new List<Keys>();
-        public Player() : base(EntityID.Player, 1, 0, 10)
+        public Player() : base(EntityID.Player, 0, 10)
         {
         }
 
