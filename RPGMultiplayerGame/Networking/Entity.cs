@@ -115,7 +115,7 @@ namespace RPGMultiplayerGame.Networking
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
-            timeSinceLastFrame += (int)(speed * 100);
+            timeSinceLastFrame += (int)(speed * 85);
             if (timeSinceLastFrame > animationDelay)
             {
                 timeSinceLastFrame = 0;
