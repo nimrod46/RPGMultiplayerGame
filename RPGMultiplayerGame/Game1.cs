@@ -75,7 +75,10 @@ namespace RPGMultiplayerGame
                 Exit();
 
             // TODO: Add your update logic here
-
+            if (gameTime.IsRunningSlowly)
+            {
+                Console.WriteLine("RUNING SLOWWWW");
+            }
             base.Update(gameTime);
             if (NetworkManager.Instance.NetBehavior?.isServer != true)
             {
@@ -93,7 +96,7 @@ namespace RPGMultiplayerGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
             if (NetworkManager.Instance.NetBehavior?.isServer != true)
             {
-                spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
                 MapManager.Instance.Draw(spriteBatch);
                 GameManager.Instance.Draw(spriteBatch);
                 spriteBatch.End();

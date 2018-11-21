@@ -16,6 +16,7 @@ namespace RPGMultiplayerGame.Networking
         {
             base.OnNetworkInitialize();
             GameManager.Instance.AddObject(this);
+            layer -= 0.01f;
         }
 
         public override void OnDestroyed()

@@ -39,6 +39,7 @@ namespace RPGMultiplayerGame.Networking
                     NetworkManager.Instance.UpdateSpawnLocation(MapManager.Instance.spawnPoint);
                 }
             }
+            layer -= SyncLayer / 100.0f;
         }
 
         public void OnTextureIndexSet()

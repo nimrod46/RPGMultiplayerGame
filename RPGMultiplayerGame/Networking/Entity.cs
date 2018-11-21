@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Map;
 using Microsoft.Xna.Framework;
@@ -63,6 +64,7 @@ namespace RPGMultiplayerGame.Networking
             animationDelay = 100;
             animations = GameManager.Instance.animationsByEntities[entityID];
             OnAnimationIndexSet();
+            layer -= 0.01f;
         }
 
         public void OnAnimationIndexSet()
@@ -74,16 +76,19 @@ namespace RPGMultiplayerGame.Networking
         {
             currentAnimationIndex = 0;
             OnAnimationIndexSet();
-            timeSinceLastFrame = animationDelay;
+            timeSinceLastFrame = 0;
         }
-
+        Block block = null;
+        Rectangle rect;
+        System.Drawing.Rectangle rectt;
         public override void Update(GameTime gameTime)
         {
+
             if (syncIsMoving)
             {
                 if (hasAuthority && !isServerAuthority)
                 {
-                    double movment = speed * gameTime.ElapsedGameTime.Milliseconds;
+                    double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
                     Vector2 newLocation = new Vector2(Location.X, Location.Y);
                     switch ((Direction)syncDirection)
                     {
@@ -100,23 +105,29 @@ namespace RPGMultiplayerGame.Networking
                             newLocation.X += (float)movment;
                             break;
                     }
-                    Rectangle rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
-                    Block block = MapManager.Instance.map.blocks.FirstOrDefault(b => b.Layer > 0 &&
-                    b.Rectangle.IntersectsWith(new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height)));
+                    rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
+                    rectt = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+                    for (int i = 0; i < MapManager.Instance.map.blocks.Count; i++)
+                    {
+                        if (MapManager.Instance.map.blocks[i].Layer > 0 && MapManager.Instance.map.blocks[i].Rectangle.IntersectsWith(rectt))
+                        {
+                            block = MapManager.Instance.map.blocks[i];
+                            break;
+                        }
+                    }
                     if (block == null)
                     {
                         SyncX = newLocation.X;
                         SyncY = newLocation.Y;
                     }
+                    else
+                    {
+                        block = null;
+                    }
                 }
             }
-        }
-
-        public override void Draw(SpriteBatch sprite)
-        {
-            base.Draw(sprite);
             timeSinceLastFrame += (int)(speed * 85);
-            if (timeSinceLastFrame > animationDelay)
+            if (timeSinceLastFrame >= animationDelay)
             {
                 timeSinceLastFrame = 0;
                 if (currentAnimationIndex + 1 >= animations[(Animation)syncCurrentAnimationType].Count)
@@ -129,6 +140,12 @@ namespace RPGMultiplayerGame.Networking
                 }
                 OnAnimationIndexSet();
             }
+
+        }
+        public override void Draw(SpriteBatch sprite)
+        {
+            base.Draw(sprite);
+            
         }
 
         protected void StartMoving(Direction direction)

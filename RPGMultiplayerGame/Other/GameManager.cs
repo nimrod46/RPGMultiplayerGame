@@ -97,23 +97,17 @@ namespace RPGMultiplayerGame.Other
 
         public void Update(GameTime gameTime)
         {
-            lock (gameObjects)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
-                foreach (GameObject obj in gameObjects)
-                {
-                    obj.Update(gameTime);
-                }
+                gameObjects[i].Update(gameTime);
             }
         }
 
         public void Draw(SpriteBatch sprite)
         {
-            lock (gameObjects)
+            for (int i = 0; i < gameObjects.Count; i++)
             {
-                foreach (GraphicObject obj in gameObjects)
-                {
-                    obj.Draw(sprite);
-                }
+                gameObjects[i].Draw(sprite);
             }
         }
     }

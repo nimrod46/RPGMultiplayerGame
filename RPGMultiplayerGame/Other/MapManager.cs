@@ -71,15 +71,12 @@ namespace RPGMultiplayerGame.Other
                 mapObjects.Add(gameObject);
             }
         }
-        
+
         public void Draw(SpriteBatch sprite)
         {
-            lock (mapObjects)
+            for (int i = mapObjects.Count; i > 0; i--)
             {
-                foreach (GraphicObject obj in mapObjects)
-                {
-                    obj.Draw(sprite);
-                }
+                mapObjects[i - 1].Draw(sprite);
             }
         }
     }

@@ -22,11 +22,13 @@ namespace RPGMultiplayerGame.Networking
         {
             base.OnNetworkInitialize();
             speed *= 2;
+            layer -= 0.01f;
         }
 
         public override void OnLocalPlayerInitialize()
         {
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
+            layer = 0f;
         }
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)

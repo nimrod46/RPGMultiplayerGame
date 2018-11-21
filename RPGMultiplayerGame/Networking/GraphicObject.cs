@@ -18,6 +18,7 @@ namespace RPGMultiplayerGame.Networking
         [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
         public float SyncY { get; set; }
         protected Texture2D texture;
+        protected float layer = 1; 
 
         public override void OnNetworkInitialize()
         {
@@ -38,7 +39,7 @@ namespace RPGMultiplayerGame.Networking
         {
             if (texture != null)
             {
-                sprite.Draw(texture, Location, Color.White);
+                sprite.Draw(texture, Location, null, Color.White, 0,Vector2.Zero, 1, SpriteEffects.None, layer);
             }
             else
             {
