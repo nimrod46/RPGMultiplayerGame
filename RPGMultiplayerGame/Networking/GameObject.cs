@@ -21,7 +21,7 @@ namespace RPGMultiplayerGame.Networking
 
         public override void OnDestroyed()
         {
-            GameManager.Instance.AddObject(this);
+            GameManager.Instance.RemoveGameObject(this);
         }
     }
 }
