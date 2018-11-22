@@ -88,7 +88,7 @@ namespace RPGMultiplayerGame.Networking
                 if (hasAuthority && !isServerAuthority)
                 {
                     double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
-                    Vector2 newLocation = new Vector2(Location.X, Location.Y);
+                    Vector2 newLocation = new Vector2(SyncX, SyncY);
                     switch ((Direction)syncDirection)
                     {
                         case Direction.Up:
