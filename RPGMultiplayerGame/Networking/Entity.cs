@@ -52,7 +52,6 @@ namespace RPGMultiplayerGame.Networking
             {
                 return;
             }
-            base.OnNetworkInitialize();
             if (!hasFieldsBeenInitialized && hasAuthority)
             {
                 hasInitialized = true;
@@ -65,6 +64,7 @@ namespace RPGMultiplayerGame.Networking
             animations = GameManager.Instance.animationsByEntities[entityID];
             OnAnimationIndexSet();
             layer -= 0.01f;
+            base.OnNetworkInitialize();
         }
 
         public void OnAnimationIndexSet()
@@ -82,8 +82,7 @@ namespace RPGMultiplayerGame.Networking
         Rectangle rect;
         System.Drawing.Rectangle rectt;
         public override void Update(GameTime gameTime)
-        {
-
+        {     
             if (syncIsMoving)
             {
                 if (hasAuthority && !isServerAuthority)

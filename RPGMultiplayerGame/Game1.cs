@@ -21,7 +21,7 @@ namespace RPGMultiplayerGame
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             gameForm = Control.FromHandle(Window.Handle) as Form;
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
         }
 
         /// <summary>
