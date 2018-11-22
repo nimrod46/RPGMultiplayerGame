@@ -46,9 +46,5 @@ namespace RPGMultiplayerGame.Networking
         {
             texture = MapManager.Instance.textures[SyncTextureIndex];
         }
-
-        public override void Update(GameTime gameTime)
-        {
-        }
     }
 }

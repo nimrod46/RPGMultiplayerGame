@@ -18,7 +18,7 @@ namespace RPGMultiplayerGame.Networking
         [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
         public float SyncY { get; set; }
         protected Texture2D texture;
-        protected float layer = 1; 
+        protected float layer = 1;
 
         public override void OnNetworkInitialize()
         {
@@ -27,12 +27,14 @@ namespace RPGMultiplayerGame.Networking
 
         public void OnXSet()
         {
-            Location = new Vector2(SyncX, Location.Y);
+            if (!hasAuthority)
+                Location = new Vector2(SyncX, Location.Y);
         }
 
         public void OnYSet()
         {
-            Location = new Vector2(Location.X, SyncY);
+            if (!hasAuthority)
+                Location = new Vector2(Location.X, SyncY);
         }
 
         public virtual void Draw(SpriteBatch sprite)
@@ -47,6 +49,10 @@ namespace RPGMultiplayerGame.Networking
             }
         }
 
-        public abstract void Update(GameTime gameTime);
+        public virtual void Update(GameTime gameTime)
+        {
+            if (hasAuthority)
+                Location = new Vector2(SyncX, SyncY);
+        }
     }
 }

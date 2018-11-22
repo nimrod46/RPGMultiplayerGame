@@ -139,7 +139,7 @@ namespace RPGMultiplayerGame.Networking
                 }
                 OnAnimationIndexSet();
             }
-
+            base.Update(gameTime);
         }
         public override void Draw(SpriteBatch sprite)
         {
