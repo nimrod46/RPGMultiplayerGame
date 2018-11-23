@@ -123,7 +123,8 @@
     <Reference Include="PostSharp, Version=6.0.29.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
       <HintPath>..\packages\PostSharp.Redist.6.0.29\lib\net45\PostSharp.dll</HintPath>
     </Reference>
-    <Reference Include="ServerLobby">
+    <Reference Include="ServerLobby, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ServerLobby\ServerLobby\bin\Debug\ServerLobby.dll</HintPath>
     </Reference>
     <Reference Include="System" />
