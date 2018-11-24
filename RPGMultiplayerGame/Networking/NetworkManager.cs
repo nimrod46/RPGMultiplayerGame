@@ -117,7 +117,7 @@ namespace RPGMultiplayerGame.Networking
         {
             foreach (Player player in players)
             {
-                player.SetSpawnPoint(spawnPoint);
+                ((Player)player).SetSpawnPoint(spawnPoint);
             }
         }
     }
