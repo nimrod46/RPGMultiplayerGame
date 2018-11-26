@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
-using RPGMultiplayerGame.Other;
+using RPGMultiplayerGame.Managers;
 
-namespace RPGMultiplayerGame.Networking
+namespace RPGMultiplayerGame.Objects
 {
     public abstract class GameObject : GraphicObject
     {

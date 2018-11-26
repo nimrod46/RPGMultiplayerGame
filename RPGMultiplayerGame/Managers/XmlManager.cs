@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace RPGMultiplayerGame.Other
+namespace RPGMultiplayerGame.Managers
 {
 
     class XmlManager<T>

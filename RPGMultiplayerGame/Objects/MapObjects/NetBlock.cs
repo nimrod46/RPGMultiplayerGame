@@ -2,14 +2,15 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
-using RPGMultiplayerGame.Other;
+using RPGMultiplayerGame.Objects;
+using RPGMultiplayerGame.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGMultiplayerGame.Networking
+namespace RPGMultiplayerGame.Objects
 {
     public class NetBlock : MapObject
     {

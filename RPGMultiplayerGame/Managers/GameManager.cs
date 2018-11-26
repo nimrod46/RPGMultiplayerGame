@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RPGMultiplayerGame.Networking;
+using RPGMultiplayerGame.Forms;
+using RPGMultiplayerGame.Objects;
+using RPGMultiplayerGame.Objects.LivingEntities;
 
-namespace RPGMultiplayerGame.Other
+namespace RPGMultiplayerGame.Managers
 {
     class GameManager
     {
@@ -44,7 +46,17 @@ namespace RPGMultiplayerGame.Other
 
         static GameManager instance;
 
+        public void SetLocalPlayerName(Player player)
+        {
+            InputText inputText = new InputText();
+            inputText.Show();
+            player.SetName(inputText.getText("Name"));
+        }
+
         public Dictionary<EntityID, Dictionary<Animation, List<Texture2D>>> animationsByEntities = new Dictionary<EntityID, Dictionary<Animation, List<Texture2D>>>();
+        public Texture2D HealthBar;
+        public Texture2D HealthBarBackground;
+        public SpriteFont PlayerName;
         private List<GameObject> gameObjects = new List<GameObject>();
 
         private GameManager()
@@ -77,6 +89,10 @@ namespace RPGMultiplayerGame.Other
                 }
                 animationsByEntities.Add(EntityID.Player, animations);
             }
+
+            HealthBar = content.Load<Texture2D>("HealthBar");
+            HealthBarBackground = content.Load<Texture2D>("HealthBarBackground");
+            PlayerName = content.Load<SpriteFont>("PlayerName");
         }
 
         public void RemoveGameObject(GameObject gameObject)

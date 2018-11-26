@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Networking;
-using RPGMultiplayerGame.Other;
-using static RPGMultiplayerGame.Other.GameManager;
+using RPGMultiplayerGame.Managers;
+using static RPGMultiplayerGame.Managers.GameManager;
 
-namespace RPGMultiplayerGame.Networking
+namespace RPGMultiplayerGame.Objects.LivingEntities
 {
-    class Player : Entity
+    class Player : Human
     {
         List<Keys> currentArrowsKeysPressed = new List<Keys>();
-        public Player() : base(EntityID.Player, 0, 10)
+        public Player() : base(EntityID.Player, 0, 10, 100, GameManager.Instance.PlayerName)
         {
         }
 
@@ -27,8 +27,14 @@ namespace RPGMultiplayerGame.Networking
 
         public override void OnLocalPlayerInitialize()
         {
+            if (isServerAuthority)
+            {
+                return;
+            }
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
             layer = 0f;
+            GameManager.Instance.SetLocalPlayerName(this);
+            Console.WriteLine("Welcome: " + syncName);
         }
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)

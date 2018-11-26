@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
-using RPGMultiplayerGame.Other;
+using RPGMultiplayerGame.Managers;
 
-namespace RPGMultiplayerGame.Networking
+namespace RPGMultiplayerGame.Objects
 {
     public abstract class GraphicObject : NetworkIdentity
     {
@@ -19,6 +19,7 @@ namespace RPGMultiplayerGame.Networking
         public float SyncY { get; set; }
         protected Texture2D texture;
         protected float layer = 1;
+        protected Point size;
 
         public override void OnNetworkInitialize()
         {

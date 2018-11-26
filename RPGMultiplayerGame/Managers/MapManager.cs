@@ -1,7 +1,7 @@
 ﻿using Map;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RPGMultiplayerGame.Networking;
+using RPGMultiplayerGame.Objects;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RPGMultiplayerGame.Other
+namespace RPGMultiplayerGame.Managers
 {
     class MapManager
     {

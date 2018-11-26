@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using RPGMultiplayerGame.Networking;
-using RPGMultiplayerGame.Other;
+using RPGMultiplayerGame.Managers;
 using System;
 using System.Windows.Forms;
 

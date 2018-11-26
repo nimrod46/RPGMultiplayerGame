@@ -8,9 +8,11 @@ using ServerLobby;
 using System.Windows.Forms;
 using System.Threading;
 using Map;
-using RPGMultiplayerGame.Other;
+using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects;
 
-namespace RPGMultiplayerGame.Networking
+namespace RPGMultiplayerGame.Managers
 {
     public class NetworkManager
     {

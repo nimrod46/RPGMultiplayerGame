@@ -10,10 +10,11 @@ using Map;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
-using RPGMultiplayerGame.Other;
-using static RPGMultiplayerGame.Other.GameManager;
+using RPGMultiplayerGame.Managers;
+using static RPGMultiplayerGame.Managers.GameManager;
 
-namespace RPGMultiplayerGame.Networking
+namespace RPGMultiplayerGame.Objects.LivingEntities
+
 {
     abstract class Entity : GameObject
     {
@@ -67,9 +68,10 @@ namespace RPGMultiplayerGame.Networking
             base.OnNetworkInitialize();
         }
 
-        public void OnAnimationIndexSet()
+        public virtual void OnAnimationIndexSet()
         {
             texture = animations[(Animation) syncCurrentAnimationType][currentAnimationIndex];
+            size = texture.Bounds.Size;
         }
 
         public void OnCurrentAnimationTypeSet()
