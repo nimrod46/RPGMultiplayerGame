@@ -43,9 +43,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 syncName = "null";
                 OnNameSet();
             }
-            OnNameSet();
             base.OnNetworkInitialize();
-            UpdateDrawOffset();
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
         }
 
@@ -54,9 +52,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             healthBarSize.X = syncHealth * healthBar.Width / maxHealth;
         }
 
-        public override void OnAnimationIndexSet()
+        public override void SetTexture()
         {
-            base.OnAnimationIndexSet();
+            base.SetTexture();
             UpdateDrawOffset();
         }
 
@@ -71,23 +69,22 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Draw(sprite);
             if (hasInitialized)
             {
-                if (syncName != null)
-                {
-                    sprite.DrawString(nameFont, syncName, Location + nameFontOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
-                }
+                sprite.DrawString(nameFont, syncName, Location + nameFontOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
                 sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.001f);
-                sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0,0, (int) healthBarSize.X, (int) healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
+                sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
             }
         }
 
-        public void SetName(string name)
+        [Command]
+        public virtual void SetName(string name)
         {
-            this.syncName = name;
+            syncName = name;
         }
 
         public void OnNameSet()
         {
             nameFontSize = nameFont.MeasureString(syncName);
+            UpdateDrawOffset();
         }
     }
 }

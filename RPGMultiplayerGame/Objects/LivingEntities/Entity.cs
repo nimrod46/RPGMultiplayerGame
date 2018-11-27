@@ -45,6 +45,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             this.entityID = entityID;
             this.collisionOffsetX = collisionOffsetX;
             this.collisionOffsetY = collisionOffsetY;
+            animations = GameManager.Instance.animationsByEntities[entityID];
         }
 
         public override void OnNetworkInitialize()
@@ -62,13 +63,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
             speed = 0.5f / 10;
             animationDelay = 100;
-            animations = GameManager.Instance.animationsByEntities[entityID];
-            OnAnimationIndexSet();
             layer -= 0.01f;
+            SetTexture();
             base.OnNetworkInitialize();
         }
 
-        public virtual void OnAnimationIndexSet()
+        public virtual void SetTexture()
         {
             texture = animations[(Animation) syncCurrentAnimationType][currentAnimationIndex];
             size = texture.Bounds.Size;
@@ -77,7 +77,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public void OnCurrentAnimationTypeSet()
         {
             currentAnimationIndex = 0;
-            OnAnimationIndexSet();
+            SetTexture();
             timeSinceLastFrame = 0;
         }
         Block block = null;
@@ -139,7 +139,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     currentAnimationIndex++;
                 }
-                OnAnimationIndexSet();
+                SetTexture();
             }
             base.Update(gameTime);
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualBasic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RPGMultiplayerGame.Managers;
@@ -114,8 +115,13 @@ namespace RPGMultiplayerGame
         private void Lobby_OnConnecting(Form form)
         {
             form.Hide();
-            gameForm.Show();
+            NetworkManager.Instance.OnStartGame += Instance_OnStartGame;
             NetworkManager.Instance.Start();
+        }
+
+        private void Instance_OnStartGame(object sender, EventArgs e)
+        {
+            gameForm.Show();
         }
     }
 }

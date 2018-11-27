@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RPGMultiplayerGame.Forms;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.LivingEntities;
 
@@ -45,13 +44,6 @@ namespace RPGMultiplayerGame.Managers
         }
 
         static GameManager instance;
-
-        public void SetLocalPlayerName(Player player)
-        {
-            InputText inputText = new InputText();
-            inputText.Show();
-            player.SetName(inputText.getText("Name"));
-        }
 
         public Dictionary<EntityID, Dictionary<Animation, List<Texture2D>>> animationsByEntities = new Dictionary<EntityID, Dictionary<Animation, List<Texture2D>>>();
         public Texture2D HealthBar;

@@ -83,12 +83,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Forms\InputText.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\InputText.Designer.cs">
-      <DependentUpon>InputText.cs</DependentUpon>
-    </Compile>
     <Compile Include="Objects\GraphicObject.cs" />
     <Compile Include="Objects\LivingEntities\Human.cs" />
     <Compile Include="Objects\MapObjects\MapObject.cs" />
@@ -116,6 +110,7 @@
       <DependentUpon>ServerPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Managers\XmlManager.cs" />
+    <Compile Include="TextInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Map">
@@ -152,9 +147,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\InputText.resx">
-      <DependentUpon>InputText.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\LobbyMenu.resx">
       <DependentUpon>LobbyMenu.cs</DependentUpon>
     </EmbeddedResource>

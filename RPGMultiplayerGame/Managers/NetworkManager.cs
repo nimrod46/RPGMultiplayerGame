@@ -20,6 +20,7 @@ namespace RPGMultiplayerGame.Managers
         public NetworkBehavior NetBehavior { get; private set; }
         public Lobby lobby;
         public ListView LobbyList;
+        public event EventHandler OnStartGame;
         public static NetworkManager Instance
         {
             get
@@ -72,6 +73,12 @@ namespace RPGMultiplayerGame.Managers
         public void Start()
         {
             NetBehavior.player.Synchronize();
+            ((Player)NetBehavior.player).OnPlayerNameSet += NetworkManager_OnPlayerNameSet;
+        }
+
+        private void NetworkManager_OnPlayerNameSet(object sender, EventArgs e)
+        {
+            OnStartGame?.Invoke(this, null);
         }
 
         public void StartServer()
@@ -83,10 +90,21 @@ namespace RPGMultiplayerGame.Managers
 
         private void NetBehavior_OnPlayerSynchronized(NetworkIdentity client)
         {
-            players.Add(((Player)client));
+            lock (players)
+            {
+                players.Add(((Player)client));
+            }
             if (MapManager.Instance.spawnPoint != null)
             {
                 ((Player)client).SetSpawnPoint(MapManager.Instance.spawnPoint);
+            }
+        }
+
+        public bool IsNameLegal(string name)
+        {
+            lock (players)
+            {
+                return !players.Any(player => player.GetName().Equals(name));
             }
         }
 
