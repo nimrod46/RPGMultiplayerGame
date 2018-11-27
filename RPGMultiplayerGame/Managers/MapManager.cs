@@ -1,7 +1,7 @@
 ﻿using Map;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RPGMultiplayerGame.Networking;
+using RPGMultiplayerGame.Objects;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RPGMultiplayerGame
+namespace RPGMultiplayerGame.Managers
 {
     class MapManager
     {
@@ -25,12 +25,16 @@ namespace RPGMultiplayerGame
                 return instance;
             }
         }
+
         static MapManager instance;
+        public GameMap map;
         public List<Texture2D> textures = new List<Texture2D>();
-        public List<NetBlock> blocks = new List<NetBlock>();
-        public GameMap currentGameMap { get; set; }
+        public NetBlock spawnPoint;
+        private List<MapObject> mapObjects = new List<MapObject>();
+
         MapManager()
         {
+            map = new GameMap();
         }
         public void LoadSpriteSheet(GraphicsDevice graphicsDevice, Texture2D spriteTextures)
         {
@@ -51,12 +55,28 @@ namespace RPGMultiplayerGame
                 }
             }
         }
+        
+        public void RemoveGameObject(MapObject gameObject)
+        {
+            lock (mapObjects)
+            {
+                mapObjects.Remove(gameObject);
+            }
+        }
+
+        public void AddObject(MapObject gameObject)
+        {
+            lock (mapObjects)
+            {
+                mapObjects.Add(gameObject);
+            }
+        }
 
         public void Draw(SpriteBatch sprite)
         {
-            for (int i = 0; i < blocks.Count; i++)
+            for (int i = mapObjects.Count; i > 0; i--)
             {
-                blocks[i].Draw(sprite);
+                mapObjects[i - 1].Draw(sprite);
             }
         }
     }

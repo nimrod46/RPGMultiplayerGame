@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualBasic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using RPGMultiplayerGame.Networking;
+using RPGMultiplayerGame.Managers;
 using System;
 using System.Windows.Forms;
 
@@ -20,6 +21,7 @@ namespace RPGMultiplayerGame
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             gameForm = Control.FromHandle(Window.Handle) as Form;
+            IsFixedTimeStep = true;
         }
 
         /// <summary>
@@ -37,22 +39,7 @@ namespace RPGMultiplayerGame
             lobby.OnConnectionEstablished += Lobby_OnConnecting;
             lobby.OnServerOnline += Lobby_OnServerCreated; ;
             lobby.FormClosing += (e, s) => Exit();
-        }
-
-        private void Lobby_OnServerCreated(Form form)
-        {
-            form.Hide();
-            ServerPanel panel = new ServerPanel();
-            panel.Show();
-            NetworkManager.Instance.Start();
-        }
-
-        private void Lobby_OnConnecting(Form form)
-        {
-            form.Hide();
-            gameForm.Show();
-            NetworkManager.Instance.Start();
-        }
+        }   
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -64,6 +51,7 @@ namespace RPGMultiplayerGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Texture2D textures = Content.Load<Texture2D>("basictiles");
             MapManager.Instance.LoadSpriteSheet(GraphicsDevice, textures);
+            GameManager.Instance.LoadTextures(GraphicsDevice, Content);
             // TODO: use this.Content to load your game content here
         }
 
@@ -87,8 +75,16 @@ namespace RPGMultiplayerGame
                 Exit();
 
             // TODO: Add your update logic here
-
+            if (gameTime.IsRunningSlowly)
+            {
+                Console.WriteLine("RUNING SLOWWWW");
+            }
             base.Update(gameTime);
+            if (NetworkManager.Instance.NetBehavior?.isServer != true)
+            {
+                GameManager.Instance.Update(gameTime);
+                InputManager.Instance.Update(gameTime);
+            }
         }
 
         /// <summary>
@@ -98,10 +94,34 @@ namespace RPGMultiplayerGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            MapManager.Instance.Draw(spriteBatch);
-            spriteBatch.End();
+            if (NetworkManager.Instance.NetBehavior?.isServer != true)
+            {
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+                MapManager.Instance.Draw(spriteBatch);
+                GameManager.Instance.Draw(spriteBatch);
+                spriteBatch.End();
+            }
             base.Draw(gameTime);
+        }
+
+        private void Lobby_OnServerCreated(Form form)
+        {
+            form.Hide();
+            ServerPanel panel = new ServerPanel();
+            panel.Show();
+            NetworkManager.Instance.Start();
+        }
+
+        private void Lobby_OnConnecting(Form form)
+        {
+            form.Hide();
+            NetworkManager.Instance.OnStartGame += Instance_OnStartGame;
+            NetworkManager.Instance.Start();
+        }
+
+        private void Instance_OnStartGame(object sender, EventArgs e)
+        {
+            gameForm.Show();
         }
     }
 }

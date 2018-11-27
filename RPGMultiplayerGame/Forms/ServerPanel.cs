@@ -1,5 +1,5 @@
 ﻿using Map;
-using RPGMultiplayerGame.Networking;
+using RPGMultiplayerGame.Managers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

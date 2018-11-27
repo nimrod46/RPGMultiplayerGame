@@ -8,14 +8,19 @@ using ServerLobby;
 using System.Windows.Forms;
 using System.Threading;
 using Map;
+using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects;
 
-namespace RPGMultiplayerGame.Networking
+namespace RPGMultiplayerGame.Managers
 {
     public class NetworkManager
     {
+        List<Player> players = new List<Player>();
         public NetworkBehavior NetBehavior { get; private set; }
         public Lobby lobby;
         public ListView LobbyList;
+        public event EventHandler OnStartGame;
         public static NetworkManager Instance
         {
             get
@@ -28,7 +33,7 @@ namespace RPGMultiplayerGame.Networking
             }
         }
         static NetworkManager instance;
-        Client client;
+        Player client;
         NetworkManager()
         {
         }
@@ -36,26 +41,30 @@ namespace RPGMultiplayerGame.Networking
         public void Init(ref ListView lobbyList)
         {
             LobbyList = lobbyList;
-            client = new Client();
-            lobby = new Lobby(client, ref LobbyList, 1331, "Map editor");
+            client = new Player();
+            lobby = new Lobby(client, ref LobbyList, 1331, "RPG Game");
             RegisterNetworkElements();
         }
 
         private void RegisterNetworkElements()
         {
             new NetBlock();
+            new Player();
         }
 
         public void LoadMap(GameMap gameMap)
         {
+            MapManager.Instance.map = gameMap;
             foreach (Block block in gameMap.blocks)
             {
                 NetBlock netBlock = new NetBlock
                 {
                     SyncTextureIndex = block.ImageIndex,
-                    SyncX = block.Location.X,
-                    SyncY = block.Location.Y,
-                    SyncLayer = block.Layer
+                    SyncX = block.Rectangle.X,
+                    SyncY = block.Rectangle.Y,
+                    SyncLayer = block.Layer,
+                    SyncHasUnder = block.HasUnder,
+                    SyncHasAbove = block.HasAbove,
                 };
                 NetBehavior.spawnWithServerAuthority(typeof(NetBlock), netBlock);
             }
@@ -64,12 +73,39 @@ namespace RPGMultiplayerGame.Networking
         public void Start()
         {
             NetBehavior.player.Synchronize();
+            ((Player)NetBehavior.player).OnPlayerNameSet += NetworkManager_OnPlayerNameSet;
+        }
+
+        private void NetworkManager_OnPlayerNameSet(object sender, EventArgs e)
+        {
+            OnStartGame?.Invoke(this, null);
         }
 
         public void StartServer()
         {
-            NetBehavior = new NetworkBehavior(new Client(), 1331);
+            NetBehavior = new NetworkBehavior(new Player(), 1331);
             NetBehavior.StartServer();
+            NetBehavior.OnPlayerSynchronized += NetBehavior_OnPlayerSynchronized;
+        }
+
+        private void NetBehavior_OnPlayerSynchronized(NetworkIdentity client)
+        {
+            lock (players)
+            {
+                players.Add(((Player)client));
+            }
+            if (MapManager.Instance.spawnPoint != null)
+            {
+                ((Player)client).SetSpawnPoint(MapManager.Instance.spawnPoint);
+            }
+        }
+
+        public bool IsNameLegal(string name)
+        {
+            lock (players)
+            {
+                return !players.Any(player => player.GetName().Equals(name));
+            }
         }
 
         public bool Connect()
@@ -95,6 +131,14 @@ namespace RPGMultiplayerGame.Networking
         public void Remove(ListViewItem item)
         {
             lobby.Remove(item);
+        }
+
+        public void UpdateSpawnLocation(NetBlock spawnPoint)
+        {
+            foreach (Player player in players)
+            {
+                ((Player)player).SetSpawnPoint(spawnPoint);
+            }
         }
     }
 }
