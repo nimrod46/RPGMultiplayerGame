@@ -10,13 +10,31 @@ using RPGMultiplayerGame.Managers;
 
 namespace RPGMultiplayerGame.Objects
 {
-    public abstract class GameObject : GraphicObject
+    public abstract class GameObject : NetworkIdentity
     {
+        public Vector2 Location { get; set; }
+        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnXSet")]
+        public float SyncX { get; set; }
+        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
+        public float SyncY { get; set; }
+        protected Point size;
+
         public override void OnNetworkInitialize()
         {
-            base.OnNetworkInitialize();
-            GameManager.Instance.AddObject(this);
-            layer -= 0.01f;
+            Location = new Vector2(SyncX, SyncY);
+            GameManager.Instance.AddGameObject(this);
+        }
+
+        public void OnXSet()
+        {
+            if (!hasAuthority)
+                Location = new Vector2(SyncX, Location.Y);
+        }
+
+        public void OnYSet()
+        {
+            if (!hasAuthority)
+                Location = new Vector2(Location.X, SyncY);
         }
 
         public override void OnDestroyed()

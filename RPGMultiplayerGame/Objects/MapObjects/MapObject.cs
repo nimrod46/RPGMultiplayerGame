@@ -5,19 +5,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Map;
+using Microsoft.Xna.Framework;
+using Networking;
 
-namespace RPGMultiplayerGame.Objects
+namespace RPGMultiplayerGame.Objects.MapObjects
 {
     public abstract class MapObject : GraphicObject
     {
+        [SyncVar()]
+        public int SyncLayer { get; set; }
+        [SyncVar()]
+        public bool SyncHasUnder { get; set; }
+        [SyncVar()]
+        public bool SyncHasAbove { get; set; }
         public override void OnNetworkInitialize()
         {
-            MapManager.Instance.AddObject(this);
+            layer -= SyncLayer / 100.0f;
+            base.OnNetworkInitialize();
         }
 
-        public override void OnDestroyed()
+        protected void Init<T>() where T : MapObjectLib
         {
-            MapManager.Instance.AddObject(this);
+            if (!isInServer)
+            {
+                MapObjectLib obj = CreateMapObject(); 
+                GameManager.Instance.map.AddObjectAt(obj);
+           }         
         }
+
+        protected abstract MapObjectLib CreateMapObject();
     }
 }

@@ -49,10 +49,8 @@ namespace RPGMultiplayerGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            Texture2D textures = Content.Load<Texture2D>("basictiles");
-            MapManager.Instance.LoadSpriteSheet(GraphicsDevice, textures);
+          //  MapManager.Instance.LoadSpriteSheet(GraphicsDevice, textures);
             GameManager.Instance.LoadTextures(GraphicsDevice, Content);
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -74,10 +72,9 @@ namespace RPGMultiplayerGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
             if (gameTime.IsRunningSlowly)
             {
-                Console.WriteLine("RUNING SLOWWWW");
+              //  Console.WriteLine("RUNING SLOWWWW");
             }
             base.Update(gameTime);
             if (NetworkManager.Instance.NetBehavior?.isServer != true)
@@ -97,7 +94,6 @@ namespace RPGMultiplayerGame
             if (NetworkManager.Instance.NetBehavior?.isServer != true)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
-                MapManager.Instance.Draw(spriteBatch);
                 GameManager.Instance.Draw(spriteBatch);
                 spriteBatch.End();
             }

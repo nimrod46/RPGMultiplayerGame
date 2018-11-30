@@ -80,7 +80,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (NetworkManager.Instance.IsNameLegal(name))
             {
-                client.SetName(name);
+                client.CmdSetName(name);
             } 
             else
             {
@@ -94,9 +94,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             CmdCheckName(this, TextInput.getText("Name"));
         }
 
-        public override void SetName(string name)
+        [Command]
+        public override void CmdSetName(string name)
         {
-            base.SetName(name);
+            base.CmdSetName(name);
             OnPlayerNameSet?.Invoke(this, null);
             Console.WriteLine("Welcome: " + syncName);
         }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RPGMultiplayerGame.Objects.MapObjects;
 
 namespace RPGMultiplayerGame.Objects
 {
@@ -16,36 +17,23 @@ namespace RPGMultiplayerGame.Objects
     {
         [SyncVar(hook = "OnTextureIndexSet")]
         public int SyncTextureIndex { get; set; }
-        [SyncVar()]
-        public int SyncLayer { get; set; }
-        [SyncVar()]
-        public bool SyncHasUnder { get; set; }
-        [SyncVar()]
-        public bool SyncHasAbove { get; set; }
+        
 
         public override void OnNetworkInitialize()
         {
+            texture = GameManager.Instance.textures[SyncTextureIndex];
             base.OnNetworkInitialize();
-            texture = MapManager.Instance.textures[SyncTextureIndex];
-            Location = new Vector2(SyncX, SyncY);
-            if (!isInServer)
-            {
-                MapManager.Instance.map.AddBlockAt(new System.Drawing.Rectangle((int)SyncX, (int)SyncY, texture.Width, texture.Height), SyncTextureIndex, SyncLayer);
-            }
-            else
-            {
-                if (MapManager.Instance.map.spawn.Rectangle.Equals(new System.Drawing.Rectangle((int)SyncX, (int)SyncY, texture.Width, texture.Height)))
-                {
-                    MapManager.Instance.spawnPoint = this;
-                    NetworkManager.Instance.UpdateSpawnLocation(MapManager.Instance.spawnPoint);
-                }
-            }
-            layer -= SyncLayer / 100.0f;
+            Init<BlockLib>();
         }
 
         public void OnTextureIndexSet()
         {
-            texture = MapManager.Instance.textures[SyncTextureIndex];
+            texture = GameManager.Instance.textures[SyncTextureIndex];
+        }
+
+        protected override MapObjectLib CreateMapObject()
+        {
+            return new BlockLib(SyncTextureIndex, new System.Drawing.Rectangle((int)SyncX, (int)SyncY, texture.Width, texture.Height), SyncLayer);
         }
     }
 }

@@ -41,7 +41,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (!hasFieldsBeenInitialized)
             {
                 syncName = "null";
-                OnNameSet();
             }
             base.OnNetworkInitialize();
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
@@ -76,7 +75,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         [Command]
-        public virtual void SetName(string name)
+        public virtual void CmdSetName(string name)
         {
             syncName = name;
         }

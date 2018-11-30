@@ -10,32 +10,16 @@ using RPGMultiplayerGame.Managers;
 
 namespace RPGMultiplayerGame.Objects
 {
-    public abstract class GraphicObject : NetworkIdentity
+    public abstract class GraphicObject : GameObject
     {
-        public Vector2 Location { get; set; }
-        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnXSet")]
-        public float SyncX { get; set; }
-        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
-        public float SyncY { get; set; }
+        
         protected Texture2D texture;
         protected float layer = 1;
-        protected Point size;
 
         public override void OnNetworkInitialize()
         {
-            Location = new Vector2(SyncX, SyncY);
-        }
-
-        public void OnXSet()
-        {
-            if (!hasAuthority)
-                Location = new Vector2(SyncX, Location.Y);
-        }
-
-        public void OnYSet()
-        {
-            if (!hasAuthority)
-                Location = new Vector2(Location.X, SyncY);
+            base.OnNetworkInitialize();
+            GameManager.Instance.AddGraphicObject(this);
         }
 
         public virtual void Draw(SpriteBatch sprite)
@@ -50,10 +34,10 @@ namespace RPGMultiplayerGame.Objects
             }
         }
 
-        public virtual void Update(GameTime gameTime)
+        public override void OnDestroyed()
         {
-            if (hasAuthority)
-                Location = new Vector2(SyncX, SyncY);
+            GameManager.Instance.RemoveGraphicObject(this);
+            base.OnDestroyed();
         }
     }
 }

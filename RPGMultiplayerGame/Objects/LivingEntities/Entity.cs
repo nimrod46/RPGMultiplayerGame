@@ -11,12 +11,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.MapObjects;
 using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 
 {
-    abstract class Entity : GameObject
+    abstract class Entity : UpdateObject
     {
         public enum Direction
         {
@@ -80,7 +81,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             SetTexture();
             timeSinceLastFrame = 0;
         }
-        Block block = null;
+        MapObjectLib block = null;
         Rectangle rect;
         System.Drawing.Rectangle rectt;
         public override void Update(GameTime gameTime)
@@ -108,11 +109,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                     rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
                     rectt = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
-                    for (int i = 0; i < MapManager.Instance.map.blocks.Count; i++)
+                    for (int i = 0; i < GameManager.Instance.map.GraphicObjects.Count; i++)
                     {
-                        if (MapManager.Instance.map.blocks[i].Layer > 0 && MapManager.Instance.map.blocks[i].Rectangle.IntersectsWith(rectt))
+                        if (GameManager.Instance.map.GraphicObjects[i].Layer > 0 && GameManager.Instance.map.GraphicObjects[i].Rectangle.IntersectsWith(rectt))
                         {
-                            block = MapManager.Instance.map.blocks[i];
+                            block = GameManager.Instance.map.GraphicObjects[i];
                             break;
                         }
                     }
@@ -143,10 +144,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
             base.Update(gameTime);
         }
+
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
-            
         }
 
         protected void StartMoving(Direction direction)
@@ -171,7 +172,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         [BroadcastMethod]
-        public void SetSpawnPoint(NetBlock spawnPoint)
+        public void SetSpawnPoint(SpawnMark spawnPoint)
         {
             if (hasAuthority)
             {
@@ -181,9 +182,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             SetSpawnPointLocaly(spawnPoint);
         }
 
-        private void SetSpawnPointLocaly(NetBlock spawnPoint)
+        private void SetSpawnPointLocaly(SpawnMark spawnPoint)
         {
-            MapManager.Instance.spawnPoint = spawnPoint;
+            GameManager.Instance.spawnPoint = spawnPoint;
         }
     }
 }

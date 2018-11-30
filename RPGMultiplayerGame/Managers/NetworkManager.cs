@@ -11,6 +11,7 @@ using Map;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects;
+using RPGMultiplayerGame.MapObjects;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -50,23 +51,33 @@ namespace RPGMultiplayerGame.Managers
         {
             new NetBlock();
             new Player();
+            new SpawnMark();
+            new NpcMark();
         }
 
         public void LoadMap(GameMap gameMap)
         {
-            MapManager.Instance.map = gameMap;
-            foreach (Block block in gameMap.blocks)
+            GameManager.Instance.map = gameMap;
+            foreach (MapObjectLib obj in gameMap.GraphicObjects)
             {
-                NetBlock netBlock = new NetBlock
+                GameObject gObject = null;
+                if (obj is NpcLib)
                 {
-                    SyncTextureIndex = block.ImageIndex,
-                    SyncX = block.Rectangle.X,
-                    SyncY = block.Rectangle.Y,
-                    SyncLayer = block.Layer,
-                    SyncHasUnder = block.HasUnder,
-                    SyncHasAbove = block.HasAbove,
-                };
-                NetBehavior.spawnWithServerAuthority(typeof(NetBlock), netBlock);
+                    gObject = new NpcMark();
+                }
+                else if (obj is SpawnLib)
+                {
+                    gObject = new SpawnMark();
+                }
+                else if (obj is BlockLib)
+                {
+                    gObject = new NetBlock();
+                    ((NetBlock)gObject).SyncTextureIndex = (obj as BlockLib).ImageIndex;
+                    ((NetBlock)gObject).SyncLayer = obj.Layer;
+                }
+                gObject.SyncX = obj.Rectangle.X;
+                gObject.SyncY = obj.Rectangle.Y;
+                NetBehavior.spawnWithServerAuthority(gObject.GetType(), gObject);
             }
         }
 
@@ -94,9 +105,9 @@ namespace RPGMultiplayerGame.Managers
             {
                 players.Add(((Player)client));
             }
-            if (MapManager.Instance.spawnPoint != null)
+            if (GameManager.Instance.spawnPoint != null)
             {
-                ((Player)client).SetSpawnPoint(MapManager.Instance.spawnPoint);
+                ((Player)client).SetSpawnPoint(GameManager.Instance.spawnPoint);
             }
         }
 
@@ -133,11 +144,11 @@ namespace RPGMultiplayerGame.Managers
             lobby.Remove(item);
         }
 
-        public void UpdateSpawnLocation(NetBlock spawnPoint)
+        public void UpdateSpawnLocation(SpawnMark spawnPoint)
         {
             foreach (Player player in players)
             {
-                ((Player)player).SetSpawnPoint(spawnPoint);
+                player.SetSpawnPoint(spawnPoint);
             }
         }
     }
