@@ -49,10 +49,11 @@ namespace RPGMultiplayerGame.Managers
 
         private void RegisterNetworkElements()
         {
-            new NetBlock();
+            new Block();
             new Player();
-            new SpawnMark();
-            new NpcMark();
+            new SpawnPoint();
+            new Waypoint();
+            new Joe();
         }
 
         public void LoadMap(GameMap gameMap)
@@ -63,21 +64,39 @@ namespace RPGMultiplayerGame.Managers
                 GameObject gObject = null;
                 if (obj is NpcLib)
                 {
-                    gObject = new NpcMark();
+                    gObject = new Joe();
+
                 }
                 else if (obj is SpawnLib)
                 {
-                    gObject = new SpawnMark();
+                    gObject = new SpawnPoint();
                 }
                 else if (obj is BlockLib)
                 {
-                    gObject = new NetBlock();
-                    ((NetBlock)gObject).SyncTextureIndex = (obj as BlockLib).ImageIndex;
-                    ((NetBlock)gObject).SyncLayer = obj.Layer;
+                    gObject = new Block();
+                    ((Block)gObject).SyncTextureIndex = (obj as BlockLib).ImageIndex;
+                    ((Block)gObject).SyncLayer = obj.Layer;
                 }
                 gObject.SyncX = obj.Rectangle.X;
                 gObject.SyncY = obj.Rectangle.Y;
-                NetBehavior.spawnWithServerAuthority(gObject.GetType(), gObject);
+                NetworkIdentity identity = NetBehavior.spawnWithServerAuthority(gObject.GetType(), gObject);
+                if (obj is NpcLib objP)
+                {
+                    Waypoint point;
+                    Npc npcMark = identity as Npc;
+                    foreach (WaypointLib waypoint in objP.waypoints)
+                    {
+                        point = new Waypoint
+                        {
+                            SyncX = waypoint.Point.X,
+                            SyncY = waypoint.Point.Y,
+                            SyncTime = waypoint.Time,
+                            SyncNpcId = npcMark.id,
+                        };
+                        NetworkManager.Instance.NetBehavior.spawnWithServerAuthority(point.GetType(), point);
+                    }
+                }
+
             }
         }
 
@@ -144,7 +163,7 @@ namespace RPGMultiplayerGame.Managers
             lobby.Remove(item);
         }
 
-        public void UpdateSpawnLocation(SpawnMark spawnPoint)
+        public void UpdateSpawnLocation(SpawnPoint spawnPoint)
         {
             foreach (Player player in players)
             {

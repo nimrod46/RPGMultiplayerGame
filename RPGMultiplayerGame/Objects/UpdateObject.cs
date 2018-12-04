@@ -19,7 +19,7 @@ namespace RPGMultiplayerGame.Objects
 
         public virtual void Update(GameTime gameTime)
         {
-            if (hasAuthority)
+            if (controling)
                 Location = new Vector2(SyncX, SyncY);
         }
 

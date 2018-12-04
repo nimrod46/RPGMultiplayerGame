@@ -18,6 +18,7 @@ namespace RPGMultiplayerGame.Objects
         [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
         public float SyncY { get; set; }
         protected Point size;
+        protected bool controling = false;
 
         public override void OnNetworkInitialize()
         {
@@ -27,13 +28,13 @@ namespace RPGMultiplayerGame.Objects
 
         public void OnXSet()
         {
-            if (!hasAuthority)
+            if (!controling)
                 Location = new Vector2(SyncX, Location.Y);
         }
 
         public void OnYSet()
         {
-            if (!hasAuthority)
+            if (!controling)
                 Location = new Vector2(Location.X, SyncY);
         }
 

@@ -15,11 +15,11 @@ namespace RPGMultiplayerGame.Objects
         
         protected Texture2D texture;
         protected float layer = 1;
-
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
             GameManager.Instance.AddGraphicObject(this);
+            controling = hasAuthority;
         }
 
         public virtual void Draw(SpriteBatch sprite)

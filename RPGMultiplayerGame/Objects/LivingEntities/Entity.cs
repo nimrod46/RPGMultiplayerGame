@@ -25,6 +25,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Up,
             Right,
             Down,
+            Idle,
         }
         protected Dictionary<Animation, List<Texture2D>> animations = new Dictionary<Animation, List<Texture2D>>();
         protected int animationDelay;
@@ -88,7 +89,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {     
             if (syncIsMoving)
             {
-                if (hasAuthority && !isServerAuthority)
+                if (controling)
                 {
                     double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
                     Vector2 newLocation = new Vector2(SyncX, SyncY);
@@ -128,7 +129,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
-            timeSinceLastFrame += (int)(speed * 85);
+            timeSinceLastFrame += (int)(speed * 500);
             if (timeSinceLastFrame >= animationDelay)
             {
                 timeSinceLastFrame = 0;
@@ -162,7 +163,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (syncIsMoving)
             {
                 syncIsMoving = false;
-                syncCurrentAnimationType += (int) Enum.GetValues(typeof(Direction)).Cast<Direction>().Max() + 1;
+                syncCurrentAnimationType += (int) Enum.GetValues(typeof(Direction)).Cast<Direction>().Max();
             }
         }
 
@@ -172,7 +173,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         [BroadcastMethod]
-        public void SetSpawnPoint(SpawnMark spawnPoint)
+        public void SetSpawnPoint(SpawnPoint spawnPoint)
         {
             if (hasAuthority)
             {
@@ -182,7 +183,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             SetSpawnPointLocaly(spawnPoint);
         }
 
-        private void SetSpawnPointLocaly(SpawnMark spawnPoint)
+        private void SetSpawnPointLocaly(SpawnPoint spawnPoint)
         {
             GameManager.Instance.spawnPoint = spawnPoint;
         }

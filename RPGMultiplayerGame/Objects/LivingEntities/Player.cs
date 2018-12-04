@@ -23,7 +23,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.OnNetworkInitialize();
             speed *= 2;
-            layer -= 0.01f;
+            layer -= 0.2f;
         }
 
         public override void OnLocalPlayerInitialize()

@@ -52,7 +52,7 @@ namespace RPGMultiplayerGame.Managers
         public Texture2D HealthBarBackground;
         public SpriteFont PlayerName;
         public GameMap map;
-        public SpawnMark spawnPoint;
+        public SpawnPoint spawnPoint;
         private List<GameObject> gameObjects = new List<GameObject>();
         private List<GraphicObject> grapichObjects = new List<GraphicObject>();
         private List<UpdateObject> updateObjects = new List<UpdateObject>();

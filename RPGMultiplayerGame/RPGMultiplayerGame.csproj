@@ -83,9 +83,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Objects\LivingEntities\Joe.cs" />
+    <Compile Include="Objects\LivingEntities\Waypoint.cs" />
     <Compile Include="Objects\Marks\MarkObject.cs" />
-    <Compile Include="Objects\Marks\NpcMark.cs" />
-    <Compile Include="Objects\Marks\SpawnMark.cs" />
+    <Compile Include="Objects\Marks\SpawnPoint.cs" />
     <Compile Include="Objects\GraphicObject.cs" />
     <Compile Include="Objects\LivingEntities\Human.cs" />
     <Compile Include="Objects\LivingEntities\Npc.cs" />
@@ -94,7 +95,7 @@
     <Compile Include="Managers\InputManager.cs" />
     <Compile Include="Objects\LivingEntities\Entity.cs" />
     <Compile Include="Objects\GameObject.cs" />
-    <Compile Include="Objects\MapObjects\NetBlock.cs" />
+    <Compile Include="Objects\MapObjects\Block.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Forms\LobbyMenu.cs">
       <SubType>Form</SubType>

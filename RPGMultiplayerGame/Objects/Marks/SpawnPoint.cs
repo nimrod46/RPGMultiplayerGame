@@ -4,7 +4,7 @@ using RPGMultiplayerGame.Objects.MapObjects;
 
 namespace RPGMultiplayerGame.MapObjects
 {
-    public class SpawnMark : MarkObject
+    public class SpawnPoint : MarkObject
     {
         public override void OnNetworkInitialize()
         {

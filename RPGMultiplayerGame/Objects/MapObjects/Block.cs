@@ -13,7 +13,7 @@ using RPGMultiplayerGame.Objects.MapObjects;
 
 namespace RPGMultiplayerGame.Objects
 {
-    public class NetBlock : MapObject
+    public class Block : MapObject
     {
         [SyncVar(hook = "OnTextureIndexSet")]
         public int SyncTextureIndex { get; set; }
