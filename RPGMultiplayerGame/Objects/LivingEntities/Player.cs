@@ -21,6 +21,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void OnNetworkInitialize()
         {
+            if (!hasFieldsBeenInitialized)
+            {
+                syncName = "null";
+            }
+            if (isServerAuthority)
+            {
+                return;
+            }
             base.OnNetworkInitialize();
             speed *= 2;
             layer -= 0.2f;
@@ -67,7 +75,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-        }  
+            if (hasAuthority)
+            {
+                SyncX = Location.X;
+                SyncY = Location.Y;
+            }
+        }
 
         public override void OnDestroyed()
         {

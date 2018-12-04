@@ -19,23 +19,34 @@ namespace RPGMultiplayerGame.Objects
         public float SyncY { get; set; }
         protected Point size;
         protected bool controling = false;
-
+        protected object movmentLock = new object();
         public override void OnNetworkInitialize()
         {
             Location = new Vector2(SyncX, SyncY);
             GameManager.Instance.AddGameObject(this);
         }
 
-        public void OnXSet()
+
+        protected virtual void OnXSet()
         {
-            if (!controling)
-                Location = new Vector2(SyncX, Location.Y);
+            lock (movmentLock)
+            {
+                if (!hasAuthority)
+                {
+                    Location = new Vector2(SyncX, Location.Y);
+                }
+            }
         }
 
-        public void OnYSet()
+        protected virtual void OnYSet()
         {
-            if (!controling)
-                Location = new Vector2(Location.X, SyncY);
+            lock (movmentLock)
+            {
+                if (!hasAuthority)
+                {
+                    Location = new Vector2(Location.X, SyncY);
+                }
+            }
         }
 
         public override void OnDestroyed()

@@ -12,16 +12,20 @@ using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.MapObjects;
+using Microsoft.Xna.Framework;
 
 namespace RPGMultiplayerGame.Managers
 {
     public class NetworkManager
     {
+        public static NetworkManager instance;
         List<Player> players = new List<Player>();
+        List<UpdateObject> serverObjects = new List<UpdateObject>();
         public NetworkBehavior NetBehavior { get; private set; }
         public Lobby lobby;
         public ListView LobbyList;
         public event EventHandler OnStartGame;
+        private Player client;
         public static NetworkManager Instance
         {
             get
@@ -33,9 +37,8 @@ namespace RPGMultiplayerGame.Managers
                 return instance;
             }
         }
-        static NetworkManager instance;
-        Player client;
-        NetworkManager()
+
+        private NetworkManager()
         {
         }
 
@@ -54,6 +57,21 @@ namespace RPGMultiplayerGame.Managers
             new SpawnPoint();
             new Waypoint();
             new Joe();
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            foreach (UpdateObject obj in serverObjects){
+                obj.Update(gameTime);
+            }
+        }
+
+        public void AddServerGameObject(UpdateObject gameObject)
+        {
+            lock (serverObjects)
+            {
+                serverObjects.Add(gameObject);
+            }
         }
 
         public void LoadMap(GameMap gameMap)

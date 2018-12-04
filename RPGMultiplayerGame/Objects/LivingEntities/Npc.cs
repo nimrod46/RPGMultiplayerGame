@@ -46,6 +46,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
+            if (!hasAuthority)
+            {
+                return;
+            }
             currentTime += gameTime.ElapsedGameTime.TotalSeconds;
             if (!hasWaited && currentPointTime != 0 && currentTime < currentPointTime)
             {
@@ -60,16 +64,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             Vector2 heading = Location - nextPoint;
             Direction direction = GetDirection(heading);
-            if ((Direction)syncDirection != Direction.Idle && syncDirection != (int)direction) //next point
+            if (syncDirection != (int)direction) //next point
             {
                 if (path.Count == nextWaypointIndex + 1)
                 {
                     unit = -1;
                 }
-                else if(nextWaypointIndex == 0)
+                else if (nextWaypointIndex == 0)
                 {
                     unit = 1;
                 }
+                SyncX = Location.X;
+                SyncY = Location.Y;
                 nextWaypointIndex += unit;
                 currentPointTime = path[nextWaypointIndex].SyncTime;
                 nextPoint = path[nextWaypointIndex].Location;
@@ -77,10 +83,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 hasWaited = false;
                 heading = Location - nextPoint;
                 direction = GetDirection(heading);
-                heading.Normalize();
+                StartMoving(direction);
             }
-            syncDirection = (int)direction;
-            StartMoving((Direction)syncDirection);
         }
 
         private Direction GetDirection(Vector2 heading)
@@ -104,6 +108,28 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 direction = Direction.Down;
             }
             return direction;
+        }
+
+        protected override void OnXSet()
+        {
+            if (!hasAuthority)
+            {
+                if (MathHelper.Distance(Location.X, SyncX) >= 2)
+                {
+                    Location = new Vector2(SyncX, Location.Y);
+                }
+            }
+        }
+
+        protected override void OnYSet()
+        {
+            if (!hasAuthority)
+            {
+                if (MathHelper.Distance(Location.Y, SyncY) >= 2)
+                {
+                    Location = new Vector2(Location.X, SyncY);
+                }
+            }
         }
 
         public void AddWaypoint(Waypoint waypoint)

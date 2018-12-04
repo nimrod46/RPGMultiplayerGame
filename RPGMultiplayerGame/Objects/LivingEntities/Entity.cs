@@ -28,16 +28,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Idle,
         }
         protected Dictionary<Animation, List<Texture2D>> animations = new Dictionary<Animation, List<Texture2D>>();
-        protected int animationDelay;
-        [SyncVar(networkInterface = NetworkInterface.TCP, hook = "OnCurrentAnimationTypeSet", invokeInServer = false)]
+        [SyncVar(hook = "OnCurrentAnimationTypeSet", invokeInServer = false)]
         protected int syncCurrentAnimationType;
-        [SyncVar(networkInterface = NetworkInterface.TCP)]
+        [SyncVar]
         protected int syncDirection;
+        [SyncVar]
+        protected bool syncIsMoving;
         protected EntityID entityID;
         protected float speed;
+        protected int animationDelay;
         protected int timeSinceLastFrame;
-        [SyncVar(networkInterface = NetworkInterface.TCP)]
-        protected bool syncIsMoving;
         protected int currentAnimationIndex;
         protected int collisionOffsetX;
         protected int collisionOffsetY;
@@ -52,10 +52,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void OnNetworkInitialize()
         {
-            if (isServerAuthority)
-            {
-                return;
-            }
+           // if (isServerAuthority)
+           // {
+            //    return;
+            //}
             if (!hasFieldsBeenInitialized && hasAuthority)
             {
                 hasInitialized = true;
@@ -86,46 +86,48 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         Rectangle rect;
         System.Drawing.Rectangle rectt;
         public override void Update(GameTime gameTime)
-        {     
-            if (syncIsMoving)
+        {
+            lock (movmentLock)
             {
-                if (controling)
+                if (syncIsMoving)
                 {
-                    double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
-                    Vector2 newLocation = new Vector2(SyncX, SyncY);
-                    switch ((Direction)syncDirection)
+                    if (controling)
                     {
-                        case Direction.Up:
-                            newLocation.Y -= (float)movment;
-                            break;
-                        case Direction.Down:
-                            newLocation.Y += (float)movment;
-                            break;
-                        case Direction.Left:
-                            newLocation.X -= (float)movment;
-                            break;
-                        case Direction.Right:
-                            newLocation.X += (float)movment;
-                            break;
-                    }
-                    rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
-                    rectt = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
-                    for (int i = 0; i < GameManager.Instance.map.GraphicObjects.Count; i++)
-                    {
-                        if (GameManager.Instance.map.GraphicObjects[i].Layer > 0 && GameManager.Instance.map.GraphicObjects[i].Rectangle.IntersectsWith(rectt))
+                        double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
+                        Vector2 newLocation = new Vector2(Location.X, Location.Y);
+                        switch ((Direction)syncDirection)
                         {
-                            block = GameManager.Instance.map.GraphicObjects[i];
-                            break;
+                            case Direction.Up:
+                                newLocation.Y -= (float)movment;
+                                break;
+                            case Direction.Down:
+                                newLocation.Y += (float)movment;
+                                break;
+                            case Direction.Left:
+                                newLocation.X -= (float)movment;
+                                break;
+                            case Direction.Right:
+                                newLocation.X += (float)movment;
+                                break;
                         }
-                    }
-                    if (block == null)
-                    {
-                        SyncX = newLocation.X;
-                        SyncY = newLocation.Y;
-                    }
-                    else
-                    {
-                        block = null;
+                        rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
+                        rectt = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+                        for (int i = 0; i < GameManager.Instance.map.GraphicObjects.Count; i++)
+                        {
+                            if (GameManager.Instance.map.GraphicObjects[i] is BlockLib && GameManager.Instance.map.GraphicObjects[i].Layer > 0 && GameManager.Instance.map.GraphicObjects[i].Rectangle.IntersectsWith(rectt))
+                            {
+                                block = GameManager.Instance.map.GraphicObjects[i];
+                                break;
+                            }
+                        }
+                        if (block == null)
+                        {
+                            Location = newLocation;
+                        }
+                        else
+                        {
+                            block = null;
+                        }
                     }
                 }
             }
@@ -179,6 +181,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 SyncX = spawnPoint.SyncX;
                 SyncY = spawnPoint.SyncY;
+                Location = new Vector2(SyncX, SyncY);
             }
             SetSpawnPointLocaly(spawnPoint);
         }

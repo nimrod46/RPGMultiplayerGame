@@ -82,6 +82,10 @@ namespace RPGMultiplayerGame
                 GameManager.Instance.Update(gameTime);
                 InputManager.Instance.Update(gameTime);
             }
+            else
+            {
+                NetworkManager.instance.Update(gameTime);
+            }
         }
 
         /// <summary>

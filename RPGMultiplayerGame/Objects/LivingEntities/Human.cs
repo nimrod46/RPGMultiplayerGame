@@ -37,11 +37,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         public override void OnNetworkInitialize()
-        {
-            if (!hasFieldsBeenInitialized)
-            {
-                syncName = "null";
-            }
+        {  
             base.OnNetworkInitialize();
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
         }

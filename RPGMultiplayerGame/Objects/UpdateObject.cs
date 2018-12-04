@@ -15,12 +15,14 @@ namespace RPGMultiplayerGame.Objects
             base.OnNetworkInitialize();
             GameManager.Instance.AddUpdateObject(this);
             layer -= 0.01f;
+            if (isServerAuthority)
+            {
+                NetworkManager.Instance.AddServerGameObject(this);
+            }
         }
 
         public virtual void Update(GameTime gameTime)
         {
-            if (controling)
-                Location = new Vector2(SyncX, SyncY);
         }
 
         public override void OnDestroyed()
