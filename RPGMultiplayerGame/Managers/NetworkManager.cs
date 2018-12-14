@@ -57,6 +57,7 @@ namespace RPGMultiplayerGame.Managers
             new SpawnPoint();
             new Waypoint();
             new Joe();
+            new Blacksmith();
         }
 
         public void Update(GameTime gameTime)
@@ -82,7 +83,7 @@ namespace RPGMultiplayerGame.Managers
                 GameObject gObject = null;
                 if (obj is NpcLib)
                 {
-                    gObject = new Joe();
+                    gObject = new Blacksmith();
 
                 }
                 else if (obj is SpawnLib)

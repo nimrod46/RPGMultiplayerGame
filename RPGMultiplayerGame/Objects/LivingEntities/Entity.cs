@@ -27,7 +27,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Down,
             Idle,
         }
-        protected Dictionary<Animation, List<Texture2D>> animations = new Dictionary<Animation, List<Texture2D>>();
+        protected Dictionary<Animation, List<GameTexture>> animations = new Dictionary<Animation, List<GameTexture>>();
         [SyncVar(hook = "OnCurrentAnimationTypeSet", invokeInServer = false)]
         protected int syncCurrentAnimationType;
         [SyncVar]
@@ -41,6 +41,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected int currentAnimationIndex;
         protected int collisionOffsetX;
         protected int collisionOffsetY;
+        protected Point baseSize;
 
         public Entity(EntityID entityID, int collisionOffsetX, int collisionOffsetY)
         {
@@ -72,8 +73,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public virtual void SetTexture()
         {
-            texture = animations[(Animation) syncCurrentAnimationType][currentAnimationIndex];
-            size = texture.Bounds.Size;
+            texture = animations[(Animation) syncCurrentAnimationType][currentAnimationIndex].Texture;
+            size = (texture.Bounds.Size.ToVector2() * scale).ToPoint();
+            offset = animations[(Animation)syncCurrentAnimationType][currentAnimationIndex].Offset * scale;
         }
 
         public void OnCurrentAnimationTypeSet()

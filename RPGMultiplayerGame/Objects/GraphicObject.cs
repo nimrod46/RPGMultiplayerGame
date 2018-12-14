@@ -14,7 +14,18 @@ namespace RPGMultiplayerGame.Objects
     {
         
         protected Texture2D texture;
-        protected float layer = 1;
+        protected Vector2 offset;
+        protected Vector2 drawLocation;
+        protected float layer;
+        protected float scale;
+        public GraphicObject()
+        {
+            layer = 1;
+            scale = 1;
+            offset = Vector2.Zero;
+            drawLocation = Vector2.Zero;
+        }
+
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
@@ -26,7 +37,8 @@ namespace RPGMultiplayerGame.Objects
         {
             if (texture != null)
             {
-                sprite.Draw(texture, Location, null, Color.White, 0,Vector2.Zero, 1, SpriteEffects.None, layer);
+                drawLocation = new Vector2(Location.X + offset.X, Location.Y + offset.Y);
+                sprite.Draw(texture, drawLocation, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, layer);
             }
             else
             {

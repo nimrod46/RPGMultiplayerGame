@@ -17,6 +17,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public event EventHandler OnPlayerNameSet;
         public Player() : base(EntityID.Player, 0, 10, 100, GameManager.Instance.PlayerName)
         {
+            scale = 1;
+            baseSize = (animations[GameManager.Animation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
         }
 
         public override void OnNetworkInitialize()

@@ -7,6 +7,7 @@ using Map;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using OffsetGeneratorLib;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.LivingEntities;
@@ -18,6 +19,7 @@ namespace RPGMultiplayerGame.Managers
         public enum EntityID
         {
             Player,
+            Blacksmith
         }
 
         public enum Animation
@@ -31,6 +33,21 @@ namespace RPGMultiplayerGame.Managers
             IdleRight,
             IdleDown,
         }
+
+        public struct GameTexture
+        {
+            public Texture2D Texture { get; private set; }
+            public Vector2 Offset { get; private set; }
+
+            public GameTexture(Texture2D image, Vector2 offset)
+            {
+                Texture = image;
+                Offset = offset;
+            }
+
+            
+        }
+
 
         public static GameManager Instance
         {
@@ -46,7 +63,7 @@ namespace RPGMultiplayerGame.Managers
 
         static GameManager instance;
 
-        public Dictionary<EntityID, Dictionary<Animation, List<Texture2D>>> animationsByEntities = new Dictionary<EntityID, Dictionary<Animation, List<Texture2D>>>();
+        public Dictionary<EntityID, Dictionary<Animation, List<GameTexture>>> animationsByEntities = new Dictionary<EntityID, Dictionary<Animation, List<GameTexture>>>();
         public List<Texture2D> textures = new List<Texture2D>();
         public Texture2D HealthBar;
         public Texture2D HealthBarBackground;
@@ -66,17 +83,33 @@ namespace RPGMultiplayerGame.Managers
         {
             for (int i = 0; i < (int)Enum.GetValues(typeof(EntityID)).Cast<EntityID>().Last() + 1; i++)
             {
-                Dictionary<Animation, List<Texture2D>> animations = new Dictionary<Animation, List<Texture2D>>();
+                XmlManager<List<AnimationPropertiesLib>> xml = new XmlManager<List<AnimationPropertiesLib>>();
+                List<AnimationPropertiesLib> animationProperties = null;
+                try
+                {
+                    animationProperties = xml.Load("Content\\" + (EntityID)i + ".xml");
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Warning: no xml found for " + (EntityID)i);
+                }
+                Dictionary<Animation, List<GameTexture>> animations = new Dictionary<Animation, List<GameTexture>>();
                 for (int j = 0; j < (int)Enum.GetValues(typeof(Animation)).Cast<Animation>().Last() + 1; j++)
                 {
-                    List<Texture2D> animation = new List<Texture2D>();
+                    List<GameTexture> animation = new List<GameTexture>();
                     for (int k = 1; k <= 32; k++)
                     {
+                        string name ="" + (EntityID)i + (Animation)j + k ;
+                        Vector2 offset = Vector2.Zero;
+                        if (animationProperties?.Where(a => a.FullPath == name).Count() > 0)
+                        {
+                            offset = new Vector2(animationProperties.Where(a => a.FullPath == name).ToArray()[0].Offset.X, animationProperties.Where(a => a.FullPath == name).ToArray()[0].Offset.Y);
+                        }
                         try
                         {
 
-                            animation.Add(content.Load<Texture2D>("Entities\\" + (EntityID)i + (Animation)j + k));
-                            Console.WriteLine("Loaded: " + (EntityID)i + (Animation)j + k);
+                            animation.Add(new GameTexture(content.Load<Texture2D>("Entities\\" + name), offset));
+                            Console.WriteLine("Loaded: " + name);
                         }
                         catch (Exception)
                         {
@@ -85,6 +118,7 @@ namespace RPGMultiplayerGame.Managers
                     }
                     animations.Add((Animation)j, animation);
                 }
+               
                 animationsByEntities.Add((EntityID) i, animations);
             }
 

@@ -55,8 +55,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected void UpdateDrawOffset()
         {
-            healthBarOffset = new Vector2(size.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
-            nameFontOffset = new Vector2(size.X / 2 - nameFontSize.X / 2, -healthBarBackground.Height - 2 - nameFontSize.Y);
+            healthBarOffset = new Vector2(baseSize.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
+            nameFontOffset = new Vector2(baseSize.X / 2 - nameFontSize.X / 2, -healthBarBackground.Height - 2 - nameFontSize.Y);
         }
 
         public override void Draw(SpriteBatch sprite)

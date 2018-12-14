@@ -21,10 +21,17 @@ namespace RPGMultiplayerGame.Managers
         public T Load(string path)
         {
             T instance;
-            using (TextReader reader = new StreamReader(path))
+            try
             {
-                XmlSerializer xml = new XmlSerializer(Type);
-                instance = (T)xml.Deserialize(reader);
+                using (TextReader reader = new StreamReader(path))
+                {
+                    XmlSerializer xml = new XmlSerializer(Type);
+                    instance = (T)xml.Deserialize(reader);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
             return instance;
         }

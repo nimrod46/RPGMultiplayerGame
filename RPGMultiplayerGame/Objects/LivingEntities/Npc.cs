@@ -25,6 +25,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private int unit;
         public Npc(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
         {
+            syncDirection = (int)Direction.Idle;
+            syncCurrentAnimationType = (int)Animation.IdleDown;
         }
 
         public override void OnNetworkInitialize()
@@ -34,8 +36,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             layer -= 0.1f;
             controling = true;
             syncIsMoving = false;
-            syncDirection = (int)Direction.Idle;
-            syncCurrentAnimationType = (int)Animation.IdleDown;
+           
         }
 
         public override void Update(GameTime gameTime)
