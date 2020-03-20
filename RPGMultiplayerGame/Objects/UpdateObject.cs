@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Networking;
 namespace RPGMultiplayerGame.Objects
 {
     public abstract class UpdateObject : GraphicObject
@@ -17,7 +17,7 @@ namespace RPGMultiplayerGame.Objects
             layer -= 0.01f;
             if (isServerAuthority)
             {
-                NetworkManager.Instance.AddServerGameObject(this);
+                ServerManager.Instance.AddServerGameObject(this);
             }
         }
 
@@ -25,10 +25,10 @@ namespace RPGMultiplayerGame.Objects
         {
         }
 
-        public override void OnDestroyed()
+        public override void OnDestroyed(NetworkIdentity identity)
         {
             GameManager.Instance.RemoveUpdateObject(this);
-            base.OnDestroyed();
+            base.OnDestroyed(identity);
         }
     }
 }

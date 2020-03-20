@@ -84,6 +84,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             SetTexture();
             timeSinceLastFrame = 0;
         }
+
         MapObjectLib block = null;
         Rectangle rect;
         System.Drawing.Rectangle rectt;

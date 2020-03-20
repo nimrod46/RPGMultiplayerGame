@@ -46,10 +46,10 @@ namespace RPGMultiplayerGame.Objects
             }
         }
 
-        public override void OnDestroyed()
+        public override void OnDestroyed(NetworkIdentity identity)
         {
             GameManager.Instance.RemoveGraphicObject(this);
-            base.OnDestroyed();
+            base.OnDestroyed(identity);
         }
     }
 }

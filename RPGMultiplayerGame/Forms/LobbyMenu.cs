@@ -22,12 +22,12 @@ namespace RPGMultiplayerGame
         {
             InitializeComponent();
             this.gameForm = gameForm;
-            NetworkManager.Instance.Init(ref LobbyList);
+            ClientManager.Instance.Init(ref LobbyList);
         }
 
         private void Connect_Click(object sender, EventArgs e)
         {
-            if (NetworkManager.Instance.Connect())
+            if (ClientManager.Instance.Connect())
             {
                 OnConnectionEstablished.Invoke(this);
             }
@@ -36,13 +36,13 @@ namespace RPGMultiplayerGame
         private void AddServer_Click(object sender, EventArgs e)
         {
 
-            NetworkManager.Instance.AddServer();
+            ClientManager.Instance.AddServer();
         }
 
         private void Refresh_Click(object sender, EventArgs e)
         {
 
-            NetworkManager.Instance.Refersh();
+            ClientManager.Instance.Refersh();
         }
 
         private void Remove_Click(object sender, EventArgs e)
@@ -50,19 +50,19 @@ namespace RPGMultiplayerGame
             if (LobbyList.SelectedItems.Count > 0)
             {
                 ListViewItem item = LobbyList.SelectedItems[0];
-                NetworkManager.Instance.Remove(item);
+                ClientManager.Instance.Remove(item);
             }
         }
 
         private void StartServer_Click(object sender, EventArgs e)
         {
-            NetworkManager.Instance.StartServer();
+            ServerManager.Instance.StartServer();
             OnServerOnline.Invoke(this);
         }
 
         private void LobbyMenu_Shown(object sender, EventArgs e)
         {
-            NetworkManager.Instance.lobby.LoadFromFile();
+            ClientManager.Instance.lobby.LoadFromFile();
         }
     }
 }

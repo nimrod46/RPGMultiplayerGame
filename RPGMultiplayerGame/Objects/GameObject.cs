@@ -20,7 +20,13 @@ namespace RPGMultiplayerGame.Objects
         protected Point size;
         protected bool controling = false;
         protected object movmentLock = new object();
-        public override void OnNetworkInitialize()
+
+        public GameObject()
+        {
+            OnNetworkInitializeEvent += OnNetworkInitialize;
+            OnDestroyEvent += OnDestroyed;
+        }
+        public virtual void OnNetworkInitialize()
         {
             Location = new Vector2(SyncX, SyncY);
             GameManager.Instance.AddGameObject(this);
@@ -49,7 +55,7 @@ namespace RPGMultiplayerGame.Objects
             }
         }
 
-        public override void OnDestroyed()
+        public virtual void OnDestroyed(NetworkIdentity identity)
         {
             GameManager.Instance.RemoveGameObject(this);
         }

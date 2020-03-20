@@ -10,7 +10,7 @@ namespace RPGMultiplayerGame.MapObjects
         {
             base.OnNetworkInitialize();
             GameManager.Instance.spawnPoint = this;
-            NetworkManager.Instance.UpdateSpawnLocation(this);
+            ServerManager.Instance.UpdateSpawnLocation(this);
         }
     }
 }

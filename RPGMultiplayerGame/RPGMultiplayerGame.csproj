@@ -83,6 +83,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Managers\ClientManager.cs" />
+    <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
     <Compile Include="Objects\LivingEntities\Joe.cs" />
     <Compile Include="Objects\LivingEntities\Waypoint.cs" />
@@ -119,7 +121,8 @@
     <Compile Include="TextInput.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Map">
+    <Reference Include="Map, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Map\Map\bin\Debug\Map.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
@@ -133,7 +136,8 @@
       <HintPath>..\..\..\..\source\repos\OffsetGeneratorLib\OffsetGeneratorLib\bin\Debug\OffsetGeneratorLib.dll</HintPath>
     </Reference>
     <Reference Include="PostSharp, Version=6.0.29.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\packages\PostSharp.Redist.6.0.29\lib\net45\PostSharp.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NetworkBehavior\NetworkBehavior\bin\Debug\PostSharp.dll</HintPath>
     </Reference>
     <Reference Include="ServerLobby, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

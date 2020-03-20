@@ -36,12 +36,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             layer -= 0.2f;
         }
 
-        public override void OnLocalPlayerInitialize()
+        public void InitName()
         {
-            if (isServerAuthority)
-            {
-                return;
-            }
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
             layer = 0f;
             CmdCheckName(this, TextInput.getText("Name"));
@@ -84,16 +80,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public override void OnDestroyed()
+        public override void OnDestroyed(NetworkIdentity identity)
         {
-            base.OnDestroyed();
+            base.OnDestroyed(identity);
             InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
         } 
 
         [Command]
         protected void CmdCheckName(Player client, string name)
         {
-            if (NetworkManager.Instance.IsNameLegal(name))
+            if (ServerManager.Instance.IsNameLegal(name))
             {
                 client.CmdSetName(name);
             } 

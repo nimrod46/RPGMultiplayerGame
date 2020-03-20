@@ -21,7 +21,7 @@ namespace RPGMultiplayerGame
 
         private void LoadMap_Click(object sender, EventArgs e)
         {
-            if (!NetworkManager.Instance.NetBehavior.isServer)
+            if (!ServerManager.Instance.isServer)
             {
                 return;
             }
@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame
                 return;
             }
             XmlManager<GameMap> xml = new XmlManager<GameMap>();
-            NetworkManager.Instance.LoadMap(xml.Load(openFileDialog.FileName));
+            ServerManager.Instance.LoadMap(xml.Load(openFileDialog.FileName));
         }
     }
 }

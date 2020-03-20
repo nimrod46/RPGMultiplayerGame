@@ -77,14 +77,14 @@ namespace RPGMultiplayerGame
               //  Console.WriteLine("RUNING SLOWWWW");
             }
             base.Update(gameTime);
-            if (NetworkManager.Instance.NetBehavior?.isServer != true)
+            if (ClientManager.Instance.isServer != true)
             {
                 GameManager.Instance.Update(gameTime);
                 InputManager.Instance.Update(gameTime);
             }
             else
             {
-                NetworkManager.instance.Update(gameTime);
+                ServerManager.instance.Update(gameTime);
             }
         }
 
@@ -95,7 +95,7 @@ namespace RPGMultiplayerGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            if (NetworkManager.Instance.NetBehavior?.isServer != true)
+            if (ClientManager.Instance.isServer != true)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
                 GameManager.Instance.Draw(spriteBatch);
@@ -109,14 +109,14 @@ namespace RPGMultiplayerGame
             form.Hide();
             ServerPanel panel = new ServerPanel();
             panel.Show();
-            NetworkManager.Instance.Start();
+            //ClientManager.Instance.Start();
         }
 
         private void Lobby_OnConnecting(Form form)
         {
             form.Hide();
-            NetworkManager.Instance.OnStartGame += Instance_OnStartGame;
-            NetworkManager.Instance.Start();
+            ClientManager.Instance.OnStartGame += Instance_OnStartGame;
+            ClientManager.Instance.Start();
         }
 
         private void Instance_OnStartGame(object sender, EventArgs e)
