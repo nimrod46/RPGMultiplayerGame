@@ -62,7 +62,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 hasWaited = true;
             }
-
+            
             Vector2 heading = Location - nextPoint;
             Direction direction = GetDirection(heading);
             if (syncDirection != (int)direction) //next point

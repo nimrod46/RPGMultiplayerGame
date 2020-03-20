@@ -56,11 +56,9 @@ namespace RPGMultiplayerGame.Managers
 
         public void LoadMap(GameMap gameMap)
         {
-                Console.WriteLine("LOADING");
             GameManager.Instance.map = gameMap;
             foreach (MapObjectLib obj in gameMap.GraphicObjects)
             {
-                Console.WriteLine(obj);
                 GameObject gObject = null;
                 if (obj is NpcLib)
                 {

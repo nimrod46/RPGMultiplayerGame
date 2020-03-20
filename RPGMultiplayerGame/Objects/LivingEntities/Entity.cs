@@ -59,7 +59,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             //}
             if (!hasFieldsBeenInitialized && hasAuthority)
             {
-                hasInitialized = true;
                 syncCurrentAnimationType = (int)Animation.IdleDown;
                 syncIsMoving = false;
                 syncDirection = (int)Direction.Down;

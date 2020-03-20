@@ -109,7 +109,6 @@ namespace RPGMultiplayerGame.Managers
                         {
 
                             animation.Add(new GameTexture(content.Load<Texture2D>("Entities\\" + name), offset));
-                            Console.WriteLine("Loaded: " + name);
                         }
                         catch (Exception)
                         {

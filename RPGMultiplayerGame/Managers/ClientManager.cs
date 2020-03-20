@@ -39,7 +39,6 @@ namespace RPGMultiplayerGame.Managers
 
         private void OnLocalIdentityInitialize(NetworkIdentity client)
         {
-            Console.WriteLine("PLASYER INIT");
             if (client is Player)
             {
                 Player player = (client as Player);
