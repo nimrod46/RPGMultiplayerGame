@@ -47,9 +47,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             healthBarSize.X = syncHealth * healthBar.Width / maxHealth;
         }
 
-        public override void SetTexture()
+        public override void UpdateTexture()
         {
-            base.SetTexture();
+            base.UpdateTexture();
             UpdateDrawOffset();
         }
 

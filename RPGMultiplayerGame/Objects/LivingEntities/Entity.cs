@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Idle,
         }
         protected Dictionary<Animation, List<GameTexture>> animations = new Dictionary<Animation, List<GameTexture>>();
-        [SyncVar(hook = "OnCurrentAnimationTypeSet", invokeInServer = false)]
+        [SyncVar(hook = "OnCurrentAnimationTypeSet")]
         protected int syncCurrentAnimationType;
         [SyncVar]
         protected int syncDirection;
@@ -53,10 +53,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void OnNetworkInitialize()
         {
-           // if (isServerAuthority)
-           // {
-            //    return;
-            //}
             if (!hasFieldsBeenInitialized && hasAuthority)
             {
                 syncCurrentAnimationType = (int)Animation.IdleDown;
@@ -66,11 +62,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             speed = 0.5f / 10;
             animationDelay = 100;
             layer -= 0.01f;
-            SetTexture();
+            UpdateTexture();
             base.OnNetworkInitialize();
         }
 
-        public virtual void SetTexture()
+        public virtual void UpdateTexture()
         {
             texture = animations[(Animation) syncCurrentAnimationType][currentAnimationIndex].Texture;
             size = (texture.Bounds.Size.ToVector2() * scale).ToPoint();
@@ -80,7 +76,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public void OnCurrentAnimationTypeSet()
         {
             currentAnimationIndex = 0;
-            SetTexture();
+            UpdateTexture();
             timeSinceLastFrame = 0;
         }
 
@@ -145,7 +141,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     currentAnimationIndex++;
                 }
-                SetTexture();
+                UpdateTexture();
             }
             base.Update(gameTime);
         }

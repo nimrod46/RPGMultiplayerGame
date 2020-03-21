@@ -27,10 +27,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 syncName = "null";
             }
-            if (isServerAuthority)
-            {
-                return;
-            }
+
             base.OnNetworkInitialize();
             speed *= 2;
             layer -= 0.2f;

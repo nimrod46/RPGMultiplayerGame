@@ -32,7 +32,6 @@ namespace RPGMultiplayerGame.Objects
             GameManager.Instance.AddGameObject(this);
         }
 
-
         protected virtual void OnXSet()
         {
             lock (movmentLock)
