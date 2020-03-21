@@ -10,11 +10,15 @@ namespace RPGMultiplayerGame.Objects
 {
     public abstract class UpdateObject : GraphicObject
     {
+        public UpdateObject()
+        {
+            layer -= 0.01f;
+        }
+
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
             GameManager.Instance.AddUpdateObject(this);
-            layer -= 0.01f;
             if (isServerAuthority)
             {
                 ServerManager.Instance.AddServerGameObject(this);

@@ -34,12 +34,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             syncHealth = maxHealth;
             healthBar = GameManager.Instance.HealthBar;
             healthBarBackground = GameManager.Instance.HealthBarBackground;
-        }
-
-        public override void OnNetworkInitialize()
-        {  
-            base.OnNetworkInitialize();
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
+            baseSize = (animations[GameManager.Animation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
         }
 
         public void OnHealthSet()

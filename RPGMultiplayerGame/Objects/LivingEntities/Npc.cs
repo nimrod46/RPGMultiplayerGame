@@ -26,14 +26,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             syncDirection = (int)Direction.Idle;
             syncCurrentAnimationType = (int)Animation.IdleDown;
-        }
-
-        public override void OnNetworkInitialize()
-        {
-            base.OnNetworkInitialize();
+            syncIsMoving = false;
             speed *= 0.5f;
             layer -= 0.1f;
-            syncIsMoving = false;
         }
 
         public override void Update(GameTime gameTime)

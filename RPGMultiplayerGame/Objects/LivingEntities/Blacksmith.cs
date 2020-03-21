@@ -14,7 +14,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             syncName = "Blacksmith";
             scale = 0.3f;
-            baseSize = (animations[GameManager.Animation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
         }
     }
 }

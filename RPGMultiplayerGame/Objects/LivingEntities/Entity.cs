@@ -49,21 +49,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             this.collisionOffsetX = collisionOffsetX;
             this.collisionOffsetY = collisionOffsetY;
             animations = GameManager.Instance.animationsByEntities[entityID];
+            syncCurrentAnimationType = (int)Animation.IdleDown;
+            syncIsMoving = false;
+            syncDirection = (int)Direction.Down;
+            speed = 0.5f / 10;
+            animationDelay = 100;
+            layer -= 0.01f;
         }
 
         public override void OnNetworkInitialize()
         {
-            if (!hasFieldsBeenInitialized && hasAuthority)
-            {
-                syncCurrentAnimationType = (int)Animation.IdleDown;
-                syncIsMoving = false;
-                syncDirection = (int)Direction.Down;
-            }
-            speed = 0.5f / 10;
-            animationDelay = 100;
-            layer -= 0.01f;
-            UpdateTexture();
             base.OnNetworkInitialize();
+            UpdateTexture();
         }
 
         public virtual void UpdateTexture()

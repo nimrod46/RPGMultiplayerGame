@@ -18,25 +18,22 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public Player() : base(EntityID.Player, 0, 10, 100, GameManager.Instance.PlayerName)
         {
             scale = 1;
-            baseSize = (animations[GameManager.Animation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
-        }
-
-        public override void OnNetworkInitialize()
-        {
-            if (!hasFieldsBeenInitialized)
-            {
-                syncName = "null";
-            }
-
-            base.OnNetworkInitialize();
             speed *= 2;
             layer -= 0.2f;
+            syncName = "null";
+        }
+        public override void OnNetworkInitialize()
+        {
+            base.OnNetworkInitialize();
+            if(hasAuthority)
+            {
+                layer = 0f;
+            }
         }
 
         public void InitName()
         {
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
-            layer = 0f;
             CmdCheckName(this, TextInput.getText("Name"));
         }
 
