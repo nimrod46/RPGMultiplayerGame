@@ -37,7 +37,7 @@ namespace RPGMultiplayerGame.Objects
         {
             if (texture != null)
             {
-                drawLocation = new Vector2(Location.X + offset.X, Location.Y + offset.Y);
+                drawLocation = new Vector2(SyncX + offset.X, SyncY + offset.Y);
                 sprite.Draw(texture, drawLocation, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, layer);
             }
             else

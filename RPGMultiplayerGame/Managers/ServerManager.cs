@@ -62,7 +62,7 @@ namespace RPGMultiplayerGame.Managers
                 GameObject gObject = null;
                 if (obj is NpcLib)
                 {
-                    gObject = new Blacksmith();
+                    gObject = new Joe();
 
                 }
                 else if (obj is SpawnLib)

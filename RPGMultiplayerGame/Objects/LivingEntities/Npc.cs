@@ -51,22 +51,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
-            currentTime += gameTime.ElapsedGameTime.TotalSeconds;
-            if (!hasWaited && currentPointTime != 0 && currentTime < currentPointTime)
+           
+            if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f || !syncIsMoving) //next point
             {
-                StopMoving();
                 currentTime += gameTime.ElapsedGameTime.TotalSeconds;
-                return;
-            }
-            else
-            {
-                hasWaited = true;
-            }
-            
-            Vector2 heading = Location - nextPoint;
-            Direction direction = GetDirection(heading);
-            if (syncDirection != (int)direction) //next point
-            {
+                if (currentPointTime != 0 && currentTime < currentPointTime)
+                {
+                    if (syncIsMoving)
+                    {
+                        StopMoving();
+                    }
+                    return;
+                }
+
                 if (path.Count == nextWaypointIndex + 1)
                 {
                     unit = -1;
@@ -75,15 +72,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     unit = 1;
                 }
-                SyncX = Location.X;
-                SyncY = Location.Y;
                 nextWaypointIndex += unit;
                 currentPointTime = path[nextWaypointIndex].SyncTime;
-                nextPoint = path[nextWaypointIndex].Location;
+                nextPoint = new Vector2(path[nextWaypointIndex].SyncX, path[nextWaypointIndex].SyncY);
                 currentTime = 0;
-                hasWaited = false;
-                heading = Location - nextPoint;
-                direction = GetDirection(heading);
+                Vector2 heading = new Vector2(SyncX, SyncY) - nextPoint;
+                Direction direction = GetDirection(heading);
                 StartMoving(direction);
             }
         }
@@ -111,34 +105,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             return direction;
         }
 
-        protected override void OnXSet()
-        {
-            if (!hasAuthority)
-            {
-                if (MathHelper.Distance(Location.X, SyncX) >= 2)
-                {
-                    Location = new Vector2(SyncX, Location.Y);
-                }
-            }
-        }
-
-        protected override void OnYSet()
-        {
-            if (!hasAuthority)
-            {
-                if (MathHelper.Distance(Location.Y, SyncY) >= 2)
-                {
-                    Location = new Vector2(Location.X, SyncY);
-                }
-            }
-        }
-
         public void AddWaypoint(Waypoint waypoint)
         {
             if (!path.Contains(waypoint))
             {
                 path.Add(waypoint);
-                nextPoint = path[0].Location;
+                nextPoint = new Vector2(path[0].SyncX, path[0].SyncY);
             }
         }
     }

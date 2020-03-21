@@ -92,7 +92,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     if (controling)
                     {
                         double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
-                        Vector2 newLocation = new Vector2(Location.X, Location.Y);
+                        Vector2 newLocation = new Vector2(SyncX, SyncY);
                         switch ((Direction)syncDirection)
                         {
                             case Direction.Up:
@@ -120,7 +120,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         }
                         if (block == null)
                         {
-                            Location = newLocation;
+                            SyncX = newLocation.X;
+                            SyncY = newLocation.Y;
                         }
                         else
                         {
@@ -179,7 +180,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 SyncX = spawnPoint.SyncX;
                 SyncY = spawnPoint.SyncY;
-                Location = new Vector2(SyncX, SyncY);
             }
             SetSpawnPointLocaly(spawnPoint);
         }

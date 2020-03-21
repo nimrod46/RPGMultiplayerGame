@@ -14,11 +14,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         [SyncVar(hook = "OnNpcIdSet")]
         public int SyncNpcId { get; set; }
 
-        public override void OnNetworkInitialize()
-        {
-            base.OnNetworkInitialize();
-        }
-
         protected void OnNpcIdSet()
         {
             if (SyncNpcId != 0)
@@ -39,7 +34,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (obj is Waypoint wayPoint)
             {
-                return wayPoint.Location.X == Location.X && wayPoint.Location.Y == Location.Y && wayPoint.SyncTime == SyncTime && wayPoint.SyncNpcId == SyncNpcId;
+                return wayPoint.SyncX == SyncX && wayPoint.SyncY == SyncY && wayPoint.SyncTime == SyncTime && wayPoint.SyncNpcId == SyncNpcId;
             }
             return false;
         }

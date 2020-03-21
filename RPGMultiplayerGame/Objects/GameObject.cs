@@ -12,10 +12,9 @@ namespace RPGMultiplayerGame.Objects
 {
     public abstract class GameObject : NetworkIdentity
     {
-        public Vector2 Location { get; set; }
-        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnXSet")]
+        [SyncVar(networkInterface = NetworkInterface.UDP)]
         public float SyncX { get; set; }
-        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
+        [SyncVar(networkInterface = NetworkInterface.UDP)]
         public float SyncY { get; set; }
         protected Point size;
         protected bool controling = false;
@@ -28,30 +27,7 @@ namespace RPGMultiplayerGame.Objects
         }
         public virtual void OnNetworkInitialize()
         {
-            Location = new Vector2(SyncX, SyncY);
             GameManager.Instance.AddGameObject(this);
-        }
-
-        protected virtual void OnXSet()
-        {
-            lock (movmentLock)
-            {
-                if (!hasAuthority)
-                {
-                    Location = new Vector2(SyncX, Location.Y);
-                }
-            }
-        }
-
-        protected virtual void OnYSet()
-        {
-            lock (movmentLock)
-            {
-                if (!hasAuthority)
-                {
-                    Location = new Vector2(Location.X, SyncY);
-                }
-            }
         }
 
         public virtual void OnDestroyed(NetworkIdentity identity)

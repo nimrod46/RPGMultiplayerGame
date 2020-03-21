@@ -70,11 +70,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (hasAuthority)
-            {
-                SyncX = Location.X;
-                SyncY = Location.Y;
-            }
         }
 
         public override void OnDestroyed(NetworkIdentity identity)
