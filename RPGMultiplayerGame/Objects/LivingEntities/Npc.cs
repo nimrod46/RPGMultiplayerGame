@@ -31,7 +31,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            speed *= 2f;
+            speed *= 0.5f;
             layer -= 0.1f;
             syncIsMoving = false;
         }
