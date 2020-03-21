@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected int syncCurrentAnimationType;
         [SyncVar]
         protected int syncDirection;
-        [SyncVar]
+        [SyncVar(hook = "OnIsMovingSet")]
         protected bool syncIsMoving;
         protected EntityID entityID;
         protected float speed;
@@ -80,6 +80,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             timeSinceLastFrame = 0;
         }
 
+        public void OnIsMovingSet()
+        {
+            if (!hasAuthority)
+            {
+                lock (movmentLock)
+                {
+                    Location = new Vector2(SyncX, SyncY);
+                }
+            }
+        }
+
         MapObjectLib block = null;
         Rectangle rect;
         System.Drawing.Rectangle rectt;
@@ -89,44 +100,45 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 if (syncIsMoving)
                 {
-                    if (controling)
+                    double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
+                    Vector2 newLocation = Location;
+                    switch ((Direction)syncDirection)
                     {
-                        double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
-                        Vector2 newLocation = new Vector2(SyncX, SyncY);
-                        switch ((Direction)syncDirection)
+                        case Direction.Up:
+                            newLocation.Y -= (float)movment;
+                            break;
+                        case Direction.Down:
+                            newLocation.Y += (float)movment;
+                            break;
+                        case Direction.Left:
+                            newLocation.X -= (float)movment;
+                            break;
+                        case Direction.Right:
+                            newLocation.X += (float)movment;
+                            break;
+                    }
+                    rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
+                    rectt = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+                    for (int i = 0; i < GameManager.Instance.map.GraphicObjects.Count; i++)
+                    {
+                        if (GameManager.Instance.map.GraphicObjects[i] is BlockLib && GameManager.Instance.map.GraphicObjects[i].Layer > 0 && GameManager.Instance.map.GraphicObjects[i].Rectangle.IntersectsWith(rectt))
                         {
-                            case Direction.Up:
-                                newLocation.Y -= (float)movment;
-                                break;
-                            case Direction.Down:
-                                newLocation.Y += (float)movment;
-                                break;
-                            case Direction.Left:
-                                newLocation.X -= (float)movment;
-                                break;
-                            case Direction.Right:
-                                newLocation.X += (float)movment;
-                                break;
+                            block = GameManager.Instance.map.GraphicObjects[i];
+                            break;
                         }
-                        rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
-                        rectt = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
-                        for (int i = 0; i < GameManager.Instance.map.GraphicObjects.Count; i++)
-                        {
-                            if (GameManager.Instance.map.GraphicObjects[i] is BlockLib && GameManager.Instance.map.GraphicObjects[i].Layer > 0 && GameManager.Instance.map.GraphicObjects[i].Rectangle.IntersectsWith(rectt))
-                            {
-                                block = GameManager.Instance.map.GraphicObjects[i];
-                                break;
-                            }
-                        }
-                        if (block == null)
+                    }
+                    if (block == null)
+                    {
+                        if (hasAuthority)
                         {
                             SyncX = newLocation.X;
                             SyncY = newLocation.Y;
                         }
-                        else
-                        {
-                            block = null;
-                        }
+                        Location = newLocation;
+                    }
+                    else
+                    {
+                        block = null;
                     }
                 }
             }
@@ -159,7 +171,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             syncCurrentAnimationType = (int)direction;
         }
 
-        protected void StopMoving()
+        public void StopMoving()
         {
             if (syncIsMoving)
             {

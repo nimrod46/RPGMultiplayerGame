@@ -12,12 +12,12 @@ namespace RPGMultiplayerGame.Objects
 {
     public abstract class GameObject : NetworkIdentity
     {
-        [SyncVar(networkInterface = NetworkInterface.UDP)]
+        public Vector2 Location { get; set; }
+        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnXSet")]
         public float SyncX { get; set; }
-        [SyncVar(networkInterface = NetworkInterface.UDP)]
+        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
         public float SyncY { get; set; }
         protected Point size;
-        protected bool controling = false;
         protected object movmentLock = new object();
 
         public GameObject()
@@ -25,9 +25,32 @@ namespace RPGMultiplayerGame.Objects
             OnNetworkInitializeEvent += OnNetworkInitialize;
             OnDestroyEvent += OnDestroyed;
         }
+
         public virtual void OnNetworkInitialize()
         {
             GameManager.Instance.AddGameObject(this);
+            Location = new Vector2(SyncX, SyncY);
+        }
+
+        public virtual void OnXSet()
+        {
+                lock (movmentLock) {
+                if (MathHelper.Distance(Location.X, SyncX) >= 5f)
+                {
+                    Location = new Vector2(SyncX, Location.Y);
+                }
+            }
+        }
+
+        public virtual void OnYSet()
+        {
+            lock (movmentLock)
+            {
+                if (MathHelper.Distance(Location.Y, SyncY) >= 5f)
+                {
+                    Location = new Vector2(Location.X, SyncY);
+                }
+            }
         }
 
         public virtual void OnDestroyed(NetworkIdentity identity)

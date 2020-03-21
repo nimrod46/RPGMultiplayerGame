@@ -22,6 +22,7 @@ namespace RPGMultiplayerGame
             Content.RootDirectory = "Content";
             gameForm = Control.FromHandle(Window.Handle) as Form;
             IsFixedTimeStep = true;
+            InactiveSleepTime = new TimeSpan(0);
         }
 
         /// <summary>

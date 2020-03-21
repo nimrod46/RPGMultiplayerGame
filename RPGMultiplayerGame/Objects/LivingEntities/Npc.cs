@@ -20,7 +20,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private double currentTime = 0;
         private double currentPointTime = 0;
         private int nextWaypointIndex = 0;
-        private bool hasWaited = false;
         private Vector2 nextPoint = Vector2.Zero;
         private int unit;
         public Npc(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
@@ -32,11 +31,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            speed *= 0.5f;
+            speed *= 2f;
             layer -= 0.1f;
-            controling = true;
             syncIsMoving = false;
-           
         }
 
         public override void Update(GameTime gameTime)
