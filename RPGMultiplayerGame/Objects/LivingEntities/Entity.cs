@@ -17,7 +17,7 @@ using static RPGMultiplayerGame.Managers.GameManager;
 namespace RPGMultiplayerGame.Objects.LivingEntities
 
 {
-    abstract class Entity : UpdateObject
+    public abstract class Entity : UpdateObject
     {
         public enum Direction
         {
@@ -164,8 +164,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected void StartMoving(Direction direction)
         {
             syncIsMoving = true;
+            LookAtDir(direction, false);
+        }
+
+        protected void LookAtDir(Direction direction, bool isIdleLook)
+        {
             syncDirection = (int)direction;
-            syncCurrentAnimationType = (int)direction;
+            syncCurrentAnimationType = (int)direction + (isIdleLook ? 4 : 0);
         }
 
         public void StopMoving()
@@ -173,7 +178,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (syncIsMoving)
             {
                 syncIsMoving = false;
-                syncCurrentAnimationType += (int) Enum.GetValues(typeof(Direction)).Cast<Direction>().Max();
+                syncCurrentAnimationType += 4;
             }
         }
 

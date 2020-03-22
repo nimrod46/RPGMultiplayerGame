@@ -11,9 +11,9 @@ using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
-    class Player : Human
+    public class Player : Human
     {
-        List<Keys> currentArrowsKeysPressed = new List<Keys>();
+        readonly List<Keys> currentArrowsKeysPressed = new List<Keys>();
         public event EventHandler OnPlayerNameSet;
         public Player() : base(EntityID.Player, 0, 10, 100, GameManager.Instance.PlayerName)
         {

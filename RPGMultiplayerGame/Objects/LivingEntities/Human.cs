@@ -11,7 +11,7 @@ using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
-    abstract class Human : Entity
+    public abstract class Human : Entity
     {
         [SyncVar(hook = "OnNameSet")]
         protected string syncName;
@@ -58,12 +58,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
-            if (hasInitialized)
-            {
-                sprite.DrawString(nameFont, syncName, Location + nameFontOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
-                sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.001f);
-                sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
-            }
+            sprite.DrawString(nameFont, syncName, Location + nameFontOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
+            sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.001f);
+            sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
         }
 
         [Command]

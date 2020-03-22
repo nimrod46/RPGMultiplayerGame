@@ -32,6 +32,11 @@ namespace RPGMultiplayerGame.Objects
             Location = new Vector2(SyncX, SyncY);
         }
 
+        public Vector2 GetCenter()
+        {
+            return new Vector2(SyncX + size.X / 2, SyncY + size.Y / 2);
+        }
+
         public virtual void OnXSet()
         {
                 lock (movmentLock) {

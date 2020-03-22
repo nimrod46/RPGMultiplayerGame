@@ -14,7 +14,7 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 
 namespace RPGMultiplayerGame.Managers
 {
-    class GameManager
+    public class GameManager
     {
         public enum EntityID
         {

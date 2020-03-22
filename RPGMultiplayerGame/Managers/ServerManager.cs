@@ -27,8 +27,8 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        readonly List<Player> players = new List<Player>();
-        readonly List<UpdateObject> serverObjects = new List<UpdateObject>();
+        public readonly List<Player> players = new List<Player>();
+        public readonly List<UpdateObject> serverObjects = new List<UpdateObject>();
 
 
         public void StartServer()
