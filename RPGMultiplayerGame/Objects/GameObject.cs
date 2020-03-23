@@ -12,12 +12,12 @@ namespace RPGMultiplayerGame.Objects
 {
     public abstract class GameObject : NetworkIdentity
     {
-        public Vector2 Location { get; set; }
+        public virtual Vector2 Location { get; set; }
         [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnXSet")]
-        public float SyncX { get; set; }
+        public virtual float SyncX { get; set; }
         [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
-        public float SyncY { get; set; }
-        public Point Size { get; set; }
+        public virtual float SyncY { get; set; }
+        public virtual Point Size { get; set; }
         public Point BaseSize { get; set; }
 
 
@@ -35,35 +35,34 @@ namespace RPGMultiplayerGame.Objects
             Location = new Vector2(SyncX, SyncY);
         }
 
-        public Vector2 GetCenter()
+        public virtual Vector2 GetCenter()
         {
             return new Vector2(SyncX + Size.X / 2, SyncY + Size.Y / 2);
         }
 
-        public Vector2 GetBaseCenter()
+        public virtual Vector2 GetBaseCenter()
         {
             return new Vector2(SyncX + BaseSize.X / 2.0f, SyncY + BaseSize.Y / 2.0f);
+        }
+       
+        public virtual Rectangle GetBaseBoundingRectangle()
+        {
+            return new Rectangle((int)SyncX, (int)SyncY, BaseSize.X, BaseSize.Y);
         }
 
         public virtual void OnXSet()
         {
-            lock (movmentLock)
+            if (MathHelper.Distance(Location.X, SyncX) >= 5f)
             {
-                if (MathHelper.Distance(Location.X, SyncX) >= 5f)
-                {
-                    Location = new Vector2(SyncX, Location.Y);
-                }
+                Location = new Vector2(SyncX, Location.Y);
             }
         }
 
         public virtual void OnYSet()
         {
-            lock (movmentLock)
+            if (MathHelper.Distance(Location.Y, SyncY) >= 5f)
             {
-                if (MathHelper.Distance(Location.Y, SyncY) >= 5f)
-                {
-                    Location = new Vector2(Location.X, SyncY);
-                }
+                Location = new Vector2(Location.X, SyncY);
             }
         }
 

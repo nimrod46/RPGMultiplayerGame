@@ -10,6 +10,7 @@ using Networking;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.Weapons;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -47,11 +48,22 @@ namespace RPGMultiplayerGame.Managers
             {
                 Player player = (Player) NetBehavior.spawnWithClientAuthority(typeof(Player), id);
                 players.Add(player);
+                player.OnDestroyEvent += Player_OnDestroyEvent;
+                Weapon weapon = (Weapon) NetBehavior.spawnWithClientAuthority(typeof(OldSword), id);
+                player.EquipeWith(weapon);
 
                 if (GameManager.Instance.spawnPoint != null)
                 {
                     player.SetSpawnPoint(GameManager.Instance.spawnPoint);
                 }
+            }
+        }
+
+        private void Player_OnDestroyEvent(NetworkIdentity identity)
+        {
+            lock(players)
+            {
+                players.Remove((Player) identity);
             }
         }
 

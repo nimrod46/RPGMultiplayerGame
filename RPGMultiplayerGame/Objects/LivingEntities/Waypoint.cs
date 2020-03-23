@@ -20,6 +20,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 (NetworkBehavior.GetNetworkIdentityById(SyncNpcId) as Npc).AddWaypoint(this);
             }
+            else
+            {
+                Console.WriteLine("Warning: call to OnNpcIdSet with no SyncNpcId");
+            }
         }
 
         public override int GetHashCode()

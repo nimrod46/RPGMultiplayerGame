@@ -30,9 +30,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public Npc(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
         {
-            syncDirection = (int)Direction.Idle;
-            syncCurrentAnimationType = (int)Animation.IdleDown;
-            syncIsMoving = false;
+            currentDirection = (int)Direction.Down;
+            currentAnimationType = (int)Animation.IdleDown;
             speed *= 0.5f;
             LookingAtPlayer = false;
         }
@@ -42,6 +41,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
             if (nextPoint == Vector2.Zero)
             {
+            //Console.WriteLine("NO POINTSSS");
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             for (int i = 0; i < ServerManager.Instance.players.Count; i++)
             {
                 Player player = ServerManager.Instance.players[i];
-                float distance = Vector2.Distance(player.GetCenter(), GetCenter());
+                float distance = Vector2.Distance(player.GetBaseCenter(), GetBaseCenter());
 
                 if (distance < minDistance)
                 {
@@ -67,33 +67,29 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             
             if (closestPlayer != null)
             {
-                if(syncIsMoving)
-                {
-                    StopMoving();
-                }
                 LookingAtPlayer = true;
-                Vector2 heading = GetCenter() - closestPlayer.GetCenter();
+                Vector2 heading = GetBaseCenter() - closestPlayer.GetBaseCenter();
                 Direction direction = GetDirection(heading);
-                IdleAtDir(direction);
+                SetCurrentEntityState((int)EntityState.Idle, (int)direction);
                 return;
             }
 
-            if(LookingAtPlayer)
+            if (LookingAtPlayer)
             {
                 LookingAtPlayer = false;
                 Vector2 heading = new Vector2(SyncX, SyncY) - nextPoint;
                 Direction direction = GetDirection(heading);
-                StartMoving(direction);
+                SetCurrentEntityState((int)EntityState.Moving, (int)direction);
             }
-           
-            if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f || !syncIsMoving) //next point
+
+            if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f || !(GetCurrentEnitytState() == EntityState.Moving)) //next point
             {
                 currentTime += gameTime.ElapsedGameTime.TotalSeconds;
                 if (currentPointTime != 0 && currentTime < currentPointTime)
                 {
-                    if (syncIsMoving)
+                    if (GetCurrentEnitytState() == EntityState.Moving)
                     {
-                        StopMoving();
+                        SetCurrentEntityState((int)EntityState.Idle, (int)currentDirection);
                     }
                     return;
                 }
@@ -112,7 +108,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 currentTime = 0;
                 Vector2 heading = new Vector2(SyncX, SyncY) - nextPoint;
                 Direction direction = GetDirection(heading);
-                StartMoving(direction);
+                SetCurrentEntityState((int)EntityState.Moving, (int)direction);
             }
         }
 

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Networking;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Weapons;
 using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
@@ -15,6 +16,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         readonly List<Keys> currentArrowsKeysPressed = new List<Keys>();
         public event EventHandler OnPlayerNameSet;
+
         public Player() : base(EntityID.Player, 0, 10, 100, GameManager.Instance.PlayerName)
         {
             scale = 1;
@@ -23,11 +25,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
         public override void OnNetworkInitialize()
         {
-            base.OnNetworkInitialize();
-            if(hasAuthority)
+            if (hasAuthority)
             {
-                DefaultLayer = GameManager.OWN_PLAYER_LAYER;
+                Layer = GameManager.OWN_PLAYER_LAYER;
             }
+            base.OnNetworkInitialize();
         }
 
         public void InitName()
@@ -43,7 +45,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 if (isDown)
                 {
                     Direction direction = (Direction)((int)key - (int)Keys.Left);
-                    StartMoving(direction);
+                    SetCurrentEntityState((int)EntityState.Moving, (int) direction);
                     currentArrowsKeysPressed.Insert(0, key);
                 }
                 else
@@ -51,13 +53,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     currentArrowsKeysPressed.RemoveAll(k => k == key);
                     if (currentArrowsKeysPressed.Count == 0)
                     {
-                        StopMoving();
+                        SetCurrentEntityState((int)EntityState.Idle, (int)currentDirection);
                     }
                     else
                     {
                         key = currentArrowsKeysPressed[0];
                         Direction direction = (Direction)((int)key - (int)Keys.Left);
-                        StartMoving(direction);
+                        SetCurrentEntityState((int)EntityState.Moving, (int)direction);
                     }
                 }
             }
@@ -67,24 +69,21 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (hasAuthority)
             {
-                if (InputManager.Instance.KeyPressed(Keys.X) && !isAttacking)
+                if (InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState() == EntityState.Attacking))
                 {
-                    StopMoving();
-                    AttackAtDir((Direction)syncDirection);
-                    isAttacking = true;
+                    SetCurrentEntityState((int)EntityState.Attacking, currentDirection);
                 }
                 else
                 {
-                    if (isAttacking)
+                    if (GetCurrentEnitytState() == EntityState.Attacking)
                     {
                         if(!InputManager.Instance.KeyDown(Keys.X) || getIsLoopAnimationFinished())
                         {
-                            isAttacking = false;
                             Instance_OnArrowsKeysStateChange(Keys.None, false);
                         }
                     }
-                }
-            }
+                }  
+            }   
             base.Update(gameTime);
         }
 

@@ -151,6 +151,25 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        public List<Entity> GetEntitiesHitBy(Entity attacker)
+        {
+            List<Entity> damagedEntities = new List<Entity>();
+            for (int i = 0; i < entities.Count; i++)
+            {
+                Entity entity = entities[i];
+                if (attacker == entity)
+                {
+                    continue;
+                }
+
+                if (attacker.Weapon.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                {
+                    damagedEntities.Add(entity);
+                }
+            }
+            return damagedEntities;
+        }
+
         public void Update(GraphicsDevice graphicsDevice,GameTime gameTime)
         {
             for (int i = 0; i < updateObjects.Count; i++)

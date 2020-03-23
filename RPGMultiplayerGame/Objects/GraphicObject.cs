@@ -36,12 +36,16 @@ namespace RPGMultiplayerGame.Objects
             DefaultLayer = Layer;
         }
 
+        public virtual Rectangle GetBoundingRectangle()
+        {
+            return new Rectangle((int)(SyncX + offset.X), (int)(SyncY + offset.Y), Size.X, Size.Y);
+        }
+
         public virtual void Draw(SpriteBatch sprite)
         {
             if (texture != null)
             {
-                drawLocation = new Vector2(Location.X + offset.X, Location.Y + offset.Y);
-                sprite.Draw(texture, drawLocation, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, Layer);
+                sprite.Draw(texture, Location + offset, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, Layer);
             }
             else
             {

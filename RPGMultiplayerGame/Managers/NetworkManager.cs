@@ -13,6 +13,7 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.MapObjects;
 using Microsoft.Xna.Framework;
+using RPGMultiplayerGame.Objects.Weapons;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -43,9 +44,8 @@ namespace RPGMultiplayerGame.Managers
             new Waypoint();
             new Joe();
             new Blacksmith();
+            new OldSword();
         }
-
-       
 
         public void AddServer()
         {
