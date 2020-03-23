@@ -32,6 +32,10 @@ namespace RPGMultiplayerGame.Managers
             IdleUp,
             IdleRight,
             IdleDown,
+            AttackLeft,
+            AttackUp,
+            AttackRight,
+            AttackDown,
         }
 
         public struct GameTexture
@@ -44,8 +48,6 @@ namespace RPGMultiplayerGame.Managers
                 Texture = image;
                 Offset = offset;
             }
-
-            
         }
 
 
@@ -61,7 +63,12 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        public const float OWN_PLAYER_LAYER = 0.001f;
+        public const float ENTITY_LAYER = 0.01f;
+        public const float CHARECTER_TEXT_LAYER = 0.9f;
+
         static GameManager instance;
+
 
         public Dictionary<EntityID, Dictionary<Animation, List<GameTexture>>> animationsByEntities = new Dictionary<EntityID, Dictionary<Animation, List<GameTexture>>>();
         public List<Texture2D> textures = new List<Texture2D>();
@@ -70,9 +77,10 @@ namespace RPGMultiplayerGame.Managers
         public SpriteFont PlayerName;
         public GameMap map;
         public SpawnPoint spawnPoint;
-        private List<GameObject> gameObjects = new List<GameObject>();
-        private List<GraphicObject> grapichObjects = new List<GraphicObject>();
-        private List<UpdateObject> updateObjects = new List<UpdateObject>();
+        private readonly List<GameObject> gameObjects = new List<GameObject>();
+        private readonly List<GraphicObject> grapichObjects = new List<GraphicObject>();
+        private readonly List<UpdateObject> updateObjects = new List<UpdateObject>();
+        private readonly List<Entity> entities = new List<Entity>();
 
         private GameManager()
         {
@@ -99,11 +107,11 @@ namespace RPGMultiplayerGame.Managers
                     List<GameTexture> animation = new List<GameTexture>();
                     for (int k = 1; k <= 32; k++)
                     {
-                        string name ="" + (EntityID)i + (Animation)j + k ;
+                        string name ="" + (EntityID)i + "\\" + (Animation)j + "\\" + k ;
                         Vector2 offset = Vector2.Zero;
-                        if (animationProperties?.Where(a => a.FullPath == name).Count() > 0)
+                        if (animationProperties?.Where(a => name.Contains(a.FullPath)).Count() > 0)
                         {
-                            offset = new Vector2(animationProperties.Where(a => a.FullPath == name).ToArray()[0].Offset.X, animationProperties.Where(a => a.FullPath == name).ToArray()[0].Offset.Y);
+                            offset = new Vector2(animationProperties.Where(a => name.Contains(a.FullPath)).ToArray()[0].Offset.X, animationProperties.Where(a => name.Contains(a.FullPath)).ToArray()[0].Offset.Y);
                         }
                         try
                         {
@@ -143,11 +151,28 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GraphicsDevice graphicsDevice,GameTime gameTime)
         {
             for (int i = 0; i < updateObjects.Count; i++)
             {
                 updateObjects[i].Update(gameTime);
+            }
+            int height = graphicsDevice.Viewport.Height;
+
+            for (int i = 0; i < entities.Count; i++)
+            {
+                Entity entity = entities[i];
+                Rectangle rectangle = new Rectangle(entity.Location.ToPoint(), entity.BaseSize);
+                float normalizedHieght = (float) rectangle.Bottom / height;
+                if (normalizedHieght > 1)
+                {
+                    normalizedHieght = 1;
+                }
+                if(normalizedHieght < 0)
+                {
+                    normalizedHieght = 0;
+                }
+                entity.Layer = 1 - normalizedHieght;
             }
         }
 
@@ -172,6 +197,22 @@ namespace RPGMultiplayerGame.Managers
             lock (gameObjects)
             {
                 gameObjects.Remove(obj);
+            }
+        }
+
+        public void AddEntity(Entity entity)
+        {
+            lock (entities)
+            {
+                entities.Add(entity);
+            }
+        }
+
+        public void RemoveEntity(Entity entity)
+        {
+            lock (entities)
+            {
+                entities.Remove(entity);
             }
         }
 

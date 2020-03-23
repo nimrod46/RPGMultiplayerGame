@@ -12,15 +12,18 @@ namespace RPGMultiplayerGame.Objects
 {
     public abstract class GraphicObject : GameObject
     {
-        
+        public float Layer { get; set; }
+        public float DefaultLayer { get; set; }
+
         protected Texture2D texture;
         protected Vector2 offset;
         protected Vector2 drawLocation;
-        protected float layer;
         protected float scale;
+
+
         public GraphicObject()
         {
-            layer = 1;
+            Layer = 1;
             scale = 1;
             offset = Vector2.Zero;
             drawLocation = Vector2.Zero;
@@ -30,6 +33,7 @@ namespace RPGMultiplayerGame.Objects
         {
             base.OnNetworkInitialize();
             GameManager.Instance.AddGraphicObject(this);
+            DefaultLayer = Layer;
         }
 
         public virtual void Draw(SpriteBatch sprite)
@@ -37,7 +41,7 @@ namespace RPGMultiplayerGame.Objects
             if (texture != null)
             {
                 drawLocation = new Vector2(Location.X + offset.X, Location.Y + offset.Y);
-                sprite.Draw(texture, drawLocation, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, layer);
+                sprite.Draw(texture, drawLocation, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, Layer);
             }
             else
             {

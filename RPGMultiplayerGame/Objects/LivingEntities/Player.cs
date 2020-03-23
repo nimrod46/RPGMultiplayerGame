@@ -19,7 +19,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             scale = 1;
             speed *= 2;
-            layer -= 0.2f;
             syncName = "null";
         }
         public override void OnNetworkInitialize()
@@ -27,7 +26,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.OnNetworkInitialize();
             if(hasAuthority)
             {
-                layer = 0f;
+                DefaultLayer = GameManager.OWN_PLAYER_LAYER;
             }
         }
 
@@ -66,6 +65,26 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void Update(GameTime gameTime)
         {
+            if (hasAuthority)
+            {
+                if (InputManager.Instance.KeyPressed(Keys.X) && !isAttacking)
+                {
+                    StopMoving();
+                    AttackAtDir((Direction)syncDirection);
+                    isAttacking = true;
+                }
+                else
+                {
+                    if (isAttacking)
+                    {
+                        if(!InputManager.Instance.KeyDown(Keys.X) || getIsLoopAnimationFinished())
+                        {
+                            isAttacking = false;
+                            Instance_OnArrowsKeysStateChange(Keys.None, false);
+                        }
+                    }
+                }
+            }
             base.Update(gameTime);
         }
 
@@ -73,7 +92,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.OnDestroyed(identity);
             InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
-        } 
+        }
 
         [Command]
         protected void CmdCheckName(Player client, string name)

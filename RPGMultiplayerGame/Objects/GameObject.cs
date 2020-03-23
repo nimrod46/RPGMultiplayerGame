@@ -17,7 +17,10 @@ namespace RPGMultiplayerGame.Objects
         public float SyncX { get; set; }
         [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
         public float SyncY { get; set; }
-        protected Point size;
+        public Point Size { get; set; }
+        public Point BaseSize { get; set; }
+
+
         protected object movmentLock = new object();
 
         public GameObject()
@@ -34,12 +37,18 @@ namespace RPGMultiplayerGame.Objects
 
         public Vector2 GetCenter()
         {
-            return new Vector2(SyncX + size.X / 2, SyncY + size.Y / 2);
+            return new Vector2(SyncX + Size.X / 2, SyncY + Size.Y / 2);
+        }
+
+        public Vector2 GetBaseCenter()
+        {
+            return new Vector2(SyncX + BaseSize.X / 2.0f, SyncY + BaseSize.Y / 2.0f);
         }
 
         public virtual void OnXSet()
         {
-                lock (movmentLock) {
+            lock (movmentLock)
+            {
                 if (MathHelper.Distance(Location.X, SyncX) >= 5f)
                 {
                     Location = new Vector2(SyncX, Location.Y);

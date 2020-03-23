@@ -2,9 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Networking;
 using RPGMultiplayerGame.Managers;
 using System;
+using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace RPGMultiplayerGame
 {
@@ -73,6 +76,8 @@ namespace RPGMultiplayerGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
                 Exit();
 
+            NetworkBehavior.RunActions();
+
             if (gameTime.IsRunningSlowly)
             {
               //  Console.WriteLine("RUNING SLOWWWW");
@@ -80,7 +85,7 @@ namespace RPGMultiplayerGame
             base.Update(gameTime);
             if (ClientManager.Instance.isServer != true)
             {
-                GameManager.Instance.Update(gameTime);
+                GameManager.Instance.Update(graphics.GraphicsDevice, gameTime);
                 InputManager.Instance.Update(gameTime);
             }
             else
@@ -110,7 +115,6 @@ namespace RPGMultiplayerGame
             form.Hide();
             ServerPanel panel = new ServerPanel();
             panel.Show();
-            //ClientManager.Instance.Start();
         }
 
         private void Lobby_OnConnecting(Form form)

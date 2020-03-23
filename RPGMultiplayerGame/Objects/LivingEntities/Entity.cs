@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Idle,
         }
         protected Dictionary<Animation, List<GameTexture>> animations = new Dictionary<Animation, List<GameTexture>>();
-        [SyncVar(hook = "OnCurrentAnimationTypeSet")]
+        [SyncVar(hook = "OnCurrentAnimationTypeSet", invokeThroughAction = true)]
         protected int syncCurrentAnimationType;
         [SyncVar]
         protected int syncDirection;
@@ -41,33 +41,36 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected int currentAnimationIndex;
         protected int collisionOffsetX;
         protected int collisionOffsetY;
-        protected Point baseSize;
+        protected bool shouldLoopAnimation;
 
         public Entity(EntityID entityID, int collisionOffsetX, int collisionOffsetY)
         {
             this.entityID = entityID;
             this.collisionOffsetX = collisionOffsetX;
             this.collisionOffsetY = collisionOffsetY;
-            animations = GameManager.Instance.animationsByEntities[entityID];
+            animations = new Dictionary<Animation, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityID]);
             syncCurrentAnimationType = (int)Animation.IdleDown;
             syncIsMoving = false;
             syncDirection = (int)Direction.Down;
             speed = 0.5f / 10;
             animationDelay = 100;
-            layer -= 0.01f;
+            Layer = GameManager.ENTITY_LAYER;
+            shouldLoopAnimation = true;
         }
 
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
             UpdateTexture();
+            GameManager.Instance.AddEntity(this);
         }
 
         public virtual void UpdateTexture()
         {
-            texture = animations[(Animation) syncCurrentAnimationType][currentAnimationIndex].Texture;
-            size = (texture.Bounds.Size.ToVector2() * scale).ToPoint();
-            offset = animations[(Animation)syncCurrentAnimationType][currentAnimationIndex].Offset * scale;
+            GameTexture gameTexture = animations[(Animation)syncCurrentAnimationType][currentAnimationIndex];
+            texture = gameTexture.Texture;
+            offset = gameTexture.Offset * scale;
+            Size = (texture.Bounds.Size.ToVector2() * scale).ToPoint();
         }
 
         public void OnCurrentAnimationTypeSet()
@@ -89,8 +92,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         MapObjectLib block = null;
-        Rectangle rect;
+        Rectangle newLocationRect;
         System.Drawing.Rectangle rectt;
+
+
         public override void Update(GameTime gameTime)
         {
             lock (movmentLock)
@@ -114,8 +119,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                             newLocation.X += (float)movment;
                             break;
                     }
-                    rect = GetCollisionRect(newLocation.X, newLocation.Y, texture.Width, texture.Height);
-                    rectt = new System.Drawing.Rectangle(rect.X, rect.Y, rect.Width, rect.Height);
+                    newLocationRect = GetCollisionRect(newLocation.X, newLocation.Y, Size.X, Size.Y);
+                    rectt = new System.Drawing.Rectangle(newLocationRect.X, newLocationRect.Y, newLocationRect.Width, newLocationRect.Height);
                     for (int i = 0; i < GameManager.Instance.map.GraphicObjects.Count; i++)
                     {
                         if (GameManager.Instance.map.GraphicObjects[i] is BlockLib && GameManager.Instance.map.GraphicObjects[i].Layer > 0 && GameManager.Instance.map.GraphicObjects[i].Rectangle.IntersectsWith(rectt))
@@ -139,13 +144,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
+
             timeSinceLastFrame += (int)(speed * 500);
             if (timeSinceLastFrame >= animationDelay)
             {
                 timeSinceLastFrame = 0;
-                if (currentAnimationIndex + 1 >= animations[(Animation)syncCurrentAnimationType].Count)
+                if (getIsLoopAnimationFinished())
                 {
-                    currentAnimationIndex = 0;
+                    if (shouldLoopAnimation)
+                    {
+                        currentAnimationIndex = 0;
+                    }
                 }
                 else
                 {
@@ -156,6 +165,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
         }
 
+        protected bool getIsLoopAnimationFinished()
+        {
+            return currentAnimationIndex + 1 >= animations[(Animation)syncCurrentAnimationType].Count;
+        }
+
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
@@ -164,13 +178,32 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected void StartMoving(Direction direction)
         {
             syncIsMoving = true;
-            LookAtDir(direction, false);
+            MoveAtDir(direction);
         }
 
-        protected void LookAtDir(Direction direction, bool isIdleLook)
+        protected void IdleAtDir(Direction direction)
         {
+            shouldLoopAnimation = true;
+            AnimationAtDir(direction, 4);
+        }
+
+        protected void MoveAtDir(Direction direction)
+        {
+            shouldLoopAnimation = true;
+            AnimationAtDir(direction, 0);
+        }
+
+        protected void AttackAtDir(Direction direction)
+        {
+            shouldLoopAnimation = false;
+            AnimationAtDir(direction, 8);
+        }
+
+        private void AnimationAtDir(Direction direction, int dirToAnimationIndex)
+        {
+            currentAnimationIndex = 0;
             syncDirection = (int)direction;
-            syncCurrentAnimationType = (int)direction + (isIdleLook ? 4 : 0);
+            syncCurrentAnimationType = (int)direction + dirToAnimationIndex;
         }
 
         public void StopMoving()
@@ -178,7 +211,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (syncIsMoving)
             {
                 syncIsMoving = false;
-                syncCurrentAnimationType += 4;
+                syncCurrentAnimationType = syncDirection + 4;
             }
         }
 
@@ -196,6 +229,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 SyncY = spawnPoint.SyncY;
             }
             SetSpawnPointLocaly(spawnPoint);
+        }
+
+        public override void OnDestroyed(NetworkIdentity identity)
+        {
+            base.OnDestroyed(identity);
+            GameManager.Instance.RemoveEntity(this);
         }
 
         private void SetSpawnPointLocaly(SpawnPoint spawnPoint)

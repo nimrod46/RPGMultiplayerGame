@@ -34,7 +34,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             syncCurrentAnimationType = (int)Animation.IdleDown;
             syncIsMoving = false;
             speed *= 0.5f;
-            layer -= 0.1f;
             LookingAtPlayer = false;
         }
 
@@ -75,7 +74,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 LookingAtPlayer = true;
                 Vector2 heading = GetCenter() - closestPlayer.GetCenter();
                 Direction direction = GetDirection(heading);
-                LookAtDir(direction, true);
+                IdleAtDir(direction);
                 return;
             }
 

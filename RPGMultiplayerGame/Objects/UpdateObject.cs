@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects
     {
         public UpdateObject()
         {
-            layer -= 0.01f;
+            Layer -= 0.01f;
         }
 
         public override void OnNetworkInitialize()

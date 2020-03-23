@@ -21,7 +21,7 @@ namespace RPGMultiplayerGame.Objects.MapObjects
         public bool SyncHasAbove { get; set; }
         public override void OnNetworkInitialize()
         {
-            layer -= SyncLayer / 100.0f;
+            Layer -= SyncLayer / 1000.0f;
             base.OnNetworkInitialize();
         }
 

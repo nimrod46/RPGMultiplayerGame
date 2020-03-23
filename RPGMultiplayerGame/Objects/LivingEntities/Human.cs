@@ -17,6 +17,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected string syncName;
         [SyncVar(hook = "OnHealthSet")]
         protected float syncHealth;
+        protected bool isAttacking;
 
         private Vector2 healthBarOffset;
         private Vector2 nameFontOffset;
@@ -32,10 +33,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             this.maxHealth = maxHealth;
             this.nameFont = nameFont;
             syncHealth = maxHealth;
+            isAttacking = false;
             healthBar = GameManager.Instance.HealthBar;
             healthBarBackground = GameManager.Instance.HealthBarBackground;
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
-            baseSize = (animations[GameManager.Animation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
+            BaseSize = (animations[GameManager.Animation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
         }
 
         public void OnHealthSet()
@@ -51,13 +53,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected void UpdateDrawOffset()
         {
-            healthBarOffset = new Vector2(baseSize.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
-            nameFontOffset = new Vector2(baseSize.X / 2 - nameFontSize.X / 2, -healthBarBackground.Height - 2 - nameFontSize.Y);
+            healthBarOffset = new Vector2(BaseSize.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
+            nameFontOffset = new Vector2(BaseSize.X / 2 - nameFontSize.X / 2, -healthBarBackground.Height - 2 - nameFontSize.Y);
         }
 
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
+            float layer = CHARECTER_TEXT_LAYER + DefaultLayer;
             sprite.DrawString(nameFont, syncName, Location + nameFontOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
             sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer + 0.001f);
             sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer);
