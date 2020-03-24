@@ -30,8 +30,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public Npc(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
         {
-            currentDirection = (int)Direction.Down;
-            currentAnimationType = (int)Animation.IdleDown;
+            syncCurrentDirection = (int)Direction.Down;
+            syncCurrentAnimationType = (int)Animation.IdleDown;
             speed *= 0.5f;
             LookingAtPlayer = false;
         }
@@ -41,7 +41,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
             if (nextPoint == Vector2.Zero)
             {
-            //Console.WriteLine("NO POINTSSS");
                 return;
             }
 
@@ -70,7 +69,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 LookingAtPlayer = true;
                 Vector2 heading = GetBaseCenter() - closestPlayer.GetBaseCenter();
                 Direction direction = GetDirection(heading);
-                SetCurrentEntityState((int)EntityState.Idle, (int)direction);
+                if (direction != (Direction) syncCurrentDirection || (EntityState) syncCurrentEntityState != EntityState.Idle)
+                {
+                    SetCurrentEntityState((int)EntityState.Idle, (int)direction);
+                }
                 return;
             }
 
@@ -89,7 +91,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     if (GetCurrentEnitytState() == EntityState.Moving)
                     {
-                        SetCurrentEntityState((int)EntityState.Idle, (int)currentDirection);
+                        SetCurrentEntityState((int)EntityState.Idle, (int)syncCurrentDirection);
                     }
                     return;
                 }

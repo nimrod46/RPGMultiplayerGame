@@ -16,7 +16,7 @@ namespace RPGMultiplayerGame.Managers
 {
     public class ServerManager : NetworkManager<ServerBehavior>
     {
-        public static ServerManager instance;
+        private static ServerManager instance;
         public static ServerManager Instance
         {
             get
@@ -39,7 +39,30 @@ namespace RPGMultiplayerGame.Managers
             ServerBehavior serverBehavior = new ServerBehavior(1331);
             serverBehavior.Run();
             serverBehavior.OnClientEventHandlerSynchronizedEvent += OnClientSynchronized;
+            serverBehavior.OnRemoteIdentityInitialize += OnIdentityInitialize;
+            serverBehavior.OnLocalIdentityInitialize += OnIdentityInitialize;
             NetBehavior = serverBehavior;
+        }
+
+        private void OnIdentityInitialize(NetworkIdentity client)
+        {
+            if(client is Entity)
+            {
+                ((Entity)client).OnEntityAttcked += ServerManager_OnEntityAttcked;
+                ((Entity)client).OnEntityAttcked += ServerManager_OnEntityAttcked;
+            }
+        }
+
+        private void ServerManager_OnEntityAttcked(Entity entity)
+        {
+            List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(entity);
+            if (damagedEntities.Count > 0)
+            {
+                foreach (Entity damagedEntity in damagedEntities)
+                {
+                    damagedEntity.OnAttackedBy(entity);
+                }
+            }
         }
 
         protected void OnClientSynchronized(int id)

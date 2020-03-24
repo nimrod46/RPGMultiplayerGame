@@ -53,7 +53,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     currentArrowsKeysPressed.RemoveAll(k => k == key);
                     if (currentArrowsKeysPressed.Count == 0)
                     {
-                        SetCurrentEntityState((int)EntityState.Idle, (int)currentDirection);
+                        SetCurrentEntityState((int)EntityState.Idle, (int)syncCurrentDirection);
                     }
                     else
                     {
@@ -71,7 +71,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 if (InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState() == EntityState.Attacking))
                 {
-                    SetCurrentEntityState((int)EntityState.Attacking, currentDirection);
+                    SetCurrentEntityState((int)EntityState.Attacking, syncCurrentDirection);
                 }
                 else
                 {

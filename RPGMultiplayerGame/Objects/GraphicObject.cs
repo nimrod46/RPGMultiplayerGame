@@ -19,6 +19,7 @@ namespace RPGMultiplayerGame.Objects
         protected Vector2 offset;
         protected Vector2 drawLocation;
         protected float scale;
+        protected bool isVisible;
 
 
         public GraphicObject()
@@ -27,6 +28,7 @@ namespace RPGMultiplayerGame.Objects
             scale = 1;
             offset = Vector2.Zero;
             drawLocation = Vector2.Zero;
+            isVisible = true;
         }
 
         public override void OnNetworkInitialize()
@@ -45,7 +47,10 @@ namespace RPGMultiplayerGame.Objects
         {
             if (texture != null)
             {
-                sprite.Draw(texture, Location + offset, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, Layer);
+                if (isVisible)
+                {
+                    sprite.Draw(texture, Location + offset, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, Layer);
+                }
             }
             else
             {

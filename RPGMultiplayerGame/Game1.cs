@@ -90,7 +90,7 @@ namespace RPGMultiplayerGame
             }
             else
             {
-                ServerManager.instance.Update(gameTime);
+                ServerManager.Instance.Update(gameTime);
             }
         }
 

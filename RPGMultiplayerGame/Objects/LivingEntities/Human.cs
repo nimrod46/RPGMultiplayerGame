@@ -36,10 +36,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
-            sprite.DrawString(nameFont, syncName, Location + nameFontOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
+            if (!isHidenCompletely)
+            {
+                sprite.DrawString(nameFont, syncName, Location + nameFontOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
+            }
         }
 
-        [Command]
         public virtual void CmdSetName(string name)
         {
             syncName = name;

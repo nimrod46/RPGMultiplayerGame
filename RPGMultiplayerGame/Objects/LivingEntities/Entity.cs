@@ -36,10 +36,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Attacking
         }
 
+        public delegate void EntityAttackedEventHandler(Entity entity);
+        public event EntityAttackedEventHandler OnEntityAttcked;
         public Weapon Weapon { get; private set; }
 
         private Vector2 healthBarOffset;
         private Vector2 healthBarSize;
+        private bool isBeingHit;
         private readonly float maxHealth;
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
@@ -47,9 +50,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected float syncHealth; 
         protected float textLyer;
         protected Dictionary<Animation, List<GameTexture>> animations = new Dictionary<Animation, List<GameTexture>>();
-        protected int currentAnimationType;
-        protected int currentDirection;
-        protected int currentEntityState;
+        [SyncVar(isDisabled = true, hook = "UpdateTexture")] //Live sync through BroadcastMethod, when first time connecting through SyncVar
+        protected int syncCurrentAnimationType;
+        [SyncVar(isDisabled = true)]
+        protected int syncCurrentDirection;
+        [SyncVar(isDisabled = true)]
+        protected int syncCurrentEntityState;
         protected EntityID entityID;
         protected float speed;
         protected int animationDelay;
@@ -58,7 +64,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected int collisionOffsetX;
         protected int collisionOffsetY;
         protected bool shouldLoopAnimation;
-
+        protected bool isHidenCompletely;
+        protected bool startedFlickeringAnim;
+        protected int flickerCount;
+        private int currentFlickerCount;
         public Entity(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth)
         {
             this.entityID = entityID;
@@ -66,17 +75,20 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             this.collisionOffsetY = collisionOffsetY;
             this.maxHealth = maxHealth;
             syncHealth = maxHealth;
+            isBeingHit = false;
             healthBar = GameManager.Instance.HealthBar;
             healthBarBackground = GameManager.Instance.HealthBarBackground;
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
             animations = new Dictionary<Animation, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityID]);
-            currentAnimationType = (int)Animation.IdleDown;
-            currentDirection = (int)Direction.Down;
-            currentEntityState = (int)EntityState.Idle;
+            syncCurrentAnimationType = (int)Animation.IdleDown;
+            syncCurrentDirection = (int)Direction.Down;
+            syncCurrentEntityState = (int)EntityState.Idle;
             speed = 0.5f / 10;
             animationDelay = 100;
             Layer = GameManager.ENTITY_LAYER;
             shouldLoopAnimation = true;
+            isHidenCompletely = false;
+            flickerCount = 5;
         }
 
         public override void OnNetworkInitialize()
@@ -90,7 +102,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public virtual void UpdateTexture()
         {
-            GameTexture gameTexture = animations[(Animation)currentAnimationType][currentAnimationIndex];
+            GameTexture gameTexture = animations[(Animation)syncCurrentAnimationType][currentAnimationIndex];
             texture = gameTexture.Texture;
             offset = gameTexture.Offset * scale;
             Size = (texture.Bounds.Size.ToVector2() * scale).ToPoint();
@@ -123,8 +135,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         [BroadcastMethod(shouldInvokeSynchronously = true)]
         public void SetCurrentEntityState(int entityState, int direction)
         {
-            currentEntityState = entityState;
-            switch ((EntityState)currentEntityState)
+            syncCurrentEntityState = entityState;
+            switch ((EntityState)syncCurrentEntityState)
             {
                 case EntityState.Idle:
                     IdleAtDir((Direction)direction);
@@ -133,18 +145,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     MoveAtDir((Direction)direction);
                     break;
                 case EntityState.Attacking:
-                    AttackAtDir((Direction)direction);  
-                    if(isInServer)
-                    {
-                        List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(this);
-                        if (damagedEntities.Count > 0)
-                        {
-                           foreach(Entity damagedEntity in damagedEntities)
-                            {
-                                damagedEntity.OnAttackedBy(this);
-                            }
-                        }
-                    }
+                    AttackAtDir((Direction)direction);
+                    OnEntityAttcked?.Invoke(this);    
                     break;
             }
             Location = new Vector2(SyncX, SyncY);
@@ -153,13 +155,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         MapObjectLib block = null;
         Rectangle newLocationRect;
         System.Drawing.Rectangle rectt;
+
         public override void Update(GameTime gameTime)
         {
             if (GetCurrentEnitytState() == EntityState.Moving)
             {
                 double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
                 Vector2 newLocation = Location;
-                switch ((Direction)currentDirection)
+                switch ((Direction)syncCurrentDirection)
                 {
                     case Direction.Up:
                         newLocation.Y -= (float)movment;
@@ -216,36 +219,57 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     currentAnimationIndex++;
                 }
                 UpdateTexture();
+                if (isBeingHit)
+                {
+                    isVisible = !isVisible;
+                    currentFlickerCount++;
+                    if(currentFlickerCount >= flickerCount)
+                    {
+                        isVisible = true;
+                        isBeingHit = false;
+                        currentFlickerCount = 0;
+                    }
+                }
             }
+            
             base.Update(gameTime);
         }
 
-        [Command]
+        [BroadcastMethod]
         public virtual void OnAttackedBy(Entity attacker)
         {
             syncHealth -= attacker.Weapon.SyncDamage;
-            if(syncHealth == 0)
+            MakeObjectFlicker();
+            if (hasAuthority && syncHealth == 0)
             {
-                Console.WriteLine("Destroy");
                 Destroy();
             }
         }
 
+        private void MakeObjectFlicker()
+        {
+            isBeingHit = true;
+            currentFlickerCount = 0;
+        }
+
         public EntityState GetCurrentEnitytState()
         {
-            return (EntityState)currentEntityState;
+            return (EntityState)syncCurrentEntityState;
         }
 
         protected bool getIsLoopAnimationFinished()
         {
-            return currentAnimationIndex + 1 >= animations[(Animation)currentAnimationType].Count;
+            return currentAnimationIndex + 1 >= animations[(Animation)syncCurrentAnimationType].Count;
         }
 
         public override void Draw(SpriteBatch sprite)
         {
-            base.Draw(sprite);
-            sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer + 0.001f);
-            sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
+            if (!isHidenCompletely)
+            {
+                base.Draw(sprite);
+                sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer + 0.001f);
+                sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
+            }
         }
 
         protected void IdleAtDir(Direction direction)
@@ -265,12 +289,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             shouldLoopAnimation = false;
             AnimationAtDir(direction, 8);
             OnCurrentAnimationTypeSet();
+            UpdateWeaponLocation();
+        }
+
+        protected void UpdateWeaponLocation()
+        {
             if (Weapon != null)
             {
-                switch ((Direction)currentDirection)
+                switch ((Direction)syncCurrentDirection)
                 {
                     case Direction.Left:
-                        Weapon.SyncX = GetBoundingRectangle().Left ;
+                        Weapon.SyncX = GetBoundingRectangle().Left;
                         Weapon.SyncY = GetCenter().Y;
                         break;
                     case Direction.Up:
@@ -294,8 +323,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private void AnimationAtDir(Direction direction, int dirToAnimationIndex)
         {
             currentAnimationIndex = 0;
-            currentDirection = (int)direction;
-            currentAnimationType = (int)direction + dirToAnimationIndex;
+            syncCurrentDirection = (int)direction;
+            syncCurrentAnimationType = (int)direction + dirToAnimationIndex;
         }
      
         private Rectangle GetCollisionRect(float x, float y, int width, int height)
