@@ -75,11 +75,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             this.collisionOffsetX = collisionOffsetX;
             this.collisionOffsetY = collisionOffsetY;
             this.maxHealth = maxHealth;
-            syncHealth = maxHealth;
             isBeingHit = false;
             healthBar = GameManager.Instance.HealthBar;
             healthBarBackground = GameManager.Instance.HealthBarBackground;
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
+            syncHealth = maxHealth;
             animations = new Dictionary<Animation, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityID]);
             syncCurrentAnimationType = (int)Animation.IdleDown;
             syncCurrentDirection = (int)Direction.Down;
@@ -111,7 +111,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         public void OnHealthSet()
-        {
+        {   
             healthBarSize.X = syncHealth * healthBar.Width / maxHealth;
         }
 
@@ -120,7 +120,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             healthBarOffset = new Vector2(BaseSize.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
         }
 
-        [BroadcastMethod]
         public void EquipeWith(Weapon weapon)
         {
             this.SyncWeapon = weapon;

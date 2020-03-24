@@ -50,7 +50,6 @@ namespace RPGMultiplayerGame.Managers
             if(client is Entity)
             {
                 ((Entity)client).OnEntityAttcked += ServerManager_OnEntityAttcked;
-                ((Entity)client).OnEntityAttcked += ServerManager_OnEntityAttcked;
             }
         }
 
