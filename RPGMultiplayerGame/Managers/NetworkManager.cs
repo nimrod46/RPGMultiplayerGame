@@ -41,7 +41,6 @@ namespace RPGMultiplayerGame.Managers
             new Block();
             new Player();
             new SpawnPoint();
-            new Waypoint();
             new Joe();
             new Blacksmith();
             new OldSword();

@@ -88,7 +88,6 @@
     <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
     <Compile Include="Objects\LivingEntities\Joe.cs" />
-    <Compile Include="Objects\LivingEntities\Waypoint.cs" />
     <Compile Include="Objects\Marks\MarkObject.cs" />
     <Compile Include="Objects\Marks\SpawnPoint.cs" />
     <Compile Include="Objects\GraphicObject.cs" />

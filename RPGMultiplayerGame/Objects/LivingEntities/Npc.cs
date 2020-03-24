@@ -18,8 +18,20 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         private const float MIN_DISTANCE_FOR_PLAYER_INTERACTION = 40;
 
-        public bool LookingAtPlayer { get; set; }
+        public struct Waypoint
+        {
+            public Point Point { get; set; }
+            public float Time { get; set; }
 
+            public Waypoint(Point point, float time)
+            {
+                Point = point;
+                Time = time;
+            }
+        }
+
+
+        public bool LookingAtPlayer { get; set; }
         private List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
         private double currentPointTime = 0;
@@ -105,8 +117,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     unit = 1;
                 }
                 nextWaypointIndex += unit;
-                currentPointTime = path[nextWaypointIndex].SyncTime;
-                nextPoint = new Vector2(path[nextWaypointIndex].SyncX, path[nextWaypointIndex].SyncY);
+                currentPointTime = path[nextWaypointIndex].Time;
+                nextPoint = path[nextWaypointIndex].Point.ToVector2();
                 currentTime = 0;
                 Vector2 heading = new Vector2(SyncX, SyncY) - nextPoint;
                 Direction direction = GetDirection(heading);
@@ -147,7 +159,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (!path.Contains(waypoint))
             {
                 path.Add(waypoint);
-                nextPoint = new Vector2(path[0].SyncX, path[0].SyncY);
+                nextPoint = waypoint.Point.ToVector2();
             }
         }
     }

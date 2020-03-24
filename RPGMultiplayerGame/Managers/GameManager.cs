@@ -162,7 +162,7 @@ namespace RPGMultiplayerGame.Managers
                     continue;
                 }
 
-                if (attacker.Weapon.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                if (attacker.SyncWeapon.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
                 {
                     damagedEntities.Add(entity);
                 }

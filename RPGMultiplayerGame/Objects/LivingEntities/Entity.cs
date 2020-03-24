@@ -38,7 +38,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public delegate void EntityAttackedEventHandler(Entity entity);
         public event EntityAttackedEventHandler OnEntityAttcked;
-        public Weapon Weapon { get; private set; }
+        [SyncVar]
+        public Weapon SyncWeapon { get; set; }
 
         private Vector2 healthBarOffset;
         private Vector2 healthBarSize;
@@ -122,7 +123,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         [BroadcastMethod]
         public void EquipeWith(Weapon weapon)
         {
-            this.Weapon = weapon;
+            this.SyncWeapon = weapon;
         }
 
         public void OnCurrentAnimationTypeSet()
@@ -238,7 +239,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         [BroadcastMethod]
         public virtual void OnAttackedBy(Entity attacker)
         {
-            syncHealth -= attacker.Weapon.SyncDamage;
+            syncHealth -= attacker.SyncWeapon.SyncDamage;
             MakeObjectFlicker();
             if (hasAuthority && syncHealth == 0)
             {
@@ -294,25 +295,25 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected void UpdateWeaponLocation()
         {
-            if (Weapon != null)
+            if (SyncWeapon != null)
             {
                 switch ((Direction)syncCurrentDirection)
                 {
                     case Direction.Left:
-                        Weapon.SyncX = GetBoundingRectangle().Left;
-                        Weapon.SyncY = GetCenter().Y;
+                        SyncWeapon.SyncX = GetBoundingRectangle().Left;
+                        SyncWeapon.SyncY = GetCenter().Y;
                         break;
                     case Direction.Up:
-                        Weapon.SyncY = GetBoundingRectangle().Top;
-                        Weapon.SyncX = GetCenter().X;
+                        SyncWeapon.SyncY = GetBoundingRectangle().Top;
+                        SyncWeapon.SyncX = GetCenter().X;
                         break;
                     case Direction.Right:
-                        Weapon.SyncX = GetBoundingRectangle().Right - Weapon.Size.X;
-                        Weapon.SyncY = GetCenter().Y;
+                        SyncWeapon.SyncX = GetBoundingRectangle().Right - SyncWeapon.Size.X;
+                        SyncWeapon.SyncY = GetCenter().Y;
                         break;
                     case Direction.Down:
-                        Weapon.SyncY = GetBoundingRectangle().Bottom - Weapon.Size.Y;
-                        Weapon.SyncX = GetCenter().X;
+                        SyncWeapon.SyncY = GetBoundingRectangle().Bottom - SyncWeapon.Size.Y;
+                        SyncWeapon.SyncX = GetCenter().X;
                         break;
                     case Direction.Idle:
                         break;

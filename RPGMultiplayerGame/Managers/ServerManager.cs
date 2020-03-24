@@ -11,6 +11,7 @@ using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Weapons;
+using static RPGMultiplayerGame.Objects.LivingEntities.Npc;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -116,18 +117,10 @@ namespace RPGMultiplayerGame.Managers
                 NetworkIdentity identity = NetBehavior.spawnWithServerAuthority(gObject.GetType(), gObject);
                 if (obj is NpcLib objP)
                 {
-                    Waypoint point;
                     Npc npcMark = identity as Npc;
                     foreach (WaypointLib waypoint in objP.waypoints)
                     {
-                        point = new Waypoint
-                        {
-                            SyncX = waypoint.Point.X,
-                            SyncY = waypoint.Point.Y,
-                            SyncTime = waypoint.Time,
-                            SyncNpcId = npcMark.id,
-                        };
-                        NetBehavior.spawnWithServerAuthority(point.GetType(), point);
+                        npcMark.AddWaypoint(new Waypoint(new Point(waypoint.Point.X, waypoint.Point.Y), (float) waypoint.Time));
                     }
                 }
 
