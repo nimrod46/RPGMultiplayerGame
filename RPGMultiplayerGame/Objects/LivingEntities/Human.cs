@@ -42,7 +42,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public virtual void CmdSetName(string name)
+        public void SetName(string name)
         {
             syncName = name;
         }
@@ -51,6 +51,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             nameFontSize = nameFont.MeasureString(syncName);
             UpdateDrawOffset();
+        }
+
+        public string GetName()
+        {
+            return syncName;
         }
     }
 }

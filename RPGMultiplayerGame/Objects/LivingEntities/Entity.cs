@@ -69,6 +69,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected bool startedFlickeringAnim;
         protected int flickerCount;
         private int currentFlickerCount;
+        [SyncVar]
+        protected SpawnPoint syncSpawnPoint;
+
         public Entity(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth)
         {
             this.entityID = entityID;
@@ -238,12 +241,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         [BroadcastMethod]
         public virtual void OnAttackedBy(Entity attacker)
         {
-            syncHealth -= attacker.SyncWeapon.SyncDamage;
-            MakeObjectFlicker();
-            if (hasAuthority && syncHealth == 0)
+            if (hasAuthority)
             {
-                Destroy();
+                syncHealth -= attacker.SyncWeapon.SyncDamage;
+                if(syncHealth == 0)
+                {
+                    Destroy();
+
+                }
             }
+            MakeObjectFlicker();
         }
 
         private void MakeObjectFlicker()
@@ -332,26 +339,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             return new Rectangle((int)x + collisionOffsetX, (int)y + collisionOffsetY, width - collisionOffsetX, height - collisionOffsetY);
         }
 
-        [BroadcastMethod]
         public void SetSpawnPoint(SpawnPoint spawnPoint)
         {
-            if (hasAuthority)
-            {
-                SyncX = spawnPoint.SyncX;
-                SyncY = spawnPoint.SyncY;
-            }
-            SetSpawnPointLocaly(spawnPoint);
+            syncSpawnPoint = spawnPoint;
+            SyncX = spawnPoint.SyncX;
+            SyncY = spawnPoint.SyncY;
         }
 
         public override void OnDestroyed(NetworkIdentity identity)
         {
             base.OnDestroyed(identity);
             GameManager.Instance.RemoveEntity(this);
-        }
-     
-        private void SetSpawnPointLocaly(SpawnPoint spawnPoint)
-        {
-            GameManager.Instance.spawnPoint = spawnPoint;
         }
     }
 }

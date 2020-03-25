@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
         public event EventHandler OnStartGame;
-
+        public string name;
         protected ClientManager()
         {
         }
@@ -39,19 +39,24 @@ namespace RPGMultiplayerGame.Managers
 
         private void OnLocalIdentityInitialize(NetworkIdentity client)
         {
-            if (client is Player)
+            if (client is Player player)
             {
-                Player player = (client as Player);
-                player.OnPlayerNameSet += NetworkManager_OnPlayerNameSet;
-
-                player.InitName();
+                if (name == null)
+                {
+                    player.OnLocalPlayerNameSet += NetworkManager_OnPlayerNameSet;
+                    player.InitName();
+                }
+                else
+                {
+                    player.SetName(name);
+                }
             }
-
         }
 
-        private void NetworkManager_OnPlayerNameSet(object sender, EventArgs e)
+        private void NetworkManager_OnPlayerNameSet(Player player)
         {
             OnStartGame?.Invoke(this, null);
+            name = player.GetName();
         }
 
        

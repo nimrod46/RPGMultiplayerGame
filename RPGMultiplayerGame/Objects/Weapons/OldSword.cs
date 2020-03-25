@@ -9,7 +9,7 @@ namespace RPGMultiplayerGame.Objects.Weapons
 {
     class OldSword : Weapon
     {
-        public OldSword() : base(new Point(7, 6), 2, "Old sword")
+        public OldSword() : base(new Point(7, 6), 50, "Old sword")
         {
 
         }

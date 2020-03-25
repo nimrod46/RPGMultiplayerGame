@@ -32,6 +32,7 @@ namespace RPGMultiplayerGame.Managers
 
         public readonly List<Player> players = new List<Player>();
         public readonly List<UpdateObject> serverObjects = new List<UpdateObject>();
+        public SpawnPoint spawnPoint;
 
 
         public void StartServer()
@@ -69,15 +70,14 @@ namespace RPGMultiplayerGame.Managers
         {
             lock (players)
             {
-                Player player = (Player) NetBehavior.spawnWithClientAuthority(typeof(Player), id);
+                Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), id);
                 players.Add(player);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
-                Weapon weapon = (Weapon) NetBehavior.spawnWithClientAuthority(typeof(OldSword), id);
+                Weapon weapon = (Weapon)NetBehavior.spawnWithClientAuthority(typeof(OldSword), id);
                 player.EquipeWith(weapon);
-
-                if (GameManager.Instance.spawnPoint != null)
+                if (spawnPoint != null)
                 {
-                    player.SetSpawnPoint(GameManager.Instance.spawnPoint);
+                    player.SetSpawnPoint(spawnPoint);
                 }
             }
         }
@@ -87,6 +87,7 @@ namespace RPGMultiplayerGame.Managers
             lock(players)
             {
                 players.Remove((Player) identity);
+                OnClientSynchronized(identity.ownerId);
             }
         }
 
@@ -122,6 +123,10 @@ namespace RPGMultiplayerGame.Managers
                         npcMark.AddWaypoint(new Waypoint(new Point(waypoint.Point.X, waypoint.Point.Y), (float) waypoint.Time));
                     }
                 }
+                else if(identity is SpawnPoint spawnPoint)
+                {
+                    UpdatePlayersSpawnLocation(spawnPoint);
+                }
 
             }
         }
@@ -142,8 +147,9 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void UpdateSpawnLocation(SpawnPoint spawnPoint)
+        public void UpdatePlayersSpawnLocation(SpawnPoint spawnPoint)
         {
+            this.spawnPoint = spawnPoint;
             foreach (Player player in players)
             {
                 player.SetSpawnPoint(spawnPoint);

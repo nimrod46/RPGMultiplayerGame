@@ -76,7 +76,6 @@ namespace RPGMultiplayerGame.Managers
         public Texture2D HealthBarBackground;
         public SpriteFont PlayerName;
         public GameMap map;
-        public SpawnPoint spawnPoint;
         private readonly List<GameObject> gameObjects = new List<GameObject>();
         private readonly List<GraphicObject> grapichObjects = new List<GraphicObject>();
         private readonly List<UpdateObject> updateObjects = new List<UpdateObject>();

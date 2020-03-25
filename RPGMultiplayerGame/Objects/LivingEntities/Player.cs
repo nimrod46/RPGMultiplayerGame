@@ -15,7 +15,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     public class Player : Human
     {
         readonly List<Keys> currentArrowsKeysPressed = new List<Keys>();
-        public event EventHandler OnPlayerNameSet;
+        public delegate void LocalPlayerNameSetEventHandler(Player player);
+        public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
 
         public Player() : base(EntityID.Player, 0, 10, 100, GameManager.Instance.PlayerName)
         {
@@ -34,8 +35,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void InitName()
         {
-            InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
             CmdCheckName(this, TextInput.getText("Name"));
+        }
+
+        public void Init(string name)
+        {
+            SetName(name);
+            InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
         }
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)
@@ -113,10 +119,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         [Command]
-        public override void CmdSetName(string name)
+        public void CmdSetName(string name)
         {
-            base.CmdSetName(name);
-            OnPlayerNameSet?.Invoke(this, null);
+            Init(name);
+            OnLocalPlayerNameSet?.Invoke(this);
             Console.WriteLine("Welcome: " + syncName);
         }
 
