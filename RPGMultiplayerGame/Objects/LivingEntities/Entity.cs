@@ -14,21 +14,13 @@ using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects.Weapons;
 using static RPGMultiplayerGame.Managers.GameManager;
+using static RPGMultiplayerGame.Objects.AnimatedObject;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 
 {
-    public abstract class Entity : UpdateObject
+    public abstract class Entity : AnimatedObject
     {
-        public enum Direction
-        {
-            Left,
-            Up,
-            Right,
-            Down,
-            Idle, //TODO: Delete
-        }
-
         public enum EntityState
         {
             Idle,
@@ -38,39 +30,29 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public delegate void EntityAttackedEventHandler(Entity entity);
         public event EntityAttackedEventHandler OnEntityAttcked;
+        public Weapon Weapon { get => syncWeapon; set => syncWeapon = value; }
         [SyncVar]
-        public Weapon SyncWeapon { get; set; }
-
-        private Vector2 healthBarOffset;
-        private Vector2 healthBarSize;
-        private bool isBeingHit;
-        private readonly float maxHealth;
-        protected readonly Texture2D healthBar;
-        protected readonly Texture2D healthBarBackground;
+        private Weapon syncWeapon;
         [SyncVar(hook = "OnHealthSet")]
-        protected float syncHealth; 
-        protected float textLyer;
-        protected Dictionary<Animation, List<GameTexture>> animations = new Dictionary<Animation, List<GameTexture>>();
-        [SyncVar(shouldInvokeNetworkly = false, hook = "UpdateTexture")] //Live sync through BroadcastMethod, when first time connecting through SyncVar
-        protected int syncCurrentAnimationType;
-        [SyncVar(shouldInvokeNetworkly = false)]
-        protected int syncCurrentDirection;
+        protected float syncHealth;
         [SyncVar(shouldInvokeNetworkly = false)]
         protected int syncCurrentEntityState;
-        protected EntityID entityID;
-        protected float speed;
-        protected int animationDelay;
-        protected int timeSinceLastFrame;
-        protected int currentAnimationIndex;
-        protected int collisionOffsetX;
-        protected int collisionOffsetY;
-        protected bool shouldLoopAnimation;
-        protected bool isHidenCompletely;
-        protected bool startedFlickeringAnim;
-        protected int flickerCount;
-        private int currentFlickerCount;
         [SyncVar]
         protected SpawnPoint syncSpawnPoint;
+        protected readonly Texture2D healthBar;
+        protected readonly Texture2D healthBarBackground;
+        protected EntityID entityID;
+        protected float textLyer;
+        protected int collisionOffsetX;
+        protected int collisionOffsetY;
+        protected int flickerCount;
+        protected bool isHidenCompletely;
+        protected bool startedFlickeringAnim;
+        private readonly float maxHealth;
+        private Vector2 healthBarOffset;
+        private Vector2 healthBarSize;
+        private int currentFlickerCount;
+        private bool isBeingHit;
 
         public Entity(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth)
         {
@@ -83,56 +65,24 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             healthBarBackground = GameManager.Instance.HealthBarBackground;
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
             syncHealth = maxHealth;
-            animations = new Dictionary<Animation, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityID]);
-            syncCurrentAnimationType = (int)Animation.IdleDown;
-            syncCurrentDirection = (int)Direction.Down;
+            syncCurrentAnimationType = (int)EntityAnimation.IdleDown;
             syncCurrentEntityState = (int)EntityState.Idle;
-            speed = 0.5f / 10;
-            animationDelay = 100;
             Layer = GameManager.ENTITY_LAYER;
-            shouldLoopAnimation = true;
             isHidenCompletely = false;
             flickerCount = 5;
+        }
+
+        protected override void InitAnimationsList()
+        {
+            animationsByType = new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityID]);
         }
 
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            UpdateTexture();
             GameManager.Instance.AddEntity(this);
             textLyer = CHARECTER_TEXT_LAYER + DefaultLayer;
 
-        }
-
-        public virtual void UpdateTexture()
-        {
-            GameTexture gameTexture = animations[(Animation)syncCurrentAnimationType][currentAnimationIndex];
-            texture = gameTexture.Texture;
-            offset = gameTexture.Offset * scale;
-            Size = (texture.Bounds.Size.ToVector2() * scale).ToPoint();
-            UpdateDrawOffset();
-        }
-
-        public void OnHealthSet()
-        {   
-            healthBarSize.X = syncHealth * healthBar.Width / maxHealth;
-        }
-
-        protected virtual void UpdateDrawOffset()
-        {
-            healthBarOffset = new Vector2(BaseSize.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
-        }
-
-        public void EquipeWith(Weapon weapon)
-        {
-            this.SyncWeapon = weapon;
-        }
-
-        public void OnCurrentAnimationTypeSet()
-        {
-            currentAnimationIndex = 0;
-            UpdateTexture();
-            timeSinceLastFrame = 0;
         }
 
         [BroadcastMethod(shouldInvokeSynchronously = true)]
@@ -149,20 +99,42 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     break;
                 case EntityState.Attacking:
                     AttackAtDir((Direction)direction);
-                    OnEntityAttcked?.Invoke(this);    
+                    OnEntityAttcked?.Invoke(this);
                     break;
             }
             Location = new Vector2(SyncX, SyncY);
         }
 
-        MapObjectLib block = null;
-        Rectangle newLocationRect;
-        System.Drawing.Rectangle rectt;
+        public void OnHealthSet()
+        {   
+            healthBarSize.X = syncHealth * healthBar.Width / maxHealth;
+        }
+
+        public override void UpdateTexture()
+        {
+            base.UpdateTexture();
+            UpdateDrawOffset();
+        }
+
+        protected virtual void UpdateDrawOffset()
+        {
+            healthBarOffset = new Vector2(BaseSize.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
+        }
+
+        public void EquipeWith(Weapon weapon)
+        {
+            this.syncWeapon = weapon;
+        }
+
+        
 
         public override void Update(GameTime gameTime)
         {
             if (GetCurrentEnitytState() == EntityState.Moving)
             {
+                MapObjectLib block = null;
+                Rectangle newLocationRect;
+                System.Drawing.Rectangle rectt;
                 double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
                 Vector2 newLocation = Location;
                 switch ((Direction)syncCurrentDirection)
@@ -199,40 +171,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                     Location = newLocation;
                 }
-                else
-                {
-                    block = null;
-                }
             }
 
-
-            timeSinceLastFrame += (int)(speed * 500);
-            if (timeSinceLastFrame >= animationDelay)
+            if (isBeingHit)
             {
-                timeSinceLastFrame = 0;
-                if (getIsLoopAnimationFinished())
+                isVisible = !isVisible;
+                currentFlickerCount++;
+                if (currentFlickerCount >= flickerCount)
                 {
-                    if (shouldLoopAnimation)
-                    {
-                        currentAnimationIndex = 0;
-                    }
+                    isVisible = true;
+                    isBeingHit = false;
+                    currentFlickerCount = 0;
                 }
-                else
-                {
-                    currentAnimationIndex++;
-                }
-                UpdateTexture();
-                if (isBeingHit)
-                {
-                    isVisible = !isVisible;
-                    currentFlickerCount++;
-                    if(currentFlickerCount >= flickerCount)
-                    {
-                        isVisible = true;
-                        isBeingHit = false;
-                        currentFlickerCount = 0;
-                    }
-                }
+
             }
             
             base.Update(gameTime);
@@ -243,7 +194,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (hasAuthority)
             {
-                syncHealth -= attacker.SyncWeapon.SyncDamage;
+                syncHealth -= attacker.syncWeapon.SyncDamage;
                 if(syncHealth == 0)
                 {
                     Destroy();
@@ -264,11 +215,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             return (EntityState)syncCurrentEntityState;
         }
 
-        protected bool getIsLoopAnimationFinished()
-        {
-            return currentAnimationIndex + 1 >= animations[(Animation)syncCurrentAnimationType].Count;
-        }
-
         public override void Draw(SpriteBatch sprite)
         {
             if (!isHidenCompletely)
@@ -281,57 +227,47 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected void IdleAtDir(Direction direction)
         {
-            shouldLoopAnimation = true;
-            AnimationAtDir(direction, 4);
+            AnimationAtDir(direction, 4, true);
         }
 
         protected void MoveAtDir(Direction direction)
         {
-            shouldLoopAnimation = true;
-            AnimationAtDir(direction, 0);
+            AnimationAtDir(direction, 0, true);
         }
 
         protected void AttackAtDir(Direction direction)
         {
-            shouldLoopAnimation = false;
-            AnimationAtDir(direction, 8);
-            OnCurrentAnimationTypeSet();
+            AnimationAtDir(direction, 8, false);
+            //OnCurrentAnimationTypeSet();
             UpdateWeaponLocation();
         }
 
         protected void UpdateWeaponLocation()
         {
-            if (SyncWeapon != null)
+            if (syncWeapon != null)
             {
                 switch ((Direction)syncCurrentDirection)
                 {
                     case Direction.Left:
-                        SyncWeapon.SyncX = GetBoundingRectangle().Left;
-                        SyncWeapon.SyncY = GetCenter().Y;
+                        syncWeapon.SyncX = GetBoundingRectangle().Left;
+                        syncWeapon.SyncY = GetCenter().Y;
                         break;
                     case Direction.Up:
-                        SyncWeapon.SyncY = GetBoundingRectangle().Top;
-                        SyncWeapon.SyncX = GetCenter().X;
+                        syncWeapon.SyncY = GetBoundingRectangle().Top;
+                        syncWeapon.SyncX = GetCenter().X;
                         break;
                     case Direction.Right:
-                        SyncWeapon.SyncX = GetBoundingRectangle().Right - SyncWeapon.Size.X;
-                        SyncWeapon.SyncY = GetCenter().Y;
+                        syncWeapon.SyncX = GetBoundingRectangle().Right - syncWeapon.Size.X;
+                        syncWeapon.SyncY = GetCenter().Y;
                         break;
                     case Direction.Down:
-                        SyncWeapon.SyncY = GetBoundingRectangle().Bottom - SyncWeapon.Size.Y;
-                        SyncWeapon.SyncX = GetCenter().X;
+                        syncWeapon.SyncY = GetBoundingRectangle().Bottom - syncWeapon.Size.Y;
+                        syncWeapon.SyncX = GetCenter().X;
                         break;
                     case Direction.Idle:
                         break;
                 }
             }
-        }
-
-        private void AnimationAtDir(Direction direction, int dirToAnimationIndex)
-        {
-            currentAnimationIndex = 0;
-            syncCurrentDirection = (int)direction;
-            syncCurrentAnimationType = (int)direction + dirToAnimationIndex;
         }
      
         private Rectangle GetCollisionRect(float x, float y, int width, int height)

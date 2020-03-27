@@ -83,7 +83,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     if (GetCurrentEnitytState() == EntityState.Attacking)
                     {
-                        if(!InputManager.Instance.KeyDown(Keys.X) || getIsLoopAnimationFinished())
+                        if(!InputManager.Instance.KeyDown(Keys.X) || GetIsLoopAnimationFinished())
                         {
                             Instance_OnArrowsKeysStateChange(Keys.None, false);
                         }
@@ -125,11 +125,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Init(name);
             OnLocalPlayerNameSet?.Invoke(this);
             Console.WriteLine("Welcome: " + syncName);
-        }
-
-        public string GetName()
-        {
-            return syncName;
         }
     }
 }

@@ -143,7 +143,7 @@
         private System.Windows.Forms.ListView LobbyList;
         private System.Windows.Forms.Button Connect;
         private System.Windows.Forms.Button AddServer;
-        private System.Windows.Forms.Button Refresh;
+        private new System.Windows.Forms.Button Refresh;
         private System.Windows.Forms.Button Remove;
         private System.Windows.Forms.ColumnHeader IpAdress;
         private System.Windows.Forms.ColumnHeader Status;

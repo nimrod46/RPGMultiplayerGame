@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 using Networking;
 namespace RPGMultiplayerGame.Objects
 {
-    public abstract class UpdateObject : GraphicObject
+    public abstract class UpdateObject : GameObject
     {
         public UpdateObject()
         {
-            Layer -= 0.01f;
         }
 
         public override void OnNetworkInitialize()

@@ -10,7 +10,7 @@ using RPGMultiplayerGame.Managers;
 
 namespace RPGMultiplayerGame.Objects
 {
-    public abstract class GraphicObject : GameObject
+    public abstract class GraphicObject : UpdateObject
     {
         public float Layer { get; set; }
         public float DefaultLayer { get; set; }
@@ -29,6 +29,7 @@ namespace RPGMultiplayerGame.Objects
             offset = Vector2.Zero;
             drawLocation = Vector2.Zero;
             isVisible = true;
+            Layer -= 0.01f;
         }
 
         public override void OnNetworkInitialize()

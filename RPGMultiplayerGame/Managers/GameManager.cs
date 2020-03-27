@@ -11,6 +11,8 @@ using OffsetGeneratorLib;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using static RPGMultiplayerGame.Objects.AnimatedObject;
+using static RPGMultiplayerGame.Objects.LivingEntities.Entity;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -20,36 +22,7 @@ namespace RPGMultiplayerGame.Managers
         {
             Player,
             Blacksmith
-        }
-
-        public enum Animation
-        {
-            WalkLeft,
-            WalkUp,
-            WalkRight,
-            WalkDown,
-            IdleLeft,
-            IdleUp,
-            IdleRight,
-            IdleDown,
-            AttackLeft,
-            AttackUp,
-            AttackRight,
-            AttackDown,
-        }
-
-        public struct GameTexture
-        {
-            public Texture2D Texture { get; private set; }
-            public Vector2 Offset { get; private set; }
-
-            public GameTexture(Texture2D image, Vector2 offset)
-            {
-                Texture = image;
-                Offset = offset;
-            }
-        }
-
+        }        
 
         public static GameManager Instance
         {
@@ -70,12 +43,12 @@ namespace RPGMultiplayerGame.Managers
         static GameManager instance;
 
 
-        public Dictionary<EntityID, Dictionary<Animation, List<GameTexture>>> animationsByEntities = new Dictionary<EntityID, Dictionary<Animation, List<GameTexture>>>();
+        public Dictionary<EntityID, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityID, Dictionary<int, List<GameTexture>>>();
         public List<Texture2D> textures = new List<Texture2D>();
         public Texture2D HealthBar;
         public Texture2D HealthBarBackground;
         public SpriteFont PlayerName;
-        public GameMap map;
+        public GameMap map; //TODO: Create GameMap with the relevent project class.
         private readonly List<GameObject> gameObjects = new List<GameObject>();
         private readonly List<GraphicObject> grapichObjects = new List<GraphicObject>();
         private readonly List<UpdateObject> updateObjects = new List<UpdateObject>();
@@ -100,13 +73,13 @@ namespace RPGMultiplayerGame.Managers
                 {
                     Console.WriteLine("Warning: no xml found for " + (EntityID)i);
                 }
-                Dictionary<Animation, List<GameTexture>> animations = new Dictionary<Animation, List<GameTexture>>();
-                for (int j = 0; j < (int)Enum.GetValues(typeof(Animation)).Cast<Animation>().Last() + 1; j++)
+                Dictionary<int, List<GameTexture>> animations = new Dictionary<int, List<GameTexture>>();
+                for (int j = 0; j < (int)Enum.GetValues(typeof(EntityAnimation)).Cast<EntityAnimation>().Last() + 1; j++)
                 {
                     List<GameTexture> animation = new List<GameTexture>();
                     for (int k = 1; k <= 32; k++)
                     {
-                        string name ="" + (EntityID)i + "\\" + (Animation)j + "\\" + k ;
+                        string name ="" + (EntityID)i + "\\" + (EntityAnimation)j + "\\" + k ;
                         Vector2 offset = Vector2.Zero;
                         if (animationProperties?.Where(a => name.Contains(a.FullPath)).Count() > 0)
                         {
@@ -122,7 +95,7 @@ namespace RPGMultiplayerGame.Managers
                             break;
                         }
                     }
-                    animations.Add((Animation)j, animation);
+                    animations.Add(j, animation);
                 }
                
                 animationsByEntities.Add((EntityID) i, animations);
@@ -161,7 +134,7 @@ namespace RPGMultiplayerGame.Managers
                     continue;
                 }
 
-                if (attacker.SyncWeapon.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                if (attacker.Weapon.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
                 {
                     damagedEntities.Add(entity);
                 }

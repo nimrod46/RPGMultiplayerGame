@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
 
         public bool LookingAtPlayer { get; set; }
-        private List<Waypoint> path = new List<Waypoint>();
+        private readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
         private double currentPointTime = 0;
         private int nextWaypointIndex = 0;
@@ -43,7 +43,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public Npc(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
         {
             syncCurrentDirection = (int)Direction.Down;
-            syncCurrentAnimationType = (int)Animation.IdleDown;
+            syncCurrentAnimationType = (int)EntityAnimation.IdleDown;
             speed *= 0.5f;
             LookingAtPlayer = false;
         }

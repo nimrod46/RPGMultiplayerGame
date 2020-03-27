@@ -24,7 +24,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public Human(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
         {
             this.nameFont = nameFont;
-            BaseSize = (animations[GameManager.Animation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
+            BaseSize = (animationsByType[(int) EntityAnimation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
         }
 
         protected override void UpdateDrawOffset()
