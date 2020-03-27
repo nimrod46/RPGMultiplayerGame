@@ -48,7 +48,7 @@ namespace RPGMultiplayerGame.Managers
                 }
                 else
                 {
-                    player.SetName(name);
+                    player.Init(name);
                 }
             }
         }

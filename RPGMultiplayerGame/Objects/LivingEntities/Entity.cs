@@ -53,6 +53,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private Vector2 healthBarSize;
         private int currentFlickerCount;
         private bool isBeingHit;
+        private readonly double flickerTimeDelay = 0.2;
+        private double currentFlickerTime = 0.5;
 
         public Entity(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth)
         {
@@ -126,8 +128,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             this.syncWeapon = weapon;
         }
 
-        
-
         public override void Update(GameTime gameTime)
         {
             if (GetCurrentEnitytState() == EntityState.Moving)
@@ -175,15 +175,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             if (isBeingHit)
             {
-                isVisible = !isVisible;
-                currentFlickerCount++;
-                if (currentFlickerCount >= flickerCount)
+                currentFlickerTime += gameTime.ElapsedGameTime.TotalSeconds;
+                if (currentFlickerTime >= flickerTimeDelay)
                 {
-                    isVisible = true;
-                    isBeingHit = false;
-                    currentFlickerCount = 0;
+                    currentFlickerTime = 0;
+                    isVisible = !isVisible;
+                    currentFlickerCount++;
+                    if (currentFlickerCount >= flickerCount)
+                    {
+                        isVisible = true;
+                        isBeingHit = false;
+                        currentFlickerCount = 0;
+                    }
                 }
-
             }
             
             base.Update(gameTime);

@@ -15,7 +15,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         [SyncVar(hook = "OnNameSet")]
         protected string syncName;
-      
 
         private Vector2 nameFontOffset;
         private readonly SpriteFont nameFont;
@@ -42,7 +41,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public void SetName(string name)
+        protected void SetName(string name)
         {
             syncName = name;
         }
