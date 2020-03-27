@@ -102,6 +102,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         [Command]
         protected void CmdCheckName(Player client, string name)
         {
+            Console.WriteLine("Checing name: " + name);
             if (ServerManager.Instance.IsNameLegal(name))
             {
                 client.CmdSetName(name);

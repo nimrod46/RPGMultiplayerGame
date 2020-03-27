@@ -10,9 +10,9 @@ namespace RPGMultiplayerGame.Objects.Weapons
 {
     public abstract class Weapon : GameObject
     {
-        [SyncVar(isDisabled = true)]
+        [SyncVar(shouldInvokeNetworkly = false)]
         public override float SyncX { get; set; }
-        [SyncVar(isDisabled = true)]
+        [SyncVar(shouldInvokeNetworkly = false)]
         public override float SyncY { get; set; }
         [SyncVar]
         public float SyncDamage { get; set; }

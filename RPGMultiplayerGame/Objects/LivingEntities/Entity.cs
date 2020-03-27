@@ -51,11 +51,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected float syncHealth; 
         protected float textLyer;
         protected Dictionary<Animation, List<GameTexture>> animations = new Dictionary<Animation, List<GameTexture>>();
-        [SyncVar(isDisabled = true, hook = "UpdateTexture")] //Live sync through BroadcastMethod, when first time connecting through SyncVar
+        [SyncVar(shouldInvokeNetworkly = false, hook = "UpdateTexture")] //Live sync through BroadcastMethod, when first time connecting through SyncVar
         protected int syncCurrentAnimationType;
-        [SyncVar(isDisabled = true)]
+        [SyncVar(shouldInvokeNetworkly = false)]
         protected int syncCurrentDirection;
-        [SyncVar(isDisabled = true)]
+        [SyncVar(shouldInvokeNetworkly = false)]
         protected int syncCurrentEntityState;
         protected EntityID entityID;
         protected float speed;

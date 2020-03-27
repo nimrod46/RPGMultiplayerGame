@@ -13,11 +13,11 @@ namespace RPGMultiplayerGame.Objects.MapObjects
 {
     public abstract class MapObject : GraphicObject
     {
-        [SyncVar()]
+        [SyncVar]
         public int SyncLayer { get; set; }
-        [SyncVar()]
+        [SyncVar]
         public bool SyncHasUnder { get; set; }
-        [SyncVar()]
+        [SyncVar]
         public bool SyncHasAbove { get; set; }
         public override void OnNetworkInitialize()
         {
