@@ -43,7 +43,8 @@ namespace RPGMultiplayerGame
             lobby.OnConnectionEstablished += Lobby_OnConnecting;
             lobby.OnServerOnline += Lobby_OnServerCreated; ;
             lobby.FormClosing += (e, s) => Exit();
-        }   
+            GameManager.Instance.Init(graphics.GraphicsDevice);
+        }
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load

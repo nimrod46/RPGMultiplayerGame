@@ -89,6 +89,8 @@
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Objects\AnimatedObject.cs" />
+    <Compile Include="Objects\SimpleDialog.cs" />
+    <Compile Include="Objects\ComplexDialog.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
     <Compile Include="Objects\LivingEntities\Joe.cs" />
     <Compile Include="Objects\Marks\MarkObject.cs" />
@@ -126,6 +128,9 @@
     <Compile Include="TextInput.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Fizzler, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4ebff4844e382110, processorArchitecture=MSIL">
+      <HintPath>..\packages\Fizzler.1.2.0\lib\netstandard2.0\Fizzler.dll</HintPath>
+    </Reference>
     <Reference Include="Map, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Map\Map\bin\Debug\Map.dll</HintPath>
@@ -150,12 +155,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ServerLobby\ServerLobby\bin\Debug\ServerLobby.dll</HintPath>
     </Reference>
+    <Reference Include="Svg, Version=3.0.0.0, Culture=neutral, PublicKeyToken=12a0bac221edeae2, processorArchitecture=MSIL">
+      <HintPath>..\packages\Svg.3.0.102\lib\net452\Svg.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />

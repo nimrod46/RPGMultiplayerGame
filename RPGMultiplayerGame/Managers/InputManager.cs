@@ -54,7 +54,7 @@ namespace RPGMultiplayerGame.Managers
         {
             foreach (Keys key in keys)
             {
-                if (currentKeyState.IsKeyDown(key) && prevKeyState.IsKeyUp(key))
+                if (KeyPressed(key))
                 {
                     return true;
                 }
@@ -66,8 +66,8 @@ namespace RPGMultiplayerGame.Managers
         {
             foreach (Keys key in keys)
             {
-                if (currentKeyState.IsKeyUp(key) && prevKeyState.IsKeyDown(key))
-                {
+                if (KeyReleased(key))
+                { 
                     return true;
                 }
             }
@@ -78,10 +78,53 @@ namespace RPGMultiplayerGame.Managers
         {
             foreach (Keys key in keys)
             {
-                if (currentKeyState.IsKeyDown(key))
+                if (KeyDown(key))
                 {
                     return true;
                 }
+            }
+            return false;
+        }
+
+        public bool KeyPressed(Keys firstKey, Keys lastKey, out Keys pressedKey)
+        {
+            pressedKey = Keys.None;
+            for (int i = (int)firstKey; i <= (int)lastKey; i++)
+            {
+                if (KeyPressed((Keys) i))
+                {
+                    pressedKey = (Keys)i;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        public bool KeyPressed(Keys key)
+        {
+            if (currentKeyState.IsKeyDown(key) && prevKeyState.IsKeyUp(key))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool KeyReleased(Keys key)
+        {
+
+            if (currentKeyState.IsKeyUp(key) && prevKeyState.IsKeyDown(key))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool KeyDown(Keys key)
+        {
+            if (currentKeyState.IsKeyDown(key))
+            {
+                return true;
             }
             return false;
         }

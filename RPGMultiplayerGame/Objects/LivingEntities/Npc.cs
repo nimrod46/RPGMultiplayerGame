@@ -14,7 +14,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
    
 
-    abstract class Npc : Human
+    public abstract class Npc : Human
     {
         private const float MIN_DISTANCE_FOR_PLAYER_INTERACTION = 40;
 
@@ -31,18 +31,41 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         public bool LookingAtPlayer { get; set; }
+        protected ComplexDialog dialog;
+        protected ComplexDialog currentDialog;
+        protected SimpleDialog currentSimpleDialog;
+        protected Player currentInteractingPlayer;
         private readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
         private double currentPointTime = 0;
         private int nextWaypointIndex = 0;
         private Vector2 nextPoint = Vector2.Zero;
         private int unit;
-
+        private Vector2 dialogOffset;
 
         public Npc(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
         {
             speed *= 0.5f;
             LookingAtPlayer = false;
+        }
+
+        public override void OnNameSet()
+        {
+            base.OnNameSet();
+            Console.WriteLine(nameFontSize.Y);
+            dialogOffset = nameOffset + new Vector2(0, -nameFontSize.Y);
+        }
+        internal abstract void ChooseDialogOption(int index);
+
+        public abstract void InteractWithPlayer(Player player);
+
+        public abstract void StopInteractWithPlayer(Player player);
+
+        public override void Draw(SpriteBatch sprite)
+        {
+            base.Draw(sprite);
+            currentDialog?.DrawAt(sprite, Location + dialogOffset);
+            currentSimpleDialog?.DrawAt(sprite, Location + dialogOffset);
         }
 
         public override void Update(GameTime gameTime)
@@ -70,56 +93,64 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     minDistance = distance;
                     closestPlayer = player;
                 }
-                
             }
-            
+
             if (closestPlayer != null)
             {
+                if (!LookingAtPlayer)
+                {
+                    InteractWithPlayer(closestPlayer);
+                }
                 LookingAtPlayer = true;
                 Vector2 heading = GetBaseCenter() - closestPlayer.GetBaseCenter();
                 Direction direction = GetDirection(heading);
-                if (direction != (Direction) syncCurrentDirection || (EntityState) syncCurrentEntityState != EntityState.Idle)
+                if (direction != (Direction)syncCurrentDirection || (EntityState)syncCurrentEntityState != EntityState.Idle)
                 {
                     SetCurrentEntityState((int)EntityState.Idle, (int)direction);
                 }
-                return;
             }
-
-            if (LookingAtPlayer)
+            else
             {
-                LookingAtPlayer = false;
-                Vector2 heading = new Vector2(SyncX, SyncY) - nextPoint;
-                Direction direction = GetDirection(heading);
-                SetCurrentEntityState((int)EntityState.Moving, (int)direction);
-            }
-
-            if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f || !(GetCurrentEnitytState() == EntityState.Moving)) //next point
-            {
-                currentTime += gameTime.ElapsedGameTime.TotalSeconds;
-                if (currentPointTime != 0 && currentTime < currentPointTime)
+                if (LookingAtPlayer)
                 {
-                    if (GetCurrentEnitytState() == EntityState.Moving)
+                    if(currentInteractingPlayer != null)
                     {
-                        SetCurrentEntityState((int)EntityState.Idle, (int)syncCurrentDirection);
+                        StopInteractWithPlayer(currentInteractingPlayer);
                     }
-                    return;
+                    LookingAtPlayer = false;
+                    Vector2 heading = new Vector2(SyncX, SyncY) - nextPoint;
+                    Direction direction = GetDirection(heading);
+                    SetCurrentEntityState((int)EntityState.Moving, (int)direction);
                 }
 
-                if (path.Count == nextWaypointIndex + 1)
+                if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f || !(GetCurrentEnitytState() == EntityState.Moving)) //next point
                 {
-                    unit = -1;
+                    currentTime += gameTime.ElapsedGameTime.TotalSeconds;
+                    if (currentPointTime != 0 && currentTime < currentPointTime)
+                    {
+                        if (GetCurrentEnitytState() == EntityState.Moving)
+                        {
+                            SetCurrentEntityState((int)EntityState.Idle, (int)syncCurrentDirection);
+                        }
+                        return;
+                    }
+
+                    if (path.Count == nextWaypointIndex + 1)
+                    {
+                        unit = -1;
+                    }
+                    else if (nextWaypointIndex == 0)
+                    {
+                        unit = 1;
+                    }
+                    nextWaypointIndex += unit;
+                    currentPointTime = path[nextWaypointIndex].Time;
+                    nextPoint = path[nextWaypointIndex].Point.ToVector2();
+                    currentTime = 0;
+                    Vector2 heading = new Vector2(SyncX, SyncY) - nextPoint;
+                    Direction direction = GetDirection(heading);
+                    SetCurrentEntityState((int)EntityState.Moving, (int)direction);
                 }
-                else if (nextWaypointIndex == 0)
-                {
-                    unit = 1;
-                }
-                nextWaypointIndex += unit;
-                currentPointTime = path[nextWaypointIndex].Time;
-                nextPoint = path[nextWaypointIndex].Point.ToVector2();
-                currentTime = 0;
-                Vector2 heading = new Vector2(SyncX, SyncY) - nextPoint;
-                Direction direction = GetDirection(heading);
-                SetCurrentEntityState((int)EntityState.Moving, (int)direction);
             }
         }
 

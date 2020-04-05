@@ -15,5 +15,20 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             syncName = "Blacksmith";
             scale = 0.3f;
         }
+
+        public override void InteractWithPlayer(Player player)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void StopInteractWithPlayer(Player player)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal override void ChooseDialogOption(int index)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

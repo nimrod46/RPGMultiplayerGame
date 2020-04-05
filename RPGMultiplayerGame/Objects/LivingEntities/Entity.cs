@@ -49,7 +49,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected bool isHidenCompletely;
         protected bool startedFlickeringAnim;
         private readonly float maxHealth;
-        private Vector2 healthBarOffset;
+        protected Vector2 healthBarOffset;
         private Vector2 healthBarSize;
         private int currentFlickerCount;
         private bool isBeingHit;

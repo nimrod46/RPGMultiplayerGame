@@ -17,6 +17,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         readonly List<Keys> currentArrowsKeysPressed = new List<Keys>();
         public delegate void LocalPlayerNameSetEventHandler(Player player);
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
+        private Npc interactingWith;
 
         public Player() : base(EntityID.Player, 0, 10, 100, GameManager.Instance.PlayerName)
         {
@@ -24,6 +25,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             speed *= 2;
             syncName = "null";
         }
+
         public override void OnNetworkInitialize()
         {
             if (hasAuthority)
@@ -71,6 +73,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
+        internal void StopInteractingWithNpc()
+        {
+            interactingWith = null;
+        }
+
+        internal void InteractWithNpc(Npc npc)
+        {
+            interactingWith = npc;
+        }
+
         public override void Update(GameTime gameTime)
         {
             if (hasAuthority)
@@ -88,7 +100,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                             Instance_OnArrowsKeysStateChange(Keys.None, false);
                         }
                     }
-                }  
+                }
+                if (interactingWith != null)
+                {
+                    if (InputManager.Instance.KeyPressed(Keys.D1, Keys.D9, out Keys pressedKey))
+                    {
+                        interactingWith.ChooseDialogOption(pressedKey - Keys.D1);
+                    }
+                }
             }   
             base.Update(gameTime);
         }

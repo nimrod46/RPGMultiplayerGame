@@ -16,9 +16,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         [SyncVar(hook = "OnNameSet")]
         protected string syncName;
 
-        private Vector2 nameFontOffset;
-        private readonly SpriteFont nameFont;
-        private Vector2 nameFontSize = Vector2.Zero;
+        protected Vector2 nameOffset;
+        protected readonly SpriteFont nameFont;
+        protected Vector2 nameFontSize = Vector2.Zero;
 
         public Human(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
         {
@@ -29,7 +29,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected override void UpdateDrawOffset()
         {
             base.UpdateDrawOffset();
-            nameFontOffset = new Vector2(BaseSize.X / 2 - nameFontSize.X / 2, -healthBarBackground.Height - 2 - nameFontSize.Y);
+            nameOffset = new Vector2(BaseSize.X / 2 - nameFontSize.X / 2, -healthBarBackground.Height - 2 - nameFontSize.Y);
         }
 
         public override void Draw(SpriteBatch sprite)
@@ -37,7 +37,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Draw(sprite);
             if (!isHidenCompletely)
             {
-                sprite.DrawString(nameFont, syncName, Location + nameFontOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
+                sprite.DrawString(nameFont, syncName, Location + nameOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
             }
         }
 
@@ -46,7 +46,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             syncName = name;
         }
 
-        public void OnNameSet()
+        public virtual void OnNameSet()
         {
             nameFontSize = nameFont.MeasureString(syncName);
             UpdateDrawOffset();
