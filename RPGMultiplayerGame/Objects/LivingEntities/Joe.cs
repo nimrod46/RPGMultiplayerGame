@@ -40,11 +40,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private void BroadCastInteractWithPlayer(Player player)
         {
             isInDialog = true;
-            currentInteractingPlayer = player;
             if (player.hasAuthority)
             {
                 player.InteractWithNpc(this);
                 currentDialog = dialog;
+                currentInteractingPlayer = player;
             }
             else
             {
@@ -56,10 +56,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (currentDialog.AnswersCount() >= index + 1)
             {
-                if (currentInteractingPlayer.hasAuthority)
-                {
-                    currentDialog = currentDialog.GetNextDialogByAnswer(index);
-                }
+                currentDialog = currentDialog.GetNextDialogByAnswer(index);
                 ShowSimpleDialog(currentDialog.Text);
             }
             else if (currentDialog.AnswersCount() == 0)
@@ -71,7 +68,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         [BroadcastMethod]
         private void ShowSimpleDialog(string text)
         {
-            if (currentInteractingPlayer ==null || !currentInteractingPlayer.hasAuthority)
+            if (currentInteractingPlayer == null || !currentInteractingPlayer.hasAuthority)
             {
                 currentSimpleDialog = new SimpleDialog(text);
             }
@@ -80,13 +77,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         [BroadcastMethod]
         public override void StopInteractWithPlayer(Player player)
         {
-            if (player.hasAuthority)
-            {
-                player.StopInteractingWithNpc();
-                currentDialog = null;
-                currentInteractingPlayer = null;
-            }
-            currentSimpleDialog = null;
+            base.StopInteractWithPlayer(player);
             isInDialog = false;
         }
     }

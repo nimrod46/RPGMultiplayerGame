@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Networking;
 using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
@@ -22,24 +23,40 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.OnNameSet();
             dialogOffset = nameOffset + new Vector2(0, -nameFontSize.Y);
         }
+
         internal abstract void ChooseDialogOption(int index);
 
         public abstract void InteractWithPlayer(Player player);
 
-        public abstract void StopInteractWithPlayer(Player player);
+        public virtual void StopInteractWithPlayer(Player player)
+        {
+            if (player.hasAuthority)
+            {
+                player.StopInteractingWithNpc();
+                currentDialog = null;
+                currentInteractingPlayer = null;
+            }
+            currentSimpleDialog = null;
+            StopLookingAtGameObject();
+        }
+
 
         protected override void LookAtGameObject(GameObject gameObject)
         {
             if (!LookingAtPlayer && gameObject is Player)
             {
                 InteractWithPlayer(gameObject as Player);
+                base.LookAtGameObject(gameObject);
             }
-            base.LookAtGameObject(gameObject);
         }
 
+        [BroadcastMethod]
         protected override void StopLookingAtGameObject()
         {
-            base.StopLookingAtGameObject();
+            if (isInServer)
+            {
+                base.StopLookingAtGameObject();
+            }
             if (currentInteractingPlayer != null)
             {
                 StopInteractWithPlayer(currentInteractingPlayer);

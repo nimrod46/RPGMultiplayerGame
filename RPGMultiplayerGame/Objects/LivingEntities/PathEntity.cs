@@ -35,7 +35,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private int nextWaypointIndex = 0;
         private Vector2 nextPoint = Vector2.Zero;
         private int unit;
-        private Vector2 dialogOffset;
 
         public PathEntity(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
         {
