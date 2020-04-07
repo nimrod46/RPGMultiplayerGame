@@ -11,7 +11,7 @@ using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Weapons;
-using static RPGMultiplayerGame.Objects.LivingEntities.Npc;
+using static RPGMultiplayerGame.Objects.LivingEntities.PathEntity;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -87,7 +87,7 @@ namespace RPGMultiplayerGame.Managers
             lock(players)
             {
                 players.Remove((Player) identity);
-                OnClientSynchronized(identity.ownerId);
+               // OnClientSynchronized(identity.ownerId);
             }
         }
 
@@ -117,7 +117,7 @@ namespace RPGMultiplayerGame.Managers
                 NetworkIdentity identity = NetBehavior.spawnWithServerAuthority(gObject.GetType(), gObject);
                 if (obj is NpcLib objP)
                 {
-                    Npc npcMark = identity as Npc;
+                    PathEntity npcMark = identity as PathEntity;
                     foreach (WaypointLib waypoint in objP.waypoints)
                     {
                         npcMark.AddWaypoint(new Waypoint(new Point(waypoint.Point.X, waypoint.Point.Y), (float) waypoint.Time));

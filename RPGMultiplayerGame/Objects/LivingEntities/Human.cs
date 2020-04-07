@@ -11,7 +11,7 @@ using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
-    public abstract class Human : Entity
+    public abstract class Human : PathEntity
     {
         [SyncVar(hook = "OnNameSet")]
         protected string syncName;

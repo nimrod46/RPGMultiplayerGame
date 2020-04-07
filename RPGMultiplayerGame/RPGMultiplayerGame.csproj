@@ -89,6 +89,7 @@
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Objects\AnimatedObject.cs" />
+    <Compile Include="Objects\LivingEntities\PathEntity.cs" />
     <Compile Include="Objects\SimpleDialog.cs" />
     <Compile Include="Objects\ComplexDialog.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
