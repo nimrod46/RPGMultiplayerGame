@@ -13,7 +13,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         private bool isInDialog;
 
-        public Joe() : base(GameManager.EntityID.Player, 0, 0, 100, GameManager.Instance.PlayerName)
+        public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerName)
         {
             syncName = "Joe";
             isInDialog = false;
@@ -79,6 +79,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.StopInteractWithPlayer(player);
             isInDialog = false;
+        }
+
+        protected override void UpdateWeaponLocation()
+        {
+            throw new NotImplementedException();
         }
     }
 }

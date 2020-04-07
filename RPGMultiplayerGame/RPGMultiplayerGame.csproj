@@ -89,6 +89,8 @@
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Objects\AnimatedObject.cs" />
+    <Compile Include="Objects\LivingEntities\Monster.cs" />
+    <Compile Include="Objects\LivingEntities\Bat.cs" />
     <Compile Include="Objects\LivingEntities\PathEntity.cs" />
     <Compile Include="Objects\SimpleDialog.cs" />
     <Compile Include="Objects\ComplexDialog.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Managers\NetworkManager.cs" />
     <Compile Include="Objects\LivingEntities\Player.cs" />
     <Compile Include="Objects\UpdateObject.cs" />
+    <Compile Include="Objects\Weapons\BatClaw.cs" />
     <Compile Include="Objects\Weapons\OldSword.cs" />
     <Compile Include="Objects\Weapons\Weapon.cs" />
     <Compile Include="Program.cs" />

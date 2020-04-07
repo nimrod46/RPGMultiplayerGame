@@ -19,10 +19,11 @@ namespace RPGMultiplayerGame.Managers
 {
     public class GameManager
     {
-        public enum EntityID
+        public enum EntityId
         {
             Player,
-            Blacksmith
+            Blacksmith,
+            Bat
         }        
 
         public static GameManager Instance
@@ -38,13 +39,16 @@ namespace RPGMultiplayerGame.Managers
         }
 
         public const float OWN_PLAYER_LAYER = 0.001f;
+
+        
+
         public const float ENTITY_LAYER = 0.01f;
         public const float CHARECTER_TEXT_LAYER = 0.9f;
 
         static GameManager instance;
 
 
-        public Dictionary<EntityID, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityID, Dictionary<int, List<GameTexture>>>();
+        public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
         public List<Texture2D> textures = new List<Texture2D>();
         public Texture2D HealthBar;
         public Texture2D HealthBarBackground;
@@ -56,6 +60,7 @@ namespace RPGMultiplayerGame.Managers
         private readonly List<GraphicObject> grapichObjects = new List<GraphicObject>();
         private readonly List<UpdateObject> updateObjects = new List<UpdateObject>();
         private readonly List<Entity> entities = new List<Entity>();
+        private readonly List<Monster> monsters = new List<Monster>();
         private GraphicsDevice graphicsDevice;
         private readonly string dialogBackgroundPath;
         private GameManager()
@@ -69,19 +74,25 @@ namespace RPGMultiplayerGame.Managers
             this.graphicsDevice = graphicsDevice;
         }
 
+        public Point GetMapSize()
+        {
+            // return new Point(graphicsDevice.PresentationParameters.Bounds.Size, graphicsDevice.Adapter.CurrentDisplayMode.Height);
+            return (graphicsDevice.PresentationParameters.Bounds.Size);
+        }
+
         public void LoadTextures(GraphicsDevice graphicsDevice, ContentManager content)
         {
-            for (int i = 0; i < (int)Enum.GetValues(typeof(EntityID)).Cast<EntityID>().Last() + 1; i++)
+            for (int i = 0; i < (int)Enum.GetValues(typeof(EntityId)).Cast<EntityId>().Last() + 1; i++)
             {
                 XmlManager<List<AnimationPropertiesLib>> xml = new XmlManager<List<AnimationPropertiesLib>>();
                 List<AnimationPropertiesLib> animationProperties = null;
                 try
                 {
-                    animationProperties = xml.Load("Content\\" + (EntityID)i + ".xml");
+                    animationProperties = xml.Load("Content\\" + (EntityId)i + ".xml");
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Warning: no xml found for " + (EntityID)i);
+                    Console.WriteLine("Warning: no xml found for " + (EntityId)i);
                 }
                 Dictionary<int, List<GameTexture>> animations = new Dictionary<int, List<GameTexture>>();
                 for (int j = 0; j < (int)Enum.GetValues(typeof(EntityAnimation)).Cast<EntityAnimation>().Last() + 1; j++)
@@ -89,7 +100,7 @@ namespace RPGMultiplayerGame.Managers
                     List<GameTexture> animation = new List<GameTexture>();
                     for (int k = 1; k <= 32; k++)
                     {
-                        string name ="" + (EntityID)i + "\\" + (EntityAnimation)j + "\\" + k ;
+                        string name ="" + (EntityId)i + "\\" + (EntityAnimation)j + "\\" + k ;
                         Vector2 offset = Vector2.Zero;
                         if (animationProperties?.Where(a => name.Contains(a.FullPath)).Count() > 0)
                         {
@@ -97,7 +108,6 @@ namespace RPGMultiplayerGame.Managers
                         }
                         try
                         {
-
                             animation.Add(new GameTexture(content.Load<Texture2D>("Entities\\" + name), offset));
                         }
                         catch (Exception)
@@ -108,7 +118,7 @@ namespace RPGMultiplayerGame.Managers
                     animations.Add(j, animation);
                 }
                
-                animationsByEntities.Add((EntityID) i, animations);
+                animationsByEntities.Add((EntityId) i, animations);
             }
 
             HealthBar = content.Load<Texture2D>("HealthBar");
@@ -140,7 +150,7 @@ namespace RPGMultiplayerGame.Managers
             for (int i = 0; i < entities.Count; i++)
             {
                 Entity entity = entities[i];
-                if (attacker == entity)
+                if (attacker == entity || attacker.GetType().IsAssignableFrom(entity.GetType()))
                 {
                     continue;
                 }
@@ -250,6 +260,21 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        public void AddMonster(Monster monster)
+        {
+            lock (monsters)
+            {
+                monsters.Add(monster);
+            }
+        }
+        public void RemoveMonster(Monster monster)
+        {
+            lock (monsters)
+            {
+                monsters.Remove(monster);
+            }
+        }
+        
         public Texture2D GetDialogBackGroundByProperties(string name, string text, params string[] options)
         {
             return SVGToTexture2D(dialogBackgroundPath, name, text, 0, 0, options);

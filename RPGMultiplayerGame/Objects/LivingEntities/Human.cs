@@ -20,7 +20,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected readonly SpriteFont nameFont;
         protected Vector2 nameFontSize = Vector2.Zero;
 
-        public Human(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
+        public Human(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
         {
             this.nameFont = nameFont;
             BaseSize = (animationsByType[(int) EntityAnimation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();

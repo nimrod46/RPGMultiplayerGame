@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects
 {
@@ -53,19 +54,21 @@ namespace RPGMultiplayerGame.Objects
         protected int syncCurrentDirection;
         [SyncVar(shouldInvokeNetworkly = false, hook = "UpdateTexture")] //Live sync through BroadcastMethod, when first time connecting through SyncVar
         protected int syncCurrentAnimationType;
-        protected int animationDelay;
-        protected int timeSinceLastFrame;
+        protected EntityId entityId;
+        protected double animationTimeDelay;
+        protected double timeSinceLastFrame;
         protected int currentAnimationIndex;
         protected bool shouldLoopAnimation;
         protected float speed;
 
-        public AnimatedObject()
+        public AnimatedObject(EntityId entityId)
         {
+            this.entityId = entityId;
+            animationsByType = new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityId]);
             speed = 0.5f / 10;
-            animationDelay = 100;
+            animationTimeDelay = 100;
             shouldLoopAnimation = true;
             syncCurrentDirection = (int)Direction.Down;
-            InitAnimationsList();
         }
 
         protected abstract void InitAnimationsList();
@@ -78,8 +81,8 @@ namespace RPGMultiplayerGame.Objects
 
         public override void Update(GameTime gameTime)
         {
-            timeSinceLastFrame += (int)(speed * 500);
-            if (timeSinceLastFrame >= animationDelay)
+            timeSinceLastFrame += (speed * 500);
+            if (timeSinceLastFrame >= animationTimeDelay)
             {
                 timeSinceLastFrame = 0;
                 if (GetIsLoopAnimationFinished())

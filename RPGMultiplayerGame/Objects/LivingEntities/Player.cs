@@ -19,7 +19,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
         private Npc interactingWith;
 
-        public Player() : base(EntityID.Player, 0, 10, 100, GameManager.Instance.PlayerName)
+        public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerName)
         {
             scale = 1;
             speed *= 2;
@@ -129,6 +129,34 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             else
             {
                 client.CmdChooseNameAgain();
+            }
+        }
+
+        protected override void UpdateWeaponLocation()
+        {
+            if (syncWeapon != null)
+            {
+                switch ((Direction)syncCurrentDirection)
+                {
+                    case Direction.Left:
+                        syncWeapon.SyncX = GetBoundingRectangle().Left;
+                        syncWeapon.SyncY = GetCenter().Y;
+                        break;
+                    case Direction.Up:
+                        syncWeapon.SyncY = GetBoundingRectangle().Top;
+                        syncWeapon.SyncX = GetCenter().X;
+                        break;
+                    case Direction.Right:
+                        syncWeapon.SyncX = GetBoundingRectangle().Right - syncWeapon.Size.X;
+                        syncWeapon.SyncY = GetCenter().Y;
+                        break;
+                    case Direction.Down:
+                        syncWeapon.SyncY = GetBoundingRectangle().Bottom - syncWeapon.Size.Y;
+                        syncWeapon.SyncX = GetCenter().X;
+                        break;
+                    case Direction.Idle:
+                        break;
+                }
             }
         }
 

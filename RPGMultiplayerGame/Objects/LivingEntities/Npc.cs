@@ -13,7 +13,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected Player currentInteractingPlayer;
         private Vector2 dialogOffset;
 
-        public Npc(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
+        public Npc(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
         {
             speed *= 0.5f;
         }
@@ -43,7 +43,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected override void LookAtGameObject(GameObject gameObject)
         {
-            if (!LookingAtPlayer && gameObject is Player)
+            if (!IsLookingAtPlayer && gameObject is Player)
             {
                 InteractWithPlayer(gameObject as Player);
                 base.LookAtGameObject(gameObject);

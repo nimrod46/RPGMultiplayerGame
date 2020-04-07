@@ -28,28 +28,24 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public bool LookingAtPlayer { get; set; }
+        public bool IsLookingAtPlayer { get; set; }
         private readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
         private double currentPointTime = 0;
         private int nextWaypointIndex = 0;
-        private Vector2 nextPoint = Vector2.Zero;
+        protected Vector2 nextPoint = Vector2.Zero;
         private int unit;
 
-        public PathEntity(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
+        public PathEntity(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
         {
-            LookingAtPlayer = false;
+            IsLookingAtPlayer = false;
         }
        
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (nextPoint == Vector2.Zero)
-            {
-                return;
-            }
 
-            if (!hasAuthority)
+            if (!hasAuthority || !isInServer)
             {
                 return;
             }
@@ -74,12 +70,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
             else
             {
-                if (LookingAtPlayer)
+                if (IsLookingAtPlayer)
                 {
                    
                     StopLookingAtGameObject();
                 }
 
+                if (nextPoint == Vector2.Zero)
+                {
+                    return;
+                }
                 if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f || !(GetCurrentEnitytState() == EntityState.Moving)) //next point
                 {
                     currentTime += gameTime.ElapsedGameTime.TotalSeconds;
@@ -101,30 +101,44 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         unit = 1;
                     }
                     nextWaypointIndex += unit;
-                    currentPointTime = path[nextWaypointIndex].Time;
-                    nextPoint = path[nextWaypointIndex].Point.ToVector2();
+                    if (HavePathToFollow())
+                    {
+                        currentPointTime = path[nextWaypointIndex].Time;
+                        nextPoint = path[nextWaypointIndex].Point.ToVector2();
+                    }
                     currentTime = 0;
-                    MoveToPoint(nextPoint);
                 }
+                MoveToPoint(nextPoint);
             }
         }
 
         protected virtual void StopLookingAtGameObject()
         {
-            LookingAtPlayer = false;
-            MoveToPoint(nextPoint);
+            IsLookingAtPlayer = false;
+            if (nextPoint != Vector2.Zero)
+            {
+                MoveToPoint(nextPoint);
+            }
+        }
+
+        protected bool HavePathToFollow()
+        {
+            return path.Any();
         }
 
         private void MoveToPoint(Vector2 point)
         {
             Vector2 heading = new Vector2(SyncX, SyncY) - point;
             Direction direction = GetDirection(heading);
-            SetCurrentEntityState((int)EntityState.Moving, (int)direction);
+            if (!(GetCurrentEnitytState() == EntityState.Moving) || (int) direction != syncCurrentDirection)
+            {
+                SetCurrentEntityState((int)EntityState.Moving, (int)direction);
+            }
         }
 
         protected virtual void LookAtGameObject(GameObject gameObject)
         {
-            LookingAtPlayer = true;
+            IsLookingAtPlayer = true;
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = GetDirection(heading);
             if (direction != (Direction)syncCurrentDirection || (EntityState)syncCurrentEntityState != EntityState.Idle)
@@ -133,7 +147,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        private Direction GetDirection(Vector2 heading)
+        protected Direction GetDirection(Vector2 heading)
         {
             Direction direction;
             if (Math.Abs(heading.X) > Math.Abs(heading.Y))

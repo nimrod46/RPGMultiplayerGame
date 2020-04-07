@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public event EntityAttackedEventHandler OnEntityAttcked;
         public Weapon Weapon { get => syncWeapon; set => syncWeapon = value; }
         [SyncVar]
-        private Weapon syncWeapon;
+        protected Weapon syncWeapon;
         [SyncVar(hook = "OnHealthSet")]
         protected float syncHealth;
         [SyncVar(shouldInvokeNetworkly = false)]
@@ -41,7 +41,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected SpawnPoint syncSpawnPoint;
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
-        protected EntityID entityID;
         protected float textLyer;
         protected int collisionOffsetX;
         protected int collisionOffsetY;
@@ -56,9 +55,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private readonly double flickerTimeDelay = 0.2;
         private double currentFlickerTime = 0.5;
 
-        public Entity(EntityID entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth)
+        public Entity(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth) : base(entityID)
         {
-            this.entityID = entityID;
             this.collisionOffsetX = collisionOffsetX;
             this.collisionOffsetY = collisionOffsetY;
             this.maxHealth = maxHealth;
@@ -76,7 +74,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected override void InitAnimationsList()
         {
-            animationsByType = new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityID]);
         }
 
         public override void OnNetworkInitialize()
@@ -246,34 +243,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             UpdateWeaponLocation();
         }
 
-        protected void UpdateWeaponLocation()
-        {
-            if (syncWeapon != null)
-            {
-                switch ((Direction)syncCurrentDirection)
-                {
-                    case Direction.Left:
-                        syncWeapon.SyncX = GetBoundingRectangle().Left;
-                        syncWeapon.SyncY = GetCenter().Y;
-                        break;
-                    case Direction.Up:
-                        syncWeapon.SyncY = GetBoundingRectangle().Top;
-                        syncWeapon.SyncX = GetCenter().X;
-                        break;
-                    case Direction.Right:
-                        syncWeapon.SyncX = GetBoundingRectangle().Right - syncWeapon.Size.X;
-                        syncWeapon.SyncY = GetCenter().Y;
-                        break;
-                    case Direction.Down:
-                        syncWeapon.SyncY = GetBoundingRectangle().Bottom - syncWeapon.Size.Y;
-                        syncWeapon.SyncX = GetCenter().X;
-                        break;
-                    case Direction.Idle:
-                        break;
-                }
-            }
-        }
-     
+        protected abstract void UpdateWeaponLocation();
+
         private Rectangle GetCollisionRect(float x, float y, int width, int height)
         {
             return new Rectangle((int)x + collisionOffsetX, (int)y + collisionOffsetY, width - collisionOffsetX, height - collisionOffsetY);

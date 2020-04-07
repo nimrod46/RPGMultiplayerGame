@@ -44,6 +44,8 @@ namespace RPGMultiplayerGame.Managers
             new Joe();
             new Blacksmith();
             new OldSword();
+            new Bat();
+            new BatClaw();
         }
 
         public void AddServer()

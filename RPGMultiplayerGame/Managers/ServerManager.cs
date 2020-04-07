@@ -32,6 +32,7 @@ namespace RPGMultiplayerGame.Managers
 
         public readonly List<Player> players = new List<Player>();
         public readonly List<UpdateObject> serverObjects = new List<UpdateObject>();
+        public readonly List<Monster> monsters = new List<Monster>();
         public SpawnPoint spawnPoint;
 
 
@@ -46,11 +47,27 @@ namespace RPGMultiplayerGame.Managers
             NetBehavior = serverBehavior;
         }
 
-        private void OnIdentityInitialize(NetworkIdentity client)
+        private void OnIdentityInitialize(NetworkIdentity identity)
         {
-            if(client is Entity)
+            if (identity is Entity)
             {
-                ((Entity)client).OnEntityAttcked += ServerManager_OnEntityAttcked;
+                ((Entity)identity).OnEntityAttcked += ServerManager_OnEntityAttcked;
+            }
+            else if (identity is Monster)
+            {
+                lock (monsters)
+                {
+                    monsters.Add(identity as Monster);
+                    identity.OnDestroyEvent += Monster_OnDestroyEvent;
+                }
+            }
+        }
+
+        private void Monster_OnDestroyEvent(NetworkIdentity identity)
+        {
+            lock (monsters)
+            {
+                monsters.Remove(identity as Monster);
             }
         }
 
@@ -100,7 +117,15 @@ namespace RPGMultiplayerGame.Managers
                 if (obj is NpcLib)
                 {
                     gObject = new Joe();
-
+                    for (int i = 0; i < 10; i++)
+                    {
+                        Bat bat = new Bat();
+                        bat.SyncX = obj.Rectangle.X;
+                        bat.SyncY = obj.Rectangle.Y;
+                        Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
+                        BatClaw weapon = NetBehavior.spawnWithServerAuthority(typeof(BatClaw)) as BatClaw;
+                        spawnedBat.EquipeWith(weapon);
+                    }
                 }
                 else if (obj is SpawnLib)
                 {
