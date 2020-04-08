@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Networking;
+using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,13 @@ namespace RPGMultiplayerGame.Objects.Weapons
 {
     public abstract class Weapon : GameObject
     {
-        [SyncVar(shouldInvokeNetworkly = false)]
+       // [SyncVar(shouldInvokeNetworkly = false)]
         public override float SyncX { get; set; }
-        [SyncVar(shouldInvokeNetworkly = false)]
+       // [SyncVar(shouldInvokeNetworkly = false)]
         public override float SyncY { get; set; }
-        [SyncVar]
+       // [SyncVar]
         public float SyncDamage { get; set; }
-        [SyncVar]
+     //   [SyncVar]
         protected string syncName;
 
         public Weapon(Point size, float damage, string name)

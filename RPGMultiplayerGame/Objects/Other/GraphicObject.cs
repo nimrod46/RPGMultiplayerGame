@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 
-namespace RPGMultiplayerGame.Objects
+namespace RPGMultiplayerGame.Objects.Other
 {
     public abstract class GraphicObject : UpdateObject
     {

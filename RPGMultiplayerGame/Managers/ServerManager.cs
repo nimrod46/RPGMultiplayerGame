@@ -10,6 +10,7 @@ using Networking;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.Weapons;
 using static RPGMultiplayerGame.Objects.LivingEntities.PathEntity;
 

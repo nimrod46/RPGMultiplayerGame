@@ -13,7 +13,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     public abstract class Human : PathEntity
     {
-        [SyncVar(hook = "OnNameSet")]
+        //[SyncVar(hook = "OnNameSet")]
         protected string syncName;
 
         protected Vector2 nameOffset;

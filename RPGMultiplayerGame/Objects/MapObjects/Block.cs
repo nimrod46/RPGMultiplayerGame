@@ -15,7 +15,7 @@ namespace RPGMultiplayerGame.Objects
 {
     public class Block : MapObject
     {
-        [SyncVar(hook = "OnTextureIndexSet")]
+        //[SyncVar(hook = "OnTextureIndexSet")]
         public int SyncTextureIndex { get; set; }
         
 

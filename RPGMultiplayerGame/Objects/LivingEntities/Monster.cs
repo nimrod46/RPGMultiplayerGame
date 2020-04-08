@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,16 +49,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 UpdateWeaponLocation();
                 if (GameManager.Instance.GetEntitiesHitBy(this).Any())
                 {
+                    SetCurrentEntityState((int)State.Idle, syncCurrentDirection);
                     timeSinceLastAtack += gameTime.ElapsedGameTime.TotalSeconds;
                     if (timeSinceLastAtack > attackTimeDelay)
                     {
                         timeSinceLastAtack = 0;
-                        SetCurrentEntityState((int)EntityState.Attacking, syncCurrentDirection);
+                        SetCurrentEntityState((int)State.Attacking, syncCurrentDirection);
                     }
                 }
                 else
                 {
-                    SetCurrentEntityState((int)EntityState.Moving, syncCurrentDirection);
+                    SetCurrentEntityState((int)State.Moving, syncCurrentDirection);
                 }
             }
             else
@@ -77,15 +79,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected override void LookAtGameObject(GameObject gameObject)
         {
             IsLookingAtPlayer = true;
-            if ((EntityState)syncCurrentEntityState == EntityState.Attacking)
+            if ((State)SyncCurrentEntityState == State.Attacking)
             {
                 return;
             }
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = GetDirection(heading);
-            if (direction != (Direction)syncCurrentDirection || (EntityState)syncCurrentEntityState != EntityState.Moving)
+            if (direction != (Direction)syncCurrentDirection || (State)SyncCurrentEntityState != State.Moving)
             {
-                SetCurrentEntityState((int)EntityState.Moving, (int)direction);
+                SetCurrentEntityState((int)State.Moving, (int)direction);
             }
         }
 
@@ -93,29 +95,27 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (syncWeapon != null)
             {
-                //switch ((Direction)syncCurrentDirection)
-                //{
-                //    case Direction.Left:
-                //        syncWeapon.SyncX = GetBoundingRectangle().Left;
-                //        syncWeapon.SyncY = GetCenter().Y;
-                //        break;
-                //    case Direction.Up:
-                //        syncWeapon.SyncY = GetBoundingRectangle().Top;
-                //        syncWeapon.SyncX = GetCenter().X;
-                //        break;
-                //    case Direction.Right:
-                //        syncWeapon.SyncX = GetBoundingRectangle().Right - syncWeapon.Size.X;
-                //        syncWeapon.SyncY = GetCenter().Y;
-                //        break;
-                //    case Direction.Down:
-                //        syncWeapon.SyncY = GetBoundingRectangle().Bottom - syncWeapon.Size.Y;
-                //        syncWeapon.SyncX = GetCenter().X;
-                //        break;
-                //    case Direction.Idle:
-                //        break;
-                //}
-                syncWeapon.SyncX = SyncX;
-                syncWeapon.SyncY = SyncY;
+                switch ((Direction)syncCurrentDirection)
+                {
+                    case Direction.Left:
+                        syncWeapon.SyncX = GetBoundingRectangle().Left;
+                        syncWeapon.SyncY = GetCenter().Y;
+                        break;
+                    case Direction.Up:
+                        syncWeapon.SyncY = GetBoundingRectangle().Top;
+                        syncWeapon.SyncX = GetCenter().X;
+                        break;
+                    case Direction.Right:
+                        syncWeapon.SyncX = GetBoundingRectangle().Right - syncWeapon.Size.X;
+                        syncWeapon.SyncY = GetCenter().Y;
+                        break;
+                    case Direction.Down:
+                        syncWeapon.SyncY = GetBoundingRectangle().Bottom - syncWeapon.Size.Y;
+                        syncWeapon.SyncX = GetCenter().X;
+                        break;
+                    case Direction.Idle:
+                        break;
+                }
             }
         }
     }

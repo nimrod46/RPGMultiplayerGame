@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGMultiplayerGame.Objects
+namespace RPGMultiplayerGame.Objects.Other
 {
     public class ComplexDialog : SimpleDialog
     {

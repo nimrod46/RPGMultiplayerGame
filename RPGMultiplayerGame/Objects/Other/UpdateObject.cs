@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Networking;
-namespace RPGMultiplayerGame.Objects
+namespace RPGMultiplayerGame.Objects.Other
 {
     public abstract class UpdateObject : GameObject
     {

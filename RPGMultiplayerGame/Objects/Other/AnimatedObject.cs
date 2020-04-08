@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Managers.GameManager;
 
-namespace RPGMultiplayerGame.Objects
+namespace RPGMultiplayerGame.Objects.Other
 {
     public abstract class AnimatedObject : GraphicObject
     {
@@ -50,21 +50,19 @@ namespace RPGMultiplayerGame.Objects
         }
 
         protected Dictionary<int, List<GameTexture>> animationsByType = new Dictionary<int, List<GameTexture>>();
-        [SyncVar(shouldInvokeNetworkly = false)]
+       // [SyncVar(shouldInvokeNetworkly = false)]
         protected int syncCurrentDirection;
-        [SyncVar(shouldInvokeNetworkly = false, hook = "UpdateTexture")] //Live sync through BroadcastMethod, when first time connecting through SyncVar
+      //  [SyncVar(shouldInvokeNetworkly = false, hook = "UpdateTexture")] //Live sync through BroadcastMethod, when first time connecting through SyncVar
         protected int syncCurrentAnimationType;
-        protected EntityId entityId;
         protected double animationTimeDelay;
         protected double timeSinceLastFrame;
         protected int currentAnimationIndex;
         protected bool shouldLoopAnimation;
         protected float speed;
 
-        public AnimatedObject(EntityId entityId)
+        public AnimatedObject(Dictionary<int, List<GameTexture>> animationsByType)
         {
-            this.entityId = entityId;
-            animationsByType = new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityId]);
+            this.animationsByType = animationsByType;
             speed = 0.5f / 10;
             animationTimeDelay = 100;
             shouldLoopAnimation = true;

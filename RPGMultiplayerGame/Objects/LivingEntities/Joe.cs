@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Other;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -36,7 +37,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        [BroadcastMethod]
+       // [BroadcastMethod]
         private void BroadCastInteractWithPlayer(Player player)
         {
             isInDialog = true;
@@ -65,7 +66,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        [BroadcastMethod]
+      //  [BroadcastMethod]
         private void ShowSimpleDialog(string text)
         {
             if (currentInteractingPlayer == null || !currentInteractingPlayer.hasAuthority)
@@ -74,7 +75,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
         
-        [BroadcastMethod]
+     //   [BroadcastMethod]
         public override void StopInteractWithPlayer(Player player)
         {
             base.StopInteractWithPlayer(player);

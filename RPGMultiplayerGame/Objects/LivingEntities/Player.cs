@@ -53,7 +53,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 if (isDown)
                 {
                     Direction direction = (Direction)((int)key - (int)Keys.Left);
-                    SetCurrentEntityState((int)EntityState.Moving, (int) direction);
+                    SetCurrentEntityState((int)State.Moving, (int) direction);
                     currentArrowsKeysPressed.Insert(0, key);
                 }
                 else
@@ -61,13 +61,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     currentArrowsKeysPressed.RemoveAll(k => k == key);
                     if (currentArrowsKeysPressed.Count == 0)
                     {
-                        SetCurrentEntityState((int)EntityState.Idle, (int)syncCurrentDirection);
+                        SetCurrentEntityState((int)State.Idle, (int)syncCurrentDirection);
                     }
                     else
                     {
                         key = currentArrowsKeysPressed[0];
                         Direction direction = (Direction)((int)key - (int)Keys.Left);
-                        SetCurrentEntityState((int)EntityState.Moving, (int)direction);
+                        SetCurrentEntityState((int)State.Moving, (int)direction);
                     }
                 }
             }
@@ -87,13 +87,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (hasAuthority)
             {
-                if (InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState() == EntityState.Attacking))
+                if (InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
                 {
-                    SetCurrentEntityState((int)EntityState.Attacking, syncCurrentDirection);
+                    SetCurrentEntityState((int)State.Attacking, syncCurrentDirection);
                 }
                 else
                 {
-                    if (GetCurrentEnitytState() == EntityState.Attacking)
+                    if (GetCurrentEnitytState<State>() == State.Attacking)
                     {
                         if(!InputManager.Instance.KeyDown(Keys.X) || GetIsLoopAnimationFinished())
                         {
@@ -118,7 +118,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
         }
 
-        [Command]
+      //  [Command]
         protected void CmdCheckName(Player client, string name)
         {
             Console.WriteLine("Checing name: " + name);
@@ -160,13 +160,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        [Command]
+      //  [Command]
         public void CmdChooseNameAgain()
         {
             CmdCheckName(this, TextInput.getText("Name"));
         }
 
-        [Command]
+       // [Command]
         public void CmdSetName(string name)
         {
             Init(name);

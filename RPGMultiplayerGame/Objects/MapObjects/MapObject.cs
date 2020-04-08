@@ -8,16 +8,17 @@ using System.Threading.Tasks;
 using Map;
 using Microsoft.Xna.Framework;
 using Networking;
+using RPGMultiplayerGame.Objects.Other;
 
 namespace RPGMultiplayerGame.Objects.MapObjects
 {
     public abstract class MapObject : GraphicObject
     {
-        [SyncVar]
+      //  [SyncVar]
         public int SyncLayer { get; set; }
-        [SyncVar]
+      //  [SyncVar]
         public bool SyncHasUnder { get; set; }
-        [SyncVar]
+     //   [SyncVar]
         public bool SyncHasAbove { get; set; }
         public override void OnNetworkInitialize()
         {

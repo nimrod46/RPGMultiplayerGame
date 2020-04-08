@@ -12,16 +12,16 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.MapObjects;
+using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.Weapons;
 using static RPGMultiplayerGame.Managers.GameManager;
-using static RPGMultiplayerGame.Objects.AnimatedObject;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 
 {
-    public abstract class Entity : AnimatedObject
+    public abstract class Entity : MovingObject
     {
-        public enum EntityState
+        public new enum State
         {
             Idle,
             Moving,
@@ -31,19 +31,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public delegate void EntityAttackedEventHandler(Entity entity);
         public event EntityAttackedEventHandler OnEntityAttcked;
         public Weapon Weapon { get => syncWeapon; set => syncWeapon = value; }
-        [SyncVar]
+       // [SyncVar]
         protected Weapon syncWeapon;
-        [SyncVar(hook = "OnHealthSet")]
+        //[SyncVar(hook = "OnHealthSet")]
         protected float syncHealth;
-        [SyncVar(shouldInvokeNetworkly = false)]
-        protected int syncCurrentEntityState;
-        [SyncVar]
+       
+      //  [SyncVar]
         protected SpawnPoint syncSpawnPoint;
+        protected EntityId entityId;
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
         protected float textLyer;
-        protected int collisionOffsetX;
-        protected int collisionOffsetY;
         protected int flickerCount;
         protected bool isHidenCompletely;
         protected bool startedFlickeringAnim;
@@ -55,10 +53,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private readonly double flickerTimeDelay = 0.2;
         private double currentFlickerTime = 0.5;
 
-        public Entity(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth) : base(entityID)
+        public Entity(EntityId entityId, int collisionOffsetX, int collisionOffsetY, float maxHealth) : base(new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityId]), collisionOffsetX, collisionOffsetY)
         {
-            this.collisionOffsetX = collisionOffsetX;
-            this.collisionOffsetY = collisionOffsetY;
+            this.entityId = entityId;
             this.maxHealth = maxHealth;
             isBeingHit = false;
             healthBar = GameManager.Instance.HealthBar;
@@ -66,7 +63,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
             syncHealth = maxHealth;
             syncCurrentAnimationType = (int)EntityAnimation.IdleDown;
-            syncCurrentEntityState = (int)EntityState.Idle;
+            SyncCurrentEntityState = (int)State.Idle;
             Layer = GameManager.ENTITY_LAYER;
             isHidenCompletely = false;
             flickerCount = 5;
@@ -82,26 +79,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             GameManager.Instance.AddEntity(this);
             textLyer = CHARECTER_TEXT_LAYER + DefaultLayer;
 
-        }
-
-        [BroadcastMethod(shouldInvokeSynchronously = true)]
-        public void SetCurrentEntityState(int entityState, int direction)
-        {
-            syncCurrentEntityState = entityState;
-            switch ((EntityState)syncCurrentEntityState)
-            {
-                case EntityState.Idle:
-                    IdleAtDir((Direction)direction);
-                    break;
-                case EntityState.Moving:
-                    MoveAtDir((Direction)direction);
-                    break;
-                case EntityState.Attacking:
-                    AttackAtDir((Direction)direction);
-                    OnEntityAttcked?.Invoke(this);
-                    break;
-            }
-            Location = new Vector2(SyncX, SyncY);
         }
 
         public void OnHealthSet()
@@ -127,49 +104,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void Update(GameTime gameTime)
         {
-            if (GetCurrentEnitytState() == EntityState.Moving)
-            {
-                MapObjectLib block = null;
-                Rectangle newLocationRect;
-                System.Drawing.Rectangle rectt;
-                double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
-                Vector2 newLocation = Location;
-                switch ((Direction)syncCurrentDirection)
-                {
-                    case Direction.Up:
-                        newLocation.Y -= (float)movment;
-                        break;
-                    case Direction.Down:
-                        newLocation.Y += (float)movment;
-                        break;
-                    case Direction.Left:
-                        newLocation.X -= (float)movment;
-                        break;
-                    case Direction.Right:
-                        newLocation.X += (float)movment;
-                        break;
-                }
-                newLocationRect = GetCollisionRect(newLocation.X, newLocation.Y, Size.X, Size.Y);
-                rectt = new System.Drawing.Rectangle(newLocationRect.X, newLocationRect.Y, newLocationRect.Width, newLocationRect.Height);
-                for (int i = 0; i < GameManager.Instance.map.GraphicObjects.Count; i++)
-                {
-                    if (GameManager.Instance.map.GraphicObjects[i] is BlockLib && GameManager.Instance.map.GraphicObjects[i].Layer > 0 && GameManager.Instance.map.GraphicObjects[i].Rectangle.IntersectsWith(rectt))
-                    {
-                        block = GameManager.Instance.map.GraphicObjects[i];
-                        break;
-                    }
-                }
-                if (block == null)
-                {
-                    if (hasAuthority)
-                    {
-                        SyncX = newLocation.X;
-                        SyncY = newLocation.Y;
-                    }
-                    Location = newLocation;
-                }
-            }
-
             if (isBeingHit)
             {
                 currentFlickerTime += gameTime.ElapsedGameTime.TotalSeconds;
@@ -190,7 +124,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
         }
 
-        [BroadcastMethod]
+        //[BroadcastMethod]
         public virtual void OnAttackedBy(Entity attacker)
         {
             if (hasAuthority)
@@ -211,10 +145,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             currentFlickerCount = 0;
         }
 
-        public EntityState GetCurrentEnitytState()
-        {
-            return (EntityState)syncCurrentEntityState;
-        }
+       
 
         public override void Draw(SpriteBatch sprite)
         {
@@ -226,14 +157,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        protected void IdleAtDir(Direction direction)
-        {
-            AnimationAtDir(direction, 4, true);
-        }
 
-        protected void MoveAtDir(Direction direction)
+       // [BroadcastMethod(shouldInvokeSynchronously = true)]
+        public override void SetCurrentEntityState(int entityState, int direction)
         {
-            AnimationAtDir(direction, 0, true);
+            switch ((State)SyncCurrentEntityState)
+            {
+                case State.Attacking:
+                    AttackAtDir((Direction)direction);
+                    OnEntityAttcked?.Invoke(this);
+                    break;
+            }
+            base.SetCurrentEntityState(entityState, direction);
         }
 
         protected void AttackAtDir(Direction direction)
@@ -245,10 +180,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected abstract void UpdateWeaponLocation();
 
-        private Rectangle GetCollisionRect(float x, float y, int width, int height)
-        {
-            return new Rectangle((int)x + collisionOffsetX, (int)y + collisionOffsetY, width - collisionOffsetX, height - collisionOffsetY);
-        }
 
         public void SetSpawnPoint(SpawnPoint spawnPoint)
         {

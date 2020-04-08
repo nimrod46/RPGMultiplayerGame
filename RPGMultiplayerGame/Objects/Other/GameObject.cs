@@ -9,14 +9,14 @@ using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 
-namespace RPGMultiplayerGame.Objects
+namespace RPGMultiplayerGame.Objects.Other
 {
     public abstract class GameObject : NetworkIdentity
     {
         public virtual Vector2 Location { get; set; }
-        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnXSet")]
+       // [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnXSet")]
         public virtual float SyncX { get; set; }
-        [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
+       // [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
         public virtual float SyncY { get; set; }
         public virtual Point Size { get; set; }
         public Point BaseSize { get; set; }

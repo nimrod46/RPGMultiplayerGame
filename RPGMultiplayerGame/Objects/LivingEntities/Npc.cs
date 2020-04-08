@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
+using RPGMultiplayerGame.Objects.Other;
 using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
@@ -50,7 +51,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        [BroadcastMethod]
+        //[BroadcastMethod]
         protected override void StopLookingAtGameObject()
         {
             if (isInServer)

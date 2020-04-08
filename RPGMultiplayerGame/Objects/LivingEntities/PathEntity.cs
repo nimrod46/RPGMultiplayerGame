@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,14 +81,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     return;
                 }
-                if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f || !(GetCurrentEnitytState() == EntityState.Moving)) //next point
+                if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f || !(GetCurrentEnitytState<State>() == State.Moving)) //next point
                 {
                     currentTime += gameTime.ElapsedGameTime.TotalSeconds;
                     if (currentPointTime != 0 && currentTime < currentPointTime)
                     {
-                        if (GetCurrentEnitytState() == EntityState.Moving)
+                        if (GetCurrentEnitytState<State>() == State.Moving)
                         {
-                            SetCurrentEntityState((int)EntityState.Idle, (int)syncCurrentDirection);
+                            SetCurrentEntityState((int)State.Idle, (int)syncCurrentDirection);
                         }
                         return;
                     }
@@ -130,9 +131,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             Vector2 heading = new Vector2(SyncX, SyncY) - point;
             Direction direction = GetDirection(heading);
-            if (!(GetCurrentEnitytState() == EntityState.Moving) || (int) direction != syncCurrentDirection)
+            if (!(GetCurrentEnitytState<State>() == State.Moving) || (int) direction != syncCurrentDirection)
             {
-                SetCurrentEntityState((int)EntityState.Moving, (int)direction);
+                SetCurrentEntityState((int)State.Moving, (int)direction);
             }
         }
 
@@ -141,9 +142,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             IsLookingAtPlayer = true;
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = GetDirection(heading);
-            if (direction != (Direction)syncCurrentDirection || (EntityState)syncCurrentEntityState != EntityState.Idle)
+            if (direction != (Direction)syncCurrentDirection || (State)SyncCurrentEntityState != State.Idle)
             {
-                SetCurrentEntityState((int)EntityState.Idle, (int)direction);
+                SetCurrentEntityState((int)State.Idle, (int)direction);
             }
         }
 

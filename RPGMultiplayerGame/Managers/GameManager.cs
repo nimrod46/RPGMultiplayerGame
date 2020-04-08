@@ -9,11 +9,10 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using OffsetGeneratorLib;
 using RPGMultiplayerGame.MapObjects;
-using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.LivingEntities;
-using static RPGMultiplayerGame.Objects.AnimatedObject;
-using static RPGMultiplayerGame.Objects.LivingEntities.Entity;
 using Svg;
+using RPGMultiplayerGame.Objects.Other;
+using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -24,7 +23,12 @@ namespace RPGMultiplayerGame.Managers
             Player,
             Blacksmith,
             Bat
-        }        
+        }
+
+        public enum EffectId
+        {
+            FireBall
+        }
 
         public static GameManager Instance
         {
@@ -49,6 +53,7 @@ namespace RPGMultiplayerGame.Managers
 
 
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
+        public Dictionary<EffectId, Dictionary<int, List<GameTexture>>> animationsByEffects = new Dictionary<EffectId, Dictionary<int, List<GameTexture>>>();
         public List<Texture2D> textures = new List<Texture2D>();
         public Texture2D HealthBar;
         public Texture2D HealthBarBackground;
@@ -76,51 +81,13 @@ namespace RPGMultiplayerGame.Managers
 
         public Point GetMapSize()
         {
-            // return new Point(graphicsDevice.PresentationParameters.Bounds.Size, graphicsDevice.Adapter.CurrentDisplayMode.Height);
-            return (graphicsDevice.PresentationParameters.Bounds.Size);
+            return graphicsDevice.PresentationParameters.Bounds.Size;
         }
 
         public void LoadTextures(GraphicsDevice graphicsDevice, ContentManager content)
         {
-            for (int i = 0; i < (int)Enum.GetValues(typeof(EntityId)).Cast<EntityId>().Last() + 1; i++)
-            {
-                XmlManager<List<AnimationPropertiesLib>> xml = new XmlManager<List<AnimationPropertiesLib>>();
-                List<AnimationPropertiesLib> animationProperties = null;
-                try
-                {
-                    animationProperties = xml.Load("Content\\" + (EntityId)i + ".xml");
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Warning: no xml found for " + (EntityId)i);
-                }
-                Dictionary<int, List<GameTexture>> animations = new Dictionary<int, List<GameTexture>>();
-                for (int j = 0; j < (int)Enum.GetValues(typeof(EntityAnimation)).Cast<EntityAnimation>().Last() + 1; j++)
-                {
-                    List<GameTexture> animation = new List<GameTexture>();
-                    for (int k = 1; k <= 32; k++)
-                    {
-                        string name ="" + (EntityId)i + "\\" + (EntityAnimation)j + "\\" + k ;
-                        Vector2 offset = Vector2.Zero;
-                        if (animationProperties?.Where(a => name.Contains(a.FullPath)).Count() > 0)
-                        {
-                            offset = new Vector2(animationProperties.Where(a => name.Contains(a.FullPath)).ToArray()[0].Offset.X, animationProperties.Where(a => name.Contains(a.FullPath)).ToArray()[0].Offset.Y);
-                        }
-                        try
-                        {
-                            animation.Add(new GameTexture(content.Load<Texture2D>("Entities\\" + name), offset));
-                        }
-                        catch (Exception)
-                        {
-                            break;
-                        }
-                    }
-                    animations.Add(j, animation);
-                }
-               
-                animationsByEntities.Add((EntityId) i, animations);
-            }
-
+            animationsByEntities = GetGameTextureByEnum<EntityId>(content);
+            animationsByEffects = GetGameTextureByEnum<EffectId>(content);
             HealthBar = content.Load<Texture2D>("HealthBar");
             HealthBarBackground = content.Load<Texture2D>("HealthBarBackground");
             PlayerName = content.Load<SpriteFont>("PlayerName");
@@ -280,6 +247,49 @@ namespace RPGMultiplayerGame.Managers
             return SVGToTexture2D(dialogBackgroundPath, name, text, 0, 0, options);
         }
 
+        private Dictionary<T, Dictionary<int, List<GameTexture>>> GetGameTextureByEnum<T>(ContentManager content) where T : Enum
+        {
+            Dictionary<T, Dictionary<int, List<GameTexture>>> gameTextureByEnum = new Dictionary<T, Dictionary<int, List<GameTexture>>>();
+            for (int i = 0; i < (int)Enum.GetValues(typeof(T)).Cast<EntityId>().Last() + 1; i++)
+            {
+                XmlManager<List<AnimationPropertiesLib>> xml = new XmlManager<List<AnimationPropertiesLib>>();
+                List<AnimationPropertiesLib> animationProperties = null;
+                try
+                {
+                    animationProperties = xml.Load("Content\\" + (EntityId)i + ".xml");
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Warning: no xml found for " + (EntityId)i);
+                }
+                Dictionary<int, List<GameTexture>> animations = new Dictionary<int, List<GameTexture>>();
+                for (int j = 0; j < (int)Enum.GetValues(typeof(EntityAnimation)).Cast<EntityAnimation>().Last() + 1; j++)
+                {
+                    List<GameTexture> animation = new List<GameTexture>();
+                    for (int k = 1; k <= 32; k++)
+                    {
+                        string name = "" + (EntityId)i + "\\" + (EntityAnimation)j + "\\" + k;
+                        Vector2 offset = Vector2.Zero;
+                        if (animationProperties?.Where(a => name.Contains(a.FullPath)).Count() > 0)
+                        {
+                            offset = new Vector2(animationProperties.Where(a => name.Contains(a.FullPath)).ToArray()[0].Offset.X, animationProperties.Where(a => name.Contains(a.FullPath)).ToArray()[0].Offset.Y);
+                        }
+                        try
+                        {
+                            animation.Add(new GameTexture(content.Load<Texture2D>("Entities\\" + name), offset));
+                        }
+                        catch (Exception)
+                        {
+                            break;
+                        }
+                    }
+                    animations.Add(j, animation);
+                }
+
+                gameTextureByEnum.Add((T)(object)i, animations);
+            }
+            return gameTextureByEnum;
+        }
         private Texture2D SVGToTexture2D(string path, string name, string text, int width = 0, int height = 0, params string[] options)
         {
            
