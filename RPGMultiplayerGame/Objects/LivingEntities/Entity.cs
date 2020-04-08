@@ -30,6 +30,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public delegate void EntityAttackedEventHandler(Entity entity);
         public event EntityAttackedEventHandler OnEntityAttcked;
+
         public Weapon SyncWeapon
         {
             get => syncWeapon; set
@@ -57,9 +58,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        protected Weapon syncWeapon;
-        private float syncHealth;
-
+       
         protected EntityId entityId;
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
@@ -67,8 +66,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected int flickerCount;
         protected bool isHidenCompletely;
         protected bool startedFlickeringAnim;
-        private readonly float maxHealth;
         protected Vector2 healthBarOffset;
+        protected bool damageable;
+        private readonly float maxHealth;
+        private Weapon syncWeapon;
+        private float syncHealth;
         private SpawnPoint syncSpawnPoint;
         private Vector2 healthBarSize;
         private int currentFlickerCount;
@@ -76,10 +78,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private readonly double flickerTimeDelay = 0.2;
         private double currentFlickerTime = 0.5;
 
-        public Entity(EntityId entityId, int collisionOffsetX, int collisionOffsetY, float maxHealth) : base(new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityId]), collisionOffsetX, collisionOffsetY)
+        public Entity(EntityId entityId, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityId]), collisionOffsetX, collisionOffsetY)
         {
             this.entityId = entityId;
             this.maxHealth = maxHealth;
+            this.damageable = damageable;
             isBeingHit = false;
             healthBar = GameManager.Instance.HealthBar;
             healthBarBackground = GameManager.Instance.HealthBarBackground;
@@ -90,6 +93,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Layer = GameManager.ENTITY_LAYER;
             isHidenCompletely = false;
             flickerCount = 5;
+            healthBarOffset = Vector2.Zero;
         }
 
         protected override void InitAnimationsList()
@@ -117,12 +121,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void UpdateDrawOffset()
         {
-            healthBarOffset = new Vector2(BaseSize.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
+            if (damageable)
+            {
+                healthBarOffset = new Vector2(BaseSize.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
+            }
         }
 
         public void EquipeWith(Weapon weapon)
         {
-            this.syncWeapon = weapon;
+            this.SyncWeapon = weapon;
         }
 
         public override void Update(GameTime gameTime)
@@ -152,7 +159,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             InvokeBroadcastMethodNetworkly(nameof(OnAttackedBy), attacker);
             if (hasAuthority)
             {
-                SyncHealth -= attacker.syncWeapon.SyncDamage;
+                SyncHealth -= attacker.SyncWeapon.SyncDamage;
                 if(SyncHealth == 0)
                 {
                     Destroy();
@@ -175,8 +182,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (!isHidenCompletely)
             {
                 base.Draw(sprite);
-                sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer + 0.001f);
-                sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
+                if (damageable)
+                {
+                    sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer + 0.001f);
+                    sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
+                }
             }
         }
 

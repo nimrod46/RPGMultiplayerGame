@@ -29,7 +29,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private string syncName;
 
 
-        public Human(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
+        public Human(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont, bool damageable) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, damageable)
         {
             this.nameFont = nameFont;
             BaseSize = (animationsByType[(int) EntityAnimation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
@@ -38,7 +38,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected override void UpdateDrawOffset()
         {
             base.UpdateDrawOffset();
-            nameOffset = new Vector2(BaseSize.X / 2 - nameFontSize.X / 2, -healthBarBackground.Height - 2 - nameFontSize.Y);
+            nameOffset = new Vector2(BaseSize.X / 2 - nameFontSize.X / 2, healthBarOffset.Y - 2 - nameFontSize.Y);
         }
 
         public override void Draw(SpriteBatch sprite)

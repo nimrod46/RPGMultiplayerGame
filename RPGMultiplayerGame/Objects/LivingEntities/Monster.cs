@@ -19,7 +19,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected double generatePointTimeDelay = 5f;
         protected double timeSinceLastGeneratePoint;
 
-        public Monster(GameManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
+        public Monster(GameManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, true)
         {
             timeSinceLastAtack = 0;
         }
@@ -93,25 +93,25 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected override void UpdateWeaponLocation()
         {
-            if (syncWeapon != null)
+            if (SyncWeapon != null)
             {
                 switch ((Direction)syncCurrentDirection)
                 {
                     case Direction.Left:
-                        syncWeapon.SyncX = GetBoundingRectangle().Left;
-                        syncWeapon.SyncY = GetCenter().Y;
+                        SyncWeapon.SyncX = GetBoundingRectangle().Left;
+                        SyncWeapon.SyncY = GetCenter().Y;
                         break;
                     case Direction.Up:
-                        syncWeapon.SyncY = GetBoundingRectangle().Top;
-                        syncWeapon.SyncX = GetCenter().X;
+                        SyncWeapon.SyncY = GetBoundingRectangle().Top;
+                        SyncWeapon.SyncX = GetCenter().X;
                         break;
                     case Direction.Right:
-                        syncWeapon.SyncX = GetBoundingRectangle().Right - syncWeapon.Size.X;
-                        syncWeapon.SyncY = GetCenter().Y;
+                        SyncWeapon.SyncX = GetBoundingRectangle().Right - SyncWeapon.Size.X;
+                        SyncWeapon.SyncY = GetCenter().Y;
                         break;
                     case Direction.Down:
-                        syncWeapon.SyncY = GetBoundingRectangle().Bottom - syncWeapon.Size.Y;
-                        syncWeapon.SyncX = GetCenter().X;
+                        SyncWeapon.SyncY = GetBoundingRectangle().Bottom - SyncWeapon.Size.Y;
+                        SyncWeapon.SyncX = GetCenter().X;
                         break;
                     case Direction.Idle:
                         break;

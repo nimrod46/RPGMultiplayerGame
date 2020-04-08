@@ -37,7 +37,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected Vector2 nextPoint = Vector2.Zero;
         private int unit;
 
-        public PathEntity(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
+        public PathEntity(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, damageable)
         {
             IsLookingAtPlayer = false;
         }
