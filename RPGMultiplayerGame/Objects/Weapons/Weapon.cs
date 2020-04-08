@@ -11,21 +11,53 @@ namespace RPGMultiplayerGame.Objects.Weapons
 {
     public abstract class Weapon : GameObject
     {
-       // [SyncVar(shouldInvokeNetworkly = false)]
-        public override float SyncX { get; set; }
-       // [SyncVar(shouldInvokeNetworkly = false)]
-        public override float SyncY { get; set; }
-       // [SyncVar]
-        public float SyncDamage { get; set; }
-     //   [SyncVar]
-        protected string syncName;
+        public override float SyncX
+        {
+            get => syncX; set
+            {
+                syncX = value;
+                OnYSet();
+            }
+        }
+
+        public override float SyncY
+        {
+            get => syncY; set
+            {
+                syncY = value;
+                OnYSet();
+            }
+        }
+
+        public float SyncDamage
+        {
+            get => syncDamage; set
+            {
+                syncDamage = value;
+                InvokeSyncVarNetworkly(nameof(SyncDamage), value);
+            }
+        }
+
+        protected string SyncName
+        {
+            get => syncName; set
+            {
+                syncName = value;
+                InvokeSyncVarNetworkly(nameof(SyncName), value);
+            }
+        }
+
+        private string syncName;
+        private float syncX;
+        private float syncY;
+        private float syncDamage;
 
         public Weapon(Point size, float damage, string name)
         {
             Size = size;
             BaseSize = size;
             SyncDamage = damage;
-            syncName = name;
+            SyncName = name;
         }
     }
 }

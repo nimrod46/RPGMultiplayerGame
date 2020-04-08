@@ -15,9 +15,19 @@ namespace RPGMultiplayerGame.Objects
 {
     public class Block : MapObject
     {
-        //[SyncVar(hook = "OnTextureIndexSet")]
-        public int SyncTextureIndex { get; set; }
-        
+
+        public int SyncTextureIndex
+        {
+            get => syncTextureIndex; set
+            {
+                syncTextureIndex = value;
+                InvokeSyncVarNetworkly(nameof(SyncTextureIndex), value);
+                OnTextureIndexSet();
+            }
+        }
+
+        private int syncTextureIndex;
+
 
         public override void OnNetworkInitialize()
         {
