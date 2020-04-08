@@ -79,13 +79,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected override void LookAtGameObject(GameObject gameObject)
         {
             IsLookingAtPlayer = true;
-            if ((State)SyncCurrentEntityState == State.Attacking)
+            if ((State)syncCurrentEntityState == State.Attacking)
             {
                 return;
             }
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = GetDirection(heading);
-            if (direction != (Direction)syncCurrentDirection || (State)SyncCurrentEntityState != State.Moving)
+            if (direction != (Direction)syncCurrentDirection || (State)syncCurrentEntityState != State.Moving)
             {
                 SetCurrentEntityState((int)State.Moving, (int)direction);
             }

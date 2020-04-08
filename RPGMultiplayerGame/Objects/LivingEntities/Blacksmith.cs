@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         public Blacksmith() : base(GameManager.EntityId.Blacksmith, 0, 0, 100, GameManager.Instance.PlayerName)
         {
-            syncName = "Blacksmith";
+            SyncName = "Blacksmith";
             scale = 0.3f;
         }
 

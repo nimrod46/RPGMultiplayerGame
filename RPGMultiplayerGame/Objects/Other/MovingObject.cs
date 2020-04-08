@@ -18,19 +18,9 @@ namespace RPGMultiplayerGame.Objects.Other
             Moving,
         }
 
-        protected int SyncCurrentEntityState
-        {
-            get => syncCurrentEntityState;
-            set
-            {
-                syncCurrentEntityState = value;
-                InvokeSyncVarNetworkly(nameof(SyncCurrentEntityState), value);
-            }
-        }
-        private int syncCurrentEntityState;
+        protected int syncCurrentEntityState;
         protected int collisionOffsetX;
         protected int collisionOffsetY;
-
 
         public MovingObject(Dictionary<int, List<GameTexture>> animationsByType, int collisionOffsetX, int collisionOffsetY) : base(animationsByType)
         {
@@ -40,9 +30,9 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void SetCurrentEntityState(int entityState, int direction)
         {
-            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), new object[] { entityState, direction });
-            SyncCurrentEntityState = entityState;
-            switch ((State)SyncCurrentEntityState)
+            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), entityState, direction );
+            syncCurrentEntityState = entityState;
+            switch ((State)syncCurrentEntityState)
             {
                 case State.Idle:
                     IdleAtDir((Direction)direction);
@@ -115,7 +105,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public T GetCurrentEnitytState<T>() where T : Enum
         {
-            return (T) (object) SyncCurrentEntityState;
+            return (T) (object) syncCurrentEntityState;
         }
 
         private Rectangle GetCollisionRect(float x, float y, int width, int height)

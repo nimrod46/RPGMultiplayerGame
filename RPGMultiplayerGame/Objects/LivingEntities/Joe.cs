@@ -16,14 +16,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerName)
         {
-            syncName = "Joe";
+            SyncName = "Joe";
             isInDialog = false;
         }
 
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            dialog = new ComplexDialog(syncName, "Hi! can you help me?")
+            dialog = new ComplexDialog(SyncName, "Hi! can you help me?")
                 .AddAnswerOption("Yes", new ComplexDialog("Thank You!")
                     .AddAnswerOption("-->", new ComplexDialog("Lets get started")))
                 .AddAnswerOption("No", new ComplexDialog("Ok"));
@@ -37,9 +37,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-       // [BroadcastMethod]
         private void BroadCastInteractWithPlayer(Player player)
         {
+            InvokeBroadcastMethodNetworkly(nameof(BroadCastInteractWithPlayer), player);
             isInDialog = true;
             if (player.hasAuthority)
             {
@@ -66,16 +66,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-      //  [BroadcastMethod]
         private void ShowSimpleDialog(string text)
         {
+            InvokeBroadcastMethodNetworkly(nameof(ShowSimpleDialog), text);
             if (currentInteractingPlayer == null || !currentInteractingPlayer.hasAuthority)
             {
                 currentSimpleDialog = new SimpleDialog(text);
             }
         }
         
-     //   [BroadcastMethod]
         public override void StopInteractWithPlayer(Player player)
         {
             base.StopInteractWithPlayer(player);

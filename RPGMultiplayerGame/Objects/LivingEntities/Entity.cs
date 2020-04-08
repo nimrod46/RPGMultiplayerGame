@@ -30,14 +30,36 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public delegate void EntityAttackedEventHandler(Entity entity);
         public event EntityAttackedEventHandler OnEntityAttcked;
-        public Weapon Weapon { get => syncWeapon; set => syncWeapon = value; }
-       // [SyncVar]
+        public Weapon SyncWeapon
+        {
+            get => syncWeapon; set
+            {
+                syncWeapon = value;
+                InvokeSyncVarNetworkly(nameof(SyncWeapon), value);
+            }
+        }
+        protected SpawnPoint SyncSpawnPoint
+        {
+            get => syncSpawnPoint; set
+            {
+                syncSpawnPoint = value;
+                InvokeSyncVarNetworkly(nameof(SyncSpawnPoint), value);
+            }
+        }
+
+        protected float SyncHealth
+        {
+            get => syncHealth; set
+            {
+                syncHealth = value;
+                InvokeSyncVarNetworkly(nameof(SyncHealth), value);
+                OnHealthSet();
+            }
+        }
+
         protected Weapon syncWeapon;
-        //[SyncVar(hook = "OnHealthSet")]
-        protected float syncHealth;
-       
-      //  [SyncVar]
-        protected SpawnPoint syncSpawnPoint;
+        private float syncHealth;
+
         protected EntityId entityId;
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
@@ -47,6 +69,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected bool startedFlickeringAnim;
         private readonly float maxHealth;
         protected Vector2 healthBarOffset;
+        private SpawnPoint syncSpawnPoint;
         private Vector2 healthBarSize;
         private int currentFlickerCount;
         private bool isBeingHit;
@@ -61,9 +84,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             healthBar = GameManager.Instance.HealthBar;
             healthBarBackground = GameManager.Instance.HealthBarBackground;
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
-            syncHealth = maxHealth;
-            syncCurrentAnimationType = (int)EntityAnimation.IdleDown;
-            SyncCurrentEntityState = (int)State.Idle;
+            SyncHealth = maxHealth;
+            SyncCurrentAnimationType = (int)EntityAnimation.IdleDown;
+            syncCurrentEntityState = (int)State.Idle;
             Layer = GameManager.ENTITY_LAYER;
             isHidenCompletely = false;
             flickerCount = 5;
@@ -83,7 +106,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void OnHealthSet()
         {   
-            healthBarSize.X = syncHealth * healthBar.Width / maxHealth;
+            healthBarSize.X = SyncHealth * healthBar.Width / maxHealth;
         }
 
         public override void UpdateTexture()
@@ -124,13 +147,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
         }
 
-        //[BroadcastMethod]
         public virtual void OnAttackedBy(Entity attacker)
         {
+            InvokeBroadcastMethodNetworkly(nameof(OnAttackedBy), attacker);
             if (hasAuthority)
             {
-                syncHealth -= attacker.syncWeapon.SyncDamage;
-                if(syncHealth == 0)
+                SyncHealth -= attacker.syncWeapon.SyncDamage;
+                if(SyncHealth == 0)
                 {
                     Destroy();
 
@@ -158,17 +181,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
 
-       // [BroadcastMethod(shouldInvokeSynchronously = true)]
         public override void SetCurrentEntityState(int entityState, int direction)
         {
-            switch ((State)SyncCurrentEntityState)
+            base.SetCurrentEntityState(entityState, direction);
+            switch ((State)syncCurrentEntityState)
             {
                 case State.Attacking:
                     AttackAtDir((Direction)direction);
                     OnEntityAttcked?.Invoke(this);
                     break;
             }
-            base.SetCurrentEntityState(entityState, direction);
         }
 
         protected void AttackAtDir(Direction direction)
@@ -183,7 +205,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void SetSpawnPoint(SpawnPoint spawnPoint)
         {
-            syncSpawnPoint = spawnPoint;
+            SyncSpawnPoint = spawnPoint;
             SyncX = spawnPoint.SyncX;
             SyncY = spawnPoint.SyncY;
         }

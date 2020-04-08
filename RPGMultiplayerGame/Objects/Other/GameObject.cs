@@ -14,15 +14,30 @@ namespace RPGMultiplayerGame.Objects.Other
     public abstract class GameObject : NetworkIdentity
     {
         public virtual Vector2 Location { get; set; }
-       // [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnXSet")]
-        public virtual float SyncX { get; set; }
-       // [SyncVar(networkInterface = NetworkInterface.UDP, hook = "OnYSet")]
-        public virtual float SyncY { get; set; }
+        public virtual float SyncX
+        {
+            get => syncX; set
+            {
+                syncX = value;
+                InvokeSyncVarNetworkly(nameof(SyncX), value, NetworkInterface.UDP);
+                OnXSet();
+            }
+        }
+
+        public virtual float SyncY
+        {
+            get => syncY; set
+            {
+                syncY = value;
+                InvokeSyncVarNetworkly(nameof(SyncY), value, NetworkInterface.UDP);
+                OnYSet();
+            }
+        }
         public virtual Point Size { get; set; }
         public Point BaseSize { get; set; }
-
-
         protected object movmentLock = new object();
+        private float syncX;
+        private float syncY;
 
         public GameObject()
         {
@@ -45,7 +60,7 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             return new Vector2(SyncX + BaseSize.X / 2.0f, SyncY + BaseSize.Y / 2.0f);
         }
-       
+
         public virtual Rectangle GetBaseBoundingRectangle()
         {
             return new Rectangle((int)SyncX, (int)SyncY, BaseSize.X, BaseSize.Y);

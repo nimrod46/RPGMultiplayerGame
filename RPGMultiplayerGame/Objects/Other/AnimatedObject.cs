@@ -49,16 +49,24 @@ namespace RPGMultiplayerGame.Objects.Other
             AttackDown,
         }
 
+        protected int SyncCurrentAnimationType
+        {
+            get => syncCurrentAnimationType; set
+            {
+                syncCurrentAnimationType = value;
+                UpdateTexture();
+            }
+        }
+
         protected Dictionary<int, List<GameTexture>> animationsByType = new Dictionary<int, List<GameTexture>>();
-       // [SyncVar(shouldInvokeNetworkly = false)]
         protected int syncCurrentDirection;
-      //  [SyncVar(shouldInvokeNetworkly = false, hook = "UpdateTexture")] //Live sync through BroadcastMethod, when first time connecting through SyncVar
-        protected int syncCurrentAnimationType;
+        private int syncCurrentAnimationType;
         protected double animationTimeDelay;
         protected double timeSinceLastFrame;
         protected int currentAnimationIndex;
         protected bool shouldLoopAnimation;
         protected float speed;
+
 
         public AnimatedObject(Dictionary<int, List<GameTexture>> animationsByType)
         {
@@ -101,7 +109,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void UpdateTexture()
         {
-            GameTexture gameTexture = animationsByType[syncCurrentAnimationType][currentAnimationIndex];
+            GameTexture gameTexture = animationsByType[SyncCurrentAnimationType][currentAnimationIndex];
             texture = gameTexture.Texture;
             offset = gameTexture.Offset * scale;
             Size = (texture.Bounds.Size.ToVector2() * scale).ToPoint();
@@ -116,14 +124,14 @@ namespace RPGMultiplayerGame.Objects.Other
 
         protected bool GetIsLoopAnimationFinished()
         {
-            return currentAnimationIndex + 1 >= animationsByType[syncCurrentAnimationType].Count;
+            return currentAnimationIndex + 1 >= animationsByType[SyncCurrentAnimationType].Count;
         }
 
         protected void AnimationAtDir(Direction direction, int dirToAnimationIndex, bool shouldLoopAnimation)
         {
             currentAnimationIndex = 0;
             syncCurrentDirection = (int)direction;
-            syncCurrentAnimationType = (int)direction + dirToAnimationIndex;
+            SyncCurrentAnimationType = (int)direction + dirToAnimationIndex;
             this.shouldLoopAnimation = shouldLoopAnimation;
         }
     }

@@ -115,6 +115,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void StopLookingAtGameObject()
         {
+            InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject));
             IsLookingAtPlayer = false;
             if (nextPoint != Vector2.Zero)
             {
@@ -142,7 +143,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             IsLookingAtPlayer = true;
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = GetDirection(heading);
-            if (direction != (Direction)syncCurrentDirection || (State)SyncCurrentEntityState != State.Idle)
+            if (direction != (Direction)syncCurrentDirection || (State)syncCurrentEntityState != State.Idle)
             {
                 SetCurrentEntityState((int)State.Idle, (int)direction);
             }

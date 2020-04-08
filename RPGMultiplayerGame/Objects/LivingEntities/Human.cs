@@ -13,12 +13,21 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     public abstract class Human : PathEntity
     {
-        //[SyncVar(hook = "OnNameSet")]
-        protected string syncName;
+        protected string SyncName
+        {
+            get => syncName; set
+            {
+                syncName = value;
+                InvokeSyncVarNetworkly(nameof(SyncName), value);
+                OnNameSet();
+            }
+        }
 
         protected Vector2 nameOffset;
         protected readonly SpriteFont nameFont;
         protected Vector2 nameFontSize = Vector2.Zero;
+        private string syncName;
+
 
         public Human(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth)
         {
@@ -37,24 +46,24 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Draw(sprite);
             if (!isHidenCompletely)
             {
-                sprite.DrawString(nameFont, syncName, Location + nameOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
+                sprite.DrawString(nameFont, SyncName, Location + nameOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, textLyer);
             }
         }
 
         protected void SetName(string name)
         {
-            syncName = name;
+            SyncName = name;
         }
 
         public virtual void OnNameSet()
         {
-            nameFontSize = nameFont.MeasureString(syncName);
+            nameFontSize = nameFont.MeasureString(SyncName);
             UpdateDrawOffset();
         }
 
         public string GetName()
         {
-            return syncName;
+            return SyncName;
         }
     }
 }

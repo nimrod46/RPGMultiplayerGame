@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         public Bat() : base(GameManager.EntityId.Bat, 0, 0, 100, GameManager.Instance.PlayerName)
         {
-            syncName = "Bat";
+            SyncName = "Bat";
             animationTimeDelay *= 0.7;
         }      
     }

@@ -23,7 +23,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             scale = 1;
             speed *= 2;
-            syncName = "null";
+            SyncName = "null";
         }
 
         public override void OnNetworkInitialize()
@@ -118,9 +118,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
         }
 
-      //  [Command]
         protected void CmdCheckName(Player client, string name)
         {
+            InvokeCommandMethodNetworkly(nameof(CmdCheckName), client, name);
+            if(!isInServer)
+            {
+                return;
+            }
+
             Console.WriteLine("Checing name: " + name);
             if (ServerManager.Instance.IsNameLegal(name))
             {
@@ -160,18 +165,26 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-      //  [Command]
         public void CmdChooseNameAgain()
         {
+            InvokeCommandMethodNetworkly(nameof(CmdChooseNameAgain));
+            if (!hasAuthority)
+            {
+                return;
+            }
             CmdCheckName(this, TextInput.getText("Name"));
         }
 
-       // [Command]
         public void CmdSetName(string name)
         {
+            InvokeCommandMethodNetworkly(nameof(CmdSetName), name);
+            if(!hasAuthority)
+            {
+                return;
+            }
             Init(name);
             OnLocalPlayerNameSet?.Invoke(this);
-            Console.WriteLine("Welcome: " + syncName);
+            Console.WriteLine("Welcome: " + SyncName);
         }
     }
 }

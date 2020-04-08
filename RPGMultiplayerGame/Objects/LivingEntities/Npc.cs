@@ -31,6 +31,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public virtual void StopInteractWithPlayer(Player player)
         {
+            InvokeBroadcastMethodNetworkly(nameof(StopInteractWithPlayer), player);
             if (player.hasAuthority)
             {
                 player.StopInteractingWithNpc();
@@ -47,11 +48,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (!IsLookingAtPlayer && gameObject is Player)
             {
                 InteractWithPlayer(gameObject as Player);
-                base.LookAtGameObject(gameObject);
             }
+                base.LookAtGameObject(gameObject);
         }
 
-        //[BroadcastMethod]
         protected override void StopLookingAtGameObject()
         {
             if (isInServer)
