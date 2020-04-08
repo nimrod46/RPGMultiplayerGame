@@ -54,8 +54,6 @@ namespace RPGMultiplayerGame.Objects.Other
             AnimationAtDir(direction, 0, true);
         }
 
-       
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);

@@ -130,6 +130,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void MoveToPoint(Vector2 point)
         {
+            if(Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f)
+            {
+                SetCurrentEntityState((int)State.Idle, (int)syncCurrentDirection);
+                return;
+            }
+
             Vector2 heading = new Vector2(SyncX, SyncY) - point;
             Direction direction = GetDirection(heading);
             if (!(GetCurrentEnitytState<State>() == State.Moving) || (int) direction != syncCurrentDirection)

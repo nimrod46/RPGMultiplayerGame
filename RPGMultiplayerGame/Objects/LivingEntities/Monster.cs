@@ -70,7 +70,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     if (timeSinceLastGeneratePoint > generatePointTimeDelay)
                     {
                         timeSinceLastGeneratePoint = 0;
-                        nextPoint = new Vector2((float)r.Next(0, GameManager.Instance.GetMapSize().X), (float)r.Next(0, GameManager.Instance.GetMapSize().Y));
+                        nextPoint = new Vector2(r.Next(0, GameManager.Instance.GetMapSize().X), r.Next(0, GameManager.Instance.GetMapSize().Y));
                     }
                 }
             }
