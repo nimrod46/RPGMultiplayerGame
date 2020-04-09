@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+﻿using RPGMultiplayerGame.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Weapons
 {
-    class BatClaw : MeleeWeapon
+    public class FireBall : WeaponEffect
     {
-        public BatClaw() : base(new Point(5, 5), 5, "Bat claw")
+        public FireBall() : base(GameManager.EffectId.FireBall)
         {
         }
     }

@@ -32,6 +32,10 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             GameManager.Instance.RemoveUpdateObject(this);
             base.OnDestroyed(identity);
+            if (isServerAuthority)
+            {
+                ServerManager.Instance.RemoveServerGameObject(this);
+            }
         }
     }
 }

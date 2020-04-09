@@ -31,28 +31,30 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        public bool IsRuning { get; private set; }
         public readonly List<Player> players = new List<Player>();
+
         public readonly List<UpdateObject> serverObjects = new List<UpdateObject>();
         public readonly List<Monster> monsters = new List<Monster>();
+        public readonly List<WeaponEffect> weaponEffects = new List<WeaponEffect>();
         public SpawnPoint spawnPoint;
-
 
         public void StartServer()
         {
-            isServer = true;
             ServerBehavior serverBehavior = new ServerBehavior(1331);
             serverBehavior.Run();
             serverBehavior.OnClientEventHandlerSynchronizedEvent += OnClientSynchronized;
             serverBehavior.OnRemoteIdentityInitialize += OnIdentityInitialize;
             serverBehavior.OnLocalIdentityInitialize += OnIdentityInitialize;
             NetBehavior = serverBehavior;
+            IsRuning = true;
         }
 
         private void OnIdentityInitialize(NetworkIdentity identity)
         {
             if (identity is Entity)
             {
-                ((Entity)identity).OnEntityAttcked += ServerManager_OnEntityAttcked;
+                //((Entity)identity).OnEntityAttcked += ServerManager_OnEntityAttcked;
             }
             else if (identity is Monster)
             {
@@ -72,18 +74,6 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        private void ServerManager_OnEntityAttcked(Entity entity)
-        {
-            List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(entity);
-            if (damagedEntities.Count > 0)
-            {
-                foreach (Entity damagedEntity in damagedEntities)
-                {
-                    damagedEntity.OnAttackedBy(entity);
-                }
-            }
-        }
-
         protected void OnClientSynchronized(int id)
         {
             lock (players)
@@ -91,12 +81,23 @@ namespace RPGMultiplayerGame.Managers
                 Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), id);
                 players.Add(player);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
-                Weapon weapon = (Weapon)NetBehavior.spawnWithClientAuthority(typeof(OldSword), id);
+                Wand weapon = (Wand)NetBehavior.spawnWithClientAuthority(typeof(Wand), id);
+                weapon.OnSpawnWeaponEffect += Weapon_OnSpawnWeaponEffect;
                 player.EquipeWith(weapon);
                 if (spawnPoint != null)
                 {
                     player.SetSpawnPoint(spawnPoint);
                 }
+            }
+        }
+
+        private void Weapon_OnSpawnWeaponEffect(WeaponEffect weaponEffect, Entity entity)
+        {
+            weaponEffect = (WeaponEffect)NetBehavior.spawnWithServerAuthority(weaponEffect.GetType(), weaponEffect);
+            weaponEffect.SetLocation(entity.GetBoundingRectangle());
+            lock (weaponEffects)
+            {
+                weaponEffects.Add(weaponEffect);
             }
         }
 
@@ -159,17 +160,39 @@ namespace RPGMultiplayerGame.Managers
 
         public void Update(GameTime gameTime)
         {
-            foreach (UpdateObject obj in serverObjects)
+            lock (serverObjects)
             {
-                obj.Update(gameTime);
+                foreach (UpdateObject obj in serverObjects)
+                {
+                    obj.Update(gameTime);
+                }
+            }
+            lock (weaponEffects)
+            {
+                foreach (WeaponEffect weaponEffect in weaponEffects)
+                {
+                    List<Entity> entities = GameManager.Instance.GetEntitiesIntersectsWith(weaponEffect);
+                   foreach(Entity entity in entities)
+                    {
+                        weaponEffect.Hit(entity);
+                    }
+                }
             }
         }
 
-        public void AddServerGameObject(UpdateObject gameObject)
+        public void AddServerGameObject(UpdateObject updateObject)
         {
             lock (serverObjects)
             {
-                serverObjects.Add(gameObject);
+                serverObjects.Add(updateObject);
+            }
+        }
+
+        public void RemoveServerGameObject(UpdateObject updateObject)
+        {
+            lock (serverObjects)
+            {
+                serverObjects.Remove(updateObject);
             }
         }
 

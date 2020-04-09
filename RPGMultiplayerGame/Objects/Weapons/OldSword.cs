@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Weapons
 {
-    class OldSword : Weapon
+    class OldSword : MeleeWeapon
     {
         public OldSword() : base(new Point(7, 6), 50, "Old sword")
         {

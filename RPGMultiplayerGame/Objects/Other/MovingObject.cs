@@ -26,6 +26,7 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             this.collisionOffsetX = collisionOffsetX;
             this.collisionOffsetY = collisionOffsetY;
+            Layer = GameManager.MOVING_OJECT_LAYER;
         }
 
         public virtual void SetCurrentEntityState(int entityState, int direction)
@@ -64,7 +65,7 @@ namespace RPGMultiplayerGame.Objects.Other
                 System.Drawing.Rectangle rectt;
                 double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
                 Vector2 newLocation = Location;
-                switch ((Direction)syncCurrentDirection)
+                switch ((Direction)SyncCurrentDirection)
                 {
                     case Direction.Up:
                         newLocation.Y -= (float)movment;
@@ -109,11 +110,6 @@ namespace RPGMultiplayerGame.Objects.Other
         private Rectangle GetCollisionRect(float x, float y, int width, int height)
         {
             return new Rectangle((int)x + collisionOffsetX, (int)y + collisionOffsetY, width - collisionOffsetX, height - collisionOffsetY);
-        }
-
-        protected override void InitAnimationsList()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -80,10 +80,5 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.StopInteractWithPlayer(player);
             isInDialog = false;
         }
-
-        protected override void UpdateWeaponLocation()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

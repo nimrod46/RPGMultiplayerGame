@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Networking;
+using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
@@ -59,5 +60,7 @@ namespace RPGMultiplayerGame.Objects.Weapons
             SyncDamage = damage;
             SyncName = name;
         }
+
+        internal abstract void Attack(Entity entity);
     }
 }

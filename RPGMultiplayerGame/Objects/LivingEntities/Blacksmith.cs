@@ -26,11 +26,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             throw new NotImplementedException();
         }
 
-        protected override void UpdateWeaponLocation()
-        {
-            throw new NotImplementedException();
-        }
-
         internal override void ChooseDialogOption(int index)
         {
             throw new NotImplementedException();

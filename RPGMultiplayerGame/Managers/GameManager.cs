@@ -43,10 +43,8 @@ namespace RPGMultiplayerGame.Managers
         }
 
         public const float OWN_PLAYER_LAYER = 0.001f;
-
-        
-
         public const float ENTITY_LAYER = 0.01f;
+        public const float MOVING_OJECT_LAYER = 0.02f;
         public const float CHARECTER_TEXT_LAYER = 0.9f;
 
         static GameManager instance;
@@ -128,6 +126,20 @@ namespace RPGMultiplayerGame.Managers
                 }
             }
             return damagedEntities;
+        }
+
+        public List<Entity> GetEntitiesIntersectsWith(GameObject gameObject)
+        {
+            List<Entity> entitiesIntersects = new List<Entity>();
+            for (int i = 0; i < entities.Count; i++)
+            {
+                Entity entity = entities[i];
+                if (gameObject.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                {
+                    entitiesIntersects.Add(entity);
+                }
+            }
+            return (entitiesIntersects);
         }
 
         public void Update(GraphicsDevice graphicsDevice,GameTime gameTime)
@@ -250,17 +262,17 @@ namespace RPGMultiplayerGame.Managers
         private Dictionary<T, Dictionary<int, List<GameTexture>>> GetGameTextureByEnum<T>(ContentManager content) where T : Enum
         {
             Dictionary<T, Dictionary<int, List<GameTexture>>> gameTextureByEnum = new Dictionary<T, Dictionary<int, List<GameTexture>>>();
-            for (int i = 0; i < (int)Enum.GetValues(typeof(T)).Cast<EntityId>().Last() + 1; i++)
+            for (int i = 0; i < (int)(object)Enum.GetValues(typeof(T)).Cast<object>().Cast<T>().Last() + 1; i++)
             {
                 XmlManager<List<AnimationPropertiesLib>> xml = new XmlManager<List<AnimationPropertiesLib>>();
                 List<AnimationPropertiesLib> animationProperties = null;
                 try
                 {
-                    animationProperties = xml.Load("Content\\" + (EntityId)i + ".xml");
+                    animationProperties = xml.Load("Content\\" + (T)(object)i + ".xml");
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Warning: no xml found for " + (EntityId)i);
+                    Console.WriteLine("Warning: no xml found for " + (T)(object)i);
                 }
                 Dictionary<int, List<GameTexture>> animations = new Dictionary<int, List<GameTexture>>();
                 for (int j = 0; j < (int)Enum.GetValues(typeof(EntityAnimation)).Cast<EntityAnimation>().Last() + 1; j++)
@@ -268,7 +280,7 @@ namespace RPGMultiplayerGame.Managers
                     List<GameTexture> animation = new List<GameTexture>();
                     for (int k = 1; k <= 32; k++)
                     {
-                        string name = "" + (EntityId)i + "\\" + (EntityAnimation)j + "\\" + k;
+                        string name = "" + (T)(object)i + "\\" + (EntityAnimation)j + "\\" + k;
                         Vector2 offset = Vector2.Zero;
                         if (animationProperties?.Where(a => name.Contains(a.FullPath)).Count() > 0)
                         {

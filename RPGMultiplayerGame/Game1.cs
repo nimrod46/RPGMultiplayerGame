@@ -84,7 +84,7 @@ namespace RPGMultiplayerGame
               //  Console.WriteLine("RUNING SLOWWWW");
             }
             base.Update(gameTime);
-            if (ClientManager.Instance.isServer != true)
+            if (ServerManager.Instance.IsRuning != true)
             {
                 GameManager.Instance.Update(graphics.GraphicsDevice, gameTime);
                 InputManager.Instance.Update(gameTime);
@@ -102,7 +102,7 @@ namespace RPGMultiplayerGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            if (ClientManager.Instance.isServer != true)
+            if (ServerManager.Instance.IsRuning != true)
             {
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
                 GameManager.Instance.Draw(spriteBatch);

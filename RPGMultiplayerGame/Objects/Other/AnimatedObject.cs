@@ -58,8 +58,9 @@ namespace RPGMultiplayerGame.Objects.Other
             }
         }
 
+        public int SyncCurrentDirection { get; set; }
+
         protected Dictionary<int, List<GameTexture>> animationsByType = new Dictionary<int, List<GameTexture>>();
-        protected int syncCurrentDirection;
         private int syncCurrentAnimationType;
         protected double animationTimeDelay;
         protected double timeSinceLastFrame;
@@ -74,15 +75,15 @@ namespace RPGMultiplayerGame.Objects.Other
             speed = 0.5f / 10;
             animationTimeDelay = 100;
             shouldLoopAnimation = true;
-            syncCurrentDirection = (int)Direction.Down;
+            SyncCurrentDirection = (int)Direction.Down;
+            currentAnimationIndex = 0;
         }
-
-        protected abstract void InitAnimationsList();
 
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
             UpdateTexture();
+            BaseSize = Size;
         }
 
         public override void Update(GameTime gameTime)
@@ -130,7 +131,7 @@ namespace RPGMultiplayerGame.Objects.Other
         protected void AnimationAtDir(Direction direction, int dirToAnimationIndex, bool shouldLoopAnimation)
         {
             currentAnimationIndex = 0;
-            syncCurrentDirection = (int)direction;
+            SyncCurrentDirection = (int)direction;
             SyncCurrentAnimationType = (int)direction + dirToAnimationIndex;
             this.shouldLoopAnimation = shouldLoopAnimation;
         }

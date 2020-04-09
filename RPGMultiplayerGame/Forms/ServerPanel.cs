@@ -21,7 +21,7 @@ namespace RPGMultiplayerGame
 
         private void LoadMap_Click(object sender, EventArgs e)
         {
-            if (!ServerManager.Instance.isServer)
+            if (!ServerManager.Instance.IsRuning)
             {
                 return;
             }

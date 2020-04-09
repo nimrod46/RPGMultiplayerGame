@@ -28,9 +28,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Attacking
         }
 
-        public delegate void EntityAttackedEventHandler(Entity entity);
-        public event EntityAttackedEventHandler OnEntityAttcked;
-
         public Weapon SyncWeapon
         {
             get => syncWeapon; set
@@ -96,10 +93,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             healthBarOffset = Vector2.Zero;
         }
 
-        protected override void InitAnimationsList()
-        {
-        }
-
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
@@ -154,12 +147,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
         }
 
-        public virtual void OnAttackedBy(Entity attacker)
+        public virtual void OnAttackedBy(float damage)
         {
-            InvokeBroadcastMethodNetworkly(nameof(OnAttackedBy), attacker);
+            if(!damageable)
+            {
+                return;
+            }
+            InvokeBroadcastMethodNetworkly(nameof(OnAttackedBy), damage);
             if (hasAuthority)
             {
-                SyncHealth -= attacker.SyncWeapon.SyncDamage;
+                SyncHealth -= damage;
                 if(SyncHealth == 0)
                 {
                     Destroy();
@@ -198,7 +195,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 case State.Attacking:
                     AttackAtDir((Direction)direction);
-                    OnEntityAttcked?.Invoke(this);
+                    SyncWeapon.Attack(this);
                     break;
             }
         }
@@ -210,7 +207,33 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             UpdateWeaponLocation();
         }
 
-        protected abstract void UpdateWeaponLocation();
+        protected void UpdateWeaponLocation()
+        {
+            if (SyncWeapon != null)
+            {
+                switch ((Direction)SyncCurrentDirection)
+                {
+                    case Direction.Left:
+                        SyncWeapon.SyncX = GetBoundingRectangle().Left;
+                        SyncWeapon.SyncY = GetCenter().Y;
+                        break;
+                    case Direction.Up:
+                        SyncWeapon.SyncY = GetBoundingRectangle().Top;
+                        SyncWeapon.SyncX = GetCenter().X;
+                        break;
+                    case Direction.Right:
+                        SyncWeapon.SyncX = GetBoundingRectangle().Right - SyncWeapon.Size.X;
+                        SyncWeapon.SyncY = GetCenter().Y;
+                        break;
+                    case Direction.Down:
+                        SyncWeapon.SyncY = GetBoundingRectangle().Bottom - SyncWeapon.Size.Y;
+                        SyncWeapon.SyncX = GetCenter().X;
+                        break;
+                    case Direction.Idle:
+                        break;
+                }
+            }
+        }
 
 
         public void SetSpawnPoint(SpawnPoint spawnPoint)

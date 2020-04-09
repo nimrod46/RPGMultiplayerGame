@@ -118,7 +118,11 @@
     <Compile Include="Objects\LivingEntities\Player.cs" />
     <Compile Include="Objects\Other\UpdateObject.cs" />
     <Compile Include="Objects\Weapons\BatClaw.cs" />
+    <Compile Include="Objects\Weapons\FireBall.cs" />
+    <Compile Include="Objects\Weapons\MeleeWeapon.cs" />
     <Compile Include="Objects\Weapons\OldSword.cs" />
+    <Compile Include="Objects\Weapons\RangedWeapon.cs" />
+    <Compile Include="Objects\Weapons\Wand.cs" />
     <Compile Include="Objects\Weapons\Weapon.cs" />
     <Compile Include="Objects\Weapons\WeaponEffect.cs" />
     <Compile Include="Program.cs" />

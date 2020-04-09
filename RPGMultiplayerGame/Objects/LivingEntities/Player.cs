@@ -61,7 +61,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     currentArrowsKeysPressed.RemoveAll(k => k == key);
                     if (currentArrowsKeysPressed.Count == 0)
                     {
-                        SetCurrentEntityState((int)State.Idle, (int)syncCurrentDirection);
+                        SetCurrentEntityState((int)State.Idle, (int)SyncCurrentDirection);
                     }
                     else
                     {
@@ -89,7 +89,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 if (InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
                 {
-                    SetCurrentEntityState((int)State.Attacking, syncCurrentDirection);
+                    SetCurrentEntityState((int)State.Attacking, SyncCurrentDirection);
                 }
                 else
                 {
@@ -134,34 +134,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             else
             {
                 client.CmdChooseNameAgain();
-            }
-        }
-
-        protected override void UpdateWeaponLocation()
-        {
-            if (SyncWeapon != null)
-            {
-                switch ((Direction)syncCurrentDirection)
-                {
-                    case Direction.Left:
-                        SyncWeapon.SyncX = GetBoundingRectangle().Left;
-                        SyncWeapon.SyncY = GetCenter().Y;
-                        break;
-                    case Direction.Up:
-                        SyncWeapon.SyncY = GetBoundingRectangle().Top;
-                        SyncWeapon.SyncX = GetCenter().X;
-                        break;
-                    case Direction.Right:
-                        SyncWeapon.SyncX = GetBoundingRectangle().Right - SyncWeapon.Size.X;
-                        SyncWeapon.SyncY = GetCenter().Y;
-                        break;
-                    case Direction.Down:
-                        SyncWeapon.SyncY = GetBoundingRectangle().Bottom - SyncWeapon.Size.Y;
-                        SyncWeapon.SyncX = GetCenter().X;
-                        break;
-                    case Direction.Idle:
-                        break;
-                }
             }
         }
 

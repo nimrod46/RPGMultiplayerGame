@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Weapons
 {
-    class BatClaw : MeleeWeapon
+    public class Wand : RangedWeapon
     {
-        public BatClaw() : base(new Point(5, 5), 5, "Bat claw")
+        public Wand() : base(new Point(0,0), 25, "Wand", new FireBall())
         {
         }
     }

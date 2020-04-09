@@ -22,11 +22,9 @@ namespace RPGMultiplayerGame.Managers
         public T NetBehavior { get; protected set; }
         public Lobby lobby;
         public ListView LobbyList;
-        public bool isServer;
 
         protected NetworkManager()
         {
-            isServer = false;
         }
 
         public void Init(ref ListView lobbyList)
@@ -46,6 +44,7 @@ namespace RPGMultiplayerGame.Managers
             new OldSword();
             new Bat();
             new BatClaw();
+            new Wand();
         }
 
         public void AddServer()
