@@ -13,7 +13,7 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.MapObjects;
 using Microsoft.Xna.Framework;
-using RPGMultiplayerGame.Objects.Weapons;
+using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -41,10 +41,7 @@ namespace RPGMultiplayerGame.Managers
             new SpawnPoint();
             new Joe();
             new Blacksmith();
-            new OldSword();
             new Bat();
-            new BatClaw();
-            new Wand();
         }
 
         public void AddServer()

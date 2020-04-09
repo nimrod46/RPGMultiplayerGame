@@ -9,9 +9,10 @@ using Microsoft.Xna.Framework;
 using Networking;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
+using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
-using RPGMultiplayerGame.Objects.Weapons;
+using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 using static RPGMultiplayerGame.Objects.LivingEntities.PathEntity;
 
 namespace RPGMultiplayerGame.Managers
@@ -52,11 +53,7 @@ namespace RPGMultiplayerGame.Managers
 
         private void OnIdentityInitialize(NetworkIdentity identity)
         {
-            if (identity is Entity)
-            {
-                //((Entity)identity).OnEntityAttcked += ServerManager_OnEntityAttcked;
-            }
-            else if (identity is Monster)
+            if (identity is Monster)
             {
                 lock (monsters)
                 {
@@ -81,9 +78,8 @@ namespace RPGMultiplayerGame.Managers
                 Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), id);
                 players.Add(player);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
-                Wand weapon = (Wand)NetBehavior.spawnWithClientAuthority(typeof(Wand), id);
-                weapon.OnSpawnWeaponEffect += Weapon_OnSpawnWeaponEffect;
-                player.EquipeWith(weapon);
+                player.AddItemToInventory((int) InventoryItemType.CommonSword);
+                player.AddItemToInventory((int)InventoryItemType.CommonWond);
                 if (spawnPoint != null)
                 {
                     player.SetSpawnPoint(spawnPoint);
@@ -91,7 +87,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        private void Weapon_OnSpawnWeaponEffect(WeaponEffect weaponEffect, Entity entity)
+        public void Weapon_OnSpawnWeaponEffect(WeaponEffect weaponEffect, Entity entity)
         {
             weaponEffect = (WeaponEffect)NetBehavior.spawnWithServerAuthority(weaponEffect.GetType(), weaponEffect);
             weaponEffect.SetLocation(entity.GetBoundingRectangle());
@@ -125,8 +121,7 @@ namespace RPGMultiplayerGame.Managers
                         bat.SyncX = obj.Rectangle.X;
                         bat.SyncY = obj.Rectangle.Y;
                         Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
-                        BatClaw weapon = NetBehavior.spawnWithServerAuthority(typeof(BatClaw)) as BatClaw;
-                        spawnedBat.EquipeWith(weapon);
+                        spawnedBat.EquipeWith((int) InventoryItemType.BatClaw);
                     }
                 }
                 else if (obj is SpawnLib)
@@ -171,7 +166,7 @@ namespace RPGMultiplayerGame.Managers
             {
                 foreach (WeaponEffect weaponEffect in weaponEffects)
                 {
-                    List<Entity> entities = GameManager.Instance.GetEntitiesIntersectsWith(weaponEffect);
+                   List<Entity> entities = GameManager.Instance.GetEntitiesIntersectsWith(weaponEffect);
                    foreach(Entity entity in entities)
                     {
                         weaponEffect.Hit(entity);

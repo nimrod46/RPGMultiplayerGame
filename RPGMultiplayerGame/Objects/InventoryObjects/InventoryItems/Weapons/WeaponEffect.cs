@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Managers.GameManager;
 
-namespace RPGMultiplayerGame.Objects.Weapons
+namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 {
     public abstract class WeaponEffect : MovingObject
     {
@@ -52,21 +52,20 @@ namespace RPGMultiplayerGame.Objects.Weapons
             switch ((Direction)SyncCurrentDirection)
             {
                 case Direction.Left:
-                    Console.WriteLine(Size.X);
                     SyncX = rectangle.Left - Size.X;
-                    SyncY = rectangle.Center.Y;
+                    SyncY = rectangle.Center.Y - Size.Y / 2;
                     break;
                 case Direction.Up:
                     SyncY = rectangle.Top - Size.Y;
-                    SyncX = rectangle.Center.X;
+                    SyncX = rectangle.Center.X - Size.X / 2;
                     break;
                 case Direction.Right:
                     SyncX = rectangle.Right;
-                    SyncY = rectangle.Center.Y;
+                    SyncY = rectangle.Center.Y - Size.Y / 2;
                     break;
                 case Direction.Down:
                     SyncY = rectangle.Bottom;
-                    SyncX = rectangle.Center.X;
+                    SyncX = rectangle.Center.X - Size.X / 2;
                     break;
                 case Direction.Idle:
                     break;

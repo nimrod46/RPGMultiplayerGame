@@ -12,9 +12,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.MapObjects;
+using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems;
+using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons;
 using RPGMultiplayerGame.Objects.Other;
-using RPGMultiplayerGame.Objects.Weapons;
 using static RPGMultiplayerGame.Managers.GameManager;
+using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 
@@ -28,14 +30,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Attacking
         }
 
-        public Weapon SyncWeapon
-        {
-            get => syncWeapon; set
-            {
-                syncWeapon = value;
-                InvokeSyncVarNetworkly(nameof(SyncWeapon), value);
-            }
-        }
+       
         protected SpawnPoint SyncSpawnPoint
         {
             get => syncSpawnPoint; set
@@ -55,7 +50,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-       
+        public Weapon EquippedWeapon { get; set; }
+
         protected EntityId entityId;
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
@@ -66,7 +62,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected Vector2 healthBarOffset;
         protected bool damageable;
         private readonly float maxHealth;
-        private Weapon syncWeapon;
         private float syncHealth;
         private SpawnPoint syncSpawnPoint;
         private Vector2 healthBarSize;
@@ -98,8 +93,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.OnNetworkInitialize();
             GameManager.Instance.AddEntity(this);
             textLyer = CHARECTER_TEXT_LAYER + DefaultLayer;
-
         }
+
 
         public void OnHealthSet()
         {   
@@ -120,9 +115,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public void EquipeWith(Weapon weapon)
+        public void EquipeWith(int itemType)
         {
-            this.SyncWeapon = weapon;
+            if (!isInServer || !hasAuthority)
+            {
+                InvokeCommandMethodNetworkly(nameof(EquipeWith), itemType);
+            }
+            EquippedWeapon = InventoryItemFactory.GetInventoryItem<Weapon>((InventoryItemType)itemType);
         }
 
         public override void Update(GameTime gameTime)
@@ -195,7 +194,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 case State.Attacking:
                     AttackAtDir((Direction)direction);
-                    SyncWeapon.Attack(this);
+                    if (isInServer)
+                    {
+                        EquippedWeapon?.Attack(this);
+                    }
                     break;
             }
         }
@@ -209,25 +211,25 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected void UpdateWeaponLocation()
         {
-            if (SyncWeapon != null)
+            if (EquippedWeapon != null)
             {
                 switch ((Direction)SyncCurrentDirection)
                 {
                     case Direction.Left:
-                        SyncWeapon.SyncX = GetBoundingRectangle().Left;
-                        SyncWeapon.SyncY = GetCenter().Y;
+                        EquippedWeapon.SyncX = GetBoundingRectangle().Left;
+                        EquippedWeapon.SyncY = GetCenter().Y;
                         break;
                     case Direction.Up:
-                        SyncWeapon.SyncY = GetBoundingRectangle().Top;
-                        SyncWeapon.SyncX = GetCenter().X;
+                        EquippedWeapon.SyncY = GetBoundingRectangle().Top;
+                        EquippedWeapon.SyncX = GetCenter().X;
                         break;
                     case Direction.Right:
-                        SyncWeapon.SyncX = GetBoundingRectangle().Right - SyncWeapon.Size.X;
-                        SyncWeapon.SyncY = GetCenter().Y;
+                        EquippedWeapon.SyncX = GetBoundingRectangle().Right - EquippedWeapon.Size.X;
+                        EquippedWeapon.SyncY = GetCenter().Y;
                         break;
                     case Direction.Down:
-                        SyncWeapon.SyncY = GetBoundingRectangle().Bottom - SyncWeapon.Size.Y;
-                        SyncWeapon.SyncX = GetCenter().X;
+                        EquippedWeapon.SyncY = GetBoundingRectangle().Bottom - EquippedWeapon.Size.Y;
+                        EquippedWeapon.SyncX = GetCenter().X;
                         break;
                     case Direction.Idle:
                         break;

@@ -1,21 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
+using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
-namespace RPGMultiplayerGame.Objects.Weapons
+namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 {
     public class RangedWeapon : Weapon
     {
-        public delegate void SpwanWeaponEffectEventHandler(WeaponEffect weaponEffect, Entity entity);
-        public event SpwanWeaponEffectEventHandler OnSpawnWeaponEffect;
 
         private readonly WeaponEffect weaponEffect;
 
-        public RangedWeapon(Point size, float damage, string name, WeaponEffect weaponEffect) : base(size, damage, name)
+        public RangedWeapon(InventoryItemType itemType, Point size, float damage, string name, WeaponEffect weaponEffect) : base(itemType, size, damage, name)
         {
             this.weaponEffect = weaponEffect;
             weaponEffect.SyncDamage = damage;
@@ -23,10 +23,10 @@ namespace RPGMultiplayerGame.Objects.Weapons
 
         internal override void Attack(Entity entity)
         {
-            if(isInServer)
+            if (entity.isInServer)
             {
                 weaponEffect.SyncCurrentDirection = entity.SyncCurrentDirection;
-                OnSpawnWeaponEffect?.Invoke(weaponEffect, entity);
+                ServerManager.Instance.Weapon_OnSpawnWeaponEffect(weaponEffect, entity);
             }
         }
     }

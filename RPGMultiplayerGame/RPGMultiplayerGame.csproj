@@ -87,10 +87,14 @@
   <ItemGroup>
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItems\InventoryItemFactory.cs" />
     <Compile Include="Objects\Other\AnimatedObject.cs" />
     <Compile Include="Objects\LivingEntities\Monster.cs" />
     <Compile Include="Objects\LivingEntities\Bat.cs" />
     <Compile Include="Objects\LivingEntities\PathEntity.cs" />
+    <Compile Include="Objects\InventoryObjects\Inventory.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryStackableItem1.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItem.cs" />
     <Compile Include="Objects\Other\MovingObject.cs" />
     <Compile Include="Objects\Other\SimpleDialog.cs" />
     <Compile Include="Objects\Other\ComplexDialog.cs" />
@@ -117,14 +121,14 @@
     <Compile Include="Managers\NetworkManager.cs" />
     <Compile Include="Objects\LivingEntities\Player.cs" />
     <Compile Include="Objects\Other\UpdateObject.cs" />
-    <Compile Include="Objects\Weapons\BatClaw.cs" />
-    <Compile Include="Objects\Weapons\FireBall.cs" />
-    <Compile Include="Objects\Weapons\MeleeWeapon.cs" />
-    <Compile Include="Objects\Weapons\OldSword.cs" />
-    <Compile Include="Objects\Weapons\RangedWeapon.cs" />
-    <Compile Include="Objects\Weapons\Wand.cs" />
-    <Compile Include="Objects\Weapons\Weapon.cs" />
-    <Compile Include="Objects\Weapons\WeaponEffect.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItems\Weapons\BatClaw.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItems\Weapons\FireBall.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItems\Weapons\MeleeWeapon.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItems\Weapons\CommonSword.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItems\Weapons\RangedWeapon.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItems\Weapons\CommonWond.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItems\Weapons\Weapon.cs" />
+    <Compile Include="Objects\InventoryObjects\InventoryItems\Weapons\WeaponEffect.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\ServerPanel.cs">

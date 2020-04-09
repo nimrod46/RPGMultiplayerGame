@@ -11,7 +11,9 @@ namespace RPGMultiplayerGame.Managers
     public class InputManager
     {
         KeyboardState currentKeyState, prevKeyState;
+        MouseState currentMouseState, prevMouseState;
         private static InputManager instance;
+
 
         public static InputManager Instance
         {
@@ -32,6 +34,8 @@ namespace RPGMultiplayerGame.Managers
         {
             prevKeyState = currentKeyState;
             currentKeyState = Keyboard.GetState();
+            prevMouseState = currentMouseState;
+            currentMouseState = Mouse.GetState();
             if (prevKeyState.IsKeyUp(Keys.Up) && currentKeyState.IsKeyDown(Keys.Up) || prevKeyState.IsKeyDown(Keys.Up) && currentKeyState.IsKeyUp(Keys.Up))
             {
                 OnArrowsKeysStateChange?.Invoke(Keys.Up, currentKeyState.IsKeyDown(Keys.Up));
@@ -48,6 +52,16 @@ namespace RPGMultiplayerGame.Managers
             {
                 OnArrowsKeysStateChange?.Invoke(Keys.Left, currentKeyState.IsKeyDown(Keys.Left));
             }
+        }
+
+        public bool GetMouseLeftButtonPressed()
+        {
+            return prevMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed;
+        }
+
+        public Rectangle MouseBounds()
+        {
+            return new Rectangle(currentMouseState.X, currentMouseState.Y, 1, 1);
         }
 
         public bool KeyPressed(params Keys[] keys)
@@ -103,30 +117,18 @@ namespace RPGMultiplayerGame.Managers
 
         public bool KeyPressed(Keys key)
         {
-            if (currentKeyState.IsKeyDown(key) && prevKeyState.IsKeyUp(key))
-            {
-                return true;
-            }
-            return false;
+            return currentKeyState.IsKeyDown(key) && prevKeyState.IsKeyUp(key);
         }
 
         public bool KeyReleased(Keys key)
         {
 
-            if (currentKeyState.IsKeyUp(key) && prevKeyState.IsKeyDown(key))
-            {
-                return true;
-            }
-            return false;
+            return currentKeyState.IsKeyUp(key) && prevKeyState.IsKeyDown(key);
         }
 
         public bool KeyDown(Keys key)
         {
-            if (currentKeyState.IsKeyDown(key))
-            {
-                return true;
-            }
-            return false;
+            return currentKeyState.IsKeyDown(key);
         }
     }
 }

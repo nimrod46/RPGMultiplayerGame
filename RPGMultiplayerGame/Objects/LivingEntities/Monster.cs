@@ -39,7 +39,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if(!hasAuthority)
+            if (!hasAuthority)
             {
                 return;
             }

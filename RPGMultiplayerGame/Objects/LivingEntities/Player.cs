@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Networking;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.Weapons;
+using RPGMultiplayerGame.Objects.InventoryObjects;
+using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems;
+using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons;
 using static RPGMultiplayerGame.Managers.GameManager;
+using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -17,6 +18,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         readonly List<Keys> currentArrowsKeysPressed = new List<Keys>();
         public delegate void LocalPlayerNameSetEventHandler(Player player);
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
+        public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
+        private Inventory inventory;
         private Npc interactingWith;
 
         public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerName, true)
@@ -32,6 +35,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 Layer = GameManager.OWN_PLAYER_LAYER;
             }
+            inventory = new Inventory();
             base.OnNetworkInitialize();
         }
 
@@ -73,20 +77,47 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        internal void StopInteractingWithNpc()
+        public void StopInteractingWithNpc()
         {
             interactingWith = null;
         }
 
-        internal void InteractWithNpc(Npc npc)
+        public void InteractWithNpc(Npc npc)
         {
             interactingWith = npc;
+        }
+
+        private void AddItemToInventoryLocaly(InventoryItem inventoryItem)
+        {
+            inventory.TryAddItem(inventoryItem);
+        }
+
+        public void AddItemToInventory(int itemType)
+        {
+            InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType);
+            AddItemToInventoryLocaly(InventoryItemFactory.GetInventoryItem<InventoryItem>((InventoryItemType)itemType));
         }
 
         public override void Update(GameTime gameTime)
         {
             if (hasAuthority)
             {
+                if (IsInventoryVisible)
+                {
+                    Console.WriteLine(InputManager.Instance.GetMouseLeftButtonPressed());
+                    if (InputManager.Instance.GetMouseLeftButtonPressed())
+                    {
+                        if (inventory.GetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out InventoryItem inventoryItem))
+                        {
+                            if(typeof(Weapon).IsAssignableFrom(inventoryItem.GetType()))
+                            {
+                                EquipeWith((int)inventoryItem.ItemType);
+                            }
+                        }
+
+                    }
+                }
+
                 if (InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
                 {
                     SetCurrentEntityState((int)State.Attacking, SyncCurrentDirection);
@@ -110,6 +141,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 }
             }   
             base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch sprite)
+        {
+            base.Draw(sprite);
+            inventory.Draw(sprite);
         }
 
         public override void OnDestroyed(NetworkIdentity identity)

@@ -25,6 +25,7 @@ namespace RPGMultiplayerGame.Managers
                 return instance;
             }
         }
+        public Player Player { get; private set; }
         public event EventHandler OnStartGame;
         public string name;
         protected ClientManager()
@@ -41,6 +42,8 @@ namespace RPGMultiplayerGame.Managers
         {
             if (client is Player player)
             {
+                Player = player;
+                player.OnDestroyEvent += Player_OnDestroyEvent;
                 if (name == null)
                 {
                     player.OnLocalPlayerNameSet += NetworkManager_OnPlayerNameSet;
@@ -51,6 +54,12 @@ namespace RPGMultiplayerGame.Managers
                     player.Init(name);
                 }
             }
+        }
+
+        private void Player_OnDestroyEvent(NetworkIdentity identity)
+        {
+            Player.IsInventoryVisible = false;
+            Player = null;
         }
 
         private void NetworkManager_OnPlayerNameSet(Player player)

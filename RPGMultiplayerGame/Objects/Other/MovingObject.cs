@@ -90,6 +90,7 @@ namespace RPGMultiplayerGame.Objects.Other
                         break;
                     }
                 }
+
                 if (block == null)
                 {
                     if (hasAuthority)

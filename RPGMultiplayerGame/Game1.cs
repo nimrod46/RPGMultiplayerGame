@@ -88,6 +88,14 @@ namespace RPGMultiplayerGame
             {
                 GameManager.Instance.Update(graphics.GraphicsDevice, gameTime);
                 InputManager.Instance.Update(gameTime);
+                if (ClientManager.Instance.Player != null)
+                {
+                    if (InputManager.Instance.KeyPressed(Microsoft.Xna.Framework.Input.Keys.I))
+                    {
+                        ClientManager.Instance.Player.IsInventoryVisible = !ClientManager.Instance.Player.IsInventoryVisible;
+                        IsMouseVisible = ClientManager.Instance.Player.IsInventoryVisible;
+                    }                    
+                }
             }
             else
             {

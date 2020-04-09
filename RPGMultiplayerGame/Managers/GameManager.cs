@@ -13,6 +13,8 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using Svg;
 using RPGMultiplayerGame.Objects.Other;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
+using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
+using RPGMultiplayerGame.Objects.InventoryObjects;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -24,6 +26,8 @@ namespace RPGMultiplayerGame.Managers
             Blacksmith,
             Bat
         }
+
+       
 
         public enum EffectId
         {
@@ -42,6 +46,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        public const float INVENTORY_LAYER = 0.0001f;
         public const float OWN_PLAYER_LAYER = 0.001f;
         public const float ENTITY_LAYER = 0.01f;
         public const float MOVING_OJECT_LAYER = 0.02f;
@@ -52,12 +57,14 @@ namespace RPGMultiplayerGame.Managers
 
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
         public Dictionary<EffectId, Dictionary<int, List<GameTexture>>> animationsByEffects = new Dictionary<EffectId, Dictionary<int, List<GameTexture>>>();
+        public Dictionary<InventoryItemType, Texture2D> itemTextures = new Dictionary<InventoryItemType, Texture2D>();
         public List<Texture2D> textures = new List<Texture2D>();
         public Texture2D HealthBar;
         public Texture2D HealthBarBackground;
         public SpriteFont PlayerName;
         public Texture2D DialogBackground;
         public SpriteFont DialogTextFont;
+        public Texture2D InventorySlotBackground;
         public GameMap map; //TODO: Create GameMap with the relevent project class.
         private readonly List<GameObject> gameObjects = new List<GameObject>();
         private readonly List<GraphicObject> grapichObjects = new List<GraphicObject>();
@@ -90,6 +97,20 @@ namespace RPGMultiplayerGame.Managers
             HealthBarBackground = content.Load<Texture2D>("HealthBarBackground");
             PlayerName = content.Load<SpriteFont>("PlayerName");
             DialogTextFont = content.Load<SpriteFont>("DialogText");
+            InventorySlotBackground = content.Load<Texture2D>("InventorySlot");
+
+
+            foreach(InventoryItemType gameItemType in Enum.GetValues(typeof(InventoryItemType)))
+            {
+                if(gameItemType == InventoryItemType.None)
+                {
+                    itemTextures.Add(gameItemType, new Texture2D(graphicsDevice, 1, 1));
+                }
+                else
+                {
+                    itemTextures.Add(gameItemType, content.Load<Texture2D>(gameItemType.ToString()));
+                }
+            }
 
             Texture2D spriteTextures = content.Load<Texture2D>("basictiles");
             int count = 0;
@@ -109,6 +130,11 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        internal Texture2D GetItemByType(Inventory.InventoryItemType value)
+        {
+            return itemTextures[value];
+        }
+
         public List<Entity> GetEntitiesHitBy(Entity attacker)
         {
             List<Entity> damagedEntities = new List<Entity>();
@@ -120,7 +146,7 @@ namespace RPGMultiplayerGame.Managers
                     continue;
                 }
 
-                if (attacker.SyncWeapon.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                if (attacker.EquippedWeapon.GetBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
                 {
                     damagedEntities.Add(entity);
                 }
