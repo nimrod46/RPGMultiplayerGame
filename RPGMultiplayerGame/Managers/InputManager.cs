@@ -64,16 +64,16 @@ namespace RPGMultiplayerGame.Managers
             return new Rectangle(currentMouseState.X, currentMouseState.Y, 1, 1);
         }
 
-        public bool KeyPressed(params Keys[] keys)
+        public Keys KeyPressed(params Keys[] keys)
         {
             foreach (Keys key in keys)
             {
                 if (KeyPressed(key))
                 {
-                    return true;
+                    return key;
                 }
             }
-            return false;
+            return Keys.None;
         }
 
         public bool KeyReleased(params Keys[] keys)

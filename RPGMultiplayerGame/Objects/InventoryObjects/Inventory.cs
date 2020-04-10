@@ -11,7 +11,7 @@ using RPGMultiplayerGame.Objects.Items;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
-    public class Inventory : NetworkIdentity
+    public class Inventory
     {
         public enum ItemType
         {
@@ -22,22 +22,24 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         public bool IsVisible { get; set; }
         private readonly ItemSlot[] inventoryItems;
+        private readonly Point origin;
         private readonly int columns;
         private readonly int rows;
 
-        public Inventory(int columns, int rows)
+        public Inventory(Point origin, int columns, int rows)
         {
+            this.origin = origin;
             this.columns = columns;
             this.rows = rows;
             inventoryItems = new ItemSlot[columns * rows];
-            IsVisible = false;
+            IsVisible = true;
             int index = 0;
             for (int j = 0; j < rows; j++)
             {
                 for (int i = 0; i < columns; i++)
                 {
                     ItemSlot inventoryItem = new ItemSlot();
-                    Vector2 location = new Vector2(i * inventoryItem.Size.X, j * inventoryItem.Size.Y) + GameManager.Instance.GetMapSize().ToVector2() / 2
+                    Vector2 location = new Vector2(i * inventoryItem.Size.X, j * inventoryItem.Size.Y) + origin.ToVector2()
                     - new Vector2(columns * inventoryItem.Size.X / 2, rows * inventoryItem.Size.Y / 2);
                     inventoryItem.Location = location.ToPoint();
                     inventoryItems[index] = inventoryItem;
@@ -57,7 +59,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
         }
 
-        public bool GetInventoryItemAtScreenLocation(Rectangle rect, out Item item)
+        public bool TryGetInventoryItemAtScreenLocation(Rectangle rect, out Item item)
         {
             item = null;
             for (int i = 0; i < inventoryItems.Count(); i++)
@@ -107,6 +109,26 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 if (item is StackableItem && item.ItemType == itemType)
                 {
                     stackableItem = item as StackableItem;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal bool TryGetItemInSlot(int slot, out Item item)
+        {
+            ItemSlot itemSlot = inventoryItems[slot - 1];
+            item = itemSlot.Item;
+            return item != null;
+        }
+
+        internal bool TryRemoveItem(Item item)
+        {
+            for (int i = inventoryItems.Length - 1; i >= 0; i--)
+            {
+                if(inventoryItems[i].Item != null && inventoryItems[i].Item.ItemType == item.ItemType)
+                {
+                    inventoryItems[i].Item = null;
                     return true;
                 }
             }

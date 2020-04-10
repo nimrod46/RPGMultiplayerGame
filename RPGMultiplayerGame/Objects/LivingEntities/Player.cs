@@ -20,7 +20,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
         private Inventory inventory;
-        private ItemSlot itemSlot;
+        private Inventory weaponsSlots;
+        private ItemSlot equippedWeaponSlot;
         private Npc interactingWith;
 
         public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerName, true)
@@ -36,9 +37,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 Layer = GameManager.OWN_PLAYER_LAYER;
             }
-            inventory = new Inventory(GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER);
-            itemSlot = new ItemSlot();
-            itemSlot.Location = new Point(0, GameManager.Instance.GetMapSize().Y - itemSlot.Size.Y);
+            inventory = new Inventory((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER);
+            inventory.IsVisible = false;
+            weaponsSlots = new Inventory(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 25), 5, 1);
+            equippedWeaponSlot = new ItemSlot();
+            equippedWeaponSlot.Location = new Point(25, GameManager.Instance.GetMapSize().Y - 25 - equippedWeaponSlot.Size.Y / 2);
             base.OnNetworkInitialize();
         }
 
@@ -56,7 +59,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void EquipeWith(int itemType)
         {
             base.EquipeWith(itemType);
-            itemSlot.Item = EquippedWeapon;
+            equippedWeaponSlot.Item = EquippedWeapon;
         }
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)
@@ -115,15 +118,44 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     if (InputManager.Instance.GetMouseLeftButtonPressed())
                     {
-                        if (inventory.GetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out Item inventoryItem))
+                        if (inventory.TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out Item item))
                         {
-                            if(inventoryItem is Weapon)
+                            if(item is Weapon)
                             {
-                                EquipeWith((int)inventoryItem.ItemType);
+                                if (weaponsSlots.TryAddItem(item))
+                                {
+                                    Console.WriteLine(inventory.TryRemoveItem(item));
+                                }
+                            }
+                        }
+                        else if (weaponsSlots.TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out item))
+                        {
+                            if (item is Weapon)
+                            {
+                                if (inventory.TryAddItem(item))
+                                {
+                                    weaponsSlots.TryRemoveItem(item);
+                                }
                             }
                         }
 
                     }
+                }
+                if (InputManager.Instance.KeyPressed(Keys.A))
+                {
+                    EquipeFromWeaponsSlot(1);
+                }
+                else if(InputManager.Instance.KeyPressed(Keys.S))
+                {
+                    EquipeFromWeaponsSlot(2);
+                }
+                else if (InputManager.Instance.KeyPressed(Keys.D))
+                {
+                    EquipeFromWeaponsSlot(3);
+                }
+                else if (InputManager.Instance.KeyPressed(Keys.F))
+                {
+                    EquipeFromWeaponsSlot(4);
                 }
 
                 if (EquippedWeapon != null && InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
@@ -151,11 +183,20 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
         }
 
+        private void EquipeFromWeaponsSlot(int slot)
+        {
+            if (weaponsSlots.TryGetItemInSlot(slot, out Item item))
+            {
+                EquipeWith((int) item.ItemType);
+            }
+        }
+
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
             inventory.Draw(sprite);
-            itemSlot.Draw(sprite);
+            equippedWeaponSlot.Draw(sprite);
+            weaponsSlots.Draw(sprite);
         }
 
         public override void OnDestroyed(NetworkIdentity identity)
