@@ -114,7 +114,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public void EquipeWith(int itemType)
+        public virtual void EquipeWith(int itemType)
         {
             if (!isInServer || !hasAuthority)
             {
@@ -170,8 +170,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             currentFlickerCount = 0;
         }
 
-       
-
         public override void Draw(SpriteBatch sprite)
         {
             if (!isHidenCompletely)
@@ -184,7 +182,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 }
             }
         }
-
 
         public override void SetCurrentEntityState(int entityState, int direction)
         {

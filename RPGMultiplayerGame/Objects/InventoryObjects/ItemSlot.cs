@@ -9,7 +9,7 @@ using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items;
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
-    public class InventoryItem
+    public class ItemSlot
     {
         public Item Item { get; set; }
         public Point Location { get; set; }
@@ -17,23 +17,25 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         private readonly Texture2D inventorySlotBackground;
 
-        public InventoryItem()
+        public ItemSlot()
         {
             inventorySlotBackground = GameManager.Instance.InventorySlotBackground;
             Size = inventorySlotBackground.Bounds.Size;
         }
 
-        public InventoryItem(Point location)
+        public ItemSlot(Point location)
         {
             Location = location;
             inventorySlotBackground = GameManager.Instance.InventorySlotBackground;
+            Size = inventorySlotBackground.Bounds.Size;
         }
 
-        public InventoryItem(Point location, Item item)
+        public ItemSlot(Point location, Item item)
         {
             Location = location;
             Item = item;
             inventorySlotBackground = GameManager.Instance.InventorySlotBackground;
+            Size = inventorySlotBackground.Bounds.Size;
         }
 
         public void Draw(SpriteBatch sprite)

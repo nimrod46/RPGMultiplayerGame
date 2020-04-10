@@ -21,7 +21,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         }
 
         public bool IsVisible { get; set; }
-        private readonly InventoryItem[] inventoryItems;
+        private readonly ItemSlot[] inventoryItems;
         private readonly int columns;
         private readonly int rows;
 
@@ -29,14 +29,14 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             this.columns = columns;
             this.rows = rows;
-            inventoryItems = new InventoryItem[columns * rows];
+            inventoryItems = new ItemSlot[columns * rows];
             IsVisible = false;
             int index = 0;
             for (int j = 0; j < rows; j++)
             {
                 for (int i = 0; i < columns; i++)
                 {
-                    InventoryItem inventoryItem = new InventoryItem();
+                    ItemSlot inventoryItem = new ItemSlot();
                     Vector2 location = new Vector2(i * inventoryItem.Size.X, j * inventoryItem.Size.Y) + GameManager.Instance.GetMapSize().ToVector2() / 2
                     - new Vector2(columns * inventoryItem.Size.X / 2, rows * inventoryItem.Size.Y / 2);
                     inventoryItem.Location = location.ToPoint();
@@ -50,7 +50,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             if (IsVisible)
             {
-
                 foreach (var item in inventoryItems)
                 {
                     item.Draw(sprite);

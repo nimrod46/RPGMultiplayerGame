@@ -20,6 +20,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
         private Inventory inventory;
+        private ItemSlot itemSlot;
         private Npc interactingWith;
 
         public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerName, true)
@@ -36,6 +37,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 Layer = GameManager.OWN_PLAYER_LAYER;
             }
             inventory = new Inventory(GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER);
+            itemSlot = new ItemSlot();
+            itemSlot.Location = new Point(0, GameManager.Instance.GetMapSize().Y - itemSlot.Size.Y);
             base.OnNetworkInitialize();
         }
 
@@ -48,6 +51,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             SetName(name);
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
+        }
+
+        public override void EquipeWith(int itemType)
+        {
+            base.EquipeWith(itemType);
+            itemSlot.Item = EquippedWeapon;
         }
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)
@@ -146,6 +155,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.Draw(sprite);
             inventory.Draw(sprite);
+            itemSlot.Draw(sprite);
         }
 
         public override void OnDestroyed(NetworkIdentity identity)
