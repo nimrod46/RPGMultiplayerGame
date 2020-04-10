@@ -13,19 +13,19 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
     public class MeleeWeapon : Weapon
     {
-        public MeleeWeapon(ItemType itemType, Point size, float damage, string name) : base(itemType, size, damage, name)
+        public MeleeWeapon(ItemType itemType, Point size, float damage, string name, double coolDownTime) : base(itemType, size, damage, name, coolDownTime)
         {
         }
 
         public override void Attack(Entity entity)
         {
             UpdateWeaponLocation(entity);
-            List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(entity);
+            List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(this, entity);
             if (damagedEntities.Count > 0)
             {
                 foreach (Entity damagedEntity in damagedEntities)
                 {
-                    damagedEntity.OnAttackedBy(SyncDamage);
+                    damagedEntity.OnAttackedBy(Damage);
                 }
             }
         }
@@ -35,20 +35,20 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             switch ((Direction)entity.SyncCurrentDirection)
             {
                 case Direction.Left:
-                    SyncX = entity.GetBoundingRectangle().Left;
-                    SyncY = entity.GetCenter().Y;
+                    X = entity.GetBoundingRectangle().Left;
+                    Y = entity.GetCenter().Y;
                     break;
                 case Direction.Up:
-                    SyncY = entity.GetBoundingRectangle().Top;
-                    SyncX = entity.GetCenter().X;
+                    Y = entity.GetBoundingRectangle().Top;
+                    X = entity.GetCenter().X;
                     break;
                 case Direction.Right:
-                    SyncX = entity.GetBoundingRectangle().Right - Size.X;
-                    SyncY = entity.GetCenter().Y;
+                    X = entity.GetBoundingRectangle().Right - Size.X;
+                    Y = entity.GetCenter().Y;
                     break;
                 case Direction.Down:
-                    SyncY = entity.GetBoundingRectangle().Bottom - Size.Y;
-                    SyncX = entity.GetCenter().X;
+                    Y = entity.GetBoundingRectangle().Bottom - Size.Y;
+                    X = entity.GetCenter().X;
                     break;
                 case Direction.Idle:
                     break;

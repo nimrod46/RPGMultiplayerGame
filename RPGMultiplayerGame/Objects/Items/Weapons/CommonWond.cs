@@ -11,7 +11,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
     public class CommonWond : RangedWeapon
     {
-        public CommonWond() : base(ItemType.CommonWond, new Point(0, 0), 25, "Common Wand", new FireBall())
+        public CommonWond() : base(ItemType.CommonWond, new Point(0, 0), 25, "Common Wand", new FireBall(), 2)
         {
         }
     }

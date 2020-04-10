@@ -56,12 +56,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
         }
 
-        public override void EquipeWith(int itemType)
-        {
-            base.EquipeWith(itemType);
-            equippedItems.PutItemInSlot(2, EquippedWeapon);
-        }
-
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)
         {
             lock (currentArrowsKeysPressed)
@@ -109,13 +103,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public void AddItemToInventory(int itemType, int count)
         {
             InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType, count);
-            AddItemToInventoryLocaly(ItemFactory.GetInventoryItem<Item>((ItemType)itemType, count));
+            AddItemToInventoryLocaly(ItemFactory.GetItem<Item>((ItemType)itemType, count));
         }
 
         public void AddItemToInventory(int itemType)
         {
             InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType);
-            AddItemToInventoryLocaly(ItemFactory.GetInventoryItem<Item>((ItemType)itemType));
+            AddItemToInventoryLocaly(ItemFactory.GetItem<Item>((ItemType)itemType));
         }
 
         public override void Update(GameTime gameTime)
@@ -128,7 +122,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     {
                         if (inventory.TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out Item item))
                         {
-                            if(item is InteractiveItem)
+                            if (item is InteractiveItem)
                             {
                                 if (usableItems.TryAddItem(item))
                                 {
@@ -152,7 +146,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     MoveFromUsableItemSlot(1);
                 }
-                else if(InputManager.Instance.KeyPressed(Keys.S))
+                else if (InputManager.Instance.KeyPressed(Keys.S))
                 {
                     MoveFromUsableItemSlot(2);
                 }
@@ -164,21 +158,21 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     MoveFromUsableItemSlot(4);
                 }
-                
-                if(InputManager.Instance.KeyPressed(Keys.Z))
+
+                if (InputManager.Instance.KeyPressed(Keys.Z))
                 {
                     equippedItems.UsePotionAtSlot(1, this);
                 }
 
                 if (EquippedWeapon != null && InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
                 {
-                    SetCurrentEntityState((int)State.Attacking, SyncCurrentDirection);
+                    Attack();
                 }
                 else
                 {
                     if (GetCurrentEnitytState<State>() == State.Attacking)
                     {
-                        if(!InputManager.Instance.KeyDown(Keys.X) || GetIsLoopAnimationFinished())
+                        if (!InputManager.Instance.KeyDown(Keys.X) || GetIsLoopAnimationFinished())
                         {
                             Instance_OnArrowsKeysStateChange(Keys.None, false);
                         }
@@ -191,7 +185,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         interactingWith.ChooseDialogOption(pressedKey - Keys.D1);
                     }
                 }
-            }   
+            }
             base.Update(gameTime);
         }
 
@@ -199,9 +193,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (usableItems.TryGetItemInSlot(slot, out Item item))
             {
-                if (item is Weapon)
+                if (item is Weapon weapon)
                 {
-                    EquipeWith((int)item.ItemType);
+                    EquipeWith(weapon);
+                    equippedItems.PutItemInSlot(2, EquippedWeapon);
                 }
                 else if(item is Potion potion)
                 {

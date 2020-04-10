@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Networking;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
+using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
@@ -124,7 +125,7 @@ namespace RPGMultiplayerGame.Managers
                         bat.SyncX = obj.Rectangle.X;
                         bat.SyncY = obj.Rectangle.Y;
                         Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
-                        spawnedBat.EquipeWith((int)ItemType.BatClaw);
+                        spawnedBat.EquipeWith(ItemFactory.GetItem<Weapon>(ItemType.BatClaw));
                     }
                 }
                 else if (obj is SpawnLib)

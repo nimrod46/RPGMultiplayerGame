@@ -15,13 +15,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         static Random r = new Random();
         protected double attackTimeDelay = 1f;
-        protected double timeSinceLastAtack;
         protected double generatePointTimeDelay = 5f;
         protected double timeSinceLastGeneratePoint;
 
         public Monster(GameManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, true)
         {
-            timeSinceLastAtack = 0;
         }
 
         public override void OnNetworkInitialize()
@@ -46,16 +44,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             if (IsLookingAtPlayer)
             {
+
                 EquippedWeapon.UpdateWeaponLocation(this);
-                if (GameManager.Instance.GetEntitiesHitBy(this).Any())
+                if (GameManager.Instance.GetEntitiesHitBy(EquippedWeapon, this).Any())
                 {
                     SetCurrentEntityState((int)State.Idle, SyncCurrentDirection);
-                    timeSinceLastAtack += gameTime.ElapsedGameTime.TotalSeconds;
-                    if (timeSinceLastAtack > attackTimeDelay)
-                    {
-                        timeSinceLastAtack = 0;
-                        SetCurrentEntityState((int)State.Attacking, SyncCurrentDirection);
-                    }
+                    Attack();
                 }
                 else
                 {

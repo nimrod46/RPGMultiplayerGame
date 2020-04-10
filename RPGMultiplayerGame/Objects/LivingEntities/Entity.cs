@@ -30,7 +30,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Attacking
         }
 
-       
+
         protected SpawnPoint SyncSpawnPoint
         {
             get => syncSpawnPoint; set
@@ -52,7 +52,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
                 syncHealth = value;
-                
+
                 InvokeSyncVarNetworkly(nameof(SyncHealth), value);
                 OnHealthSet();
             }
@@ -105,7 +105,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
 
         public void OnHealthSet()
-        {   
+        {
             healthBarSize.X = SyncHealth * healthBar.Width / maxHealth;
         }
 
@@ -123,13 +123,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public virtual void EquipeWith(int itemType)
+        public virtual void EquipeWith(Weapon weapon)
         {
-            if (!isServerAuthority)
-            {
-                InvokeCommandMethodNetworkly(nameof(EquipeWith), itemType);
-            }
-            EquippedWeapon = ItemFactory.GetInventoryItem<Weapon>((ItemType)itemType);
+            //  if (!isServerAuthority)
+            //{
+            //InvokeCommandMethodNetworkly(nameof(EquipeWith), itemType);
+            //  }
+            EquippedWeapon = weapon;
         }
 
         public override void Update(GameTime gameTime)
@@ -150,13 +150,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
-            
+            if (hasAuthority)
+            {
+                EquippedWeapon?.Update(gameTime);
+            }
             base.Update(gameTime);
         }
 
         public virtual void OnAttackedBy(float damage)
         {
-            if(!damageable)
+            if (!damageable)
             {
                 return;
             }
@@ -164,7 +167,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (hasAuthority)
             {
                 SyncHealth -= damage;
-                if(SyncHealth <= 0)
+                if (SyncHealth <= 0)
                 {
                     Destroy();
 
@@ -199,10 +202,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 case State.Attacking:
                     AttackAtDir((Direction)direction);
-                    if (isInServer)
-                    {
-                        EquippedWeapon.Attack(this);
-                    }
                     break;
             }
         }
@@ -223,6 +222,28 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.OnDestroyed(identity);
             GameManager.Instance.RemoveEntity(this);
+        }
+
+        protected void Attack()
+        {
+            if (EquippedWeapon.IsAbleToAttack())
+            {
+                SetCurrentEntityState((int)State.Attacking, SyncCurrentDirection);
+                CmdAttack(this, (int)EquippedWeapon.ItemType);
+            }
+        }
+
+        protected void CmdAttack(Entity attacker, int itemType)
+        {
+            if (!isInServer)
+            {
+                InvokeCommandMethodNetworkly(nameof(CmdAttack), attacker, itemType);
+            }
+            else
+            {
+                Weapon weapon = ItemFactory.GetItem<Weapon>((ItemType)itemType);
+                weapon.Attack(attacker);
+            }
         }
     }
 }

@@ -15,6 +15,7 @@ using RPGMultiplayerGame.Objects.Other;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 using RPGMultiplayerGame.Objects.InventoryObjects;
+using RPGMultiplayerGame.Objects.Items.Weapons;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -130,7 +131,7 @@ namespace RPGMultiplayerGame.Managers
             return itemTextures[value];
         }
 
-        public List<Entity> GetEntitiesHitBy(Entity attacker)
+        public List<Entity> GetEntitiesHitBy(Weapon weapon, Entity attacker)
         {
             List<Entity> damagedEntities = new List<Entity>();
             for (int i = 0; i < entities.Count; i++)
@@ -141,7 +142,7 @@ namespace RPGMultiplayerGame.Managers
                     continue;
                 }
 
-                if (attacker.EquippedWeapon.GetBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                if (weapon.GetBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
                 {
                     damagedEntities.Add(entity);
                 }

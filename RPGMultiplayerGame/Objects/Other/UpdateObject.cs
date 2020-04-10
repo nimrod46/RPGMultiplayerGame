@@ -18,7 +18,7 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             base.OnNetworkInitialize();
             GameManager.Instance.AddUpdateObject(this);
-            if (isServerAuthority)
+            if (isInServer)
             {
                 ServerManager.Instance.AddServerGameObject(this);
             }
@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             GameManager.Instance.RemoveUpdateObject(this);
             base.OnDestroyed(identity);
-            if (isServerAuthority)
+            if (isInServer)
             {
                 ServerManager.Instance.RemoveServerGameObject(this);
             }

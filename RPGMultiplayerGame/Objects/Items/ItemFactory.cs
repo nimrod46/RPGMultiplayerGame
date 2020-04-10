@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects.Items
     public static class ItemFactory
     {
         public static Item EmptyItem = new EmptyItem();
-        public static T GetInventoryItem<T>(ItemType itemType) where T : Item
+        public static T GetItem<T>(ItemType itemType) where T : Item
         {
             switch (itemType)
             {
@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Objects.Items
             return null;
         }
 
-        internal static T GetInventoryItem<T>(ItemType itemType, int count) where T : Item
+        public static T GetItem<T>(ItemType itemType, int count) where T : Item
         {
             switch (itemType)
             {
