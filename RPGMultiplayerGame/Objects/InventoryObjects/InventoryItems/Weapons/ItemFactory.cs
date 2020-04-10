@@ -14,8 +14,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
         {
             switch (itemType)
             {
-                case ItemType.None:
-                    return null;
                 case ItemType.CommonSword:
                     return new CommonSword() as T;
                 case ItemType.CommonWond:

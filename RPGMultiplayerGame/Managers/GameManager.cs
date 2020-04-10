@@ -46,8 +46,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public const int INVENTORY_ROWS_NUMBER = 5;
-        public const int INVENTORY_COLUMNS_NUMBER = 4;
+        public const int INVENTORY_ROWS_NUMBER = 4, INVENTORY_COLUMNS_NUMBER = 5;
         public const float INVENTORY_LAYER = 0.0001f;
         public const float OWN_PLAYER_LAYER = 0.001f;
         public const float ENTITY_LAYER = 0.01f;

@@ -93,7 +93,7 @@
     <Compile Include="Objects\LivingEntities\Bat.cs" />
     <Compile Include="Objects\LivingEntities\PathEntity.cs" />
     <Compile Include="Objects\InventoryObjects\Inventory.cs" />
-    <Compile Include="Objects\InventoryObjects\InventoryStackableItem1.cs" />
+    <Compile Include="Objects\InventoryObjects\StackableItem.cs" />
     <Compile Include="Objects\InventoryObjects\Item.cs" />
     <Compile Include="Objects\Other\MovingObject.cs" />
     <Compile Include="Objects\Other\SimpleDialog.cs" />

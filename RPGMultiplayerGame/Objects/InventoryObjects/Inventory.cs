@@ -33,9 +33,9 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             inventorySlotBackground = GameManager.Instance.InventorySlotBackground;
             IsVisible = false;
             int index = 0;
-            for (int i = 0; i < columns; i++)
+            for (int j = 0; j < rows; j++)
             {
-                for (int j = 0; j < rows; j++)
+                for (int i = 0; i < columns; i++)
                 {
                     Vector2 location = new Vector2(i * inventorySlotBackground.Width, j * inventorySlotBackground.Height) + GameManager.Instance.GetMapSize().ToVector2() / 2
                     - new Vector2(columns * inventorySlotBackground.Width / 2, rows * inventorySlotBackground.Height / 2);
