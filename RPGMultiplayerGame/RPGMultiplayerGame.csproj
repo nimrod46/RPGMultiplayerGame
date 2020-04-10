@@ -193,29 +193,11 @@
   <ItemGroup>
     <Content Include="Content\basictiles.png" />
     <Content Include="Icon.ico" />
-    <Content Include="LEADTOOLS\OcrLEADRuntime\US_Cities.txt" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\BusinessCard.Names.en.dic" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\BusinessCard.Titles.en.dic" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.Cmc7.bin" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.de.bin" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.de.dic" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.en.bin" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.en.bin2" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.en.dic" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.es.bin" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.es.dic" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.Field.bin" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.fr.bin" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.fr.dic" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.it.bin" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.it.dic" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.Micr.bin" />
-    <None Include="LEADTOOLS\OcrLEADRuntime\LEAD.Mrz.bin" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -241,35 +223,6 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
-  <Import Project="..\packages\Leadtools.Kernel.20.0.0.8\build\net40\Leadtools.Kernel.targets" Condition="Exists('..\packages\Leadtools.Kernel.20.0.0.8\build\net40\Leadtools.Kernel.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Leadtools.Kernel.20.0.0.8\build\net40\Leadtools.Kernel.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Kernel.20.0.0.8\build\net40\Leadtools.Kernel.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Formats.Raster.Common.20.0.0.8\build\net40\Leadtools.Formats.Raster.Common.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Formats.Raster.Common.20.0.0.8\build\net40\Leadtools.Formats.Raster.Common.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Formats.Vector.20.0.0.8\build\net40\Leadtools.Formats.Vector.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Formats.Vector.20.0.0.8\build\net40\Leadtools.Formats.Vector.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Image.Processing.20.0.0.8\build\net40\Leadtools.Image.Processing.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Image.Processing.20.0.0.8\build\net40\Leadtools.Image.Processing.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Barcode.20.0.0.8\build\net40\Leadtools.Barcode.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Barcode.20.0.0.8\build\net40\Leadtools.Barcode.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Ocr.Languages.Main.NET.20.0.0.8\build\net40\Leadtools.Ocr.Languages.Main.NET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Ocr.Languages.Main.NET.20.0.0.8\build\net40\Leadtools.Ocr.Languages.Main.NET.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Ocr.20.0.0.8\build\net40\Leadtools.Ocr.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Ocr.20.0.0.8\build\net40\Leadtools.Ocr.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Pdf.20.0.0.8\build\net40\Leadtools.Pdf.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Pdf.20.0.0.8\build\net40\Leadtools.Pdf.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Annotations.20.0.0.8\build\net40\Leadtools.Annotations.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Annotations.20.0.0.8\build\net40\Leadtools.Annotations.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Formats.Document.20.0.0.8\build\net40\Leadtools.Formats.Document.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Formats.Document.20.0.0.8\build\net40\Leadtools.Formats.Document.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Document.20.0.0.8\build\net40\Leadtools.Document.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Document.20.0.0.8\build\net40\Leadtools.Document.targets'))" />
-    <Error Condition="!Exists('..\packages\Leadtools.Forms.20.0.0.8\build\net40\Leadtools.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Leadtools.Forms.20.0.0.8\build\net40\Leadtools.Forms.targets'))" />
-  </Target>
-  <Import Project="..\packages\Leadtools.Formats.Raster.Common.20.0.0.8\build\net40\Leadtools.Formats.Raster.Common.targets" Condition="Exists('..\packages\Leadtools.Formats.Raster.Common.20.0.0.8\build\net40\Leadtools.Formats.Raster.Common.targets')" />
-  <Import Project="..\packages\Leadtools.Formats.Vector.20.0.0.8\build\net40\Leadtools.Formats.Vector.targets" Condition="Exists('..\packages\Leadtools.Formats.Vector.20.0.0.8\build\net40\Leadtools.Formats.Vector.targets')" />
-  <Import Project="..\packages\Leadtools.Image.Processing.20.0.0.8\build\net40\Leadtools.Image.Processing.targets" Condition="Exists('..\packages\Leadtools.Image.Processing.20.0.0.8\build\net40\Leadtools.Image.Processing.targets')" />
-  <Import Project="..\packages\Leadtools.Barcode.20.0.0.8\build\net40\Leadtools.Barcode.targets" Condition="Exists('..\packages\Leadtools.Barcode.20.0.0.8\build\net40\Leadtools.Barcode.targets')" />
-  <Import Project="..\packages\Leadtools.Ocr.Languages.Main.NET.20.0.0.8\build\net40\Leadtools.Ocr.Languages.Main.NET.targets" Condition="Exists('..\packages\Leadtools.Ocr.Languages.Main.NET.20.0.0.8\build\net40\Leadtools.Ocr.Languages.Main.NET.targets')" />
-  <Import Project="..\packages\Leadtools.Ocr.20.0.0.8\build\net40\Leadtools.Ocr.targets" Condition="Exists('..\packages\Leadtools.Ocr.20.0.0.8\build\net40\Leadtools.Ocr.targets')" />
-  <Import Project="..\packages\Leadtools.Pdf.20.0.0.8\build\net40\Leadtools.Pdf.targets" Condition="Exists('..\packages\Leadtools.Pdf.20.0.0.8\build\net40\Leadtools.Pdf.targets')" />
-  <Import Project="..\packages\Leadtools.Annotations.20.0.0.8\build\net40\Leadtools.Annotations.targets" Condition="Exists('..\packages\Leadtools.Annotations.20.0.0.8\build\net40\Leadtools.Annotations.targets')" />
-  <Import Project="..\packages\Leadtools.Formats.Document.20.0.0.8\build\net40\Leadtools.Formats.Document.targets" Condition="Exists('..\packages\Leadtools.Formats.Document.20.0.0.8\build\net40\Leadtools.Formats.Document.targets')" />
-  <Import Project="..\packages\Leadtools.Document.20.0.0.8\build\net40\Leadtools.Document.targets" Condition="Exists('..\packages\Leadtools.Document.20.0.0.8\build\net40\Leadtools.Document.targets')" />
-  <Import Project="..\packages\Leadtools.Forms.20.0.0.8\build\net40\Leadtools.Forms.targets" Condition="Exists('..\packages\Leadtools.Forms.20.0.0.8\build\net40\Leadtools.Forms.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
