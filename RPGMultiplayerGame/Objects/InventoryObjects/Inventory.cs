@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Items;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {

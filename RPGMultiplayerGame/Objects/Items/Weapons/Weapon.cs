@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Networking;
-using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using System;
@@ -10,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
-namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
+namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
     public abstract class Weapon : Item
     {
@@ -31,7 +30,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 
         public Rectangle GetBoundingRectangle()
         {
-            return new Rectangle((int) SyncX, (int) SyncY, Size.X, Size.Y);
+            return new Rectangle((int)SyncX, (int)SyncY, Size.X, Size.Y);
         }
 
         internal abstract void Attack(Entity entity);

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
-namespace RPGMultiplayerGame.Objects.InventoryObjects
+namespace RPGMultiplayerGame.Objects.Items
 {
     public abstract class StackableItem : Item
     {

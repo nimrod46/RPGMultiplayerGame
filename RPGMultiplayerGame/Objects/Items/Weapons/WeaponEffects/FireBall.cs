@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
+namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects
 {
     public class FireBall : WeaponEffect
     {

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Managers.GameManager;
 
-namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
+namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
     public abstract class WeaponEffect : MovingObject
     {
@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
         private float syncDamage;
         List<int> hittedEntitiesId = new List<int>();
 
-        public WeaponEffect(EffectId effectId) : base(new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEffects[effectId]), 0, 0)
+        public WeaponEffect(EffectId effectId) : base(new Dictionary<int, List<GameTexture>>(Instance.animationsByEffects[effectId]), 0, 0)
         {
             this.effectId = effectId;
             speed *= 6;

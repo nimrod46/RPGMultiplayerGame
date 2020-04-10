@@ -13,7 +13,7 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.MapObjects;
 using Microsoft.Xna.Framework;
-using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons;
+using RPGMultiplayerGame.Objects.InventoryObjects.Items.Weapons;
 
 namespace RPGMultiplayerGame.Managers
 {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
-namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
+namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
     class BatClaw : MeleeWeapon
     {

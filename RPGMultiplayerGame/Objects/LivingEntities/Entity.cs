@@ -12,7 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.MapObjects;
-using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons;
+using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Other;
 using static RPGMultiplayerGame.Managers.GameManager;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;

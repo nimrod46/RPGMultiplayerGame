@@ -6,8 +6,9 @@ using Microsoft.Xna.Framework.Input;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.InventoryObjects;
-using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems;
-using RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons;
+using RPGMultiplayerGame.Objects.InventoryObjects.Items;
+using RPGMultiplayerGame.Objects.Items;
+using RPGMultiplayerGame.Objects.Items.Weapons;
 using static RPGMultiplayerGame.Managers.GameManager;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 

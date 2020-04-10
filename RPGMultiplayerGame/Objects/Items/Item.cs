@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
-namespace RPGMultiplayerGame.Objects.InventoryObjects
+namespace RPGMultiplayerGame.Objects.Items
 {
     public abstract class Item
     {
@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         public Item(ItemType itemType)
         {
-            this.ItemType = itemType;
+            ItemType = itemType;
         }
 
         public virtual void Draw(SpriteBatch sprite, Vector2 location, float layer)
