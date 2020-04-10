@@ -10,6 +10,7 @@ using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
@@ -22,13 +23,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             CommonWond,
             BatClaw,
             CommonHealthPotion,
-        }
-
-        public enum OriginLocationType
-        {
-            Centered,
-            ButtomLeft,
-            ButtomCentered
         }
 
         public bool IsVisible { get; set; }

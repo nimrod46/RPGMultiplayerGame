@@ -13,8 +13,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     public abstract class Monster : Human
     {
-        static Random r = new Random();
-        protected double attackTimeDelay = 1f;
+        static readonly Random rand = new Random();
         protected double generatePointTimeDelay = 5f;
         protected double timeSinceLastGeneratePoint;
 
@@ -64,7 +63,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     if (timeSinceLastGeneratePoint > generatePointTimeDelay)
                     {
                         timeSinceLastGeneratePoint = 0;
-                        nextPoint = new Vector2(r.Next(0, GameManager.Instance.GetMapSize().X), r.Next(0, GameManager.Instance.GetMapSize().Y));
+                        nextPoint = new Vector2(rand.Next(0, GameManager.Instance.GetMapSize().X), rand.Next(0, GameManager.Instance.GetMapSize().Y));
                     }
                 }
             }

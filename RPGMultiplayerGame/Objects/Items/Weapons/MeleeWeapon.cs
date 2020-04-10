@@ -17,15 +17,15 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         {
         }
 
-        public override void Attack(Entity entity)
+        public override void Attack(Entity attacker)
         {
-            UpdateWeaponLocation(entity);
-            List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(this, entity);
+            UpdateWeaponLocation(attacker);
+            List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(this, attacker);
             if (damagedEntities.Count > 0)
             {
                 foreach (Entity damagedEntity in damagedEntities)
                 {
-                    damagedEntity.OnAttackedBy(Damage);
+                    damagedEntity.OnAttackedBy(attacker, Damage);
                 }
             }
         }

@@ -9,6 +9,7 @@ using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.Other.Quests;
 using static RPGMultiplayerGame.Managers.GameManager;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
@@ -19,13 +20,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         readonly List<Keys> currentArrowsKeysPressed = new List<Keys>();
         public delegate void LocalPlayerNameSetEventHandler(Player player);
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
+
+       
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
+        private QuestsMenu playerQuests;
         private Inventory inventory;
         private Inventory usableItems;
         private Inventory equippedItems;
         private Npc interactingWith;
 
-        public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerName, true)
+        public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerNameFont, true)
         {
             scale = 1;
             speed *= 2;
@@ -42,6 +46,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             inventory.IsVisible = false;
             usableItems = new Inventory(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomCentered, 5, 1);
             equippedItems = new Inventory(new Point(10, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomLeft, 3, 1);
+            playerQuests = new QuestsMenu(new Vector2(GameManager.Instance.GetMapSize().X, 100), OriginLocationType.TopLeft);
             base.OnNetworkInitialize();
         }
 
@@ -54,6 +59,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             SetName(name);
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
+        }
+
+        public void AddQuest(Quest quest)
+        {
+            playerQuests.AddQuest(quest);
         }
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)
@@ -211,6 +221,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             inventory.Draw(sprite);
             equippedItems.Draw(sprite);
             usableItems.Draw(sprite);
+            playerQuests.Draw(sprite);
         }
 
         public override void OnDestroyed(NetworkIdentity identity)

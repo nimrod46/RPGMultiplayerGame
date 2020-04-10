@@ -30,7 +30,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Attacking
         }
 
-
+        public delegate void EntityKill(Entity killedEntity);
+        public EntityKill OnEnitytKillEvent;
         protected SpawnPoint SyncSpawnPoint
         {
             get => syncSpawnPoint; set
@@ -60,7 +61,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public Weapon EquippedWeapon { get; set; }
 
-        protected EntityId entityId;
+        public EntityId entityId { get; }
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
         protected float textLyer;
@@ -124,11 +125,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         public virtual void EquipeWith(Weapon weapon)
-        {
-            //  if (!isServerAuthority)
-            //{
-            //InvokeCommandMethodNetworkly(nameof(EquipeWith), itemType);
-            //  }
+        {      
             EquippedWeapon = weapon;
         }
 
@@ -157,23 +154,35 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
         }
 
-        public virtual void OnAttackedBy(float damage)
+        public virtual void OnAttackedBy(Entity attacker, float damage)
         {
             if (!damageable)
             {
                 return;
             }
-            InvokeBroadcastMethodNetworkly(nameof(OnAttackedBy), damage);
+            InvokeBroadcastMethodNetworkly(nameof(OnAttackedBy), attacker, damage);
             if (hasAuthority)
             {
                 SyncHealth -= damage;
                 if (SyncHealth <= 0)
                 {
-                    Destroy();
-
+                    Kill(attacker);
                 }
             }
             MakeObjectFlicker();
+        }
+
+        public void Kill(Entity attacker)
+        {
+            InvokeBroadcastMethodNetworkly(nameof(Kill), attacker);
+            if(attacker.hasAuthority)
+            {
+                attacker.OnEnitytKillEvent?.Invoke(this);
+            }
+            if (hasAuthority)
+            {
+                Destroy();
+            }
         }
 
         private void MakeObjectFlicker()

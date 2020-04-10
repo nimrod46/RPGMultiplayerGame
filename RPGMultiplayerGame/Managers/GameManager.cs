@@ -35,6 +35,14 @@ namespace RPGMultiplayerGame.Managers
             FireBall
         }
 
+        public enum OriginLocationType
+        {
+            Centered,
+            ButtomLeft,
+            ButtomCentered,
+            TopLeft
+        }
+
         public static GameManager Instance
         {
             get
@@ -63,7 +71,7 @@ namespace RPGMultiplayerGame.Managers
         public List<Texture2D> textures = new List<Texture2D>();
         public Texture2D HealthBar;
         public Texture2D HealthBarBackground;
-        public SpriteFont PlayerName;
+        public SpriteFont PlayerNameFont;
         public Texture2D DialogBackground;
         public SpriteFont DialogTextFont;
         public Texture2D InventorySlotBackground;
@@ -98,7 +106,7 @@ namespace RPGMultiplayerGame.Managers
             animationsByEffects = GetGameTextureByEnum<EffectId>(content);
             HealthBar = content.Load<Texture2D>("HealthBar");
             HealthBarBackground = content.Load<Texture2D>("HealthBarBackground");
-            PlayerName = content.Load<SpriteFont>("PlayerName");
+            PlayerNameFont = content.Load<SpriteFont>("PlayerName");
             DialogTextFont = content.Load<SpriteFont>("DialogText");
             InventorySlotBackground = content.Load<Texture2D>("InventorySlot");
 

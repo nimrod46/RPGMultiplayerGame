@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,35 +15,45 @@ namespace RPGMultiplayerGame.Objects.Other
         private Texture2D background;
 
         public string Name { get; private set; }
-        public Dictionary<string, ComplexDialog> DialogsByAnswers { get; } = new Dictionary<string, ComplexDialog>();
-
-        public ComplexDialog(string text) : base(text)
-        {
-            background = GameManager.Instance.GetDialogBackGroundByProperties(Name, Text, DialogsByAnswers.Keys.ToArray());
-        }
+        private readonly Dictionary<string, ComplexDialog> dialogsByAnswers = new Dictionary<string, ComplexDialog>();
 
         public ComplexDialog(string name, string text) : base(text)
         {
             Name = name;
-            background = GameManager.Instance.GetDialogBackGroundByProperties(Name, Text, DialogsByAnswers.Keys.ToArray());
+            background = GameManager.Instance.GetDialogBackGroundByProperties(Name, Text, dialogsByAnswers.Keys.ToArray());
         }
 
-        public ComplexDialog AddAnswerOption(string option, ComplexDialog dialog)
+        public ComplexDialog AddAnswerOption(string optionText, string text)
         {
-            dialog.Name = Name;
-            DialogsByAnswers.Add(option, dialog);
-            background = GameManager.Instance.GetDialogBackGroundByProperties(Name, Text, DialogsByAnswers.Keys.ToArray());
-            return this;
+            ComplexDialog dialog = new ComplexDialog(Name, text);
+            dialogsByAnswers.Add(optionText, dialog);
+            background = GameManager.Instance.GetDialogBackGroundByProperties(Name, Text, dialogsByAnswers.Keys.ToArray());
+            return dialog;
         }
 
-        public ComplexDialog GetNextDialogByAnswer(int answerIndex)
+        public T AddAnswerOption<T>(string optionText, params object[] args) where T : ComplexDialog
         {
-            return DialogsByAnswers.Values.ToList()[answerIndex];
+            var v = args.ToList();
+            v.Insert(0, Name);
+            T dialog = (T)Activator.CreateInstance(typeof(T), v.ToArray());
+            dialogsByAnswers.Add(optionText, dialog);
+            background = GameManager.Instance.GetDialogBackGroundByProperties(Name, Text, dialogsByAnswers.Keys.ToArray());
+            return dialog;
+        }
+
+        public virtual ComplexDialog GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
+        {
+            if(answerIndex == dialogsByAnswers.Count)
+            {
+                return null;
+            }
+
+            return dialogsByAnswers.Values.ToList()[answerIndex];
         }
 
         public int AnswersCount()
         {
-            return DialogsByAnswers.Count;
+            return dialogsByAnswers.Count;
         }
 
         public new void DrawAt(SpriteBatch sprite, Vector2 location)

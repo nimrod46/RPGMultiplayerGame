@@ -10,7 +10,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     public class Bat : Monster
     {
-        public Bat() : base(GameManager.EntityId.Bat, 0, 0, 100, GameManager.Instance.PlayerName)
+        public Bat() : base(GameManager.EntityId.Bat, 0, 0, 100, GameManager.Instance.PlayerNameFont)
         {
             SyncName = "Bat";
             animationTimeDelay *= 0.7;

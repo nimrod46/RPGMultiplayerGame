@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Other;
+using RPGMultiplayerGame.Objects.Other.Quests;
+using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -14,7 +16,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         private bool isInDialog;
 
-        public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerName)
+        public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerNameFont)
         {
             SyncName = "Joe";
             isInDialog = false;
@@ -23,10 +25,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            dialog = new ComplexDialog(SyncName, "Hi! can you help me?")
-                .AddAnswerOption("Yes", new ComplexDialog("Thank You!")
-                    .AddAnswerOption("-->", new ComplexDialog("Lets get started")))
-                .AddAnswerOption("No", new ComplexDialog("Ok"));
+            dialog = new ComplexDialog(SyncName, "Hi! can you help me?");
+            dialog.AddAnswerOption("Yes", "Thank You!").AddAnswerOption("....", "Lets get started").AddAnswerOption<QuestDialog>("Got it","So you need to kill for me some bats",new KillQuest("Kill 5 bats", EntityId.Bat, 5));
+            dialog.AddAnswerOption("No", "Ok");
         }
         public override void InteractWithPlayer(Player player)
         {
@@ -55,14 +56,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         internal override void ChooseDialogOption(int index)
         {
-            if (currentDialog.AnswersCount() >= index + 1)
-            {
-                currentDialog = currentDialog.GetNextDialogByAnswer(index);
-                ShowSimpleDialog(currentDialog.Text);
-            }
-            else if (currentDialog.AnswersCount() == 0)
+            currentDialog = currentDialog.GetNextDialogByAnswer(currentInteractingPlayer, index);
+            if (currentDialog == null)
             {
                 StopInteractWithPlayer(currentInteractingPlayer);
+            }
+            else
+            {
+                ShowSimpleDialog(currentDialog.Text);
             }
         }
 

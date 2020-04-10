@@ -10,7 +10,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     class Blacksmith : Npc
     {
-        public Blacksmith() : base(GameManager.EntityId.Blacksmith, 0, 0, 100, GameManager.Instance.PlayerName)
+        public Blacksmith() : base(GameManager.EntityId.Blacksmith, 0, 0, 100, GameManager.Instance.PlayerNameFont)
         {
             SyncName = "Blacksmith";
             scale = 0.3f;

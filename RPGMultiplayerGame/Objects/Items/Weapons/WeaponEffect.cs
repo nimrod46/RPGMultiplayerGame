@@ -23,8 +23,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         }
 
         protected EffectId effectId;
+        public Entity SyncAttacker { get; set; }
         private float syncDamage;
-        List<int> hittedEntitiesId = new List<int>();
+        private readonly List<int> hittedEntitiesId = new List<int>();
 
         public WeaponEffect(EffectId effectId) : base(new Dictionary<int, List<GameTexture>>(Instance.animationsByEffects[effectId]), 0, 0)
         {
@@ -42,7 +43,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         {
             if (!hittedEntitiesId.Contains(entity.id))
             {
-                entity.OnAttackedBy(syncDamage);
+                entity.OnAttackedBy(SyncAttacker, syncDamage);
                 hittedEntitiesId.Add(entity.id);
             }
         }

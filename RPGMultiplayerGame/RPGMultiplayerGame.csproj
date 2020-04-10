@@ -102,6 +102,10 @@
     <Compile Include="Objects\Items\StackableItem.cs" />
     <Compile Include="Objects\Items\Item.cs" />
     <Compile Include="Objects\Other\MovingObject.cs" />
+    <Compile Include="Objects\Other\Quests\KillQuest.cs" />
+    <Compile Include="Objects\Other\Quests\QuestsMenu.cs" />
+    <Compile Include="Objects\Other\Quests\Quest.cs" />
+    <Compile Include="Objects\Other\QuestDialog.cs" />
     <Compile Include="Objects\Other\SimpleDialog.cs" />
     <Compile Include="Objects\Other\ComplexDialog.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
