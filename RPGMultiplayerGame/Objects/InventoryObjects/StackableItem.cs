@@ -14,7 +14,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
     {
         public int Count { get; set; }
         private readonly SpriteFont spriteFont;
-        public StackableItem(InventoryItemType itemType, int count) : base(itemType)
+        public StackableItem(ItemType itemType, int count) : base(itemType)
         {
             Count = count;
             spriteFont = GameManager.Instance.PlayerName;

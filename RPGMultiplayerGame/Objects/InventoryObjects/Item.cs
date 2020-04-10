@@ -13,7 +13,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
     public abstract class Item
     {
         public Texture2D Texture { get; set; }
-        public InventoryItemType ItemType
+        public ItemType ItemType
         {
             get => itemType; set
             {
@@ -22,9 +22,9 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
         }
 
-        private InventoryItemType itemType;
+        private ItemType itemType;
 
-        public Item(InventoryItemType itemType)
+        public Item(ItemType itemType)
         {
             this.ItemType = itemType;
         }

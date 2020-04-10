@@ -78,8 +78,8 @@ namespace RPGMultiplayerGame.Managers
                 Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), id);
                 players.Add(player);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
-                player.AddItemToInventory((int) InventoryItemType.CommonSword);
-                player.AddItemToInventory((int)InventoryItemType.CommonWond);
+                player.AddItemToInventory((int) ItemType.CommonSword);
+                player.AddItemToInventory((int)ItemType.CommonWond);
                 if (spawnPoint != null)
                 {
                     player.SetSpawnPoint(spawnPoint);
@@ -121,7 +121,7 @@ namespace RPGMultiplayerGame.Managers
                         bat.SyncX = obj.Rectangle.X;
                         bat.SyncY = obj.Rectangle.Y;
                         Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
-                        spawnedBat.EquipeWith((int) InventoryItemType.BatClaw);
+                        spawnedBat.EquipeWith((int) ItemType.BatClaw);
                     }
                 }
                 else if (obj is SpawnLib)

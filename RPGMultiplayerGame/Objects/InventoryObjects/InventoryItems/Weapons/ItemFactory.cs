@@ -10,17 +10,17 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 {
     public static class ItemFactory
     {
-        public static T GetInventoryItem<T>(InventoryItemType itemType) where T : Item
+        public static T GetInventoryItem<T>(ItemType itemType) where T : Item
         {
             switch (itemType)
             {
-                case InventoryItemType.None:
+                case ItemType.None:
                     return null;
-                case InventoryItemType.CommonSword:
+                case ItemType.CommonSword:
                     return new CommonSword() as T;
-                case InventoryItemType.CommonWond:
+                case ItemType.CommonWond:
                     return new CommonWond() as T;
-                case InventoryItemType.BatClaw:
+                case ItemType.BatClaw:
                     return new BatClaw() as T;
             }
             return null;

@@ -46,6 +46,8 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        public const int INVENTORY_ROWS_NUMBER = 5;
+        public const int INVENTORY_COLUMNS_NUMBER = 4;
         public const float INVENTORY_LAYER = 0.0001f;
         public const float OWN_PLAYER_LAYER = 0.001f;
         public const float ENTITY_LAYER = 0.01f;
@@ -57,7 +59,7 @@ namespace RPGMultiplayerGame.Managers
 
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
         public Dictionary<EffectId, Dictionary<int, List<GameTexture>>> animationsByEffects = new Dictionary<EffectId, Dictionary<int, List<GameTexture>>>();
-        public Dictionary<InventoryItemType, Texture2D> itemTextures = new Dictionary<InventoryItemType, Texture2D>();
+        public Dictionary<ItemType, Texture2D> itemTextures = new Dictionary<ItemType, Texture2D>();
         public List<Texture2D> textures = new List<Texture2D>();
         public Texture2D HealthBar;
         public Texture2D HealthBarBackground;
@@ -73,6 +75,7 @@ namespace RPGMultiplayerGame.Managers
         private readonly List<Monster> monsters = new List<Monster>();
         private GraphicsDevice graphicsDevice;
         private readonly string dialogBackgroundPath;
+
         private GameManager()
         {
             map = new GameMap();
@@ -100,16 +103,9 @@ namespace RPGMultiplayerGame.Managers
             InventorySlotBackground = content.Load<Texture2D>("InventorySlot");
 
 
-            foreach(InventoryItemType gameItemType in Enum.GetValues(typeof(InventoryItemType)))
+            foreach (ItemType gameItemType in Enum.GetValues(typeof(ItemType)))
             {
-                if(gameItemType == InventoryItemType.None)
-                {
-                    itemTextures.Add(gameItemType, new Texture2D(graphicsDevice, 1, 1));
-                }
-                else
-                {
-                    itemTextures.Add(gameItemType, content.Load<Texture2D>(gameItemType.ToString()));
-                }
+                itemTextures.Add(gameItemType, content.Load<Texture2D>(gameItemType.ToString()));
             }
 
             Texture2D spriteTextures = content.Load<Texture2D>("basictiles");
@@ -130,7 +126,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        internal Texture2D GetItemByType(Inventory.InventoryItemType value)
+        internal Texture2D GetItemByType(Inventory.ItemType value)
         {
             return itemTextures[value];
         }

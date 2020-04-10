@@ -35,7 +35,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 Layer = GameManager.OWN_PLAYER_LAYER;
             }
-            inventory = new Inventory();
+            inventory = new Inventory(GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER);
             base.OnNetworkInitialize();
         }
 
@@ -95,7 +95,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public void AddItemToInventory(int itemType)
         {
             InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType);
-            AddItemToInventoryLocaly(ItemFactory.GetInventoryItem<Item>((InventoryItemType)itemType));
+            AddItemToInventoryLocaly(ItemFactory.GetInventoryItem<Item>((ItemType)itemType));
         }
 
         public override void Update(GameTime gameTime)

@@ -12,32 +12,36 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
     public class Inventory : NetworkIdentity
     {
-        public enum InventoryItemType
+        public enum ItemType
         {
-            None,
             CommonSword,
             CommonWond,
             BatClaw,
         }
 
-        private Texture2D inventorySlotBackground;
+        private readonly Texture2D inventorySlotBackground;
         public bool IsVisible { get; set; }
-        private readonly KeyValuePair<Vector2, Item>[] inventoryItems = new KeyValuePair<Vector2, Item>[12];
+        private readonly KeyValuePair<Vector2, Item>[] inventoryItems;
+        private readonly int columns;
+        private readonly int rows;
 
-        public Inventory()
+        public Inventory(int columns, int rows)
         {
+            this.columns = columns;
+            this.rows = rows;
+            inventoryItems = new KeyValuePair<Vector2, Item>[columns * rows];
             inventorySlotBackground = GameManager.Instance.InventorySlotBackground;
             IsVisible = false;
-                int j = 0;
-            for (int i = 0; i < inventoryItems.Count(); i++)
+            int index = 0;
+            for (int i = 0; i < columns; i++)
             {
-                if (i % (this.inventoryItems.Count() / 2) == 0)
+                for (int j = 0; j < rows; j++)
                 {
-                    j = i / (this.inventoryItems.Count() / 2);
+                    Vector2 location = new Vector2(i * inventorySlotBackground.Width, j * inventorySlotBackground.Height) + GameManager.Instance.GetMapSize().ToVector2() / 2
+                    - new Vector2(columns * inventorySlotBackground.Width / 2, rows * inventorySlotBackground.Height / 2);
+                    inventoryItems[index] = new KeyValuePair<Vector2, Item>(location, null);
+                    index++;
                 }
-                Vector2 location = new Vector2((i - j * (this.inventoryItems.Count() / 2)) * inventorySlotBackground.Width, j * inventorySlotBackground.Height) + GameManager.Instance.GetMapSize().ToVector2() / 2 -
-                       new Vector2(this.inventoryItems.Count() / 2 * inventorySlotBackground.Width / 2, this.inventoryItems.Count() / 2 * inventorySlotBackground.Height / 2);
-                inventoryItems[i] = new KeyValuePair<Vector2, Item>(location, null);
             }
         }
 
@@ -101,7 +105,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
             return false;
         }
-        public bool HaveStackbleItem(InventoryItemType itemType, out StackableItem stackableItem)
+        public bool HaveStackbleItem(ItemType itemType, out StackableItem stackableItem)
         {
             stackableItem = null;
             for (int i = 0; i < inventoryItems.Count(); i++)

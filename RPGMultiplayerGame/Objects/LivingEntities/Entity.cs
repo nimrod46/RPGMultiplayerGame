@@ -120,7 +120,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 InvokeCommandMethodNetworkly(nameof(EquipeWith), itemType);
             }
-            EquippedWeapon = ItemFactory.GetInventoryItem<Weapon>((InventoryItemType)itemType);
+            EquippedWeapon = ItemFactory.GetInventoryItem<Weapon>((ItemType)itemType);
         }
 
         public override void Update(GameTime gameTime)

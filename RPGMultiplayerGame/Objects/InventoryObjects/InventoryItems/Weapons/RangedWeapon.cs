@@ -15,7 +15,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 
         private readonly WeaponEffect weaponEffect;
 
-        public RangedWeapon(InventoryItemType itemType, Point size, float damage, string name, WeaponEffect weaponEffect) : base(itemType, size, damage, name)
+        public RangedWeapon(ItemType itemType, Point size, float damage, string name, WeaponEffect weaponEffect) : base(itemType, size, damage, name)
         {
             this.weaponEffect = weaponEffect;
             weaponEffect.SyncDamage = damage;

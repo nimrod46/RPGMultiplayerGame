@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 {
     public class MeleeWeapon : Weapon
     {
-        public MeleeWeapon(InventoryItemType itemType, Point size, float damage, string name) : base(itemType, size, damage, name)
+        public MeleeWeapon(ItemType itemType, Point size, float damage, string name) : base(itemType, size, damage, name)
         {
         }
 

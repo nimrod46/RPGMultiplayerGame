@@ -10,7 +10,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 {
     public class CommonSword : MeleeWeapon
     {
-        public CommonSword() : base(InventoryItemType.CommonSword, new Point(7, 6), 50, "Common sword")
+        public CommonSword() : base(ItemType.CommonSword, new Point(7, 6), 50, "Common sword")
         {
 
         }

@@ -22,7 +22,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 
         protected string SyncName { get; set; }
 
-        public Weapon(InventoryItemType itemType, Point size, float damage, string name) : base(itemType)
+        public Weapon(ItemType itemType, Point size, float damage, string name) : base(itemType)
         {
             Size = size;
             SyncDamage = damage;
