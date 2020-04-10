@@ -125,7 +125,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public virtual void EquipeWith(int itemType)
         {
-            if (!isInServer || !hasAuthority)
+            if (!isServerAuthority)
             {
                 InvokeCommandMethodNetworkly(nameof(EquipeWith), itemType);
             }
@@ -210,38 +210,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected void AttackAtDir(Direction direction)
         {
             AnimationAtDir(direction, 8, false);
-            //OnCurrentAnimationTypeSet();
-            if (isInServer)
-            {
-                UpdateWeaponLocation();
-            }
         }
-
-        protected void UpdateWeaponLocation()
-        {
-            switch ((Direction)SyncCurrentDirection)
-            {
-                case Direction.Left:
-                    EquippedWeapon.SyncX = GetBoundingRectangle().Left;
-                    EquippedWeapon.SyncY = GetCenter().Y;
-                    break;
-                case Direction.Up:
-                    EquippedWeapon.SyncY = GetBoundingRectangle().Top;
-                    EquippedWeapon.SyncX = GetCenter().X;
-                    break;
-                case Direction.Right:
-                    EquippedWeapon.SyncX = GetBoundingRectangle().Right - EquippedWeapon.Size.X;
-                    EquippedWeapon.SyncY = GetCenter().Y;
-                    break;
-                case Direction.Down:
-                    EquippedWeapon.SyncY = GetBoundingRectangle().Bottom - EquippedWeapon.Size.Y;
-                    EquippedWeapon.SyncX = GetCenter().X;
-                    break;
-                case Direction.Idle:
-                    break;
-            }
-        }
-
 
         public void SetSpawnPoint(SpawnPoint spawnPoint)
         {

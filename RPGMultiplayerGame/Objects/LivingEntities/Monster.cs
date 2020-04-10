@@ -46,7 +46,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             if (IsLookingAtPlayer)
             {
-                UpdateWeaponLocation();
+                EquippedWeapon.UpdateWeaponLocation(this);
                 if (GameManager.Instance.GetEntitiesHitBy(this).Any())
                 {
                     SetCurrentEntityState((int)State.Idle, SyncCurrentDirection);

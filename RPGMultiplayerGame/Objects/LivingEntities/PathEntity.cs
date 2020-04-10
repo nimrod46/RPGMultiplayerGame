@@ -46,7 +46,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.Update(gameTime);
 
-            if (!hasAuthority || !isInServer)
+            if (!isServerAuthority && !isInServer)
             {
                 return;
             }

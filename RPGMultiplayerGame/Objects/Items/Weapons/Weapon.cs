@@ -33,6 +33,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             return new Rectangle((int)SyncX, (int)SyncY, Size.X, Size.Y);
         }
 
-        internal abstract void Attack(Entity entity);
+        public abstract void Attack(Entity entity);
+
+        public abstract void UpdateWeaponLocation(Entity entity);
+
     }
 }

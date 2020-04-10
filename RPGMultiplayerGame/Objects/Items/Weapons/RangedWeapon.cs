@@ -21,7 +21,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             weaponEffect.SyncDamage = damage;
         }
 
-        internal override void Attack(Entity entity)
+        public override void UpdateWeaponLocation(Entity entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Attack(Entity entity)
         {
             if (entity.isInServer)
             {

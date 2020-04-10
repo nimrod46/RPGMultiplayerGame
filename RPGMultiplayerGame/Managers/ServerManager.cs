@@ -123,8 +123,8 @@ namespace RPGMultiplayerGame.Managers
                         Bat bat = new Bat();
                         bat.SyncX = obj.Rectangle.X;
                         bat.SyncY = obj.Rectangle.Y;
-                     //   Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
-                       // spawnedBat.EquipeWith((int) ItemType.BatClaw);
+                        Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
+                        spawnedBat.EquipeWith((int)ItemType.BatClaw);
                     }
                 }
                 else if (obj is SpawnLib)
