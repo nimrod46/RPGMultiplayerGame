@@ -33,5 +33,10 @@ namespace RPGMultiplayerGame.Objects.Items
         {
             sprite.Draw(Texture, location, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, layer);
         }
+
+        public bool IsExists()
+        {
+            return ItemType != ItemType.None;
+        }
     }
 }

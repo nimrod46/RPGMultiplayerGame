@@ -1,4 +1,5 @@
 ﻿using RPGMultiplayerGame.Objects.Items.Potions;
+using RPGMultiplayerGame.Objects.Items.Weapons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +7,11 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
-namespace RPGMultiplayerGame.Objects.Items.Weapons
+namespace RPGMultiplayerGame.Objects.Items
 {
     public static class ItemFactory
     {
+        public static Item EmptyItem = new EmptyItem();
         public static T GetInventoryItem<T>(ItemType itemType) where T : Item
         {
             switch (itemType)

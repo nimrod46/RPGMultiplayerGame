@@ -38,11 +38,10 @@ namespace RPGMultiplayerGame.Objects.Items
         {
             count--;
             textSize = spriteFont.MeasureString(count.ToString());
-        }
-
-        public bool IsDone()
-        {
-            return count == 0;
+            if(count == 0)
+            {
+                ItemType = ItemType.None;
+            }
         }
     }
 }

@@ -17,10 +17,18 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
     {
         public enum ItemType
         {
+            None,
             CommonSword,
             CommonWond,
             BatClaw,
             CommonHealthPotion,
+        }
+
+        public enum OriginLocationType
+        {
+            Centered,
+            ButtomLeft,
+            ButtomCentered
         }
 
         public bool IsVisible { get; set; }
@@ -29,8 +37,21 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         private readonly int columns;
         private readonly int rows;
 
-        public Inventory(Point origin, int columns, int rows)
+        public Inventory(Point origin, OriginLocationType originType , int columns, int rows)
         {
+            ItemSlot inventoryItem = new ItemSlot();
+            switch (originType)
+            {
+                case OriginLocationType.Centered:
+                    origin = (origin.ToVector2() - new Vector2(inventoryItem.Size.X * columns / 2, inventoryItem.Size.Y * rows / 2)).ToPoint();
+                    break;
+                case OriginLocationType.ButtomLeft:
+                    origin = (origin.ToVector2() - new Vector2(0, inventoryItem.Size.Y * rows)).ToPoint();
+                    break;
+                case OriginLocationType.ButtomCentered:
+                    origin = (origin.ToVector2() - new Vector2(inventoryItem.Size.X * columns / 2, inventoryItem.Size.Y * rows)).ToPoint();
+                    break;
+            }
             this.origin = origin;
             this.columns = columns;
             this.rows = rows;
@@ -41,10 +62,10 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             {
                 for (int i = 0; i < columns; i++)
                 {
-                    ItemSlot inventoryItem = new ItemSlot();
-                    Vector2 location = new Vector2(i * inventoryItem.Size.X, j * inventoryItem.Size.Y) + origin.ToVector2()
-                    - new Vector2(columns * inventoryItem.Size.X / 2, rows * inventoryItem.Size.Y / 2);
+                    inventoryItem = new ItemSlot();
+                    Vector2 location = new Vector2(i * inventoryItem.Size.X, j * inventoryItem.Size.Y) + origin.ToVector2();
                     inventoryItem.Location = location.ToPoint();
+                    inventoryItem.Item = ItemFactory.EmptyItem;
                     inventoryItems[index] = inventoryItem;
                     index++;
                 }
@@ -69,12 +90,13 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 if(item is Potion potion)
                 {
                     potion.UseOn(entity);
-                    if(potion.IsDone())
-                    {
-                        TryRemoveItem(potion);
-                    }
                 }
             }
+        }
+
+        public void PutItemInSlot(int slot, Item item)
+        {
+            inventoryItems[slot - 1].Item = item;
         }
 
         public bool TryGetInventoryItemAtScreenLocation(Rectangle rect, out Item item)
@@ -83,7 +105,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             for (int i = 0; i < inventoryItems.Count(); i++)
             {
                 var inventoryItem = inventoryItems[i];
-                if(inventoryItem.Item == null)
+                if(!inventoryItem.Item.IsExists())
                 {
                     continue;
                 }
@@ -110,7 +132,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             for (int i = 0; i < inventoryItems.Count(); i++)
             {
                 var inventoryItem = inventoryItems[i];
-                if (inventoryItem.Item == null)
+                if (!inventoryItem.Item.IsExists())
                 {
                     inventoryItem.Item = itemToAdd;
                     return true;
@@ -144,9 +166,9 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             for (int i = inventoryItems.Length - 1; i >= 0; i--)
             {
-                if(inventoryItems[i].Item != null && inventoryItems[i].Item.ItemType == item.ItemType)
+                if(inventoryItems[i].Item.IsExists() && inventoryItems[i].Item.ItemType == item.ItemType)
                 {
-                    inventoryItems[i].Item = null;
+                    inventoryItems[i].Item = ItemFactory.EmptyItem;
                     return true;
                 }
             }

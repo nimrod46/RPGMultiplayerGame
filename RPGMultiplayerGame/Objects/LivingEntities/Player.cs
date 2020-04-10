@@ -22,7 +22,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
         private Inventory inventory;
         private Inventory usableItems;
-        private ItemSlot equippedWeaponSlot;
+        private Inventory equippedItems;
         private Npc interactingWith;
 
         public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerName, true)
@@ -38,11 +38,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 Layer = GameManager.OWN_PLAYER_LAYER;
             }
-            inventory = new Inventory((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER);
+            inventory = new Inventory((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), OriginLocationType.Centered, GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER);
             inventory.IsVisible = false;
-            usableItems = new Inventory(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 25), 5, 1);
-            equippedWeaponSlot = new ItemSlot();
-            equippedWeaponSlot.Location = new Point(25, GameManager.Instance.GetMapSize().Y - 25 - equippedWeaponSlot.Size.Y / 2);
+            usableItems = new Inventory(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomCentered, 5, 1);
+            equippedItems = new Inventory(new Point(10, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomLeft, 3, 1);
             base.OnNetworkInitialize();
         }
 
@@ -60,7 +59,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void EquipeWith(int itemType)
         {
             base.EquipeWith(itemType);
-            equippedWeaponSlot.Item = EquippedWeapon;
+            equippedItems.PutItemInSlot(2, EquippedWeapon);
         }
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)
@@ -147,24 +146,28 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                                 }
                             }
                         }
-
                     }
                 }
                 if (InputManager.Instance.KeyPressed(Keys.A))
                 {
-                    UseFromUsableItemSlot(1);
+                    MoveFromUsableItemSlot(1);
                 }
                 else if(InputManager.Instance.KeyPressed(Keys.S))
                 {
-                    UseFromUsableItemSlot(2);
+                    MoveFromUsableItemSlot(2);
                 }
                 else if (InputManager.Instance.KeyPressed(Keys.D))
                 {
-                    UseFromUsableItemSlot(3);
+                    MoveFromUsableItemSlot(3);
                 }
                 else if (InputManager.Instance.KeyPressed(Keys.F))
                 {
-                    UseFromUsableItemSlot(4);
+                    MoveFromUsableItemSlot(4);
+                }
+                
+                if(InputManager.Instance.KeyPressed(Keys.Z))
+                {
+                    equippedItems.UsePotionAtSlot(1, this);
                 }
 
                 if (EquippedWeapon != null && InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
@@ -192,7 +195,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
         }
 
-        private void UseFromUsableItemSlot(int slot)
+        private void MoveFromUsableItemSlot(int slot)
         {
             if (usableItems.TryGetItemInSlot(slot, out Item item))
             {
@@ -200,9 +203,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     EquipeWith((int)item.ItemType);
                 }
-                else if(item is Potion)
+                else if(item is Potion potion)
                 {
-                    usableItems.UsePotionAtSlot(slot, this);
+                    equippedItems.PutItemInSlot(1, potion);
                 }
             }
         }
@@ -211,7 +214,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.Draw(sprite);
             inventory.Draw(sprite);
-            equippedWeaponSlot.Draw(sprite);
+            equippedItems.Draw(sprite);
             usableItems.Draw(sprite);
         }
 
