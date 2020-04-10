@@ -20,14 +20,14 @@ namespace RPGMultiplayerGame.Objects.Other
         public ComplexDialog(string name, string text) : base(text)
         {
             Name = name;
-            background = GameManager.Instance.GetDialogBackGroundByProperties(Name, Text, dialogsByAnswers.Keys.ToArray());
+            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Keys.ToArray());
         }
 
         public ComplexDialog AddAnswerOption(string optionText, string text)
         {
             ComplexDialog dialog = new ComplexDialog(Name, text);
             dialogsByAnswers.Add(optionText, dialog);
-            background = GameManager.Instance.GetDialogBackGroundByProperties(Name, Text, dialogsByAnswers.Keys.ToArray());
+            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Keys.ToArray());
             return dialog;
         }
 
@@ -37,7 +37,7 @@ namespace RPGMultiplayerGame.Objects.Other
             v.Insert(0, Name);
             T dialog = (T)Activator.CreateInstance(typeof(T), v.ToArray());
             dialogsByAnswers.Add(optionText, dialog);
-            background = GameManager.Instance.GetDialogBackGroundByProperties(Name, Text, dialogsByAnswers.Keys.ToArray());
+            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Keys.ToArray());
             return dialog;
         }
 

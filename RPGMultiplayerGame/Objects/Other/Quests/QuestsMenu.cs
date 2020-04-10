@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects.Other.Quests
     public class QuestsMenu
     {
         private readonly Dictionary<Vector2, Quest> quests = new Dictionary<Vector2, Quest>();
-        private readonly Vector2 origin;
+        private Vector2 origin;
         private readonly OriginLocationType originType;
 
         public QuestsMenu(Vector2 origin, OriginLocationType originType)
@@ -35,7 +35,7 @@ namespace RPGMultiplayerGame.Objects.Other.Quests
                     origin = (origin - new Vector2(size.X / 2, size.Y * quests.Count()));
                     break;
                 case OriginLocationType.TopLeft:
-                    origin = (origin - new Vector2(size.X, 0));
+                    origin = (origin - new Vector2(size.X, -size.Y * quests.Count()));
                     break;
             }
             return origin;
@@ -48,7 +48,7 @@ namespace RPGMultiplayerGame.Objects.Other.Quests
                 Vector2 lastQuestPosition;
                 if (quests.Count != 0)
                 {
-                    lastQuestPosition = GetOriginBaseOnOriginType(quests.Keys.ToArray()[quests.Count - 1], quest.GetTextSize(), originType);
+                    lastQuestPosition = GetOriginBaseOnOriginType(origin, quest.GetTextSize(), originType);
                 }
                 else
                 {

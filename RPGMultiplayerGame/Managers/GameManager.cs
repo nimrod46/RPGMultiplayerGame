@@ -56,7 +56,7 @@ namespace RPGMultiplayerGame.Managers
         }
 
         public const int INVENTORY_ROWS_NUMBER = 4, INVENTORY_COLUMNS_NUMBER = 5;
-        public const float INVENTORY_LAYER = 0.0001f;
+        public const float GUI_LAYER = 0.0001f;
         public const float OWN_PLAYER_LAYER = 0.001f;
         public const float ENTITY_LAYER = 0.01f;
         public const float MOVING_OJECT_LAYER = 0.02f;
@@ -83,11 +83,13 @@ namespace RPGMultiplayerGame.Managers
         private readonly List<Monster> monsters = new List<Monster>();
         private GraphicsDevice graphicsDevice;
         private readonly string dialogBackgroundPath;
+        private readonly string questBackgroundPath;
 
         private GameManager()
         {
             map = new GameMap();
             dialogBackgroundPath = "Content\\DialogBackground.svg";
+            questBackgroundPath = "Content\\QuestBackground.svg";
         }
 
         public void Init(GraphicsDevice graphicsDevice)
@@ -284,9 +286,19 @@ namespace RPGMultiplayerGame.Managers
             }
         }
         
-        public Texture2D GetDialogBackGroundByProperties(string name, string text, params string[] options)
+        public Texture2D GetDialogBackgroundByProperties(string name, string text, Color textColor, params string[] options)
         {
-            return SVGToTexture2D(dialogBackgroundPath, name, text, 0, 0, options);
+            return GetBackgroundByProperties(dialogBackgroundPath, name, text, textColor, options);
+        }
+
+        public Texture2D GetQuestBackgroundByProperties(string name, string text, Color textColor, params string[] options)
+        {
+            return GetBackgroundByProperties(questBackgroundPath, name, text, textColor, options);
+        }
+
+        public Texture2D GetBackgroundByProperties(string path, string name, string text, Color textColor, params string[] options)
+        {
+            return SVGToTexture2D(path, name, text, textColor, 0, 0, options);
         }
 
         private Dictionary<T, Dictionary<int, List<GameTexture>>> GetGameTextureByEnum<T>(ContentManager content) where T : Enum
@@ -332,9 +344,10 @@ namespace RPGMultiplayerGame.Managers
             }
             return gameTextureByEnum;
         }
-        private Texture2D SVGToTexture2D(string path, string name, string text, int width = 0, int height = 0, params string[] options)
+
+        private Texture2D SVGToTexture2D(string path, string name, string text, Color? textColor = null, int width = 0, int height = 0, params string[] options)
         {
-           
+            textColor = textColor ?? Color.White;
             var svgDoc = SvgDocument.Open<SvgDocument>(path, null);
             if (width == 0)
             {
@@ -346,7 +359,7 @@ namespace RPGMultiplayerGame.Managers
             }
 
 
-            ((SvgTextBase) svgDoc.GetElementById("Name").Children[0]).Text = name;
+            ((SvgTextBase) svgDoc.GetElementById<SvgTextBase>("Name").Children[0]).Text = name;
             int cahrCount = 0;
             SvgTextBase svgText = (SvgTextBase)svgDoc.GetElementById("Text").Children[0].DeepCopy();
             string line = "";
@@ -369,6 +382,7 @@ namespace RPGMultiplayerGame.Managers
                 }
             });
             svgText.Text = line;
+            svgText.Fill = new SvgColourServer(System.Drawing.Color.FromArgb(textColor.Value.A, textColor.Value.R, textColor.Value.G, textColor.Value.B));
             svgText.Dy[0] = (svgText.Dy[0] + svgText.Y[0]);
             svgDoc.GetElementById("Text").Children.Add(svgText);    
 

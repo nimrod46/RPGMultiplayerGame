@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 72" width="150" height="72">
+	<defs>
+		<image width="150" height="72" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAABICAMAAAAj6/yPAAAAAXNSR0IB2cksfwAAAEtQTFRFAAAANxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwU1m+cEAAAABl0Uk5TAJf/gAr141D6xxT8atbkAs/7PagI9lf5gVatWksAAAC7SURBVHic7dW5FcNADMRQ+pLl+7bVf6V+VKhlMtFsAFTwM0Rkq3VfbWbVdud2LBpm1t7NWDbOrIOb0ZSq48mtaErW2Y1oS9bFjWhL1tWNaOuWdbs/3Ii2iKebUBXxchOq4v1xE6ri6xaUdTieLPobTxZuQB0sJVhKsJRgKcFSgqUESwmWEiwlWEqwlGApwVKCpQRLCZYSLCVYSrCUYCnBUoKlBEsJlhIsJVhK8XMLqsYY3ISqISY3oWr6AwfLVVchbm0UAAAAAElFTkSuQmCC"/>
+		<image width="150" height="72" id="img2" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAABICAMAAAAj6/yPAAAAAXNSR0IB2cksfwAAALFQTFRFAAAAdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpk0tMJgAAADt0Uk5TAJL/dwjz30n2wNjb/f4Q+/AKw2KhfNIwduTmAoHMHzYBoAb0+g1QtcFF7pcs4Xn8GsZa9wyydYvdJHg99z8CAAABQklEQVR4nO3Zt1IDQRBF0cEtC2hxwgiEQAjhvZXQ/38Y3bMBYzbp6E3wbtThqa6ummCc05aWy2rFq1bX0I6kyrPW0Yy02rM2dNzcKqZeo6rtHVHt7rli2vesvi7rAG0JOvSsI2Udoy1BA886EdXpEG0J+medoSlhyhqO5OJ752hKmLIu9LJGYzQlTFmXyuqjJVHCmlyJanqNlkQJ60aXdYuGxAnrTln3aEicsKaiepigIXHCaoT1iHYktazmCe1IalnPJT08Wst6QTPSPOv1Dc1I86z3MZqR5lkfaEWWsj6/0IosZX2jEXnK+kEj8pQ1QCPyyLJEliWyLJFliSxLZFkiyxJZlsiyRJYlsiyRZYksS2RZIssSWZbIskSWJbIsFcyaoRF5M2HNf4tr3v5VF1fjajShq9pVaEJXlVugCV0t/gCKBkZgZ58jAQAAAABJRU5ErkJggg=="/>
+		<image width="146" height="58" id="img3" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJIAAAA6CAMAAABs6vA/AAAAAXNSR0IB2cksfwAAAH5QTFRFAAAAroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYkFgUrQAAACp0Uk5TAATm/Z89P/+3ea98Dvhayhf+egHbK5gD7bKKkm01csx230CGmY9xSbQcZFDAOgAAAN1JREFUeJzt1bcSwjAQhOEDk0UwmIzJ+f1fEDOYAs3ouMZeF/u3tzP6Ool8qtWjUI3gpZCauUha7WCd8KmIul9SL7wpmeRyUX8Q3oBIQ2UDIo2UDYYUj5UNhjTRNhBSMtU2ENJM3UBIc3WDIC2W6gZBUj6TdwjSSt8ASMl6o5aWT9qmervySftyn/xXRoojNOK3jHRAG7ycJEe0wcvJCU3wc3JGE/ycXNAEP5IskWSJJEskWSLJEkmWSLJEkiWSLJFkiSRLJFkiyRJJlkiyRJKlSpKuaILfTe6PivV8AT6jAZdTJrCdAAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+		.txt0 { font-size: 33px;fill: #350f0f;font-family: "Arial Narrow" } 
+		.txt1 { font-size: 29px;fill: #f5ebeb;font-family: "Arial Narrow" } 
+	</style>
+	<use id="Rounded Rectangle 1 copy 2" href="#img1" x="0" y="0" />
+	<use id="Rounded Rectangle 1 copy 3" href="#img2" x="0" y="0" />
+	<use id="Rounded Rectangle 1 copy" href="#img3" x="2" y="7" />
+	<text id="Name" style="transform: matrix(0.316,0,0,0.317,48.277,17.547)" >
+		<tspan x="0" y="0" class="txt0" dx="0" > </tspan>
+	</text>
+	<text id="Text" style="transform: matrix(0.316,0,0,0.317,11,31)" >
+		<tspan x="0" y="33.333" class="txt0" dx="0" > </tspan>
+	</text>
+	<text id="Option1" style="transform: matrix(0.316,0,0,0.317,30.001,31.749)" >
+		<tspan x="0" y="0" class="txt1" dx="0" > </tspan>
+	</text>
+	<text id="Option2" style="transform: matrix(0.316,0,0,0.317,30.481,45.194)" >
+		<tspan x="0" y="0" class="txt1" dx="0" > </tspan>
+	</text>
+	<text id="Option3" style="transform: matrix(0.316,0,0,0.317,30.139,58.676)" >
+		<tspan x="0" y="0" class="txt1" dx="0" > </tspan>
+	</text>
+</svg>

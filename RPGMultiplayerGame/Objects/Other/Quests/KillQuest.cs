@@ -13,7 +13,7 @@ namespace RPGMultiplayerGame.Objects.Other.Quests
         private readonly EntityId entityId;
         private readonly int numberOfKills;
         private int currentKills;
-        public KillQuest(string text, EntityId entityId, int numberOfKills) : base(text)
+        public KillQuest(string npcName, string text, EntityId entityId, int numberOfKills) : base(npcName, text)
         {
             this.entityId = entityId;
             this.numberOfKills = numberOfKills;

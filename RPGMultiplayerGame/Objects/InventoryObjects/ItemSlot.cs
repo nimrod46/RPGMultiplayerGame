@@ -40,12 +40,12 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         public void Draw(SpriteBatch sprite)
         {
-            sprite.Draw(inventorySlotBackground, Location.ToVector2(), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, GameManager.INVENTORY_LAYER);
+            sprite.Draw(inventorySlotBackground, Location.ToVector2(), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, GameManager.GUI_LAYER);
             if (Item.IsExists())
             {
                 Item.Draw(sprite, Location.ToVector2() + new Vector2(inventorySlotBackground.Width / 2 - Item.Texture.Width / 2,
                     inventorySlotBackground.Height / 2 - Item.Texture.Height / 2)
-                    ,GameManager.INVENTORY_LAYER * 0.1f);
+                    ,GameManager.GUI_LAYER * 0.1f);
             }
         }
     }

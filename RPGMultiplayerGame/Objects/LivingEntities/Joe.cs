@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.OnNetworkInitialize();
             dialog = new ComplexDialog(SyncName, "Hi! can you help me?");
-            dialog.AddAnswerOption("Yes", "Thank You!").AddAnswerOption("....", "Lets get started").AddAnswerOption<QuestDialog>("Got it","So you need to kill for me some bats",new KillQuest("Kill 5 bats", EntityId.Bat, 5));
+            dialog.AddAnswerOption("Yes", "Thank You!").AddAnswerOption("....", "Lets get started").AddAnswerOption<QuestDialog>("Got it","So you need to kill for me some bats", new KillQuest(SyncName, "Kill 5 bats", EntityId.Bat, 5));
             dialog.AddAnswerOption("No", "Ok");
         }
         public override void InteractWithPlayer(Player player)
