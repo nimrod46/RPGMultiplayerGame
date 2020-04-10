@@ -10,11 +10,11 @@ using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
-    public abstract class InventoryStackableItem : InventoryItem
+    public abstract class StackableItem : Item
     {
         public int Count { get; set; }
         private readonly SpriteFont spriteFont;
-        public InventoryStackableItem(InventoryItemType itemType, int count) : base(itemType)
+        public StackableItem(InventoryItemType itemType, int count) : base(itemType)
         {
             Count = count;
             spriteFont = GameManager.Instance.PlayerName;

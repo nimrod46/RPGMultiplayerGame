@@ -10,7 +10,7 @@ using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
-    public abstract class InventoryItem
+    public abstract class Item
     {
         public Texture2D Texture { get; set; }
         public InventoryItemType ItemType
@@ -24,7 +24,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         private InventoryItemType itemType;
 
-        public InventoryItem(InventoryItemType itemType)
+        public Item(InventoryItemType itemType)
         {
             this.ItemType = itemType;
         }

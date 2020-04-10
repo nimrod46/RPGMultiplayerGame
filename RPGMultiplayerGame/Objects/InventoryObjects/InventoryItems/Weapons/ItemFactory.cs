@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
-namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems
+namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 {
-    public static class InventoryItemFactory
+    public static class ItemFactory
     {
-        public static T GetInventoryItem<T>(InventoryItemType itemType) where T : InventoryItem
+        public static T GetInventoryItem<T>(InventoryItemType itemType) where T : Item
         {
             switch (itemType)
             {

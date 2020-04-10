@@ -22,7 +22,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         private Texture2D inventorySlotBackground;
         public bool IsVisible { get; set; }
-        private readonly KeyValuePair<Vector2, InventoryItem>[] inventoryItems = new KeyValuePair<Vector2, InventoryItem>[12];
+        private readonly KeyValuePair<Vector2, Item>[] inventoryItems = new KeyValuePair<Vector2, Item>[12];
 
         public Inventory()
         {
@@ -37,7 +37,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 }
                 Vector2 location = new Vector2((i - j * (this.inventoryItems.Count() / 2)) * inventorySlotBackground.Width, j * inventorySlotBackground.Height) + GameManager.Instance.GetMapSize().ToVector2() / 2 -
                        new Vector2(this.inventoryItems.Count() / 2 * inventorySlotBackground.Width / 2, this.inventoryItems.Count() / 2 * inventorySlotBackground.Height / 2);
-                inventoryItems[i] = new KeyValuePair<Vector2, InventoryItem>(location, null);
+                inventoryItems[i] = new KeyValuePair<Vector2, Item>(location, null);
             }
         }
 
@@ -48,7 +48,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
                 foreach (var item in inventoryItems)
                 {
-                    InventoryItem inventoryItem = item.Value;
+                    Item inventoryItem = item.Value;
                     sprite.Draw(inventorySlotBackground, item.Key, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, GameManager.INVENTORY_LAYER);
                     if (inventoryItem != null)
                     {
@@ -60,7 +60,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
         }
 
-        public bool GetInventoryItemAtScreenLocation(Rectangle rect, out InventoryItem inventoryItem)
+        public bool GetInventoryItemAtScreenLocation(Rectangle rect, out Item inventoryItem)
         {
             inventoryItem = null;
             for (int i = 0; i < inventoryItems.Count(); i++)
@@ -80,13 +80,13 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             return false;
         }
 
-        public bool TryAddItem(InventoryItem inventoryItemToAdd)
+        public bool TryAddItem(Item inventoryItemToAdd)
         {
-            if (inventoryItemToAdd is InventoryStackableItem)
+            if (inventoryItemToAdd is StackableItem)
             {
-                if (HaveStackbleItem(inventoryItemToAdd.ItemType, out InventoryStackableItem stackableItem))
+                if (HaveStackbleItem(inventoryItemToAdd.ItemType, out StackableItem stackableItem))
                 {
-                    stackableItem.Count += (inventoryItemToAdd as InventoryStackableItem).Count;
+                    stackableItem.Count += (inventoryItemToAdd as StackableItem).Count;
                     return true;
                 }
             }
@@ -95,21 +95,21 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 var item = inventoryItems[i];
                 if (item.Value == null)
                 {
-                    inventoryItems[i] = new  KeyValuePair<Vector2, InventoryItem>(item.Key, inventoryItemToAdd);
+                    inventoryItems[i] = new  KeyValuePair<Vector2, Item>(item.Key, inventoryItemToAdd);
                     return true;
                 }
             }
             return false;
         }
-        public bool HaveStackbleItem(InventoryItemType itemType, out InventoryStackableItem stackableItem)
+        public bool HaveStackbleItem(InventoryItemType itemType, out StackableItem stackableItem)
         {
             stackableItem = null;
             for (int i = 0; i < inventoryItems.Count(); i++)
             {
-                    InventoryItem inventoryItem = this.inventoryItems[i].Value;
-                if (inventoryItem is InventoryStackableItem && inventoryItem.ItemType == itemType)
+                    Item inventoryItem = this.inventoryItems[i].Value;
+                if (inventoryItem is StackableItem && inventoryItem.ItemType == itemType)
                 {
-                    stackableItem = inventoryItem as InventoryStackableItem;
+                    stackableItem = inventoryItem as StackableItem;
                     return true;
                 }
             }

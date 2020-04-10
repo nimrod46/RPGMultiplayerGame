@@ -87,7 +87,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             interactingWith = npc;
         }
 
-        private void AddItemToInventoryLocaly(InventoryItem inventoryItem)
+        private void AddItemToInventoryLocaly(Item inventoryItem)
         {
             inventory.TryAddItem(inventoryItem);
         }
@@ -95,7 +95,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public void AddItemToInventory(int itemType)
         {
             InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType);
-            AddItemToInventoryLocaly(InventoryItemFactory.GetInventoryItem<InventoryItem>((InventoryItemType)itemType));
+            AddItemToInventoryLocaly(ItemFactory.GetInventoryItem<Item>((InventoryItemType)itemType));
         }
 
         public override void Update(GameTime gameTime)
@@ -107,7 +107,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     Console.WriteLine(InputManager.Instance.GetMouseLeftButtonPressed());
                     if (InputManager.Instance.GetMouseLeftButtonPressed())
                     {
-                        if (inventory.GetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out InventoryItem inventoryItem))
+                        if (inventory.GetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out Item inventoryItem))
                         {
                             if(typeof(Weapon).IsAssignableFrom(inventoryItem.GetType()))
                             {

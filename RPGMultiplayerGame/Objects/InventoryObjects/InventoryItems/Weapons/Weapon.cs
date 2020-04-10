@@ -12,7 +12,7 @@ using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects.InventoryItems.Weapons
 {
-    public abstract class Weapon : InventoryItem
+    public abstract class Weapon : Item
     {
         public float SyncX { get; set; }
 
