@@ -195,7 +195,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     AttackAtDir((Direction)direction);
                     if (isInServer)
                     {
-                        EquippedWeapon?.Attack(this);
+                        EquippedWeapon.Attack(this);
                     }
                     break;
             }
@@ -205,34 +205,34 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             AnimationAtDir(direction, 8, false);
             //OnCurrentAnimationTypeSet();
-            UpdateWeaponLocation();
+            if (isInServer)
+            {
+                UpdateWeaponLocation();
+            }
         }
 
         protected void UpdateWeaponLocation()
         {
-            if (EquippedWeapon != null)
+            switch ((Direction)SyncCurrentDirection)
             {
-                switch ((Direction)SyncCurrentDirection)
-                {
-                    case Direction.Left:
-                        EquippedWeapon.SyncX = GetBoundingRectangle().Left;
-                        EquippedWeapon.SyncY = GetCenter().Y;
-                        break;
-                    case Direction.Up:
-                        EquippedWeapon.SyncY = GetBoundingRectangle().Top;
-                        EquippedWeapon.SyncX = GetCenter().X;
-                        break;
-                    case Direction.Right:
-                        EquippedWeapon.SyncX = GetBoundingRectangle().Right - EquippedWeapon.Size.X;
-                        EquippedWeapon.SyncY = GetCenter().Y;
-                        break;
-                    case Direction.Down:
-                        EquippedWeapon.SyncY = GetBoundingRectangle().Bottom - EquippedWeapon.Size.Y;
-                        EquippedWeapon.SyncX = GetCenter().X;
-                        break;
-                    case Direction.Idle:
-                        break;
-                }
+                case Direction.Left:
+                    EquippedWeapon.SyncX = GetBoundingRectangle().Left;
+                    EquippedWeapon.SyncY = GetCenter().Y;
+                    break;
+                case Direction.Up:
+                    EquippedWeapon.SyncY = GetBoundingRectangle().Top;
+                    EquippedWeapon.SyncX = GetCenter().X;
+                    break;
+                case Direction.Right:
+                    EquippedWeapon.SyncX = GetBoundingRectangle().Right - EquippedWeapon.Size.X;
+                    EquippedWeapon.SyncY = GetCenter().Y;
+                    break;
+                case Direction.Down:
+                    EquippedWeapon.SyncY = GetBoundingRectangle().Bottom - EquippedWeapon.Size.Y;
+                    EquippedWeapon.SyncX = GetCenter().X;
+                    break;
+                case Direction.Idle:
+                    break;
             }
         }
 

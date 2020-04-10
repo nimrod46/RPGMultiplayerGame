@@ -20,9 +20,8 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             BatClaw,
         }
 
-        private readonly Texture2D inventorySlotBackground;
         public bool IsVisible { get; set; }
-        private readonly KeyValuePair<Vector2, Item>[] inventoryItems;
+        private readonly InventoryItem[] inventoryItems;
         private readonly int columns;
         private readonly int rows;
 
@@ -30,17 +29,18 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             this.columns = columns;
             this.rows = rows;
-            inventoryItems = new KeyValuePair<Vector2, Item>[columns * rows];
-            inventorySlotBackground = GameManager.Instance.InventorySlotBackground;
+            inventoryItems = new InventoryItem[columns * rows];
             IsVisible = false;
             int index = 0;
             for (int j = 0; j < rows; j++)
             {
                 for (int i = 0; i < columns; i++)
                 {
-                    Vector2 location = new Vector2(i * inventorySlotBackground.Width, j * inventorySlotBackground.Height) + GameManager.Instance.GetMapSize().ToVector2() / 2
-                    - new Vector2(columns * inventorySlotBackground.Width / 2, rows * inventorySlotBackground.Height / 2);
-                    inventoryItems[index] = new KeyValuePair<Vector2, Item>(location, null);
+                    InventoryItem inventoryItem = new InventoryItem();
+                    Vector2 location = new Vector2(i * inventoryItem.Size.X, j * inventoryItem.Size.Y) + GameManager.Instance.GetMapSize().ToVector2() / 2
+                    - new Vector2(columns * inventoryItem.Size.X / 2, rows * inventoryItem.Size.Y / 2);
+                    inventoryItem.Location = location.ToPoint();
+                    inventoryItems[index] = inventoryItem;
                     index++;
                 }
             }
@@ -53,54 +53,47 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
                 foreach (var item in inventoryItems)
                 {
-                    Item inventoryItem = item.Value;
-                    sprite.Draw(inventorySlotBackground, item.Key, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, GameManager.INVENTORY_LAYER);
-                    if (inventoryItem != null)
-                    {
-                        inventoryItem.Draw(sprite, item.Key + new Vector2(inventorySlotBackground.Width / 2 - inventoryItem.Texture.Width / 2,
-                            inventorySlotBackground.Height / 2 - inventoryItem.Texture.Height / 2)
-                            , GameManager.INVENTORY_LAYER * 0.1f);
-                    }
+                    item.Draw(sprite);
                 }
             }
         }
 
-        public bool GetInventoryItemAtScreenLocation(Rectangle rect, out Item inventoryItem)
+        public bool GetInventoryItemAtScreenLocation(Rectangle rect, out Item item)
         {
-            inventoryItem = null;
+            item = null;
             for (int i = 0; i < inventoryItems.Count(); i++)
             {
-                var item = inventoryItems[i];
-                if(item.Value == null)
+                var inventoryItem = inventoryItems[i];
+                if(inventoryItem.Item == null)
                 {
                     continue;
                 }
-                Rectangle rectangle = new Rectangle(item.Key.ToPoint(), new Point(inventorySlotBackground.Width, inventorySlotBackground.Height));
+                Rectangle rectangle = new Rectangle(inventoryItem.Location, inventoryItem.Size);
                 if (rectangle.Intersects(rect))
                 {
-                    inventoryItem = item.Value;
+                    item = inventoryItem.Item;
                     return true;
                 }
             }
             return false;
         }
 
-        public bool TryAddItem(Item inventoryItemToAdd)
+        public bool TryAddItem(Item itemToAdd)
         {
-            if (inventoryItemToAdd is StackableItem)
+            if (itemToAdd is StackableItem)
             {
-                if (HaveStackbleItem(inventoryItemToAdd.ItemType, out StackableItem stackableItem))
+                if (HaveStackbleItem(itemToAdd.ItemType, out StackableItem stackableItem))
                 {
-                    stackableItem.Count += (inventoryItemToAdd as StackableItem).Count;
+                    stackableItem.Count += (itemToAdd as StackableItem).Count;
                     return true;
                 }
             }
             for (int i = 0; i < inventoryItems.Count(); i++)
             {
-                var item = inventoryItems[i];
-                if (item.Value == null)
+                var inventoryItem = inventoryItems[i];
+                if (inventoryItem.Item == null)
                 {
-                    inventoryItems[i] = new  KeyValuePair<Vector2, Item>(item.Key, inventoryItemToAdd);
+                    inventoryItem.Item = itemToAdd;
                     return true;
                 }
             }
@@ -111,10 +104,10 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             stackableItem = null;
             for (int i = 0; i < inventoryItems.Count(); i++)
             {
-                    Item inventoryItem = this.inventoryItems[i].Value;
-                if (inventoryItem is StackableItem && inventoryItem.ItemType == itemType)
+                Item item = inventoryItems[i].Item;
+                if (item is StackableItem && item.ItemType == itemType)
                 {
-                    stackableItem = inventoryItem as StackableItem;
+                    stackableItem = item as StackableItem;
                     return true;
                 }
             }

@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Input;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.InventoryObjects;
-using RPGMultiplayerGame.Objects.InventoryObjects.Items;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using static RPGMultiplayerGame.Managers.GameManager;
@@ -105,12 +104,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 if (IsInventoryVisible)
                 {
-                    Console.WriteLine(InputManager.Instance.GetMouseLeftButtonPressed());
                     if (InputManager.Instance.GetMouseLeftButtonPressed())
                     {
                         if (inventory.GetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out Item inventoryItem))
                         {
-                            if(typeof(Weapon).IsAssignableFrom(inventoryItem.GetType()))
+                            if(inventoryItem is Weapon)
                             {
                                 EquipeWith((int)inventoryItem.ItemType);
                             }
@@ -119,7 +117,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
 
-                if (InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
+                if (EquippedWeapon != null && InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
                 {
                     SetCurrentEntityState((int)State.Attacking, SyncCurrentDirection);
                 }
