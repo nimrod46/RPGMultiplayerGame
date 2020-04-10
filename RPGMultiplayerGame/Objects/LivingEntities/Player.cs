@@ -7,6 +7,7 @@ using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items;
+using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using static RPGMultiplayerGame.Managers.GameManager;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
@@ -20,7 +21,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
         private Inventory inventory;
-        private Inventory weaponsSlots;
+        private Inventory usableItems;
         private ItemSlot equippedWeaponSlot;
         private Npc interactingWith;
 
@@ -39,7 +40,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
             inventory = new Inventory((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER);
             inventory.IsVisible = false;
-            weaponsSlots = new Inventory(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 25), 5, 1);
+            usableItems = new Inventory(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 25), 5, 1);
             equippedWeaponSlot = new ItemSlot();
             equippedWeaponSlot.Location = new Point(25, GameManager.Instance.GetMapSize().Y - 25 - equippedWeaponSlot.Size.Y / 2);
             base.OnNetworkInitialize();
@@ -89,6 +90,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
+        
+
         public void StopInteractingWithNpc()
         {
             interactingWith = null;
@@ -102,6 +105,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private void AddItemToInventoryLocaly(Item inventoryItem)
         {
             inventory.TryAddItem(inventoryItem);
+        }
+
+        public void AddItemToInventory(int itemType, int count)
+        {
+            InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType, count);
+            AddItemToInventoryLocaly(ItemFactory.GetInventoryItem<Item>((ItemType)itemType, count));
         }
 
         public void AddItemToInventory(int itemType)
@@ -120,21 +129,21 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     {
                         if (inventory.TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out Item item))
                         {
-                            if(item is Weapon)
+                            if(item is InteractiveItem)
                             {
-                                if (weaponsSlots.TryAddItem(item))
+                                if (usableItems.TryAddItem(item))
                                 {
-                                    Console.WriteLine(inventory.TryRemoveItem(item));
+                                    inventory.TryRemoveItem(item);
                                 }
                             }
                         }
-                        else if (weaponsSlots.TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out item))
+                        else if (usableItems.TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out item))
                         {
-                            if (item is Weapon)
+                            if (item is InteractiveItem)
                             {
                                 if (inventory.TryAddItem(item))
                                 {
-                                    weaponsSlots.TryRemoveItem(item);
+                                    usableItems.TryRemoveItem(item);
                                 }
                             }
                         }
@@ -143,19 +152,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 }
                 if (InputManager.Instance.KeyPressed(Keys.A))
                 {
-                    EquipeFromWeaponsSlot(1);
+                    UseFromUsableItemSlot(1);
                 }
                 else if(InputManager.Instance.KeyPressed(Keys.S))
                 {
-                    EquipeFromWeaponsSlot(2);
+                    UseFromUsableItemSlot(2);
                 }
                 else if (InputManager.Instance.KeyPressed(Keys.D))
                 {
-                    EquipeFromWeaponsSlot(3);
+                    UseFromUsableItemSlot(3);
                 }
                 else if (InputManager.Instance.KeyPressed(Keys.F))
                 {
-                    EquipeFromWeaponsSlot(4);
+                    UseFromUsableItemSlot(4);
                 }
 
                 if (EquippedWeapon != null && InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
@@ -183,11 +192,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
         }
 
-        private void EquipeFromWeaponsSlot(int slot)
+        private void UseFromUsableItemSlot(int slot)
         {
-            if (weaponsSlots.TryGetItemInSlot(slot, out Item item))
+            if (usableItems.TryGetItemInSlot(slot, out Item item))
             {
-                EquipeWith((int) item.ItemType);
+                if (item is Weapon)
+                {
+                    EquipeWith((int)item.ItemType);
+                }
+                else if(item is Potion)
+                {
+                    usableItems.UsePotionAtSlot(slot, this);
+                }
             }
         }
 
@@ -196,7 +212,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Draw(sprite);
             inventory.Draw(sprite);
             equippedWeaponSlot.Draw(sprite);
-            weaponsSlots.Draw(sprite);
+            usableItems.Draw(sprite);
         }
 
         public override void OnDestroyed(NetworkIdentity identity)

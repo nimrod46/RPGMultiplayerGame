@@ -88,6 +88,10 @@
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Objects\InventoryObjects\ItemSlot.cs" />
+    <Compile Include="Objects\Items\InteractiveItem.cs" />
+    <Compile Include="Objects\Items\Potions\CommonHealthPotion.cs" />
+    <Compile Include="Objects\Items\Potions\HealthPotion.cs" />
+    <Compile Include="Objects\Items\Potions\Potion.cs" />
     <Compile Include="Objects\Items\Weapons\ItemFactory.cs" />
     <Compile Include="Objects\Other\AnimatedObject.cs" />
     <Compile Include="Objects\LivingEntities\Monster.cs" />

@@ -80,6 +80,7 @@ namespace RPGMultiplayerGame.Managers
                 player.OnDestroyEvent += Player_OnDestroyEvent;
                 player.AddItemToInventory((int) ItemType.CommonSword);
                 player.AddItemToInventory((int)ItemType.CommonWond);
+                player.AddItemToInventory((int)ItemType.CommonHealthPotion, 10);
                 if (spawnPoint != null)
                 {
                     player.SetSpawnPoint(spawnPoint);

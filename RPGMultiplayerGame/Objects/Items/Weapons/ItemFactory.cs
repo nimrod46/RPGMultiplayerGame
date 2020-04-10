@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RPGMultiplayerGame.Objects.Items.Potions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,6 +20,16 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
                     return new CommonWond() as T;
                 case ItemType.BatClaw:
                     return new BatClaw() as T;
+            }
+            return null;
+        }
+
+        internal static T GetInventoryItem<T>(ItemType itemType, int count) where T : Item
+        {
+            switch (itemType)
+            {
+                case ItemType.CommonHealthPotion:
+                    return new CommonHealthPotion(count) as T;
             }
             return null;
         }

@@ -39,11 +39,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        protected float SyncHealth
+        public float SyncHealth
         {
             get => syncHealth; set
             {
+                if (hasAuthority)
+                {
+                    if (value > maxHealth)
+                    {
+                        value = maxHealth;
+                    }
+                }
                 syncHealth = value;
+                
                 InvokeSyncVarNetworkly(nameof(SyncHealth), value);
                 OnHealthSet();
             }
@@ -155,7 +163,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (hasAuthority)
             {
                 SyncHealth -= damage;
-                if(SyncHealth == 0)
+                if(SyncHealth <= 0)
                 {
                     Destroy();
 

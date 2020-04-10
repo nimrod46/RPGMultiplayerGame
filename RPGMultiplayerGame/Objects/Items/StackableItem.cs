@@ -10,20 +10,39 @@ using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.Items
 {
-    public abstract class StackableItem : Item
+    public abstract class StackableItem : InteractiveItem
     {
-        public int Count { get; set; }
         private readonly SpriteFont spriteFont;
+        protected int count;
+        private Vector2 textSize;
         public StackableItem(ItemType itemType, int count) : base(itemType)
         {
-            Count = count;
+            this.count = count;
             spriteFont = GameManager.Instance.PlayerName;
+            textSize = spriteFont.MeasureString(count.ToString());
         }
 
         public override void Draw(SpriteBatch sprite, Vector2 location, float layer)
         {
             base.Draw(sprite, location, layer);
-            sprite.DrawString(spriteFont, Count + "", location, Color.Orange);
+            sprite.DrawString(spriteFont, count + "", location + new Vector2(Texture.Width, Texture.Height) + new Vector2(-textSize.X + 10, - textSize.Y / 2), Color.Orange);
+        }
+
+        public void Add(StackableItem stackableItemToAdd)
+        {
+            count += stackableItemToAdd.count;
+            textSize = spriteFont.MeasureString(count.ToString());
+        }
+
+        public void Use()
+        {
+            count--;
+            textSize = spriteFont.MeasureString(count.ToString());
+        }
+
+        public bool IsDone()
+        {
+            return count == 0;
         }
     }
 }

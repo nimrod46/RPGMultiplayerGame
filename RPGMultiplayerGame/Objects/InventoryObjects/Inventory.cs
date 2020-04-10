@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items;
+using RPGMultiplayerGame.Objects.Items.Potions;
+using RPGMultiplayerGame.Objects.LivingEntities;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
@@ -18,6 +20,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             CommonSword,
             CommonWond,
             BatClaw,
+            CommonHealthPotion,
         }
 
         public bool IsVisible { get; set; }
@@ -59,6 +62,21 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
         }
 
+        public void UsePotionAtSlot(int slot, Entity entity)
+        {
+            if(TryGetItemInSlot(slot, out Item item))
+            {
+                if(item is Potion potion)
+                {
+                    potion.UseOn(entity);
+                    if(potion.IsDone())
+                    {
+                        TryRemoveItem(potion);
+                    }
+                }
+            }
+        }
+
         public bool TryGetInventoryItemAtScreenLocation(Rectangle rect, out Item item)
         {
             item = null;
@@ -85,7 +103,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             {
                 if (HaveStackbleItem(itemToAdd.ItemType, out StackableItem stackableItem))
                 {
-                    stackableItem.Count += (itemToAdd as StackableItem).Count;
+                    stackableItem.Add(itemToAdd as StackableItem);
                     return true;
                 }
             }

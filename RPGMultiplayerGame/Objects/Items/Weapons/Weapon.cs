@@ -11,7 +11,7 @@ using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
-    public abstract class Weapon : Item
+    public abstract class Weapon : InteractiveItem
     {
         public float SyncX { get; set; }
 
