@@ -29,18 +29,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public abstract void InteractWithPlayer(Player player);
 
-        public virtual void StopInteractWithPlayer(Player player)
-        {
-            InvokeBroadcastMethodNetworkly(nameof(StopInteractWithPlayer), player);
-            if (player.hasAuthority)
-            {
-                player.StopInteractingWithNpc();
-                currentDialog = null;
-                currentInteractingPlayer = null;
-            }
-            currentSimpleDialog = null;
-            StopLookingAtGameObject();
-        }
+        public abstract void StopInteractWithPlayer(Player player);
+       
 
 
         protected override void LookAtGameObject(GameObject gameObject)

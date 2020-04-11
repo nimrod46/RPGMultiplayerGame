@@ -174,13 +174,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void Kill(Entity attacker)
         {
-            InvokeBroadcastMethodNetworkly(nameof(Kill), attacker);
-            if(attacker.hasAuthority)
+            Console.WriteLine("KILL");
+            if (!isInServer)
+            {
+                InvokeCommandMethodNetworkly(nameof(Kill), attacker);
+            }
+            else
             {
                 attacker.OnEnitytKillEvent?.Invoke(this);
-            }
-            if (hasAuthority)
-            {
                 Destroy();
             }
         }

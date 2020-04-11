@@ -43,7 +43,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual ComplexDialog GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
         {
-            if(answerIndex == dialogsByAnswers.Count)
+            if(answerIndex == dialogsByAnswers.Count || dialogsByAnswers.Count == 0)
             {
                 return null;
             }

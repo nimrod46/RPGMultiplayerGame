@@ -7,7 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Other;
-using RPGMultiplayerGame.Objects.Other.Quests;
+using RPGMultiplayerGame.Objects.QuestsObjects;
+using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
@@ -26,7 +27,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.OnNetworkInitialize();
             dialog = new ComplexDialog(SyncName, "Hi! can you help me?");
-            dialog.AddAnswerOption("Yes", "Thank You!").AddAnswerOption("....", "Lets get started").AddAnswerOption<QuestDialog>("Got it","So you need to kill for me some bats", new KillQuest(SyncName, "Kill 5 bats", EntityId.Bat, 5));
+            dialog.AddAnswerOption("Yes", "Thank You!").AddAnswerOption("....", "Lets get started").AddAnswerOption<QuestDialog>("Got it","So you need to kill for me some bats", new JoeKillQuest());
             dialog.AddAnswerOption("No", "Ok");
         }
         public override void InteractWithPlayer(Player player)
@@ -42,11 +43,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             InvokeBroadcastMethodNetworkly(nameof(BroadCastInteractWithPlayer), player);
             isInDialog = true;
-            if (player.hasAuthority)
+            if (isInServer || player.hasAuthority)
             {
-                player.InteractWithNpc(this);
-                currentDialog = dialog;
                 currentInteractingPlayer = player;
+                currentDialog = dialog;
+                if (player.hasAuthority)
+                {
+                    currentInteractingPlayer.InteractWithNpc(this);
+                }
             }
             else
             {
@@ -56,6 +60,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         internal override void ChooseDialogOption(int index)
         {
+            InvokeCommandMethodNetworkly(nameof(ChooseDialogOption), index);
+            if (!isInServer)
+            {
+                return;
+            }
             currentDialog = currentDialog.GetNextDialogByAnswer(currentInteractingPlayer, index);
             if (currentDialog == null)
             {
@@ -63,22 +72,36 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
             else
             {
-                ShowSimpleDialog(currentDialog.Text);
+                ShowNextDialog(currentDialog.Text, index);
             }
         }
 
-        private void ShowSimpleDialog(string text)
+        private void ShowNextDialog(string text, int index)
         {
-            InvokeBroadcastMethodNetworkly(nameof(ShowSimpleDialog), text);
+            InvokeBroadcastMethodNetworkly(nameof(ShowNextDialog), text, index);
             if (currentInteractingPlayer == null || !currentInteractingPlayer.hasAuthority)
             {
                 currentSimpleDialog = new SimpleDialog(text);
             }
+            else if(!isInServer)
+            {
+                currentDialog = currentDialog.GetNextDialogByAnswer(currentInteractingPlayer, index);
+            }
         }
-        
+
         public override void StopInteractWithPlayer(Player player)
         {
-            base.StopInteractWithPlayer(player);
+            InvokeBroadcastMethodNetworkly(nameof(StopInteractWithPlayer), player);
+            if (isInServer || player.hasAuthority)
+            {
+                if (player.hasAuthority)
+                {
+                    currentInteractingPlayer.StopInteractingWithNpc();
+                }
+                currentInteractingPlayer = null;
+                currentDialog = null;
+            }
+            currentSimpleDialog = null;
             isInDialog = false;
         }
     }

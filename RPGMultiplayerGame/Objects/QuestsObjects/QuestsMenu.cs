@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Managers.GameManager;
 
-namespace RPGMultiplayerGame.Objects.Other.Quests
+namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
     public class QuestsMenu
     {
@@ -26,16 +26,16 @@ namespace RPGMultiplayerGame.Objects.Other.Quests
             switch (originType)
             {
                 case OriginLocationType.Centered:
-                    origin = (origin - new Vector2(size.X / 2, size.Y / 2 * quests.Count()));
+                    origin = origin - new Vector2(size.X / 2, size.Y / 2 * quests.Count());
                     break;
                 case OriginLocationType.ButtomLeft:
-                    origin = (origin - new Vector2(0, size.Y * quests.Count()));
+                    origin = origin - new Vector2(0, size.Y * quests.Count());
                     break;
                 case OriginLocationType.ButtomCentered:
-                    origin = (origin - new Vector2(size.X / 2, size.Y * quests.Count()));
+                    origin = origin - new Vector2(size.X / 2, size.Y * quests.Count());
                     break;
                 case OriginLocationType.TopLeft:
-                    origin = (origin - new Vector2(size.X, -size.Y * quests.Count()));
+                    origin = origin - new Vector2(size.X, -size.Y * quests.Count());
                     break;
             }
             return origin;
@@ -58,7 +58,7 @@ namespace RPGMultiplayerGame.Objects.Other.Quests
             }
         }
 
-        public void Draw(SpriteBatch sprite) 
+        public void Draw(SpriteBatch sprite)
         {
             lock (quests)
             {

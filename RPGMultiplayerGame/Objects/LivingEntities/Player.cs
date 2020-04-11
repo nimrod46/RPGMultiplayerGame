@@ -9,7 +9,7 @@ using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
-using RPGMultiplayerGame.Objects.Other.Quests;
+using RPGMultiplayerGame.Objects.QuestsObjects;
 using static RPGMultiplayerGame.Managers.GameManager;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
@@ -63,6 +63,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void AddQuest(Quest quest)
         {
+            InvokeCommandMethodNetworkly(nameof(AddQuest), quest);
             playerQuests.AddQuest(quest);
         }
 

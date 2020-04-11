@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
@@ -8,20 +9,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGMultiplayerGame.Objects.Other.Quests
+namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
-    public class Quest
+    public class Quest : NetworkIdentity
     {
-        public bool IsFinished
+        protected bool SyncIsFinished
         {
             get => isFinished;
-            protected set
+            set
             {
                 isFinished = value;
-                if(isFinished)
+                InvokeSyncVarNetworkly(nameof(SyncIsFinished), isFinished);
+                if (isFinished)
                 {
                     textColor = Color.LawnGreen;
-                    background = GameManager.Instance.GetQuestBackgroundByProperties(npcName,text, textColor);
+                    background = GameManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor);
                 }
             }
         }
@@ -38,10 +40,10 @@ namespace RPGMultiplayerGame.Objects.Other.Quests
         {
             this.npcName = npcName;
             this.text = text;
-            IsFinished = false;
+            SyncIsFinished = false;
             textColor = Color.Blue;
             textFont = GameManager.Instance.PlayerNameFont;
-            background = GameManager.Instance.GetQuestBackgroundByProperties(npcName,text, textColor);
+            background = GameManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor);
         }
 
         public virtual void AssignTo(Player player)

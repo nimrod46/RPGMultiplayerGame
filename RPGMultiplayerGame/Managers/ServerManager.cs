@@ -13,6 +13,7 @@ using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
+using RPGMultiplayerGame.Objects.QuestsObjects;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 using static RPGMultiplayerGame.Objects.LivingEntities.PathEntity;
 
@@ -99,6 +100,12 @@ namespace RPGMultiplayerGame.Managers
             {
                 weaponEffects.Add(weaponEffect);
             }
+        }
+
+        public void AddQuest(Quest quest, Player player)
+        {
+            quest = (Quest)NetBehavior.spawnWithServerAuthority(quest.GetType(), quest);
+            quest.AssignTo(player);
         }
 
         private void Player_OnDestroyEvent(NetworkIdentity identity)

@@ -1,5 +1,6 @@
-﻿using RPGMultiplayerGame.Objects.LivingEntities;
-using RPGMultiplayerGame.Objects.Other.Quests;
+﻿using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.QuestsObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,10 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public override ComplexDialog GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
         {
-            quest.AssignTo(interactivePlayer);
+            if (ServerManager.Instance.IsRuning)
+            {
+                ServerManager.Instance.AddQuest(quest, interactivePlayer);
+            }
             return base.GetNextDialogByAnswer(interactivePlayer, answerIndex);
         }
     }

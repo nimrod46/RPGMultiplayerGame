@@ -6,10 +6,19 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Managers.GameManager;
 
-namespace RPGMultiplayerGame.Objects.Other.Quests
+namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
     public class KillQuest : Quest
     {
+        protected int CurrentKills
+        {
+            get => currentKills; set
+            {
+                currentKills = value;
+                InvokeSyncVarNetworkly(nameof(currentKills), currentKills);
+            }
+        }
+
         private readonly EntityId entityId;
         private readonly int numberOfKills;
         private int currentKills;
@@ -17,8 +26,9 @@ namespace RPGMultiplayerGame.Objects.Other.Quests
         {
             this.entityId = entityId;
             this.numberOfKills = numberOfKills;
-            currentKills = 0;
+            CurrentKills = 0;
         }
+
 
         public override void AssignTo(Player player)
         {
@@ -28,17 +38,17 @@ namespace RPGMultiplayerGame.Objects.Other.Quests
 
         private void OnEnitytKill(Entity killedEntity)
         {
-            Console.WriteLine(currentKills);
-            if(killedEntity.entityId == entityId)
+            Console.WriteLine(CurrentKills);
+            if (killedEntity.entityId == entityId)
             {
-                if(currentKills != numberOfKills - 1)
+                if (CurrentKills != numberOfKills - 1)
                 {
-                    currentKills++;
+                    CurrentKills++;
                 }
                 else
                 {
                     player.OnEnitytKillEvent -= OnEnitytKill;
-                    IsFinished = true;
+                    SyncIsFinished = true;
                 }
             }
         }
