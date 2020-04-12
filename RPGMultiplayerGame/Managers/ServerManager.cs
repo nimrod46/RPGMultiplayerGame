@@ -14,6 +14,7 @@ using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.QuestsObjects;
+using static NetworkingLib.Server;
 using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 using static RPGMultiplayerGame.Objects.LivingEntities.PathEntity;
 
@@ -73,11 +74,11 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        protected void OnClientSynchronized(int id)
+        protected void OnClientSynchronized(EndPointId endPointId)
         {
             lock (players)
             {
-                Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), id);
+                Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), endPointId);
                 players.Add(player);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
                 player.AddItemToInventory((int) ItemType.CommonSword);
@@ -126,14 +127,14 @@ namespace RPGMultiplayerGame.Managers
                 if (obj is NpcLib)
                 {
                     gObject = new Joe();
-                    for (int i = 0; i < 10; i++)
-                    {
-                        Bat bat = new Bat();
-                        bat.SyncX = obj.Rectangle.X;
-                        bat.SyncY = obj.Rectangle.Y;
-                        Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
-                        spawnedBat.EquipeWith(ItemFactory.GetItem<Weapon>(ItemType.BatClaw));
-                    }
+                    //for (int i = 0; i < 10; i++)
+                    //{
+                    //    Bat bat = new Bat();
+                    //    bat.SyncX = obj.Rectangle.X;
+                    //    bat.SyncY = obj.Rectangle.Y;
+                    //    Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
+                    //    spawnedBat.EquipeWith(ItemFactory.GetItem<Weapon>(ItemType.BatClaw));
+                    //}
                 }
                 else if (obj is SpawnLib)
                 {

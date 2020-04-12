@@ -174,7 +174,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void Kill(Entity attacker)
         {
-            Console.WriteLine("KILL");
             if (!isInServer)
             {
                 InvokeCommandMethodNetworkly(nameof(Kill), attacker);

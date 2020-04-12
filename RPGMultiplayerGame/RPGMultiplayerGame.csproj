@@ -166,6 +166,10 @@
     <Reference Include="NetworkBehavior">
       <HintPath>..\..\NetworkBehavior\NetworkBehavior\bin\Debug\NetworkBehavior.dll</HintPath>
     </Reference>
+    <Reference Include="NetworkingLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\NetworkingLib\NetworkingLib\bin\Debug\netstandard2.0\NetworkingLib.dll</HintPath>
+    </Reference>
     <Reference Include="OffsetGeneratorLib">
       <HintPath>..\..\..\..\source\repos\OffsetGeneratorLib\OffsetGeneratorLib\bin\Debug\OffsetGeneratorLib.dll</HintPath>
     </Reference>

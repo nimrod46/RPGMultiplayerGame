@@ -13,8 +13,9 @@ namespace RPGMultiplayerGame.Objects.Other
     {
         private readonly Quest quest;
 
-        public QuestDialog(string name, string text, Quest quest) : base(name, text)
+        public QuestDialog(int index, string name, string text, Quest quest, string nextDialogText) : base(index, name, text, false)
         {
+            AddAnswerOption("Okay", nextDialogText, true);
             this.quest = quest;
         }
 

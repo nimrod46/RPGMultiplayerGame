@@ -21,12 +21,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             throw new NotImplementedException();
         }
 
-        public override void StopInteractWithPlayer(Player player)
+        internal override void CmdChooseDialogOption(Player player, int index)
         {
             throw new NotImplementedException();
         }
 
-        internal override void ChooseDialogOption(int index)
+        public override void CmdStopInteractWithPlayer(Player player)
         {
             throw new NotImplementedException();
         }

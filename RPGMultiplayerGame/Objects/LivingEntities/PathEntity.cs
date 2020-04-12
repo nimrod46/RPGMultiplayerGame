@@ -29,7 +29,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public bool IsLookingAtPlayer { get; set; }
+        public bool IsLookingAtObject { get; set; }
+        private GameObject lastInteractiveObject;
         private readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
         private double currentPointTime = 0;
@@ -39,7 +40,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public PathEntity(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, damageable)
         {
-            IsLookingAtPlayer = false;
+            IsLookingAtObject = false;
+            lastInteractiveObject = null;
         }
        
         public override void Update(GameTime gameTime)
@@ -64,19 +66,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     closestPlayer = player;
                 }
             }
+            if(lastInteractiveObject != closestPlayer)
+            {
+                StopLookingAtGameObject(lastInteractiveObject ?? closestPlayer);
+            }
 
             if (closestPlayer != null)
             {
+                lastInteractiveObject = closestPlayer;
                 LookAtGameObject(closestPlayer);
             }
             else
             {
-                if (IsLookingAtPlayer)
-                {
-                   
-                    StopLookingAtGameObject();
-                }
-
+                lastInteractiveObject = null;
                 if (nextPoint == Vector2.Zero)
                 {
                     return;
@@ -113,10 +115,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        protected virtual void StopLookingAtGameObject()
+        protected virtual void StopLookingAtGameObject(GameObject gameObject)
         {
-            InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject));
-            IsLookingAtPlayer = false;
+            InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), gameObject);
+            IsLookingAtObject = false;
             if (nextPoint != Vector2.Zero)
             {
                 MoveToPoint(nextPoint);
@@ -146,7 +148,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void LookAtGameObject(GameObject gameObject)
         {
-            IsLookingAtPlayer = true;
+            IsLookingAtObject = true;
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = GetDirection(heading);
             if (direction != (Direction)SyncCurrentDirection || (State)syncCurrentEntityState != State.Idle)

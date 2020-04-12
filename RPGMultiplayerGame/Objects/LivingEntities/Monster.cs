@@ -41,7 +41,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
-            if (IsLookingAtPlayer)
+            if (IsLookingAtObject)
             {
 
                 EquippedWeapon.UpdateWeaponLocation(this);
@@ -71,7 +71,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected override void LookAtGameObject(GameObject gameObject)
         {
-            IsLookingAtPlayer = true;
+            IsLookingAtObject = true;
             if ((State)syncCurrentEntityState == State.Attacking)
             {
                 return;

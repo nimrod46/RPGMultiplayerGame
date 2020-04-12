@@ -15,94 +15,107 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     class Joe : Npc
     {
-        private bool isInDialog;
-
+        private readonly Dictionary<string, ComplexDialog> curentInteractingPlayers = new Dictionary<string, ComplexDialog>();
+        private readonly Dictionary<string, int> playersProgres = new Dictionary<string, int>();
         public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerNameFont)
         {
             SyncName = "Joe";
-            isInDialog = false;
         }
 
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            dialog = new ComplexDialog(SyncName, "Hi! can you help me?");
-            dialog.AddAnswerOption("Yes", "Thank You!").AddAnswerOption("....", "Lets get started").AddAnswerOption<QuestDialog>("Got it","So you need to kill for me some bats", new JoeKillQuest());
-            dialog.AddAnswerOption("No", "Ok");
-        }
-        public override void InteractWithPlayer(Player player)
-        {
-            if(!isInDialog)
-            {
-                isInDialog = true;
-                BroadCastInteractWithPlayer(player);
-            }
+            dialog = new ComplexDialog(SyncName, "Hi! can you help me?", false);
+            dialog
+                .AddAnswerOption("Yes", "Thank You!", false)
+                    .AddAnswerOption("....", "Lets get started", false)
+                        .AddAnswerOption<QuestDialog>("Got it", "So you need to kill for me some bats", new JoeKillQuest(), "Tell me when you are done");
+            dialog.AddAnswerOption("No", "Ok", false);
         }
 
-        private void BroadCastInteractWithPlayer(Player player)
+        public override void InteractWithPlayer(Player player)
         {
-            InvokeBroadcastMethodNetworkly(nameof(BroadCastInteractWithPlayer), player);
-            isInDialog = true;
-            if (isInServer || player.hasAuthority)
+            if (curentInteractingPlayers.ContainsKey(player.GetName()))
             {
-                currentInteractingPlayer = player;
-                currentDialog = dialog;
-                if (player.hasAuthority)
-                {
-                    currentInteractingPlayer.InteractWithNpc(this);
-                }
+                return;
+            }
+
+            ComplexDialog progresDialog;
+            if (!playersProgres.ContainsKey(player.GetName()))
+            {
+                playersProgres.Add(player.GetName(), dialog.Index);
+                progresDialog = dialog;
             }
             else
             {
-                currentSimpleDialog = new SimpleDialog(dialog.Text);
+                progresDialog = dialog.GetDialogByIndex(playersProgres[player.GetName()]);
             }
+            curentInteractingPlayers.Add(player.GetName(), progresDialog);
+            CmdInteractWithPlayer(player, progresDialog.Index);
         }
 
-        internal override void ChooseDialogOption(int index)
+        private void CmdInteractWithPlayer(Player player, int dialogIndex)
         {
-            InvokeCommandMethodNetworkly(nameof(ChooseDialogOption), index);
+            InvokeCommandMethodNetworkly(nameof(CmdInteractWithPlayer), player.OwnerId, player, dialogIndex);
+            if (isInServer)
+            {
+                return;
+            }
+            Console.WriteLine(dialog.GetDialogByIndex(dialogIndex).Text);
+            currentDialog = dialog.GetDialogByIndex(dialogIndex);
+            player.InteractWithNpc(this);
+        }
+
+        internal override void CmdChooseDialogOption(Player player, int answerIndex)
+        {
+            InvokeCommandMethodNetworkly(nameof(CmdChooseDialogOption), player, answerIndex);
             if (!isInServer)
             {
                 return;
             }
-            currentDialog = currentDialog.GetNextDialogByAnswer(currentInteractingPlayer, index);
+            currentDialog = curentInteractingPlayers[player.GetName()];
+            currentDialog = currentDialog.GetNextDialogByAnswer(player, answerIndex);
             if (currentDialog == null)
             {
-                StopInteractWithPlayer(currentInteractingPlayer);
+                CmdStopInteractWithPlayer(player);
             }
             else
             {
-                ShowNextDialog(currentDialog.Text, index);
-            }
-        }
-
-        private void ShowNextDialog(string text, int index)
-        {
-            InvokeBroadcastMethodNetworkly(nameof(ShowNextDialog), text, index);
-            if (currentInteractingPlayer == null || !currentInteractingPlayer.hasAuthority)
-            {
-                currentSimpleDialog = new SimpleDialog(text);
-            }
-            else if(!isInServer)
-            {
-                currentDialog = currentDialog.GetNextDialogByAnswer(currentInteractingPlayer, index);
-            }
-        }
-
-        public override void StopInteractWithPlayer(Player player)
-        {
-            InvokeBroadcastMethodNetworkly(nameof(StopInteractWithPlayer), player);
-            if (isInServer || player.hasAuthority)
-            {
-                if (player.hasAuthority)
+                if(currentDialog.IsProgressing)
                 {
-                    currentInteractingPlayer.StopInteractingWithNpc();
+                    playersProgres[player.GetName()] = currentDialog.Index;
                 }
-                currentInteractingPlayer = null;
-                currentDialog = null;
+                curentInteractingPlayers[player.GetName()] = currentDialog;
+                CmdShowNextDialogForPlayer(player, answerIndex);
             }
-            currentSimpleDialog = null;
-            isInDialog = false;
+        }
+
+        private void CmdShowNextDialogForPlayer(Player player, int answerIndex)
+        {
+            InvokeCommandMethodNetworkly(nameof(CmdShowNextDialogForPlayer), player.OwnerId, player, answerIndex);
+            if (isInServer)
+            {
+                return;
+            }
+
+            currentDialog = currentDialog.GetNextDialogByAnswer(player, answerIndex);
+        }
+
+        public override void CmdStopInteractWithPlayer(Player player)
+        {
+            InvokeCommandMethodNetworkly(nameof(CmdStopInteractWithPlayer), player.OwnerId, player);
+            if (isInServer)
+            {
+                curentInteractingPlayers.Remove(player.GetName());
+                return;
+            }
+            if(currentDialog == null)
+            {
+                return;
+            }
+
+            player.StopInteractingWithNpc();
+            currentDialog = null;
         }
     }
 }

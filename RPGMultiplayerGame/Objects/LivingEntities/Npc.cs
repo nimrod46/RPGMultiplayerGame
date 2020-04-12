@@ -10,8 +10,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         protected ComplexDialog dialog;
         protected ComplexDialog currentDialog;
-        protected SimpleDialog currentSimpleDialog;
-        protected Player currentInteractingPlayer;
         private Vector2 dialogOffset;
 
         public Npc(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, false)
@@ -25,32 +23,33 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             dialogOffset = nameOffset + new Vector2(0, -nameFontSize.Y);
         }
 
-        internal abstract void ChooseDialogOption(int index);
-
         public abstract void InteractWithPlayer(Player player);
 
-        public abstract void StopInteractWithPlayer(Player player);
+        internal abstract void CmdChooseDialogOption(Player player, int index);
+
+
+        public abstract void CmdStopInteractWithPlayer(Player player);
        
 
 
         protected override void LookAtGameObject(GameObject gameObject)
         {
-            if (!IsLookingAtPlayer && gameObject is Player)
+            if (gameObject is Player player)
             {
-                InteractWithPlayer(gameObject as Player);
+                InteractWithPlayer(player);
             }
                 base.LookAtGameObject(gameObject);
         }
 
-        protected override void StopLookingAtGameObject()
+        protected override void StopLookingAtGameObject(GameObject gameObject)
         {
             if (isInServer)
             {
-                base.StopLookingAtGameObject();
+                base.StopLookingAtGameObject(gameObject);
             }
-            if (currentInteractingPlayer != null)
+            if (gameObject is Player player)
             {
-                StopInteractWithPlayer(currentInteractingPlayer);
+                CmdStopInteractWithPlayer(player);
             }
         }
 
@@ -58,7 +57,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.Draw(sprite);
             currentDialog?.DrawAt(sprite, Location + dialogOffset);
-            currentSimpleDialog?.DrawAt(sprite, Location + dialogOffset);
         }
     }
 }

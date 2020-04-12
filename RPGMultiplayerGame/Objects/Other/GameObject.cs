@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using static NetworkingLib.Server;
 
 namespace RPGMultiplayerGame.Objects.Other
 {
@@ -19,7 +20,7 @@ namespace RPGMultiplayerGame.Objects.Other
             get => syncX; set
             {
                 syncX = value;
-                InvokeSyncVarNetworkly(nameof(SyncX), value, NetworkInterface.UDP);
+                InvokeSyncVarNetworkly(nameof(SyncX), value, NetworkInterfaceType.UDP);
                 OnXSet();
             }
         }
@@ -29,7 +30,7 @@ namespace RPGMultiplayerGame.Objects.Other
             get => syncY; set
             {
                 syncY = value;
-                InvokeSyncVarNetworkly(nameof(SyncY), value, NetworkInterface.UDP);
+                InvokeSyncVarNetworkly(nameof(SyncY), value, NetworkInterfaceType.UDP);
                 OnYSet();
             }
         }

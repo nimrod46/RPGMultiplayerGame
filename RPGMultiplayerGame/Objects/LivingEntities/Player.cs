@@ -193,7 +193,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     if (InputManager.Instance.KeyPressed(Keys.D1, Keys.D9, out Keys pressedKey))
                     {
-                        interactingWith.ChooseDialogOption(pressedKey - Keys.D1);
+                        interactingWith.CmdChooseDialogOption(this, pressedKey - Keys.D1);
                     }
                 }
             }

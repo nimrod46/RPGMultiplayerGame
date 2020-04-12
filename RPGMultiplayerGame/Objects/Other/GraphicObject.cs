@@ -55,7 +55,7 @@ namespace RPGMultiplayerGame.Objects.Other
             }
             else
             {
-                Console.Error.WriteLine("Cannot draw object object: " + id + " " + GetType());
+                Console.Error.WriteLine("Cannot draw object: " + Id + " " + GetType());
             }
         }
 
