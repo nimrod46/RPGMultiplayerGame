@@ -60,7 +60,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
-            List<Player> stoppedInteractingPlayers = new List<Player>();
+            List<Player> currentInteractingPlayers = new List<Player>();
             for (int i = 0; i < ServerManager.Instance.players.Count; i++)
             {
                 Player player = ServerManager.Instance.players[i];
@@ -68,29 +68,22 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
                 if (distance < minDistanceForPlayerInteraction)
                 {
-                    if (!interactingPlayers.Contains(player))
-                    {
-                        interactingPlayers.Add(player);
-                    }
-                        lastInteractingPlayer = player;
+                    lastInteractingPlayer = player;
+                    currentInteractingPlayers.Add(player);
                 }
-                else if (interactingPlayers.Contains(player))
+                else if (curentInteractingPlayersDialogs.Keys.Contains(player))
                 {
-                    interactingPlayers.Remove(player);
-                    stoppedInteractingPlayers.Add(player);
-                    if(lastInteractingPlayer == player)
+                    if (lastInteractingPlayer == player)
                     {
                         lastInteractingPlayer = null;
                     }
                 }
             }
-            foreach (var player in stoppedInteractingPlayers)
+            
+            foreach (var player in curentInteractingPlayersDialogs.Keys.ToList().Where(pl => !currentInteractingPlayers.Contains(pl)))
             {
-                InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), player);
-            }
-            if (interactingPlayers.Any()) 
-            {
-                lastInteractingPlayer = lastInteractingPlayer ?? interactingPlayers[0];
+               
+               InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), player);
             }
 
             if (lastInteractingPlayer != null)

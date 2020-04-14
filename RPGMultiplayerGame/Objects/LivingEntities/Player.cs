@@ -42,8 +42,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 Layer = GameManager.OWN_PLAYER_LAYER;
             }
-            inventory = new Inventory((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), OriginLocationType.Centered, GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER);
-            inventory.IsVisible = false;
+            inventory = new Inventory((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), OriginLocationType.Centered, GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER)
+            {
+                IsVisible = false
+            };
             usableItems = new Inventory(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomCentered, 5, 1);
             equippedItems = new Inventory(new Point(10, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomLeft, 3, 1);
             playerQuests = new QuestsMenu(new Vector2(GameManager.Instance.GetMapSize().X, 100), OriginLocationType.TopLeft);

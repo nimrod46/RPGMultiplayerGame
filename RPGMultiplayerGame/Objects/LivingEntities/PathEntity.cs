@@ -29,7 +29,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         public bool IsLookingAtObject { get; set; }
-        protected List<Player> interactingPlayers = new List<Player>();
         protected float minDistanceForPlayerInteraction = 40;
         private readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
@@ -53,7 +52,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
            
-            if (!interactingPlayers.Any())
+            if (!IsLookingAtObject)
             {
                 if (nextPoint == Vector2.Zero)
                 {
