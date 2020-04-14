@@ -17,12 +17,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     class Joe : Npc
     {
         private bool isCurrentAthorityPlayerInteracting;
-        private Player lastInteractingPlayer;
+
         public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerNameFont)
         {
             SyncName = "Joe";
             isCurrentAthorityPlayerInteracting = false;
-            lastInteractingPlayer = null;
         }
 
         public override void OnNetworkInitialize()
@@ -61,6 +60,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
 
             List<Player> currentInteractingPlayers = new List<Player>();
+            Player lastInteractingPlayer = null;
             for (int i = 0; i < ServerManager.Instance.players.Count; i++)
             {
                 Player player = ServerManager.Instance.players[i];
@@ -71,18 +71,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     lastInteractingPlayer = player;
                     currentInteractingPlayers.Add(player);
                 }
-                else if (curentInteractingPlayersDialogs.Keys.Contains(player))
-                {
-                    if (lastInteractingPlayer == player)
-                    {
-                        lastInteractingPlayer = null;
-                    }
-                }
             }
             
             foreach (var player in curentInteractingPlayersDialogs.Keys.ToList().Where(pl => !currentInteractingPlayers.Contains(pl)))
             {
-               
                InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), player);
             }
 
