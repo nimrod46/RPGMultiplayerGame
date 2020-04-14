@@ -29,7 +29,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         public bool IsLookingAtObject { get; set; }
-        protected readonly List<Player> interactingPlayers = new List<Player>();
+        protected List<Player> interactingPlayers = new List<Player>();
         protected float minDistanceForPlayerInteraction = 40;
         private readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;

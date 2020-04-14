@@ -13,6 +13,7 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.MapObjects;
 using Microsoft.Xna.Framework;
+using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -41,6 +42,7 @@ namespace RPGMultiplayerGame.Managers
             new Joe();
             new Blacksmith();
             new Bat();
+            new JoeKillQuest();
         }
 
         public void AddServer()

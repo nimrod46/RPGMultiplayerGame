@@ -31,7 +31,6 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         protected Player player;
         private readonly string npcName;
         private readonly string text;
-        private readonly SpriteFont textFont;
         private Color textColor;
         private bool isFinished;
         private Texture2D background;
@@ -42,9 +41,14 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             this.text = text;
             SyncIsFinished = false;
             textColor = Color.Blue;
-            textFont = GameManager.Instance.PlayerNameFont;
+            OnNetworkInitializeEvent += OnNetworkInitialize;
+        }
+
+        private void OnNetworkInitialize()
+        {
             background = GameManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor);
         }
+
 
         public virtual void AssignTo(Player player)
         {

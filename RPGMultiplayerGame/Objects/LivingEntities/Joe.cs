@@ -17,10 +17,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     class Joe : Npc
     {
         private bool isCurrentAthorityPlayerInteracting;
+        private Player lastInteractingPlayer;
         public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerNameFont)
         {
             SyncName = "Joe";
             isCurrentAthorityPlayerInteracting = false;
+            lastInteractingPlayer = null;
         }
 
         public override void OnNetworkInitialize()
@@ -39,10 +41,25 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
             if (!hasAuthority)
             {
+
+                Player player = ClientManager.Instance.Player;
+                if(player == null)
+                {
+                    return;
+                }
+                float distance = Vector2.Distance(player.GetBaseCenter(), GetBaseCenter());
+                if (distance < minDistanceForPlayerInteraction)
+                {
+                    isCurrentAthorityPlayerInteracting = true;
+                    LookAtGameObject(player);
+                }
+                else if(isCurrentAthorityPlayerInteracting)
+                {
+                    isCurrentAthorityPlayerInteracting = false;
+                }
                 return;
             }
 
-            List<Player> newInteractingPlayers = new List<Player>();
             List<Player> stoppedInteractingPlayers = new List<Player>();
             for (int i = 0; i < ServerManager.Instance.players.Count; i++)
             {
@@ -54,23 +71,31 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     if (!interactingPlayers.Contains(player))
                     {
                         interactingPlayers.Add(player);
-                        newInteractingPlayers.Add(player);
                     }
+                        lastInteractingPlayer = player;
                 }
                 else if (interactingPlayers.Contains(player))
                 {
                     interactingPlayers.Remove(player);
                     stoppedInteractingPlayers.Add(player);
+                    if(lastInteractingPlayer == player)
+                    {
+                        lastInteractingPlayer = null;
+                    }
                 }
             }
             foreach (var player in stoppedInteractingPlayers)
             {
                 InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), player);
             }
-
-            foreach (var player in interactingPlayers)
+            if (interactingPlayers.Any()) 
             {
-                InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), player);
+                lastInteractingPlayer = lastInteractingPlayer ?? interactingPlayers[0];
+            }
+
+            if (lastInteractingPlayer != null)
+            {
+                InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), lastInteractingPlayer);
             }
         }
 
@@ -81,10 +106,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 if (isInServer)
                 {
                     InteractWithPlayer(player);
-                }
-                else if(player.hasAuthority)
-                {
-                    isCurrentAthorityPlayerInteracting = true;
                 }
                 else if(isCurrentAthorityPlayerInteracting && !player.hasAuthority)
                 {
@@ -101,10 +122,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 if (isInServer)
                 {
                     CmdStopInteractWithPlayer(player);
-                }
-                else if (player.hasAuthority)
-                {
-                    isCurrentAthorityPlayerInteracting = false;
                 }
                 else if (isCurrentAthorityPlayerInteracting && !player.hasAuthority)
                 {
