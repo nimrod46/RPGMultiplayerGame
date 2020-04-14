@@ -15,7 +15,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     public abstract class PathEntity : Entity
     {
-        private const float MIN_DISTANCE_FOR_PLAYER_INTERACTION = 40;
 
         public struct Waypoint
         {
@@ -30,18 +29,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         public bool IsLookingAtObject { get; set; }
-        private GameObject lastInteractiveObject;
+        protected readonly List<Player> interactingPlayers = new List<Player>();
+        protected float minDistanceForPlayerInteraction = 40;
         private readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
         private double currentPointTime = 0;
         private int nextWaypointIndex = 0;
         protected Vector2 nextPoint = Vector2.Zero;
         private int unit;
+        
 
         public PathEntity(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, damageable)
         {
             IsLookingAtObject = false;
-            lastInteractiveObject = null;
         }
        
         public override void Update(GameTime gameTime)
@@ -52,33 +52,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
-
-            float minDistance = MIN_DISTANCE_FOR_PLAYER_INTERACTION;
-            Player closestPlayer = null;
-            for (int i = 0; i < ServerManager.Instance.players.Count; i++)
+           
+            if (!interactingPlayers.Any())
             {
-                Player player = ServerManager.Instance.players[i];
-                float distance = Vector2.Distance(player.GetBaseCenter(), GetBaseCenter());
-
-                if (distance < minDistance)
-                {
-                    minDistance = distance;
-                    closestPlayer = player;
-                }
-            }
-            if(lastInteractiveObject != closestPlayer)
-            {
-                StopLookingAtGameObject(lastInteractiveObject ?? closestPlayer);
-            }
-
-            if (closestPlayer != null)
-            {
-                lastInteractiveObject = closestPlayer;
-                LookAtGameObject(closestPlayer);
-            }
-            else
-            {
-                lastInteractiveObject = null;
                 if (nextPoint == Vector2.Zero)
                 {
                     return;
@@ -90,7 +66,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     {
                         if (GetCurrentEnitytState<State>() == State.Moving)
                         {
-                            SetCurrentEntityState((int)State.Idle, (int)SyncCurrentDirection);
+                            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Idle, SyncCurrentDirection);
                         }
                         return;
                     }
@@ -111,38 +87,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                     currentTime = 0;
                 }
-                MoveToPoint(nextPoint);
-            }
-        }
-
-        protected virtual void StopLookingAtGameObject(GameObject gameObject)
-        {
-            InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), gameObject);
-            IsLookingAtObject = false;
-            if (nextPoint != Vector2.Zero)
-            {
-                MoveToPoint(nextPoint);
-            }
-        }
-
-        protected bool HavePathToFollow()
-        {
-            return path.Any();
-        }
-
-        private void MoveToPoint(Vector2 point)
-        {
-            if(Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f)
-            {
-                SetCurrentEntityState((int)State.Idle, (int)SyncCurrentDirection);
-                return;
-            }
-
-            Vector2 heading = new Vector2(SyncX, SyncY) - point;
-            Direction direction = GetDirection(heading);
-            if (!(GetCurrentEnitytState<State>() == State.Moving) || (int) direction != SyncCurrentDirection)
-            {
-                SetCurrentEntityState((int)State.Moving, (int)direction);
+                InvokeBroadcastMethodNetworkly(nameof(MoveToPoint), nextPoint.X, nextPoint.Y);
             }
         }
 
@@ -156,6 +101,38 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 SetCurrentEntityState((int)State.Idle, (int)direction);
             }
         }
+
+        protected virtual void StopLookingAtGameObject(GameObject gameObject)
+        {
+            IsLookingAtObject = false;
+            if (nextPoint != Vector2.Zero)
+            {
+
+                MoveToPoint(nextPoint.X, nextPoint.Y);
+            }
+        }
+
+        protected bool HavePathToFollow()
+        {
+            return path.Any();
+        }
+
+        protected void MoveToPoint(float x, float y)
+        {
+            Vector2 point = new Vector2(x, y);
+            if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f)
+            {
+                SetCurrentEntityState((int)State.Idle, SyncCurrentDirection);
+                return;
+            }
+
+            Vector2 heading = new Vector2(SyncX, SyncY) - point;
+            Direction direction = GetDirection(heading);
+            if (!(GetCurrentEnitytState<State>() == State.Moving) || (int) direction != SyncCurrentDirection)
+            {
+                SetCurrentEntityState((int)State.Moving, (int)direction);
+            }
+        }       
 
         protected Direction GetDirection(Vector2 heading)
         {

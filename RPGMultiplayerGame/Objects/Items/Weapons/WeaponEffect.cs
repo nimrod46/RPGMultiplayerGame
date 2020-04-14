@@ -36,14 +36,14 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            SetCurrentEntityState((int)State.Moving, SyncCurrentDirection);
+            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, SyncCurrentDirection);
         }
 
         public void Hit(Entity entity)
         {
             if (!hittedEntitiesId.Contains(entity.Id))
             {
-                entity.OnAttackedBy(SyncAttacker, syncDamage);
+                entity.InvokeBroadcastMethodNetworkly(nameof(entity.OnAttackedBy), SyncAttacker, syncDamage);
                 hittedEntitiesId.Add(entity.Id);
             }
         }

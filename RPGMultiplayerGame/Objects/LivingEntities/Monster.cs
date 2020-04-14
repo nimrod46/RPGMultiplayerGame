@@ -47,12 +47,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 EquippedWeapon.UpdateWeaponLocation(this);
                 if (GameManager.Instance.GetEntitiesHitBy(EquippedWeapon, this).Any())
                 {
-                    SetCurrentEntityState((int)State.Idle, SyncCurrentDirection);
+                    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Idle, SyncCurrentDirection);
                     Attack();
                 }
                 else
                 {
-                    SetCurrentEntityState((int)State.Moving, SyncCurrentDirection);
+                    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Idle, SyncCurrentDirection);
                 }
             }
             else
@@ -80,7 +80,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Direction direction = GetDirection(heading);
             if (direction != (Direction)SyncCurrentDirection || (State)syncCurrentEntityState != State.Moving)
             {
-                SetCurrentEntityState((int)State.Moving, (int)direction);
+                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Moving, (int)direction);
             }
         }
     }

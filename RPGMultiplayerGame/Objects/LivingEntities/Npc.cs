@@ -1,13 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
+using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Other;
+using System.Collections.Generic;
 using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     public abstract class Npc : Human
     {
+        protected readonly Dictionary<Player, ComplexDialog> curentInteractingPlayersDialogs = new Dictionary<Player, ComplexDialog>();
+        protected readonly Dictionary<string, int> playersProgres = new Dictionary<string, int>();
         protected ComplexDialog dialog;
         protected ComplexDialog currentDialog;
         private Vector2 dialogOffset;
@@ -29,29 +33,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
 
         public abstract void CmdStopInteractWithPlayer(Player player);
+
        
-
-
-        protected override void LookAtGameObject(GameObject gameObject)
-        {
-            if (gameObject is Player player)
-            {
-                InteractWithPlayer(player);
-            }
-                base.LookAtGameObject(gameObject);
-        }
-
-        protected override void StopLookingAtGameObject(GameObject gameObject)
-        {
-            if (isInServer)
-            {
-                base.StopLookingAtGameObject(gameObject);
-            }
-            if (gameObject is Player player)
-            {
-                CmdStopInteractWithPlayer(player);
-            }
-        }
 
         public override void Draw(SpriteBatch sprite)
         {

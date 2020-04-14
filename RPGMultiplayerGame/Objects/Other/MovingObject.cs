@@ -31,7 +31,6 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void SetCurrentEntityState(int entityState, int direction)
         {
-            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), entityState, direction );
             syncCurrentEntityState = entityState;
             switch ((State)syncCurrentEntityState)
             {
@@ -45,12 +44,12 @@ namespace RPGMultiplayerGame.Objects.Other
             Location = new Vector2(SyncX, SyncY);
         }
 
-        protected void IdleAtDir(Direction direction)
+        protected virtual void IdleAtDir(Direction direction)
         {
             AnimationAtDir(direction, 4, true);
         }
 
-        protected void MoveAtDir(Direction direction)
+        protected virtual void MoveAtDir(Direction direction)
         {
             AnimationAtDir(direction, 0, true);
         }

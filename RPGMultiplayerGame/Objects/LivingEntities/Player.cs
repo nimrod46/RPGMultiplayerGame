@@ -74,7 +74,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 if (isDown)
                 {
                     Direction direction = (Direction)((int)key - (int)Keys.Left);
-                    SetCurrentEntityState((int)State.Moving, (int) direction);
+                   InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, (int)direction);
                     currentArrowsKeysPressed.Insert(0, key);
                 }
                 else
@@ -82,13 +82,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     currentArrowsKeysPressed.RemoveAll(k => k == key);
                     if (currentArrowsKeysPressed.Count == 0)
                     {
-                        SetCurrentEntityState((int)State.Idle, (int)SyncCurrentDirection);
+                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Idle, SyncCurrentDirection);
                     }
                     else
                     {
                         key = currentArrowsKeysPressed[0];
                         Direction direction = (Direction)((int)key - (int)Keys.Left);
-                        SetCurrentEntityState((int)State.Moving, (int)direction);
+                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, (int)direction);
                     }
                 }
             }

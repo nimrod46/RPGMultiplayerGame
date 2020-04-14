@@ -10,12 +10,12 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
     public class KillQuest : Quest
     {
-        protected int CurrentKills
+        protected int SyncCurrentKills
         {
             get => currentKills; set
             {
                 currentKills = value;
-                InvokeSyncVarNetworkly(nameof(currentKills), currentKills);
+                InvokeSyncVarNetworkly(nameof(SyncCurrentKills), currentKills);
             }
         }
 
@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         {
             this.entityId = entityId;
             this.numberOfKills = numberOfKills;
-            CurrentKills = 0;
+            SyncCurrentKills = 0;
         }
 
 
@@ -38,12 +38,12 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
 
         private void OnEnitytKill(Entity killedEntity)
         {
-            Console.WriteLine(CurrentKills);
-            if (killedEntity.entityId == entityId)
+            Console.WriteLine(SyncCurrentKills);
+            if (killedEntity.EntityId == entityId)
             {
-                if (CurrentKills != numberOfKills - 1)
+                if (SyncCurrentKills != numberOfKills - 1)
                 {
-                    CurrentKills++;
+                    SyncCurrentKills++;
                 }
                 else
                 {

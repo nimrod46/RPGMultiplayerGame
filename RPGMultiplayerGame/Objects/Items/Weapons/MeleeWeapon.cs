@@ -25,7 +25,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             {
                 foreach (Entity damagedEntity in damagedEntities)
                 {
-                    damagedEntity.OnAttackedBy(attacker, Damage);
+                    damagedEntity.InvokeBroadcastMethodNetworkly(nameof(damagedEntity.OnAttackedBy), attacker, Damage);
                 }
             }
         }

@@ -61,7 +61,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public Weapon EquippedWeapon { get; set; }
 
-        public EntityId entityId { get; }
+        public EntityId EntityId { get; }
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
         protected float textLyer;
@@ -81,7 +81,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public Entity(EntityId entityId, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityId]), collisionOffsetX, collisionOffsetY)
         {
-            this.entityId = entityId;
+            this.EntityId = entityId;
             this.maxHealth = maxHealth;
             this.damageable = damageable;
             isBeingHit = false;
@@ -215,7 +215,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        protected void AttackAtDir(Direction direction)
+        protected virtual void AttackAtDir(Direction direction)
         {
             AnimationAtDir(direction, 8, false);
         }
@@ -237,7 +237,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (EquippedWeapon.IsAbleToAttack())
             {
-                SetCurrentEntityState((int)State.Attacking, SyncCurrentDirection);
+                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Attacking, SyncCurrentDirection);
                 CmdAttack(this, (int)EquippedWeapon.ItemType);
             }
         }

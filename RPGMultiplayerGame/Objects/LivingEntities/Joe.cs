@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
@@ -15,11 +16,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     class Joe : Npc
     {
-        private readonly Dictionary<string, ComplexDialog> curentInteractingPlayers = new Dictionary<string, ComplexDialog>();
-        private readonly Dictionary<string, int> playersProgres = new Dictionary<string, int>();
+        private bool isCurrentAthorityPlayerInteracting;
         public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerNameFont)
         {
             SyncName = "Joe";
+            isCurrentAthorityPlayerInteracting = false;
         }
 
         public override void OnNetworkInitialize()
@@ -33,9 +34,89 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             dialog.AddAnswerOption("No", "Ok", false);
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            if (!hasAuthority)
+            {
+                return;
+            }
+
+            List<Player> newInteractingPlayers = new List<Player>();
+            List<Player> stoppedInteractingPlayers = new List<Player>();
+            for (int i = 0; i < ServerManager.Instance.players.Count; i++)
+            {
+                Player player = ServerManager.Instance.players[i];
+                float distance = Vector2.Distance(player.GetBaseCenter(), GetBaseCenter());
+
+                if (distance < minDistanceForPlayerInteraction)
+                {
+                    if (!interactingPlayers.Contains(player))
+                    {
+                        interactingPlayers.Add(player);
+                        newInteractingPlayers.Add(player);
+                    }
+                }
+                else if (interactingPlayers.Contains(player))
+                {
+                    interactingPlayers.Remove(player);
+                    stoppedInteractingPlayers.Add(player);
+                }
+            }
+            foreach (var player in stoppedInteractingPlayers)
+            {
+                InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), player);
+            }
+
+            foreach (var player in interactingPlayers)
+            {
+                InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), player);
+            }
+        }
+
+        protected override void LookAtGameObject(GameObject gameObject)
+        {
+            if (gameObject is Player player)
+            {
+                if (isInServer)
+                {
+                    InteractWithPlayer(player);
+                }
+                else if(player.hasAuthority)
+                {
+                    isCurrentAthorityPlayerInteracting = true;
+                }
+                else if(isCurrentAthorityPlayerInteracting && !player.hasAuthority)
+                {
+                    return;
+                }
+            }
+            base.LookAtGameObject(gameObject);
+        }
+
+        protected override void StopLookingAtGameObject(GameObject gameObject)
+        {
+            if (gameObject is Player player)
+            {
+                if (isInServer)
+                {
+                    CmdStopInteractWithPlayer(player);
+                }
+                else if (player.hasAuthority)
+                {
+                    isCurrentAthorityPlayerInteracting = false;
+                }
+                else if (isCurrentAthorityPlayerInteracting && !player.hasAuthority)
+                {
+                    return;
+                }
+            }
+            base.StopLookingAtGameObject(gameObject);
+        }
+
         public override void InteractWithPlayer(Player player)
         {
-            if (curentInteractingPlayers.ContainsKey(player.GetName()))
+            if (curentInteractingPlayersDialogs.ContainsKey(player))
             {
                 return;
             }
@@ -50,7 +131,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 progresDialog = dialog.GetDialogByIndex(playersProgres[player.GetName()]);
             }
-            curentInteractingPlayers.Add(player.GetName(), progresDialog);
+            curentInteractingPlayersDialogs.Add(player, progresDialog);
             CmdInteractWithPlayer(player, progresDialog.Index);
         }
 
@@ -73,7 +154,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
-            currentDialog = curentInteractingPlayers[player.GetName()];
+            currentDialog = curentInteractingPlayersDialogs[player];
             currentDialog = currentDialog.GetNextDialogByAnswer(player, answerIndex);
             if (currentDialog == null)
             {
@@ -85,7 +166,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     playersProgres[player.GetName()] = currentDialog.Index;
                 }
-                curentInteractingPlayers[player.GetName()] = currentDialog;
+                curentInteractingPlayersDialogs[player] = currentDialog;
                 CmdShowNextDialogForPlayer(player, answerIndex);
             }
         }
@@ -106,7 +187,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             InvokeCommandMethodNetworkly(nameof(CmdStopInteractWithPlayer), player.OwnerId, player);
             if (isInServer)
             {
-                curentInteractingPlayers.Remove(player.GetName());
+                curentInteractingPlayersDialogs.Remove(player);
                 return;
             }
             if(currentDialog == null)
