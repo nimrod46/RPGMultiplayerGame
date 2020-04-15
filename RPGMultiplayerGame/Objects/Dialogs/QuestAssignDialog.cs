@@ -7,21 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGMultiplayerGame.Objects.Other
+namespace RPGMultiplayerGame.Objects.Dialogs
 {
-    public class QuestDialog : ComplexDialog
+    public class QuestAssignDialog : QuestDialog
     {
-        private readonly Quest quest;
 
-        public QuestDialog(int index, string name, string text, Quest quest, string nextDialogText) : base(index, name, text, false)
+        public QuestAssignDialog(int index, string name, string text, Quest quest) : base(index, name, text, false, quest)
         {
-            AddAnswerOption("Okay", nextDialogText, true);
-            this.quest = quest;
         }
 
+        public new T AddAnswerOption<T>(string optionText, params object[] args) where T : QuestInProgressDialog
+        {
+            return base.AddAnswerOption<T>(optionText, args);
+        }
         public override ComplexDialog GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
         {
-            if (ServerManager.Instance.IsRuning)
+            if (answerIndex == 0)
             {
                 ServerManager.Instance.AddQuest(quest, interactivePlayer);
             }

@@ -11,7 +11,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
     public class QuestsMenu
     {
-        private readonly Dictionary<Vector2, Quest> quests = new Dictionary<Vector2, Quest>();
+        private readonly Dictionary<Quest, Vector2> quests = new Dictionary<Quest, Vector2>();
         private Vector2 origin;
         private readonly OriginLocationType originType;
 
@@ -26,16 +26,16 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             switch (originType)
             {
                 case OriginLocationType.Centered:
-                    origin = origin - new Vector2(size.X / 2, size.Y / 2 * quests.Count());
+                    origin -= new Vector2(size.X / 2, size.Y / 2 * quests.Count());
                     break;
                 case OriginLocationType.ButtomLeft:
-                    origin = origin - new Vector2(0, size.Y * quests.Count());
+                    origin -= new Vector2(0, size.Y * quests.Count());
                     break;
                 case OriginLocationType.ButtomCentered:
-                    origin = origin - new Vector2(size.X / 2, size.Y * quests.Count());
+                    origin -= new Vector2(size.X / 2, size.Y * quests.Count());
                     break;
                 case OriginLocationType.TopLeft:
-                    origin = origin - new Vector2(size.X, -size.Y * quests.Count());
+                    origin -= new Vector2(size.X, -size.Y * quests.Count());
                     break;
             }
             return origin;
@@ -54,8 +54,23 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
                 {
                     lastQuestPosition = GetOriginBaseOnOriginType(origin, quest.GetTextSize(), originType);
                 }
-                quests.Add(lastQuestPosition, quest);
+                quests.Add(quest, lastQuestPosition);
             }
+        }
+
+        public Quest GetQuestByType(Quest quest)
+        {
+            lock (quests)
+            {
+                foreach (var q in quests)
+                {
+                    if(q.Key.GetType() == quest.GetType())
+                    {
+                        return q.Key;
+                    }
+                }
+            }
+            return null;
         }
 
         public void Draw(SpriteBatch sprite)
@@ -64,9 +79,14 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             {
                 foreach (var v in quests)
                 {
-                    v.Value.DrawAt(sprite, v.Key);
+                    v.Key.DrawAt(sprite, v.Value);
                 }
             }
+        }
+
+        internal void RemoveQuest(Quest quest)
+        {
+            quests.Remove(quest);
         }
     }
 }

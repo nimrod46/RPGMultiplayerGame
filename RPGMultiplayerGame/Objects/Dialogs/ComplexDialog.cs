@@ -2,13 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGMultiplayerGame.Objects.Other
+namespace RPGMultiplayerGame.Objects.Dialogs
 {
     public class ComplexDialog : SimpleDialog
     {
@@ -19,51 +21,54 @@ namespace RPGMultiplayerGame.Objects.Other
         public string Name { get; private set; }
         public bool IsProgressing { get; }
 
-        private readonly Dictionary<string, ComplexDialog> dialogsByAnswers = new Dictionary<string, ComplexDialog>();
-
+        private readonly List<KeyValuePair<string, ComplexDialog>> dialogsByAnswers = new List<KeyValuePair<string, ComplexDialog>>();
         public ComplexDialog(string name, string text, bool isProgressing) : base(text)
         {
             Index = 0;
             Name = name;
             IsProgressing = isProgressing;
-            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Keys.ToArray());
+            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
         }
 
-        protected ComplexDialog(int index, string name, string text, bool isProgressing) : base(text)
+        public ComplexDialog(int index, string name, string text, bool isProgressing) : base(text)
         {
             Index = index;
             Name = name;
             IsProgressing = isProgressing;
-            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Keys.ToArray());
+            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
         }
 
-        public ComplexDialog AddAnswerOption(string optionText, string text, bool isProgressing)
+        public virtual ComplexDialog AddAnswerOption(string optionText, string text, bool isProgressing)
         {
-            ComplexDialog dialog = new ComplexDialog(GetDialogsCount(this) + 1 + Index, Name, text, isProgressing);
-            dialogsByAnswers.Add(optionText, dialog);
-            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Keys.ToArray());
-            return dialog;
+            return AddAnswerOption<ComplexDialog>(optionText, text, isProgressing);
         }
 
-        public T AddAnswerOption<T>(string optionText, params object[] args) where T : ComplexDialog
+        public virtual T AddAnswerOption<T>(string optionText, params object[] args) where T : ComplexDialog
+        {
+            return AddAnswerOptionAt<T>(optionText, dialogsByAnswers.Count, args);
+        }
+
+        public virtual T AddAnswerOptionAt<T>(string optionText, int index, params object[] args) where T : ComplexDialog
         {
             var v = args.ToList();
             v.Insert(0, GetDialogsCount(this) + 1 + Index);
             v.Insert(1, Name);
             T dialog = (T)Activator.CreateInstance(typeof(T), v.ToArray());
-            dialogsByAnswers.Add(optionText, dialog);
-            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Keys.ToArray());
+            dialogsByAnswers.Insert(index, new KeyValuePair<string, ComplexDialog>(optionText, dialog));
+            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
             return dialog;
         }
 
+       
+
         public virtual ComplexDialog GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
         {
-            if(answerIndex >= dialogsByAnswers.Count || dialogsByAnswers.Count == 0)
+            if (answerIndex >= dialogsByAnswers.Count || dialogsByAnswers.Count == 0)
             {
                 return null;
             }
 
-            return dialogsByAnswers.Values.ToList()[answerIndex];
+            return dialogsByAnswers[answerIndex].Value;
         }
 
         public int AnswersCount()
@@ -81,9 +86,9 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             if (Index == index) return this;
             ComplexDialog result;
-            foreach (var item in dialogsByAnswers.Values)
+            foreach (var item in dialogsByAnswers)
             {
-                result = item.GetDialogByIndex(index);
+                result = item.Value.GetDialogByIndex(index);
                 if (result != null)
                 {
                     return result;
@@ -95,9 +100,9 @@ namespace RPGMultiplayerGame.Objects.Other
         private static int GetDialogsCount(ComplexDialog dialog)
         {
             int count = 0;
-            foreach (var item in dialog.dialogsByAnswers.Values)
+            foreach (var item in dialog.dialogsByAnswers)
             {
-                count += GetDialogsCount(item) + 1;
+                count += GetDialogsCount(item.Value) + 1;
             }
             return count;
         }

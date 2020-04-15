@@ -52,6 +52,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.OnNetworkInitialize();
         }
 
+        
+        public override void OnAttackedBy(Entity attacker, float damage)
+        {
+            return;
+        }
+
         public void InitName()
         {
             CmdCheckName(this, TextInput.getText("Name"));
@@ -67,6 +73,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             InvokeCommandMethodNetworkly(nameof(AddQuest), quest);
             playerQuests.AddQuest(quest);
+        }
+
+        public void RemoveQuest(Quest quest)
+        {
+            InvokeCommandMethodNetworkly(nameof(RemoveQuest), quest);
+            playerQuests.RemoveQuest(quest);
+        }
+
+
+        public Quest GetQuestByType(Quest quest)
+        {
+            return playerQuests.GetQuestByType(quest);
         }
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)

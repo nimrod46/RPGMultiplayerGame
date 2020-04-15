@@ -13,10 +13,10 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
     public class Quest : NetworkIdentity
     {
-        protected bool SyncIsFinished
+        public bool SyncIsFinished
         {
             get => isFinished;
-            set
+            protected set
             {
                 isFinished = value;
                 InvokeSyncVarNetworkly(nameof(SyncIsFinished), isFinished);
@@ -31,14 +31,16 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         protected Player player;
         private readonly string npcName;
         private readonly string text;
+        private readonly Action<Player> reward;
         private Color textColor;
         private bool isFinished;
         private Texture2D background;
 
-        public Quest(string npcName, string text)
+        public Quest(string npcName, string text, Action<Player> reward)
         {
             this.npcName = npcName;
             this.text = text;
+            this.reward = reward;
             SyncIsFinished = false;
             textColor = Color.Blue;
             OnNetworkInitializeEvent += OnNetworkInitialize;
@@ -54,6 +56,16 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         {
             this.player = player;
             player.AddQuest(this);
+        }
+
+        public virtual void Unassign(Player player)
+        {
+            player.RemoveQuest(this);
+        }
+
+        public virtual void RewardPlayer(Player player)
+        {
+            reward.Invoke(player);
         }
 
         public void DrawAt(SpriteBatch sprite, Vector2 position)

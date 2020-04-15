@@ -20,7 +20,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public Monster(GameManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, true)
         {
-            minDistanceForObjectInteraction = 40;
+            minDistanceForObjectInteraction = 60;
         }
 
         public override void OnNetworkInitialize()

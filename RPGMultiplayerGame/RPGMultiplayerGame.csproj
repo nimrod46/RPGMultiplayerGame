@@ -2,6 +2,9 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
   <PropertyGroup>
+    <LangVersion>8</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
@@ -88,6 +91,9 @@
     <Compile Include="DictionarySortedByValue.cs" />
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
+    <Compile Include="Objects\Dialogs\QuestAssignDialog.cs" />
+    <Compile Include="Objects\Dialogs\QuestCompletedDialog.cs" />
+    <Compile Include="Objects\Dialogs\QuestInProgressDialog.cs" />
     <Compile Include="Objects\InventoryObjects\ItemSlot.cs" />
     <Compile Include="Objects\Items\EmptyItem.cs" />
     <Compile Include="Objects\Items\InteractiveItem.cs" />
@@ -107,9 +113,9 @@
     <Compile Include="Objects\QuestsObjects\KillQuest.cs" />
     <Compile Include="Objects\QuestsObjects\QuestsMenu.cs" />
     <Compile Include="Objects\QuestsObjects\Quest.cs" />
-    <Compile Include="Objects\Other\QuestDialog.cs" />
-    <Compile Include="Objects\Other\SimpleDialog.cs" />
-    <Compile Include="Objects\Other\ComplexDialog.cs" />
+    <Compile Include="Objects\Dialogs\QuestDialog.cs" />
+    <Compile Include="Objects\Dialogs\SimpleDialog.cs" />
+    <Compile Include="Objects\Dialogs\ComplexDialog.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
     <Compile Include="Objects\LivingEntities\Joe.cs" />
     <Compile Include="Objects\Marks\MarkObject.cs" />

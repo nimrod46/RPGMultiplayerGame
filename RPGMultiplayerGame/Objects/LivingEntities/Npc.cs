@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.Other;
+using RPGMultiplayerGame.Objects.Dialogs;
 using System.Collections.Generic;
 using static RPGMultiplayerGame.Managers.GameManager;
 

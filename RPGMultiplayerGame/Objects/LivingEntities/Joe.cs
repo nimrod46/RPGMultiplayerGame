@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
@@ -31,8 +32,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             dialog = new ComplexDialog(SyncName, "Hi! can you help me?", false);
             dialog
                 .AddAnswerOption("Yes", "Thank You!", false)
-                    .AddAnswerOption("....", "Lets get started", false)
-                        .AddAnswerOption<QuestDialog>("Got it", "So you need to kill for me some bats", new JoeKillQuest(), "Tell me when you are done");
+                .AddAnswerOption("....", "Lets get started", false)
+                .AddAnswerOption<QuestAssignDialog>("Got it", "So you need to kill for me some bats", new JoeKillQuest())
+                .AddAnswerOption<QuestInProgressDialog>("Okay", "Tell me when you are done", "Ammm seams like you didn't finish, do you need anything?")
+                .AddAnswerOption<QuestCompletedDialog>("Ok finished", "Good job!!! Here is your reward")
+                .AddAnswerOption<ComplexDialog>("Thank you", "Be well", true);
             dialog.AddAnswerOption("No", "Ok", false);
         }
 
@@ -162,19 +166,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     playersProgres[player.GetName()] = currentDialog.Index;
                 }
                 curentInteractingPlayersDialogs[player] = currentDialog;
-                CmdShowNextDialogForPlayer(player, answerIndex);
+                CmdShowNextDialogForPlayer(player, currentDialog.Index);
             }
         }
 
-        private void CmdShowNextDialogForPlayer(Player player, int answerIndex)
+        private void CmdShowNextDialogForPlayer(Player player, int dialogIndex)
         {
-            InvokeCommandMethodNetworkly(nameof(CmdShowNextDialogForPlayer), player.OwnerId, player, answerIndex);
+            InvokeCommandMethodNetworkly(nameof(CmdShowNextDialogForPlayer), player.OwnerId, player, dialogIndex);
             if (isInServer)
             {
                 return;
             }
 
-            currentDialog = currentDialog.GetNextDialogByAnswer(player, answerIndex);
+            currentDialog = dialog.GetDialogByIndex(dialogIndex);
         }
 
         public override void CmdStopInteractWithPlayer(Player player)

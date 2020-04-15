@@ -181,7 +181,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             else
             {
                 attacker.OnEnitytKillEvent?.Invoke(this);
-                Destroy();
+                InvokeBroadcastMethodNetworkly(nameof(Destroy));
             }
         }
 

@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGMultiplayerGame.Objects.Other
+namespace RPGMultiplayerGame.Objects.Dialogs
 {
     public class SimpleDialog
     {
-        private SpriteFont font;
+        private readonly SpriteFont font;
 
         public string Text { get; private set; }
 
