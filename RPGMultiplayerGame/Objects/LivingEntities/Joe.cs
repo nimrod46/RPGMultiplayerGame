@@ -33,9 +33,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             dialog
                 .AddAnswerOption("Yes", "Thank You!", false)
                 .AddAnswerOption("....", "Lets get started", false)
-                .AddAnswerOption<QuestAssignDialog>("Got it", "So you need to kill for me some bats", new JoeKillQuest())
-                .AddAnswerOption<QuestInProgressDialog>("Okay", "Tell me when you are done", "Ammm seams like you didn't finish, do you need anything?")
-                .AddAnswerOption<QuestCompletedDialog>("Ok finished", "Good job!!! Here is your reward")
+                .AddAnswerOption<DialogQuestAssign>("Got it", "So you need to kill for me some bats", new JoeKillQuest())
+                .AddAnswerOption<DialogQuestInProgress>("Okay", "Tell me when you are done", "Ammm seams like you didn't finish, do you need anything?")
+                .AddAnswerOption<DialogQuestCompleted>("Ok finished", "Good job!!! Here is your reward")
                 .AddAnswerOption<ComplexDialog>("Thank you", "Be well", true);
             dialog.AddAnswerOption("No", "Ok", false);
         }

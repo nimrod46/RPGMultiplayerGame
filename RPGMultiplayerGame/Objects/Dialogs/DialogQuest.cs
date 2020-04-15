@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
-    public class QuestDialog : ComplexDialog
+    public class DialogQuest : ComplexDialog
     {
         protected readonly Quest quest;
 
-        public QuestDialog(int index, string name, string text, bool isProgressing, Quest quest) : base(index, name, text, isProgressing)
+        public DialogQuest(int index, string name, string text, bool isProgressing, Quest quest) : base(index, name, text, isProgressing)
         {
             this.quest = quest;
         }

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
-    public class QuestCompletedDialog : ComplexDialog
+    public class DialogQuestCompleted : ComplexDialog
     {
         private readonly Quest quest;
 
-        public QuestCompletedDialog(int index, string name, string text, Quest quest) : base(index, name, text, true)
+        public DialogQuestCompleted(int index, string name, string text, Quest quest) : base(index, name, text, true)
         {
             this.quest = quest;
         }

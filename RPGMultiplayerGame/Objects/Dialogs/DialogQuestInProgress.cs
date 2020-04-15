@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
-    public class QuestInProgressDialog : QuestDialog
+    public class DialogQuestInProgress : DialogQuest
     {
-        public QuestInProgressDialog(int index, string name, string text, Quest questInProgress, string questStilInProgressText) : base(index, name, text, true, questInProgress)
+        public DialogQuestInProgress(int index, string name, string text, Quest questInProgress, string questStilInProgressText) : base(index, name, text, true, questInProgress)
         {
             base.AddAnswerOption("", questStilInProgressText, false);
         }
 
-        public new T AddAnswerOption<T>(string optionText, params object[] args) where T : QuestCompletedDialog
+        public new T AddAnswerOption<T>(string optionText, params object[] args) where T : DialogQuestCompleted
         {
             return base.AddAnswerOption<T>(optionText, args);
         }
