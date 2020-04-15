@@ -59,22 +59,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
-            List<Player> currentInteractingPlayers = new List<Player>();
             Player lastInteractingPlayer = null;
-            for (int i = 0; i < ServerManager.Instance.players.Count; i++)
+            List<Player> currentInteractingPlayers = GetCurrentPlayersInRadius();
+            if (currentInteractingPlayers.Count != 0)
             {
-                Player player = ServerManager.Instance.players[i];
-                if (IsObjectInInteractingRadius(player))
-                {
-                    lastInteractingPlayer = player;
-                    currentInteractingPlayers.Add(player);
-                }
+                lastInteractingPlayer = currentInteractingPlayers[0];
             }
-            
+
             foreach (var player in curentInteractingPlayersDialogs.Keys.ToList().Where(pl => !currentInteractingPlayers.Contains(pl)))
             {
                InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), player);
             }
+            
 
             if (lastInteractingPlayer != null)
             {

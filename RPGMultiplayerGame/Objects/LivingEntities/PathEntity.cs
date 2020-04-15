@@ -51,6 +51,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
+
+
            
             if (!IsLookingAtObject)
             {
@@ -90,10 +92,34 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
+        protected List<Player> GetCurrentPlayersInRadius()
+        {
+            return GetCurrentPlayersInRadius(minDistanceForObjectInteraction);
+        }
+
+        protected List<Player> GetCurrentPlayersInRadius(float minDistance)
+        {
+            List<Player> currentInteractingPlayers = new List<Player>();
+            for (int i = 0; i < ServerManager.Instance.players.Count; i++)
+            {
+                Player player = ServerManager.Instance.players[i];
+                if (IsObjectInInteractingRadius(player, minDistance))
+                {
+                    currentInteractingPlayers.Add(player);
+                }
+            }
+            return currentInteractingPlayers;
+        }
+
         protected bool IsObjectInInteractingRadius(GameObject gameObject)
         {
+            return IsObjectInInteractingRadius(gameObject, minDistanceForObjectInteraction);
+        }
+
+        protected bool IsObjectInInteractingRadius(GameObject gameObject, float minDistanceForObjectInteraction)
+        {
             return GetDistanceFrom(gameObject) <= minDistanceForObjectInteraction;
-        } 
+        }
 
         protected virtual void LookAtGameObject(GameObject gameObject)
         {

@@ -43,17 +43,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
-            List<Player> currentInteractingPlayers = new List<Player>();
-            for (int i = 0; i < ServerManager.Instance.players.Count; i++)
+            List<Player> currentInteractingPlayers = GetCurrentPlayersInRadius();
+
+            foreach (var player in currentInteractingPlayers)
             {
-                Player player = ServerManager.Instance.players[i];
-                if (IsObjectInInteractingRadius(player))
+                if (!targetPlayers.ContainsKey(player))
                 {
-                    if (!targetPlayers.ContainsKey(player))
-                    {
-                        targetPlayers.Add(player, 0);
-                    }
-                    currentInteractingPlayers.Add(player);
+                    targetPlayers.Add(player, 0);
                 }
             }
 
@@ -106,12 +102,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
-            //Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
-            //Direction direction = GetDirection(heading);
-            //if (direction != (Direction)SyncCurrentDirection || (State)syncCurrentEntityState != State.Moving)
-            //{
-            //    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Moving, (int)direction);
-            //}
             base.LookAtGameObject(gameObject);
         }
 
@@ -122,7 +112,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 if (targetPlayers.TryGetValue(attacker, out float lastDamage))
                 {
-                    Console.WriteLine((attacker as Player).GetName() + " lastDamage: " + lastDamage);
                     targetPlayers.Remove(attacker);
                     targetPlayers.Add(attacker, lastDamage + damage);
                 }
