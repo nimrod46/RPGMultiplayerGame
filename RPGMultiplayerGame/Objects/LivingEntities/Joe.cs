@@ -22,6 +22,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             SyncName = "Joe";
             isCurrentAthorityPlayerInteracting = false;
+            minDistanceForObjectInteraction = 40;
         }
 
         public override void OnNetworkInitialize()
@@ -46,8 +47,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     return;
                 }
-                float distance = Vector2.Distance(player.GetBaseCenter(), GetBaseCenter());
-                if (distance < minDistanceForPlayerInteraction)
+                if (IsObjectInInteractingRadius(player))
                 {
                     isCurrentAthorityPlayerInteracting = true;
                     LookAtGameObject(player);
@@ -64,9 +64,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             for (int i = 0; i < ServerManager.Instance.players.Count; i++)
             {
                 Player player = ServerManager.Instance.players[i];
-                float distance = Vector2.Distance(player.GetBaseCenter(), GetBaseCenter());
-
-                if (distance < minDistanceForPlayerInteraction)
+                if (IsObjectInInteractingRadius(player))
                 {
                     lastInteractingPlayer = player;
                     currentInteractingPlayers.Add(player);
@@ -144,7 +142,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
-            Console.WriteLine(dialog.GetDialogByIndex(dialogIndex).Text);
             currentDialog = dialog.GetDialogByIndex(dialogIndex);
             player.InteractWithNpc(this);
         }

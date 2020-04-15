@@ -160,7 +160,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
-            InvokeBroadcastMethodNetworkly(nameof(OnAttackedBy), attacker, damage);
+
             if (hasAuthority)
             {
                 SyncHealth -= damage;

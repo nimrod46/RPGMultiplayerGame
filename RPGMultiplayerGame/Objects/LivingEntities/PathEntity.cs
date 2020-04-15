@@ -29,7 +29,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         public bool IsLookingAtObject { get; set; }
-        protected float minDistanceForPlayerInteraction = 40;
+        protected float minDistanceForObjectInteraction;
         private readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
         private double currentPointTime = 0;
@@ -90,6 +90,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
+        protected bool IsObjectInInteractingRadius(GameObject gameObject)
+        {
+            return GetDistanceFrom(gameObject) <= minDistanceForObjectInteraction;
+        } 
+
         protected virtual void LookAtGameObject(GameObject gameObject)
         {
             IsLookingAtObject = true;
@@ -119,12 +124,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected void MoveToPoint(float x, float y)
         {
             Vector2 point = new Vector2(x, y);
-            if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f)
+            if (Vector2.Distance(new Vector2(SyncX, SyncY), point) <= 2f)
             {
                 SetCurrentEntityState((int)State.Idle, SyncCurrentDirection);
                 return;
             }
-
+           
             Vector2 heading = new Vector2(SyncX, SyncY) - point;
             Direction direction = GetDirection(heading);
             if (!(GetCurrentEnitytState<State>() == State.Moving) || (int) direction != SyncCurrentDirection)

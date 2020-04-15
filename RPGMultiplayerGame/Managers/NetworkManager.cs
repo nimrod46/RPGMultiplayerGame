@@ -14,6 +14,7 @@ using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.MapObjects;
 using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
+using RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -43,6 +44,7 @@ namespace RPGMultiplayerGame.Managers
             new Blacksmith();
             new Bat();
             new JoeKillQuest();
+            new FireBall();
         }
 
         public void AddServer()

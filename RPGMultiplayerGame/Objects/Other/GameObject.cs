@@ -69,6 +69,11 @@ namespace RPGMultiplayerGame.Objects.Other
             return new Rectangle((int)SyncX, (int)SyncY, BaseSize.X, BaseSize.Y);
         }
 
+        public float GetDistanceFrom(GameObject gameObject)
+        {
+            return Vector2.Distance(gameObject.GetBaseCenter(), GetBaseCenter());
+        }
+
         public virtual void OnXSet()
         {
             if (MathHelper.Distance(Location.X, SyncX) >= 5f)

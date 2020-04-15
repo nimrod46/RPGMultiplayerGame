@@ -127,14 +127,16 @@ namespace RPGMultiplayerGame.Managers
                 if (obj is NpcLib)
                 {
                     gObject = new Joe();
-                    //for (int i = 0; i < 10; i++)
+                   // for (int i = 0; i < 10; i++)
                     //{
-                    //    Bat bat = new Bat();
-                    //    bat.SyncX = obj.Rectangle.X;
-                    //    bat.SyncY = obj.Rectangle.Y;
-                    //    Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
-                    //    spawnedBat.EquipeWith(ItemFactory.GetItem<Weapon>(ItemType.BatClaw));
-                    //}
+                        Bat bat = new Bat
+                        {
+                            SyncX = obj.Rectangle.X,
+                            SyncY = obj.Rectangle.Y
+                        };
+                        Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
+                        spawnedBat.EquipeWith(ItemFactory.GetItem<Weapon>(ItemType.BatClaw));
+                  //  }
                 }
                 else if (obj is SpawnLib)
                 {

@@ -85,6 +85,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DictionarySortedByValue.cs" />
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Objects\InventoryObjects\ItemSlot.cs" />
