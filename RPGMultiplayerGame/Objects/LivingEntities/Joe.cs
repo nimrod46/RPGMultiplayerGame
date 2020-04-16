@@ -66,7 +66,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     InteractWithPlayer(player);
                 }
-                else if(ClientManager.Instance.Player.InteractingWith == this && !player.hasAuthority)
+                else if(ClientManager.Instance.Player.IsInteractingWith(this) && !player.hasAuthority)
                 {
                     return;
                 }
@@ -82,7 +82,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     CmdStopInteractWithPlayer(player);
                 }
-                else if (ClientManager.Instance.Player.InteractingWith == this && !player.hasAuthority)
+                else if (ClientManager.Instance.Player.IsInteractingWith(this) && !player.hasAuthority)
                 {
                     return;
                 }
@@ -108,8 +108,30 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 progresDialog = dialog.GetDialogByIndex(playersProgres[player.GetName()]);
             }
             curentInteractingPlayersDialogs.Add(player, progresDialog);
-            CmdInteractWithPlayer(player, progresDialog.Index);
+            CmdRequestingInteractWithPlayer(player, progresDialog.Index);
         }
+
+        public override void CmdRequestingInteractWithPlayer(Player player, int dialogIndex)
+        {
+            InvokeCommandMethodNetworkly(nameof(CmdRequestingInteractWithPlayer), player.OwnerId, player, dialogIndex);
+            if (isInServer)
+            {
+                return;
+            }
+            currentSimpleDialog = dialog.GetDialogByIndex(dialogIndex);
+            player.InteractRequestWithNpc(this);
+        }
+
+        public override void CmdAcceptInteractWithPlayer(Player player)
+        {
+            InvokeCommandMethodNetworkly(nameof(CmdAcceptInteractWithPlayer), player);
+            if (!isInServer)
+            {
+                return;
+            }
+            CmdInteractWithPlayer(player, curentInteractingPlayersDialogs[player].Index);
+        }
+       
 
         private void CmdInteractWithPlayer(Player player, int dialogIndex)
         {
@@ -118,31 +140,31 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
-            currentDialog = dialog.GetDialogByIndex(dialogIndex);
+            currentComplexDialog = dialog.GetDialogByIndex(dialogIndex);
             player.InteractWithNpc(this);
         }
 
-        internal override void CmdChooseDialogOption(Player player, int answerIndex)
+        public override void CmdChooseDialogOption(Player player, int answerIndex)
         {
             InvokeCommandMethodNetworkly(nameof(CmdChooseDialogOption), player, answerIndex);
             if (!isInServer)
             {
                 return;
             }
-            currentDialog = curentInteractingPlayersDialogs[player];
-            currentDialog = currentDialog.GetNextDialogByAnswer(player, answerIndex);
-            if (currentDialog == null)
+            currentComplexDialog = curentInteractingPlayersDialogs[player];
+            currentComplexDialog = currentComplexDialog.GetNextDialogByAnswer(player, answerIndex);
+            if (currentComplexDialog == null)
             {
                 CmdStopInteractWithPlayer(player);
             }
             else
             {
-                if(currentDialog.IsProgressing)
+                if(currentComplexDialog.IsProgressing)
                 {
-                    playersProgres[player.GetName()] = currentDialog.Index;
+                    playersProgres[player.GetName()] = currentComplexDialog.Index;
                 }
-                curentInteractingPlayersDialogs[player] = currentDialog;
-                CmdShowNextDialogForPlayer(player, currentDialog.Index);
+                curentInteractingPlayersDialogs[player] = currentComplexDialog;
+                CmdShowNextDialogForPlayer(player, currentComplexDialog.Index);
             }
         }
 
@@ -154,7 +176,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
-            currentDialog = dialog.GetDialogByIndex(dialogIndex);
+            currentComplexDialog = dialog.GetDialogByIndex(dialogIndex);
         }
 
         public override void CmdStopInteractWithPlayer(Player player)
@@ -165,13 +187,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 curentInteractingPlayersDialogs.Remove(player);
                 return;
             }
-            if(currentDialog == null)
+            if (currentComplexDialog == null && currentSimpleDialog == null)
             {
                 return;
             }
 
             player.StopInteractingWithNpc();
-            currentDialog = null;
+            currentComplexDialog = null;
+            currentSimpleDialog = null;
         }
     }
 }

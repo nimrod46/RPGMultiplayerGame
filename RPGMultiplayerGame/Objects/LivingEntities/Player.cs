@@ -24,8 +24,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
        
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
 
-        public Npc InteractingWith { get; private set; }
-
+        private Npc interactingWith;
+        private Npc requestingInteraction;
         private QuestsMenu playerQuests;
         private Inventory inventory;
         private Inventory usableItems;
@@ -116,16 +116,25 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        
+        public bool IsInteractingWith(Npc npc)
+        {
+            return interactingWith == npc || requestingInteraction == npc;
+        }
 
         public void StopInteractingWithNpc()
         {
-            InteractingWith = null;
+            interactingWith = null;
+            requestingInteraction = null;
         }
 
         public void InteractWithNpc(Npc npc)
         {
-            InteractingWith = npc;
+            interactingWith = npc;
+        }
+
+        public void InteractRequestWithNpc(Npc npc)
+        {
+            requestingInteraction = npc;
         }
 
         private void AddItemToInventoryLocaly(Item inventoryItem)
@@ -211,11 +220,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         }
                     }
                 }
-                if (InteractingWith != null)
+                if(requestingInteraction != null)
+                {
+                    if (InputManager.Instance.KeyPressed(Keys.Q))
+                    {
+                        requestingInteraction.CmdAcceptInteractWithPlayer(this);
+                    }
+                }
+                if (interactingWith != null)
                 {
                     if (InputManager.Instance.KeyPressed(Keys.D1, Keys.D9, out Keys pressedKey))
                     {
-                        InteractingWith.CmdChooseDialogOption(this, pressedKey - Keys.D1);
+                        interactingWith.CmdChooseDialogOption(this, pressedKey - Keys.D1);
                     }
                 }
             }
