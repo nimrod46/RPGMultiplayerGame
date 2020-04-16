@@ -135,11 +135,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected virtual void StopLookingAtGameObject(GameObject gameObject)
         {
             IsLookingAtObject = false;
-            if (nextPoint != Vector2.Zero)
-            {
-
-                //MoveToPoint(nextPoint.X, nextPoint.Y); //TODO: Make idle instead
-            }
         }
 
         protected bool HavePathToFollow()
