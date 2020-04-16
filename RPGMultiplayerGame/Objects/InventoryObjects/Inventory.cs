@@ -27,9 +27,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         public bool IsVisible { get; set; }
         private readonly ItemSlot[] inventoryItems;
-        private readonly Point origin;
-        private readonly int columns;
-        private readonly int rows;
 
         public Inventory(Point origin, OriginLocationType originType , int columns, int rows)
         {
@@ -46,9 +43,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                     origin = (origin.ToVector2() - new Vector2(inventoryItem.Size.X * columns / 2, inventoryItem.Size.Y * rows)).ToPoint();
                     break;
             }
-            this.origin = origin;
-            this.columns = columns;
-            this.rows = rows;
             inventoryItems = new ItemSlot[columns * rows];
             IsVisible = true;
             int index = 0;

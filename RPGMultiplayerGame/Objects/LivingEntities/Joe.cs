@@ -17,12 +17,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     class Joe : Npc
     {
-        private bool isCurrentAthorityPlayerInteracting;
-
         public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerNameFont)
         {
             SyncName = "Joe";
-            isCurrentAthorityPlayerInteracting = false;
             minDistanceForObjectInteraction = 40;
         }
 
@@ -45,40 +42,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
             if (!hasAuthority)
             {
-
-                Player player = ClientManager.Instance.Player;
-                if(player == null)
-                {
-                    return;
-                }
-                if (IsObjectInInteractingRadius(player))
-                {
-                    isCurrentAthorityPlayerInteracting = true;
-                    LookAtGameObject(player);
-                }
-                else if(isCurrentAthorityPlayerInteracting)
-                {
-                    isCurrentAthorityPlayerInteracting = false;
-                }
                 return;
             }
 
-            Player lastInteractingPlayer = null;
             List<Player> currentInteractingPlayers = GetCurrentPlayersInRadius();
-            if (currentInteractingPlayers.Count != 0)
-            {
-                lastInteractingPlayer = currentInteractingPlayers[0];
-            }
-
+            
             foreach (var player in curentInteractingPlayersDialogs.Keys.ToList().Where(pl => !currentInteractingPlayers.Contains(pl)))
             {
                InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), player);
             }
-            
 
-            if (lastInteractingPlayer != null)
+            foreach (var player in currentInteractingPlayers)
             {
-                InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), lastInteractingPlayer);
+                InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), player);
             }
         }
 
@@ -90,7 +66,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     InteractWithPlayer(player);
                 }
-                else if(isCurrentAthorityPlayerInteracting && !player.hasAuthority)
+                else if(ClientManager.Instance.Player.InteractingWith == this && !player.hasAuthority)
                 {
                     return;
                 }
@@ -106,7 +82,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     CmdStopInteractWithPlayer(player);
                 }
-                else if (isCurrentAthorityPlayerInteracting && !player.hasAuthority)
+                else if (ClientManager.Instance.Player.InteractingWith == this && !player.hasAuthority)
                 {
                     return;
                 }

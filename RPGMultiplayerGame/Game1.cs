@@ -16,9 +16,10 @@ namespace RPGMultiplayerGame
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        Form gameForm;
+        readonly GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+        readonly Form gameForm;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);

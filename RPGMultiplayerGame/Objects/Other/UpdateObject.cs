@@ -17,10 +17,13 @@ namespace RPGMultiplayerGame.Objects.Other
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            GameManager.Instance.AddUpdateObject(this);
-            if (isInServer)
+            if (isInServer && hasAuthority)
             {
                 ServerManager.Instance.AddServerGameObject(this);
+            }
+            else
+            {
+                GameManager.Instance.AddUpdateObject(this);
             }
         }
 
@@ -30,11 +33,14 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public override void OnDestroyed(NetworkIdentity identity)
         {
-            GameManager.Instance.RemoveUpdateObject(this);
             base.OnDestroyed(identity);
-            if (isInServer)
+            if (isInServer && hasAuthority)
             {
                 ServerManager.Instance.RemoveServerGameObject(this);
+            }
+            else
+            {
+                GameManager.Instance.RemoveUpdateObject(this);
             }
         }
     }

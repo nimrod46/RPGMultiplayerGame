@@ -23,11 +23,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
        
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
+
+        public Npc InteractingWith { get; private set; }
+
         private QuestsMenu playerQuests;
         private Inventory inventory;
         private Inventory usableItems;
         private Inventory equippedItems;
-        private Npc interactingWith;
 
         public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerNameFont, true)
         {
@@ -118,12 +120,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void StopInteractingWithNpc()
         {
-            interactingWith = null;
+            InteractingWith = null;
         }
 
         public void InteractWithNpc(Npc npc)
         {
-            interactingWith = npc;
+            InteractingWith = npc;
         }
 
         private void AddItemToInventoryLocaly(Item inventoryItem)
@@ -209,11 +211,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         }
                     }
                 }
-                if (interactingWith != null)
+                if (InteractingWith != null)
                 {
                     if (InputManager.Instance.KeyPressed(Keys.D1, Keys.D9, out Keys pressedKey))
                     {
-                        interactingWith.CmdChooseDialogOption(this, pressedKey - Keys.D1);
+                        InteractingWith.CmdChooseDialogOption(this, pressedKey - Keys.D1);
                     }
                 }
             }
