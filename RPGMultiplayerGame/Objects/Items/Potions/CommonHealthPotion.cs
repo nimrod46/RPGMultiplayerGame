@@ -9,7 +9,7 @@ namespace RPGMultiplayerGame.Objects.Items.Potions
 {
     public class CommonHealthPotion : HealthPotion
     {
-        public CommonHealthPotion(int count) : base(Inventory.ItemType.CommonHealthPotion, count, 20)
+        public CommonHealthPotion(int count) : base(ItemType.CommonHealthPotion, count, 20)
         {
         }
     }

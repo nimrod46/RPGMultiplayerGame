@@ -10,12 +10,12 @@ using Networking;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.Items;
+using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 using static NetworkingLib.Server;
-using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 using static RPGMultiplayerGame.Objects.LivingEntities.PathEntity;
 
 namespace RPGMultiplayerGame.Managers
@@ -38,7 +38,7 @@ namespace RPGMultiplayerGame.Managers
         public bool IsRuning { get; private set; }
         public readonly List<Player> players = new List<Player>();
 
-        public readonly List<UpdateObject> serverObjects = new List<UpdateObject>();
+        public readonly List<IGameUpdateable> serverObjects = new List<IGameUpdateable>();
         public readonly List<Monster> monsters = new List<Monster>();
         public readonly List<WeaponEffect> weaponEffects = new List<WeaponEffect>();
         public SpawnPoint spawnPoint;
@@ -81,11 +81,12 @@ namespace RPGMultiplayerGame.Managers
                 Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), endPointId);
                 players.Add(player);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
-                player.AddItemToInventory((int) ItemType.CommonSword);
-                player.AddItemToInventory((int)ItemType.CommonWond);
-                player.AddItemToInventory((int)ItemType.CommonHealthPotion, 10);
-                player.AddItemToInventory((int)ItemType.CommonHealthPotion, 10);
-                player.AddItemToInventory((int)ItemType.CommonHealthPotion, 10);
+                player.AddItemToInventory(ItemType.CommonSword);
+                player.AddItemToInventory(ItemType.CommonWond);
+                player.AddItemToInventory(ItemType.CommonHealthPotion, 10);
+                player.AddItemToInventory(ItemType.CommonHealthPotion, 10);
+                player.AddItemToInventory(ItemType.CommonHealthPotion, 10);
+                player.SyncGold = 100;
                 if (spawnPoint != null)
                 {
                     player.SetSpawnPoint(spawnPoint);
@@ -126,7 +127,12 @@ namespace RPGMultiplayerGame.Managers
                 GameObject gObject = null;
                 if (obj is NpcLib)
                 {
+                    Blacksmith  blacksmith = new Blacksmith();
+                    blacksmith.SyncX = obj.Rectangle.X;
+                    blacksmith.SyncY = obj.Rectangle.Y;
+                    NetBehavior.spawnWithServerAuthority(blacksmith.GetType(), blacksmith);
                     gObject = new Joe();
+
                     for (int i = 0; i < 10; i++)
                     {
                         Bat bat = new Bat
@@ -171,7 +177,7 @@ namespace RPGMultiplayerGame.Managers
         {
             lock (serverObjects)
             {
-                foreach (UpdateObject obj in serverObjects)
+                foreach (IGameUpdateable obj in serverObjects)
                 {
                     obj.Update(gameTime);
                 }
@@ -189,7 +195,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void AddServerGameObject(UpdateObject updateObject)
+        public void AddServerGameObject(IGameUpdateable updateObject)
         {
             lock (serverObjects)
             {
@@ -197,7 +203,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void RemoveServerGameObject(UpdateObject updateObject)
+        public void RemoveServerGameObject(IGameUpdateable updateObject)
         {
             lock (serverObjects)
             {

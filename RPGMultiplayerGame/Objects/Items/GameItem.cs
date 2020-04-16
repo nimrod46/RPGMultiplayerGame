@@ -6,11 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.Items
 {
-    public abstract class Item
+    public class GameItem
     {
         public Texture2D Texture { get; set; }
         public ItemType ItemType
@@ -24,7 +23,12 @@ namespace RPGMultiplayerGame.Objects.Items
 
         private ItemType itemType;
 
-        public Item(ItemType itemType)
+        public GameItem()
+        {
+            ItemType = ItemType.None;
+        }
+
+        public GameItem(ItemType itemType)
         {
             ItemType = itemType;
         }

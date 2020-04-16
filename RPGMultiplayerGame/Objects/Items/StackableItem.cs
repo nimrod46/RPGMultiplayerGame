@@ -6,18 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.Items
 {
-    public abstract class StackableItem : InteractiveItem
+    public abstract class StackableGameItem : InteractiveItem
     {
+        public int Count { get; protected set; }
+
         private readonly SpriteFont spriteFont;
-        protected int count;
         private Vector2 textSize;
-        public StackableItem(ItemType itemType, int count) : base(itemType)
+
+
+        public StackableGameItem(ItemType itemType, int count) : base(itemType)
         {
-            this.count = count;
+            this.Count = count;
             spriteFont = GameManager.Instance.PlayerNameFont;
             textSize = spriteFont.MeasureString(count.ToString());
         }
@@ -25,20 +27,20 @@ namespace RPGMultiplayerGame.Objects.Items
         public override void Draw(SpriteBatch sprite, Vector2 location, float layer)
         {
             base.Draw(sprite, location, layer);
-            sprite.DrawString(spriteFont, count + "", location + new Vector2(Texture.Width, Texture.Height) + new Vector2(-textSize.X + 10, - textSize.Y / 2), Color.Orange);
+            sprite.DrawString(spriteFont, Count + "", location + new Vector2(Texture.Width, Texture.Height) + new Vector2(-textSize.X + 10, - textSize.Y / 2), Color.Orange);
         }
 
-        public void Add(StackableItem stackableItemToAdd)
+        public void Add(StackableGameItem stackableItemToAdd)
         {
-            count += stackableItemToAdd.count;
-            textSize = spriteFont.MeasureString(count.ToString());
+            Count += stackableItemToAdd.Count;
+            textSize = spriteFont.MeasureString(Count.ToString());
         }
 
         public void Use()
         {
-            count--;
-            textSize = spriteFont.MeasureString(count.ToString());
-            if(count == 0)
+            Count--;
+            textSize = spriteFont.MeasureString(Count.ToString());
+            if(Count == 0)
             {
                 ItemType = ItemType.None;
             }

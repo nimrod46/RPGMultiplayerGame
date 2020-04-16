@@ -4,41 +4,73 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Dialogs;
+using RPGMultiplayerGame.Objects.InventoryObjects;
+using RPGMultiplayerGame.Objects.Items;
+using RPGMultiplayerGame.Objects.Items.Potions;
+using RPGMultiplayerGame.Objects.Items.Weapons;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
-    class Blacksmith : Npc
+    public class Blacksmith : MultipleInteractionNpc
     {
+        private Inventory<GameItemShop> shop;
+
         public Blacksmith() : base(GameManager.EntityId.Blacksmith, 0, 0, 100, GameManager.Instance.PlayerNameFont)
         {
             SyncName = "Blacksmith";
+            minDistanceForObjectInteraction = 40;
             scale = 0.3f;
         }
-
-        public override void InteractWithPlayer(Player player)
+        public override void OnNetworkInitialize()
         {
-            throw new NotImplementedException();
+            base.OnNetworkInitialize();
+            shop = new Inventory<GameItemShop>((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), GameManager.OriginLocationType.Centered, 5, 5)
+            {
+                IsVisible = false
+            };
+            shop.OnItemClickedEvent += Shop_OnItemClickedEvent;
+            dialog = new ComplexDialog(SyncName, "Are you here to buy or what?", false);
+            AddItemToShop(new GameItemShop(new CommonWond(), 50));
+            AddItemToShop(new GameItemShop(new CommonHealthPotion(10), 10));
+            AddItemToShop(new GameItemShop(new CommonSword(), 50));
         }
 
-        public override void CmdChooseDialogOption(Player player, int index)
+        protected override void CmdInteractWithPlayer(Player player, int dialogIndex)
         {
-            throw new NotImplementedException();
+            shop.IsVisible = true;
+            base.CmdInteractWithPlayer(player, dialogIndex);
         }
 
         public override void CmdStopInteractWithPlayer(Player player)
         {
-            throw new NotImplementedException();
+            shop.IsVisible = false;
+            base.CmdStopInteractWithPlayer(player);
         }
 
-        public override void CmdRequestingInteractWithPlayer(Player player, int dialogIndex)
+        public void AddItemToShop(GameItemShop gameItem)
         {
-            throw new NotImplementedException();
+            shop.TryAddItem(gameItem);
         }
 
-        public override void CmdAcceptInteractWithPlayer(Player player)
+        private void Shop_OnItemClickedEvent(GameItemShop item)
         {
-            throw new NotImplementedException();
+            CmdCheckPlayerBuy(ClientManager.Instance.Player, item);
+        }
+
+        public void CmdCheckPlayerBuy(Player player, GameItemShop gameItemShop)
+        {
+            InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), player);
+            if (!isInServer)
+            {
+                if (player.IsAbleToBuy(gameItemShop))
+                {
+                    ItemFactory.GivePlayerItemByItem(player, gameItemShop.GameItem);
+                    player.SyncGold -= gameItemShop.Price;
+                }
+            }
         }
     }
 }

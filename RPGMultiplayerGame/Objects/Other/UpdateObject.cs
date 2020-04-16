@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Networking;
 namespace RPGMultiplayerGame.Objects.Other
 {
-    public abstract class UpdateObject : GameObject
+    public abstract class UpdateObject : GameObject, IGameUpdateable
     {
         public UpdateObject()
         {

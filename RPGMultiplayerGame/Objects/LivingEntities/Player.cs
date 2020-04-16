@@ -11,7 +11,6 @@ using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 using static RPGMultiplayerGame.Managers.GameManager;
-using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -21,15 +20,26 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public delegate void LocalPlayerNameSetEventHandler(Player player);
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
 
-       
+
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
 
+        public long SyncGold
+        {
+            get => syncGold;
+            set
+            {
+                Console.WriteLine(value);
+                syncGold = value;
+                InvokeSyncVarNetworkly(nameof(SyncGold), syncGold);
+            }
+        }
         private Npc interactingWith;
         private Npc requestingInteraction;
         private QuestsMenu playerQuests;
-        private Inventory inventory;
-        private Inventory usableItems;
-        private Inventory equippedItems;
+        private Inventory<GameItem> inventory;
+        private Inventory<GameItem> usableItems;
+        private Inventory<GameItem> equippedItems;
+        private long syncGold;
 
         public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerNameFont, true)
         {
@@ -43,19 +53,49 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (hasAuthority)
             {
                 Layer = GameManager.OWN_PLAYER_LAYER;
+
+                inventory = new Inventory<GameItem>((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), OriginLocationType.Centered, GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER)
+                {
+                    IsVisible = false
+                };
+            inventory.OnItemClickedEvent += Inventory_OnItemClickedEvent;
+
             }
-            inventory = new Inventory((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), OriginLocationType.Centered, GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER)
-            {
-                IsVisible = false
-            };
-            usableItems = new Inventory(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomCentered, 5, 1);
-            equippedItems = new Inventory(new Point(10, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomLeft, 3, 1);
+            usableItems = new Inventory<GameItem>(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomCentered, 5, 1);
+            usableItems.OnItemClickedEvent += UsableItems_OnItemClickedEvent;
+            equippedItems = new Inventory<GameItem>(new Point(10, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomLeft, 3, 1);
             playerQuests = new QuestsMenu(new Vector2(GameManager.Instance.GetMapSize().X, 100), OriginLocationType.TopLeft);
             base.OnNetworkInitialize();
         }
 
-        
-        public override void OnAttackedBy(Entity attacker, float damage)
+        public bool IsAbleToBuy(GameItemShop gameItemShop)
+        {
+            return SyncGold >= gameItemShop.Price;
+        }
+
+        private void Inventory_OnItemClickedEvent(GameItem item)
+        {
+            if (item is InteractiveItem)
+            {
+                if (usableItems.TryAddItem(item))
+                {
+                    inventory.TryRemoveItem(item);
+                }
+            }
+        }
+
+        private void UsableItems_OnItemClickedEvent(GameItem item)
+        {
+            if (item is InteractiveItem)
+            {
+                if (inventory.TryAddItem(item))
+                {
+                    usableItems.TryRemoveItem(item);
+                }
+            }
+        }
+
+        public override void OnAttackedBy(Entity attacker, float damage) //TODO: Remove
         {
             return;
         }
@@ -96,7 +136,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 if (isDown)
                 {
                     Direction direction = (Direction)((int)key - (int)Keys.Left);
-                   InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, direction);
+                    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, direction);
                     currentArrowsKeysPressed.Insert(0, key);
                 }
                 else
@@ -137,53 +177,33 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             requestingInteraction = npc;
         }
 
-        private void AddItemToInventoryLocaly(Item inventoryItem)
+        private void AddItemToInventoryLocaly(GameItem inventoryItem)
         {
             inventory.TryAddItem(inventoryItem);
         }
 
-        public void AddItemToInventory(int itemType, int count)
+        public void AddItemToInventory(ItemType itemType, int count)
         {
             InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType, count);
-            AddItemToInventoryLocaly(ItemFactory.GetItem<Item>((ItemType)itemType, count));
+            if (hasAuthority)
+            {
+                AddItemToInventoryLocaly(ItemFactory.GetItem<GameItem>(itemType, count));
+            }
         }
 
-        public void AddItemToInventory(int itemType)
+        public void AddItemToInventory(ItemType itemType)
         {
             InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType);
-            AddItemToInventoryLocaly(ItemFactory.GetItem<Item>((ItemType)itemType));
+            if (hasAuthority)
+            {
+                AddItemToInventoryLocaly(ItemFactory.GetItem<GameItem>(itemType));
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
             if (hasAuthority)
             {
-                if (IsInventoryVisible)
-                {
-                    if (InputManager.Instance.GetMouseLeftButtonPressed())
-                    {
-                        if (inventory.TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out Item item))
-                        {
-                            if (item is InteractiveItem)
-                            {
-                                if (usableItems.TryAddItem(item))
-                                {
-                                    inventory.TryRemoveItem(item);
-                                }
-                            }
-                        }
-                        else if (usableItems.TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out item))
-                        {
-                            if (item is InteractiveItem)
-                            {
-                                if (inventory.TryAddItem(item))
-                                {
-                                    usableItems.TryRemoveItem(item);
-                                }
-                            }
-                        }
-                    }
-                }
                 if (InputManager.Instance.KeyPressed(Keys.A))
                 {
                     MoveFromUsableItemSlot(1);
@@ -220,18 +240,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         }
                     }
                 }
-                if(requestingInteraction != null)
+                if (requestingInteraction != null)
                 {
                     if (InputManager.Instance.KeyPressed(Keys.Q))
                     {
-                        requestingInteraction.CmdAcceptInteractWithPlayer(this);
+                        requestingInteraction.InvokeCommandMethodNetworkly(nameof(requestingInteraction.InteractionAcceptedByPlayer), this);
+
                     }
                 }
                 if (interactingWith != null)
                 {
                     if (InputManager.Instance.KeyPressed(Keys.D1, Keys.D9, out Keys pressedKey))
                     {
-                        interactingWith.CmdChooseDialogOption(this, pressedKey - Keys.D1);
+                        interactingWith.InvokeCommandMethodNetworkly(nameof(interactingWith.CmdChooseDialogOption), this, pressedKey - Keys.D1);
                     }
                 }
             }
@@ -240,14 +261,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void MoveFromUsableItemSlot(int slot)
         {
-            if (usableItems.TryGetItemInSlot(slot, out Item item))
+            if (usableItems.TryGetItemInSlot(slot, out GameItem item))
             {
                 if (item is Weapon weapon)
                 {
                     EquipeWith(weapon);
                     equippedItems.PutItemInSlot(2, EquippedWeapon);
                 }
-                else if(item is Potion potion)
+                else if (item is Potion potion)
                 {
                     equippedItems.PutItemInSlot(1, potion);
                 }
@@ -257,9 +278,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
-            inventory.Draw(sprite);
-            equippedItems.Draw(sprite);
-            usableItems.Draw(sprite);
             playerQuests.Draw(sprite);
         }
 
@@ -272,7 +290,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected void CmdCheckName(Player client, string name)
         {
             InvokeCommandMethodNetworkly(nameof(CmdCheckName), client, name);
-            if(!isInServer)
+            if (!isInServer)
             {
                 return;
             }
@@ -281,7 +299,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (ServerManager.Instance.IsNameLegal(name))
             {
                 client.CmdSetName(name);
-            } 
+            }
             else
             {
                 client.CmdChooseNameAgain();
@@ -301,7 +319,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public void CmdSetName(string name)
         {
             InvokeCommandMethodNetworkly(nameof(CmdSetName), name);
-            if(!hasAuthority)
+            if (!hasAuthority)
             {
                 return;
             }

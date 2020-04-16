@@ -51,8 +51,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
-
-
            
             if (!IsLookingAtObject)
             {
@@ -60,7 +58,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     return;
                 }
-                if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f || !(GetCurrentEnitytState<State>() == State.Moving)) //next point
+
+                if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f) //next point
                 {
                     currentTime += gameTime.ElapsedGameTime.TotalSeconds;
                     if (currentPointTime != 0 && currentTime < currentPointTime)
@@ -80,6 +79,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     {
                         unit = 1;
                     }
+
                     nextWaypointIndex += unit;
                     if (HavePathToFollow())
                     {
@@ -121,14 +121,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             return GetDistanceFrom(gameObject) <= minDistanceForObjectInteraction;
         }
 
-        protected virtual void LookAtGameObject(GameObject gameObject)
+        protected virtual void LookAtGameObject(GameObject gameObject, int entityState)
         {
             IsLookingAtObject = true;
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = GetDirection(heading);
-            if (direction != (Direction)SyncCurrentDirection || (State)syncCurrentEntityState != State.Idle)
+            if (direction != SyncCurrentDirection || syncCurrentEntityState != entityState)
             {
-                SetCurrentEntityState((int)State.Idle, direction);
+                SetCurrentEntityState(entityState, direction);
             }
         }
 
@@ -138,7 +138,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (nextPoint != Vector2.Zero)
             {
 
-                MoveToPoint(nextPoint.X, nextPoint.Y);
+                //MoveToPoint(nextPoint.X, nextPoint.Y); //TODO: Make idle instead
             }
         }
 
@@ -158,7 +158,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
            
             Vector2 heading = new Vector2(SyncX, SyncY) - point;
             Direction direction = GetDirection(heading);
-            if (!(GetCurrentEnitytState<State>() == State.Moving) || direction != SyncCurrentDirection)
+            if (GetCurrentEnitytState<State>() != State.Moving || direction != SyncCurrentDirection)
             {
                 SetCurrentEntityState((int)State.Moving, direction);
             }
@@ -197,7 +197,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (!path.Contains(waypoint))
             {
                 path.Add(waypoint);
-                nextPoint = waypoint.Point.ToVector2();
+                nextPoint = path[0].Point.ToVector2();
             }
         }
     }

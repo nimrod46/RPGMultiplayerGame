@@ -64,20 +64,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             if (targetPlayers.GetMaxElement().HasValue)
             {
-                InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key);
-            }
-
-            if (IsLookingAtObject)
-            {
                 EquippedWeapon.UpdateWeaponLocation(this);
                 if (GameManager.Instance.GetEntitiesHitBy(EquippedWeapon, this).Any())
                 {
-                    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Idle, SyncCurrentDirection);
+                    InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
                     Attack();
                 }
                 else
                 {
-                    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Moving, SyncCurrentDirection);
+                    InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
                 }
             }
             else
@@ -92,17 +87,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
-        }
-
-        protected override void LookAtGameObject(GameObject gameObject)
-        {
-            IsLookingAtObject = true;
-            if ((State)syncCurrentEntityState == State.Attacking)
-            {
-                return;
-            }
-
-            base.LookAtGameObject(gameObject);
         }
 
         public override void OnAttackedBy(Entity attacker, float damage)

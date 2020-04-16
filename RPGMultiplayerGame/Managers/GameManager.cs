@@ -13,9 +13,9 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using Svg;
 using RPGMultiplayerGame.Objects.Other;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
-using static RPGMultiplayerGame.Objects.InventoryObjects.Inventory;
 using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.Items;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Managers
             Bat
         }
 
-       
+
 
         public enum EffectId
         {
@@ -64,7 +64,15 @@ namespace RPGMultiplayerGame.Managers
 
         static GameManager instance;
 
-
+        public bool IsMouseVisible
+        {
+            get => isMouseVisible; 
+            set
+            {
+                isMouseVisible = value;
+                isMouseVisibleCounter = (isMouseVisible ? isMouseVisibleCounter+1 : isMouseVisibleCounter-1);
+            }
+        }
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
         public Dictionary<EffectId, Dictionary<int, List<GameTexture>>> animationsByEffects = new Dictionary<EffectId, Dictionary<int, List<GameTexture>>>();
         public Dictionary<ItemType, Texture2D> itemTextures = new Dictionary<ItemType, Texture2D>();
@@ -77,29 +85,34 @@ namespace RPGMultiplayerGame.Managers
         public Texture2D InventorySlotBackground;
         public GameMap map; //TODO: Create GameMap with the relevent project class.
         private readonly List<GameObject> gameObjects = new List<GameObject>();
-        private readonly List<GraphicObject> grapichObjects = new List<GraphicObject>();
-        private readonly List<UpdateObject> updateObjects = new List<UpdateObject>();
+        private readonly List<IGameDrawable> grapichObjects = new List<IGameDrawable>();
+        private readonly List<IGameUpdateable> updateObjects = new List<IGameUpdateable>();
         private readonly List<Entity> entities = new List<Entity>();
         private readonly List<Monster> monsters = new List<Monster>();
-        private GraphicsDevice graphicsDevice;
         private readonly string dialogBackgroundPath;
         private readonly string questBackgroundPath;
+        private Game1 game;
+        private bool isMouseVisible;
+
+        private int isMouseVisibleCounter;
 
         private GameManager()
         {
             map = new GameMap();
             dialogBackgroundPath = "Content\\DialogBackground.svg";
             questBackgroundPath = "Content\\QuestBackground.svg";
+            IsMouseVisible = false;
+            isMouseVisibleCounter = 0;
         }
 
-        public void Init(GraphicsDevice graphicsDevice)
+        public void Init(Game1 game)
         {
-            this.graphicsDevice = graphicsDevice;
+            this.game = game;
         }
 
         public Point GetMapSize()
         {
-            return graphicsDevice.PresentationParameters.Bounds.Size;
+            return game.GraphicsDevice.PresentationParameters.Bounds.Size;
         }
 
         public void LoadTextures(GraphicsDevice graphicsDevice, ContentManager content)
@@ -136,7 +149,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        internal Texture2D GetItemByType(Inventory.ItemType value)
+        internal Texture2D GetItemByType(ItemType value)
         {
             return itemTextures[value];
         }
@@ -174,8 +187,9 @@ namespace RPGMultiplayerGame.Managers
             return (entitiesIntersects);
         }
 
-        public void Update(GraphicsDevice graphicsDevice,GameTime gameTime)
+        public void Update(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
+            game.IsMouseVisible = isMouseVisibleCounter > 0;
             for (int i = 0; i < updateObjects.Count; i++)
             {
                 updateObjects[i].Update(gameTime);
@@ -186,12 +200,12 @@ namespace RPGMultiplayerGame.Managers
             {
                 Entity entity = entities[i];
                 Rectangle rectangle = new Rectangle(entity.Location.ToPoint(), entity.BaseSize);
-                float normalizedHieght = (float) rectangle.Bottom / height;
+                float normalizedHieght = (float)rectangle.Bottom / height;
                 if (normalizedHieght > 1)
                 {
                     normalizedHieght = 1;
                 }
-                if(normalizedHieght < 0)
+                if (normalizedHieght < 0)
                 {
                     normalizedHieght = 0;
                 }
@@ -239,7 +253,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void AddGraphicObject(GraphicObject obj)
+        public void AddGraphicObject(IGameDrawable obj)
         {
             lock (grapichObjects)
             {
@@ -247,7 +261,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void RemoveGraphicObject(GraphicObject obj)
+        public void RemoveGraphicObject(IGameDrawable obj)
         {
             lock (grapichObjects)
             {
@@ -255,7 +269,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void AddUpdateObject(UpdateObject obj)
+        public void AddUpdateObject(IGameUpdateable obj)
         {
             lock (updateObjects)
             {
@@ -263,7 +277,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void RemoveUpdateObject(UpdateObject obj)
+        public void RemoveUpdateObject(IGameUpdateable obj)
         {
             lock (updateObjects)
             {
@@ -285,7 +299,7 @@ namespace RPGMultiplayerGame.Managers
                 monsters.Remove(monster);
             }
         }
-        
+
         public Texture2D GetDialogBackgroundByProperties(string name, string text, Color textColor, params string[] options)
         {
             return GetBackgroundByProperties(dialogBackgroundPath, name, text, textColor, options);
@@ -351,7 +365,7 @@ namespace RPGMultiplayerGame.Managers
             var svgDoc = SvgDocument.Open<SvgDocument>(path, null);
             if (width == 0)
             {
-                width = (int) svgDoc.Bounds.Width;
+                width = (int)svgDoc.Bounds.Width;
             }
             if (height == 0)
             {
@@ -359,7 +373,7 @@ namespace RPGMultiplayerGame.Managers
             }
 
 
-            ((SvgTextBase) svgDoc.GetElementById<SvgTextBase>("Name").Children[0]).Text = name;
+            ((SvgTextBase)svgDoc.GetElementById<SvgTextBase>("Name").Children[0]).Text = name;
             int cahrCount = 0;
             SvgTextBase svgText = (SvgTextBase)svgDoc.GetElementById("Text").Children[0].DeepCopy();
             string line = "";
@@ -367,14 +381,14 @@ namespace RPGMultiplayerGame.Managers
             text.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList().ForEach(w =>
             {
                 cahrCount += w.Length;
-                if ((cahrCount ) > 60)
+                if ((cahrCount) > 60)
                 {
                     cahrCount = 0;
                     svgText.Text = line + " " + w;
                     line = "";
                     svgText.Dy[0] = (svgText.Dy[0] + svgText.Y[0]);
                     svgDoc.GetElementById("Text").Children.Add(svgText);
-                    svgText = (SvgTextBase) svgText.DeepCopy();
+                    svgText = (SvgTextBase)svgText.DeepCopy();
                 }
                 else
                 {
@@ -384,7 +398,7 @@ namespace RPGMultiplayerGame.Managers
             svgText.Text = line;
             svgText.Fill = new SvgColourServer(System.Drawing.Color.FromArgb(textColor.Value.A, textColor.Value.R, textColor.Value.G, textColor.Value.B));
             svgText.Dy[0] = (svgText.Dy[0] + svgText.Y[0]);
-            svgDoc.GetElementById("Text").Children.Add(svgText);    
+            svgDoc.GetElementById("Text").Children.Add(svgText);
 
             for (int i = 0; i < options.Length; i++)
             {
@@ -397,7 +411,7 @@ namespace RPGMultiplayerGame.Managers
                 new System.IO.MemoryStream(bufferSize);
             svgDoc.Draw().Save(memoryStream, System.Drawing.Imaging.ImageFormat.Png);
             Texture2D texture = Texture2D.FromStream(
-                graphicsDevice, memoryStream);
+                game.GraphicsDevice, memoryStream);
             return texture;
         }
     }

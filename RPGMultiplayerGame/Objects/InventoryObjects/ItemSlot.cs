@@ -9,9 +9,9 @@ using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items;
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
-    public class ItemSlot
+    public class ItemSlot<T> where T : GameItem
     {
-        public Item Item { get; set; }
+        public T Item { get; set; }
         public Point Location { get; set; }
         public Point Size { get; }
 
@@ -30,7 +30,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             Size = inventorySlotBackground.Bounds.Size;
         }
 
-        public ItemSlot(Point location, Item item)
+        public ItemSlot(Point location, T item)
         {
             Location = location;
             Item = item;

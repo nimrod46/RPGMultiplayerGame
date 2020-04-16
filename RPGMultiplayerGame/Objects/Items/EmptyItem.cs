@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Items
 {
-    public class EmptyItem : Item
+    public class EmptyItem : GameItem
     {
-        public EmptyItem() : base(Inventory.ItemType.None)
+        public EmptyItem() : base(ItemType.None)
         {
         }
     }

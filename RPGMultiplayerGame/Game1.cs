@@ -44,7 +44,7 @@ namespace RPGMultiplayerGame
             lobby.OnConnectionEstablished += Lobby_OnConnecting;
             lobby.OnServerOnline += Lobby_OnServerCreated; ;
             lobby.FormClosing += (e, s) => Exit();
-            GameManager.Instance.Init(graphics.GraphicsDevice);
+            GameManager.Instance.Init(this);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace RPGMultiplayerGame
 
             if (gameTime.IsRunningSlowly)
             {
-              //  Console.WriteLine("RUNING SLOWWWW");
+                Console.WriteLine("RUNING SLOWWWW");
             }
             base.Update(gameTime);
             if (ServerManager.Instance.IsRuning != true)
@@ -94,7 +94,7 @@ namespace RPGMultiplayerGame
                     if (InputManager.Instance.KeyPressed(Microsoft.Xna.Framework.Input.Keys.I))
                     {
                         ClientManager.Instance.Player.IsInventoryVisible = !ClientManager.Instance.Player.IsInventoryVisible;
-                        IsMouseVisible = ClientManager.Instance.Player.IsInventoryVisible;
+                       // IsMouseVisible = ClientManager.Instance.Player.IsInventoryVisible;
                     }                    
                 }
             }

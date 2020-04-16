@@ -30,7 +30,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public abstract void CmdRequestingInteractWithPlayer(Player player, int dialogIndex);
 
-        public abstract void CmdAcceptInteractWithPlayer(Player player);
+        public abstract void InteractionAcceptedByPlayer(Player player);
 
         public abstract void InteractWithPlayer(Player player);
 

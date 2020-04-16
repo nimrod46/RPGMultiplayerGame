@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Items.Potions
 {
-    public abstract class Potion : StackableItem
+    public abstract class Potion : StackableGameItem
     {
         private readonly Action<Entity> action;
-        public Potion(Inventory.ItemType itemType, int count, Action<Entity> action) : base(itemType, count)
+        public Potion(ItemType itemType, int count, Action<Entity> action) : base(itemType, count)
         {
             this.action = action;
         }

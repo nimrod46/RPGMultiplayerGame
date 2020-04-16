@@ -10,8 +10,10 @@ using RPGMultiplayerGame.Managers;
 
 namespace RPGMultiplayerGame.Objects.Other
 {
-    public abstract class GraphicObject : UpdateObject
+    public abstract class GraphicObject : UpdateObject, IGameDrawable
     {
+        
+
         public float Layer { get; set; }
         public float DefaultLayer { get; set; }
 
@@ -20,7 +22,7 @@ namespace RPGMultiplayerGame.Objects.Other
         protected Vector2 drawLocation;
         protected float scale;
         protected bool isVisible;
-
+        
 
         public GraphicObject()
         {
@@ -35,7 +37,10 @@ namespace RPGMultiplayerGame.Objects.Other
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            GameManager.Instance.AddGraphicObject(this);
+            if (!isInServer)
+            {
+                GameManager.Instance.AddGraphicObject(this);
+            }
             DefaultLayer = Layer;
         }
 
@@ -63,6 +68,11 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             GameManager.Instance.RemoveGraphicObject(this);
             base.OnDestroyed(identity);
+        }
+
+        public void Draw(GameTime gameTime)
+        {
+            throw new NotImplementedException();
         }
     }
 }
