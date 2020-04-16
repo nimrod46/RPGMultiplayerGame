@@ -204,13 +204,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public override void SetCurrentEntityState(int entityState, int direction)
+        public override void SetCurrentEntityState(int entityState, Direction direction)
         {
             base.SetCurrentEntityState(entityState, direction);
             switch ((State)syncCurrentEntityState)
             {
                 case State.Attacking:
-                    AttackAtDir((Direction)direction);
+                    AttackAtDir(direction);
                     break;
             }
         }

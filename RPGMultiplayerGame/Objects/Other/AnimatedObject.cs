@@ -58,7 +58,7 @@ namespace RPGMultiplayerGame.Objects.Other
             }
         }
 
-        public int SyncCurrentDirection { get; set; }
+        public Direction SyncCurrentDirection { get; set; }
 
         protected Dictionary<int, List<GameTexture>> animationsByType = new Dictionary<int, List<GameTexture>>();
         private int syncCurrentAnimationType;
@@ -75,7 +75,7 @@ namespace RPGMultiplayerGame.Objects.Other
             speed = 0.5f / 10;
             animationTimeDelay = 100;
             shouldLoopAnimation = true;
-            SyncCurrentDirection = (int)Direction.Down;
+            SyncCurrentDirection = Direction.Down;
             currentAnimationIndex = 0;
         }
 
@@ -131,7 +131,7 @@ namespace RPGMultiplayerGame.Objects.Other
         protected void AnimationAtDir(Direction direction, int dirToAnimationIndex, bool shouldLoopAnimation)
         {
             currentAnimationIndex = 0;
-            SyncCurrentDirection = (int)direction;
+            SyncCurrentDirection = direction;
             SyncCurrentAnimationType = (int)direction + dirToAnimationIndex;
             this.shouldLoopAnimation = shouldLoopAnimation;
         }

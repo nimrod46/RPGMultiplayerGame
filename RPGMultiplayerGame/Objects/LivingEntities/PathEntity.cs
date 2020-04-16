@@ -128,7 +128,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Direction direction = GetDirection(heading);
             if (direction != (Direction)SyncCurrentDirection || (State)syncCurrentEntityState != State.Idle)
             {
-                SetCurrentEntityState((int)State.Idle, (int)direction);
+                SetCurrentEntityState((int)State.Idle, direction);
             }
         }
 
@@ -158,9 +158,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
            
             Vector2 heading = new Vector2(SyncX, SyncY) - point;
             Direction direction = GetDirection(heading);
-            if (!(GetCurrentEnitytState<State>() == State.Moving) || (int) direction != SyncCurrentDirection)
+            if (!(GetCurrentEnitytState<State>() == State.Moving) || direction != SyncCurrentDirection)
             {
-                SetCurrentEntityState((int)State.Moving, (int)direction);
+                SetCurrentEntityState((int)State.Moving, direction);
             }
         }       
 

@@ -29,16 +29,16 @@ namespace RPGMultiplayerGame.Objects.Other
             Layer = GameManager.MOVING_OJECT_LAYER;
         }
 
-        public virtual void SetCurrentEntityState(int entityState, int direction)
+        public virtual void SetCurrentEntityState(int entityState, Direction direction)
         {
             syncCurrentEntityState = entityState;
             switch ((State)syncCurrentEntityState)
             {
                 case State.Idle:
-                    IdleAtDir((Direction)direction);
+                    IdleAtDir(direction);
                     break;
                 case State.Moving:
-                    MoveAtDir((Direction)direction);
+                    MoveAtDir(direction);
                     break;
             }
             Location = new Vector2(SyncX, SyncY);

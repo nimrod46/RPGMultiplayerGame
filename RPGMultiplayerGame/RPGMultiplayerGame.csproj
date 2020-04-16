@@ -91,9 +91,9 @@
     <Compile Include="DictionarySortedByValue.cs" />
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
-    <Compile Include="Objects\Dialogs\QuestAssignDialog.cs" />
-    <Compile Include="Objects\Dialogs\QuestCompletedDialog.cs" />
-    <Compile Include="Objects\Dialogs\QuestInProgressDialog.cs" />
+    <Compile Include="Objects\Dialogs\DialogQuestAssign.cs" />
+    <Compile Include="Objects\Dialogs\DialogQuestCompleted.cs" />
+    <Compile Include="Objects\Dialogs\DialogQuestInProgress.cs" />
     <Compile Include="Objects\InventoryObjects\ItemSlot.cs" />
     <Compile Include="Objects\Items\EmptyItem.cs" />
     <Compile Include="Objects\Items\InteractiveItem.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="Objects\QuestsObjects\KillQuest.cs" />
     <Compile Include="Objects\QuestsObjects\QuestsMenu.cs" />
     <Compile Include="Objects\QuestsObjects\Quest.cs" />
-    <Compile Include="Objects\Dialogs\QuestDialog.cs" />
+    <Compile Include="Objects\Dialogs\DialogQuest.cs" />
     <Compile Include="Objects\Dialogs\SimpleDialog.cs" />
     <Compile Include="Objects\Dialogs\ComplexDialog.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
