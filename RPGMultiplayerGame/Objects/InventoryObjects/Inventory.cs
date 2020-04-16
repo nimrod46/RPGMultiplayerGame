@@ -131,7 +131,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         public bool TryAddItem(T itemToAdd)
         {
-                    Console.WriteLine("ADDED {0} POTIONS", itemToAdd);
             if (itemToAdd is StackableGameItem)
             {
                 if (HaveStackbleItem(itemToAdd.ItemType, out StackableGameItem stackableItem))

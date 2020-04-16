@@ -38,7 +38,6 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
 
         private void OnEnitytKill(Entity killedEntity)
         {
-            Console.WriteLine(SyncCurrentKills);
             if (killedEntity.EntityId == entityId)
             {
                 if (SyncCurrentKills != numberOfKills - 1)

@@ -144,7 +144,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
-            Console.WriteLine("STOPPP");
+
             player.StopInteractingWithNpc();
             currentComplexDialog = null;
             currentSimpleDialog = null;

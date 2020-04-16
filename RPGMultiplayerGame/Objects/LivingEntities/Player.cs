@@ -28,7 +28,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             get => syncGold;
             set
             {
-                Console.WriteLine(value);
                 syncGold = value;
                 InvokeSyncVarNetworkly(nameof(SyncGold), syncGold);
             }
