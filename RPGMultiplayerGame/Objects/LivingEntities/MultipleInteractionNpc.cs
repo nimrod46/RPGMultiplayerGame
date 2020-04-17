@@ -123,11 +123,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     playersProgres[player.GetName()] = currentComplexDialog.Index;
                 }
                 curentInteractingPlayersDialogs[player] = currentComplexDialog;
-                InvokeCommandMethodNetworkly(nameof(CmdShowNextDialogForPlayer), player.OwnerId, player, currentComplexDialog.Index);
+                InvokeCommandMethodNetworkly(nameof(CmdShowNextDialogForPlayer), player.OwnerId, currentComplexDialog.Index);
             }
         }
 
-        private void CmdShowNextDialogForPlayer(Player player, int dialogIndex)
+        protected void CmdShowNextDialogForPlayer(int dialogIndex)
         {
             currentComplexDialog = dialog.GetDialogByIndex(dialogIndex);
         }
