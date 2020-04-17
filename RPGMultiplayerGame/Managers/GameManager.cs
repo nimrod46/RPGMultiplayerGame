@@ -66,11 +66,19 @@ namespace RPGMultiplayerGame.Managers
 
         public bool IsMouseVisible
         {
-            get => isMouseVisible; 
+            get
+            {
+                return isMouseVisibleCounter > 0;
+            }
+
             set
             {
-                isMouseVisible = value;
-                isMouseVisibleCounter = (isMouseVisible ? isMouseVisibleCounter+1 : isMouseVisibleCounter-1);
+                isMouseVisibleCounter = (value ? isMouseVisibleCounter + 1 : isMouseVisibleCounter - 1);
+                if(isMouseVisibleCounter < 0)
+                {
+                    isMouseVisibleCounter = 0;
+                }
+
             }
         }
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
@@ -92,8 +100,6 @@ namespace RPGMultiplayerGame.Managers
         private readonly string dialogBackgroundPath;
         private readonly string questBackgroundPath;
         private Game1 game;
-        private bool isMouseVisible;
-
         private int isMouseVisibleCounter;
 
         private GameManager()
@@ -108,6 +114,32 @@ namespace RPGMultiplayerGame.Managers
         public void Init(Game1 game)
         {
             this.game = game;
+        }
+
+        public void Update(GraphicsDevice graphicsDevice, GameTime gameTime)
+        {
+            game.IsMouseVisible = IsMouseVisible;
+            for (int i = 0; i < updateObjects.Count; i++)
+            {
+                updateObjects[i].Update(gameTime);
+            }
+            int height = graphicsDevice.Viewport.Height;
+
+            for (int i = 0; i < entities.Count; i++)
+            {
+                Entity entity = entities[i];
+                Rectangle rectangle = new Rectangle(entity.Location.ToPoint(), entity.BaseSize);
+                float normalizedHieght = (float)rectangle.Bottom / height;
+                if (normalizedHieght > 1)
+                {
+                    normalizedHieght = 1;
+                }
+                if (normalizedHieght < 0)
+                {
+                    normalizedHieght = 0;
+                }
+                entity.Layer = 1 - normalizedHieght;
+            }
         }
 
         public Point GetMapSize()
@@ -187,31 +219,7 @@ namespace RPGMultiplayerGame.Managers
             return (entitiesIntersects);
         }
 
-        public void Update(GraphicsDevice graphicsDevice, GameTime gameTime)
-        {
-            game.IsMouseVisible = isMouseVisibleCounter > 0;
-            for (int i = 0; i < updateObjects.Count; i++)
-            {
-                updateObjects[i].Update(gameTime);
-            }
-            int height = graphicsDevice.Viewport.Height;
-
-            for (int i = 0; i < entities.Count; i++)
-            {
-                Entity entity = entities[i];
-                Rectangle rectangle = new Rectangle(entity.Location.ToPoint(), entity.BaseSize);
-                float normalizedHieght = (float)rectangle.Bottom / height;
-                if (normalizedHieght > 1)
-                {
-                    normalizedHieght = 1;
-                }
-                if (normalizedHieght < 0)
-                {
-                    normalizedHieght = 0;
-                }
-                entity.Layer = 1 - normalizedHieght;
-            }
-        }
+        
 
         public void Draw(SpriteBatch sprite)
         {

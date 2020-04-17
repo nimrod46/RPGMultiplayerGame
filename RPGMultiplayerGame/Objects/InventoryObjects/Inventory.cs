@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         private readonly ItemSlot<T>[] inventoryItems;
         private bool isVisible;
 
-        public Inventory(Point origin, OriginLocationType originType, int columns, int rows)
+        public Inventory(Point origin, OriginLocationType originType, int columns, int rows, bool defaultVisibility)
         {
             ItemSlot<T> inventoryItem = new ItemSlot<T>();
             switch (originType)
@@ -48,7 +48,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                     break;
             }
             inventoryItems = new ItemSlot<T>[columns * rows];
-            IsVisible = true;
+            isVisible = defaultVisibility;
             int index = 0;
             for (int j = 0; j < rows; j++)
             {
@@ -64,7 +64,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
             GameManager.Instance.AddGraphicObject(this);
             GameManager.Instance.AddUpdateObject(this);
-            ServerManager.Instance.AddServerGameObject(this);
         }
 
         public void Update(GameTime gameTime)
