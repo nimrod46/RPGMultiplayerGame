@@ -29,11 +29,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             dialog = new ComplexDialog(SyncName, "Hi! can you help me?", false);
             dialog
                 .AddAnswerOption("Yes", "Thank You!", false)
-                .AddAnswerOption("....", "Lets get started", false)
-                .AddAnswerOption<DialogQuestAssign>("Got it", "So you need to kill for me some bats", new JoeKillQuest())
-                .AddAnswerOption<DialogQuestInProgress>("Okay", "Tell me when you are done", "Ammm seams like you didn't finish, do you need anything?")
-                .AddAnswerOption<DialogQuestCompleted>("Ok finished", "Good job!!! Here is your reward")
-                .AddAnswerOption<ComplexDialog>("Thank you", "Be well", true);
+                .AddAnswerOption("....", new QuestDialog("Lets get started", new JoeKillQuest(), "So you need to kill for me some bats", "Tell me when you are done", "Ammmm.... seams like you did not finished", "Good job!! here is your reward"))
+                .AddAnswerOption("Thank you", "Be well", true);
             dialog.AddAnswerOption("No", "Ok", false);
         }
     }

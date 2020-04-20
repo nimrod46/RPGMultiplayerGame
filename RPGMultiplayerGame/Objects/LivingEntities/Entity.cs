@@ -50,10 +50,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     {
                         value = maxHealth;
                     }
+                    InvokeSyncVarNetworkly(nameof(SyncHealth), value);
                 }
                 syncHealth = value;
-
-                InvokeSyncVarNetworkly(nameof(SyncHealth), value);
                 OnHealthSet();
             }
         }

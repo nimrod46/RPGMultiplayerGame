@@ -38,28 +38,40 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
         }
 
+        public ComplexDialog(string text, bool isProgressing) : base(text)
+        {
+            Index = 0;
+            Name = "";
+            IsProgressing = isProgressing;
+            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
+        }
+
+        public virtual ComplexDialog GetLast()
+        {
+            return this;
+        }
+
         public virtual ComplexDialog AddAnswerOption(string optionText, string text, bool isProgressing)
         {
             return AddAnswerOption<ComplexDialog>(optionText, text, isProgressing);
         }
 
-        public virtual T AddAnswerOption<T>(string optionText, params object[] args) where T : ComplexDialog
+        public ComplexDialog AddAnswerOption<T>(string optionText, params object[] args) where T : ComplexDialog
         {
-            return AddAnswerOptionAt<T>(optionText, dialogsByAnswers.Count, args);
+            T dialog = (T)Activator.CreateInstance(typeof(T), args);
+            return AddAnswerOption(optionText, dialog);
         }
 
-        public virtual T AddAnswerOptionAt<T>(string optionText, int index, params object[] args) where T : ComplexDialog
+        public ComplexDialog AddAnswerOption<T>(string optionText, T dialog) where T : ComplexDialog
         {
-            var v = args.ToList();
-            v.Insert(0, GetDialogsCount(this) + 1 + Index);
-            v.Insert(1, Name);
-            T dialog = (T)Activator.CreateInstance(typeof(T), v.ToArray());
-            dialogsByAnswers.Insert(index, new KeyValuePair<string, ComplexDialog>(optionText, dialog));
+            dialog.Index = GetDialogsCount(this) + 1 + Index;
+            dialog.Name = Name;
+            dialogsByAnswers.Add(new KeyValuePair<string, ComplexDialog>(optionText, dialog));
             background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
-            return dialog;
+            return dialog.GetLast();
         }
 
-       
+
 
         public virtual ComplexDialog GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
         {

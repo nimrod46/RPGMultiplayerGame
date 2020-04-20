@@ -9,23 +9,18 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
-    public class DialogQuestAssign : DialogQuest
+    public class ActionDialog : ComplexDialog
     {
+        private readonly Action<Player, int> action;
 
-        public DialogQuestAssign(int index, string name, string text, Quest quest) : base(index, name, text, false, quest)
+        public ActionDialog(string text, Action<Player, int> action) : base(text, false)
         {
+            this.action = action;
         }
 
-        public new T AddAnswerOption<T>(string optionText, params object[] args) where T : DialogQuestInProgress
-        {
-            return base.AddAnswerOption<T>(optionText, args);
-        }
         public override ComplexDialog GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
-        {
-            if (answerIndex == 0)
-            {
-                ServerManager.Instance.AddQuest(quest, interactivePlayer);
-            }
+        {   
+            action.Invoke(interactivePlayer, answerIndex);
             return base.GetNextDialogByAnswer(interactivePlayer, answerIndex);
         }
     }

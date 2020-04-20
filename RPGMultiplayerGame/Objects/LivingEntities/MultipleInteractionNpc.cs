@@ -104,6 +104,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void CmdInteractWithPlayer(Player player, int dialogIndex)
         {
+            currentSimpleDialog = null;
             currentComplexDialog = dialog.GetDialogByIndex(dialogIndex);
             player.InteractWithNpc(this);
         }
