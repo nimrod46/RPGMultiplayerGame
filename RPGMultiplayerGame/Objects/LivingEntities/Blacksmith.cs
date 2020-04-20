@@ -11,6 +11,7 @@ using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
+using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -27,7 +28,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            shop = new Inventory<GameItemShop>((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), GameManager.OriginLocationType.Centered, 5, 5, false);
+            shop = new Inventory<GameItemShop>((GameManager.Instance.GetMapSize().ToVector2() / 2), PositionType.Centered, 5, 5, false);
             shop.OnItemClickedEvent += Shop_OnItemClickedEvent;
             dialog = new ComplexDialog(SyncName, "Are you here to buy or what?", false);
             AddItemToShop(new GameItemShop(new CommonWond(), 50));

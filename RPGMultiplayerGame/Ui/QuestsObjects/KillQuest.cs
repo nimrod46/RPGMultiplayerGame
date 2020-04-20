@@ -1,10 +1,12 @@
-﻿using RPGMultiplayerGame.Objects.LivingEntities;
+﻿using Microsoft.Xna.Framework;
+using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Managers.GameManager;
+using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
@@ -22,7 +24,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         private readonly EntityId entityId;
         private readonly int numberOfKills;
         private int currentKills;
-        public KillQuest(string npcName, string text, Action<Player> reward, EntityId entityId, int numberOfKills) : base(npcName, text, reward)
+        public KillQuest(Vector2 origin, PositionType positionType, string npcName, string text, Action<Player> reward, EntityId entityId, int numberOfKills) : base(origin, positionType, npcName, text, reward)
         {
             this.entityId = entityId;
             this.numberOfKills = numberOfKills;

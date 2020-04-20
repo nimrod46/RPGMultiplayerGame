@@ -35,14 +35,6 @@ namespace RPGMultiplayerGame.Managers
             FireBall
         }
 
-        public enum OriginLocationType
-        {
-            Centered,
-            ButtomLeft,
-            ButtomCentered,
-            TopLeft
-        }
-
         public static GameManager Instance
         {
             get
@@ -369,7 +361,7 @@ namespace RPGMultiplayerGame.Managers
 
         private Texture2D SVGToTexture2D(string path, string name, string text, Color? textColor = null, int width = 0, int height = 0, params string[] options)
         {
-            textColor = textColor ?? Color.White;
+            textColor ??= Color.White;
             var svgDoc = SvgDocument.Open<SvgDocument>(path, null);
             if (width == 0)
             {

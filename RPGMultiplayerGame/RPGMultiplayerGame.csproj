@@ -93,8 +93,8 @@
     <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Objects\Dialogs\ActionDialog.cs" />
     <Compile Include="Objects\Dialogs\DialogByAnswerIndex.cs" />
-    <Compile Include="Objects\Dialogs\FullDialogQuest.cs" />
-    <Compile Include="Objects\InventoryObjects\ItemSlot.cs" />
+    <Compile Include="Objects\Dialogs\QuestDialog1.cs" />
+    <Compile Include="Ui\InventoryObjects\ItemSlotUi.cs" />
     <Compile Include="Objects\Items\EmptyItem.cs" />
     <Compile Include="Objects\Items\InteractiveItem.cs" />
     <Compile Include="Objects\Items\Potions\CommonHealthPotion.cs" />
@@ -107,16 +107,16 @@
     <Compile Include="Objects\LivingEntities\Monster.cs" />
     <Compile Include="Objects\LivingEntities\Bat.cs" />
     <Compile Include="Objects\LivingEntities\PathEntity.cs" />
-    <Compile Include="Objects\InventoryObjects\Inventory.cs" />
+    <Compile Include="Ui\InventoryObjects\Inventory.cs" />
     <Compile Include="Objects\Items\StackableItem.cs" />
     <Compile Include="Objects\Items\GameItem.cs" />
     <Compile Include="Objects\Other\IGameDrawable.cs" />
     <Compile Include="Objects\Other\IGameUpdateable.cs" />
     <Compile Include="Objects\Other\MovingObject.cs" />
-    <Compile Include="Objects\QuestsObjects\Quests\JoeKillQuest.cs" />
-    <Compile Include="Objects\QuestsObjects\KillQuest.cs" />
-    <Compile Include="Objects\QuestsObjects\QuestsMenu.cs" />
-    <Compile Include="Objects\QuestsObjects\Quest.cs" />
+    <Compile Include="Ui\QuestsObjects\Quests\JoeKillQuest.cs" />
+    <Compile Include="Ui\QuestsObjects\KillQuest.cs" />
+    <Compile Include="Ui\QuestsObjects\QuestsMenu.cs" />
+    <Compile Include="Ui\QuestsObjects\Quest.cs" />
     <Compile Include="Objects\Dialogs\SimpleDialog.cs" />
     <Compile Include="Objects\Dialogs\ComplexDialog.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
@@ -160,6 +160,8 @@
     </Compile>
     <Compile Include="Managers\XmlManager.cs" />
     <Compile Include="TextInput.cs" />
+    <Compile Include="Ui\QuestsObjects\QuestUi.cs" />
+    <Compile Include="Ui\UiComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Fizzler, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4ebff4844e382110, processorArchitecture=MSIL">

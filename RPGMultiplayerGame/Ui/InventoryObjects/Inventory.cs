@@ -11,11 +11,13 @@ using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
+using RPGMultiplayerGame.Ui;
 using static RPGMultiplayerGame.Managers.GameManager;
+using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
-    public class Inventory<T> : IGameDrawable, IGameUpdateable where T : GameItem
+    public class Inventory<T> : UiComponent, IGameUpdateable where T : GameItem
     {
         public delegate void ItemClickedEventHandler(T item);
         public event ItemClickedEventHandler OnItemClickedEvent;
@@ -29,35 +31,22 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
         }
 
-        private readonly ItemSlot<T>[] inventoryItems;
+        private readonly ItemSlotUi<T>[] inventoryItems;
         private bool isVisible;
 
-        public Inventory(Point origin, OriginLocationType originType, int columns, int rows, bool defaultVisibility)
+        public Inventory(Vector2 origin, PositionType positionType, int columns, int rows, bool defaultVisibility) : base(origin, positionType)
         {
-            ItemSlot<T> inventoryItem = new ItemSlot<T>();
-            switch (originType)
-            {
-                case OriginLocationType.Centered:
-                    origin = (origin.ToVector2() - new Vector2(inventoryItem.Size.X * columns / 2, inventoryItem.Size.Y * rows / 2)).ToPoint();
-                    break;
-                case OriginLocationType.ButtomLeft:
-                    origin = (origin.ToVector2() - new Vector2(0, inventoryItem.Size.Y * rows)).ToPoint();
-                    break;
-                case OriginLocationType.ButtomCentered:
-                    origin = (origin.ToVector2() - new Vector2(inventoryItem.Size.X * columns / 2, inventoryItem.Size.Y * rows)).ToPoint();
-                    break;
-            }
-            inventoryItems = new ItemSlot<T>[columns * rows];
             isVisible = defaultVisibility;
+            ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType);
+            Size = inventoryItem.Size * new Vector2(columns, rows);
+            inventoryItems = new ItemSlotUi<T>[columns * rows];
             int index = 0;
             for (int j = 0; j < rows; j++)
             {
                 for (int i = 0; i < columns; i++)
                 {
-                    inventoryItem = new ItemSlot<T>();
-                    Vector2 location = new Vector2(i * inventoryItem.Size.X, j * inventoryItem.Size.Y) + origin.ToVector2();
-                    inventoryItem.Location = location.ToPoint();
-                    inventoryItem.Item = ItemFactory.GetEmptyItem<T>();
+                    inventoryItem = new ItemSlotUi<T>(Position, PositionType.TopLeft, ItemFactory.GetEmptyItem<T>());
+                    inventoryItem.Position += new Vector2(i * inventoryItem.Size.X, j * inventoryItem.Size.Y);
                     inventoryItems[index] = inventoryItem;
                     index++;
                 }
@@ -81,7 +70,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
         }
 
-        public void Draw(SpriteBatch sprite)
+        public override void Draw(SpriteBatch sprite)
         {
             if (IsVisible)
             {
@@ -118,7 +107,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 {
                     continue;
                 }
-                Rectangle rectangle = new Rectangle(inventoryItem.Location, inventoryItem.Size);
+                Rectangle rectangle = new Rectangle(inventoryItem.Position.ToPoint(), inventoryItem.Size.ToPoint());
                 if (rectangle.Intersects(rect))
                 {
                     item = inventoryItem.Item;
@@ -166,7 +155,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         internal bool TryGetItemInSlot(int slot, out T item)
         {
-            ItemSlot<T> itemSlot = inventoryItems[slot - 1];
+            ItemSlotUi<T> itemSlot = inventoryItems[slot - 1];
             item = itemSlot.Item;
             return item != null;
         }

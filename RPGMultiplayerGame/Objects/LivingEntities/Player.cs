@@ -11,6 +11,7 @@ using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 using static RPGMultiplayerGame.Managers.GameManager;
+using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -53,17 +54,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 Layer = GameManager.OWN_PLAYER_LAYER;
 
-                inventory = new Inventory<GameItem>((GameManager.Instance.GetMapSize().ToVector2() / 2).ToPoint(), OriginLocationType.Centered, GameManager.INVENTORY_COLUMNS_NUMBER, GameManager.INVENTORY_ROWS_NUMBER, false)
+                inventory = new Inventory<GameItem>((GameManager.Instance.GetMapSize().ToVector2() / 2), PositionType.Centered, INVENTORY_COLUMNS_NUMBER, INVENTORY_ROWS_NUMBER, false)
                 {
                     IsVisible = false
                 };
             inventory.OnItemClickedEvent += Inventory_OnItemClickedEvent;
 
             }
-            usableItems = new Inventory<GameItem>(new Point(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomCentered, 5, 1, true);
+            usableItems = new Inventory<GameItem>(new Vector2(GameManager.Instance.GetMapSize().X / 2, GameManager.Instance.GetMapSize().Y - 10), PositionType.ButtomCentered, 5, 1, true);
             usableItems.OnItemClickedEvent += UsableItems_OnItemClickedEvent;
-            equippedItems = new Inventory<GameItem>(new Point(10, GameManager.Instance.GetMapSize().Y - 10), OriginLocationType.ButtomLeft, 3, 1, true);
-            playerQuests = new QuestsMenu(new Vector2(GameManager.Instance.GetMapSize().X, 100), OriginLocationType.TopLeft);
+            equippedItems = new Inventory<GameItem>(new Vector2(10, GameManager.Instance.GetMapSize().Y - 10), PositionType.ButtomLeft, 3, 1, true);
+            playerQuests = new QuestsMenu(new Vector2(GameManager.Instance.GetMapSize().X, 100), PositionType.TopRight);
             base.OnNetworkInitialize();
         }
 

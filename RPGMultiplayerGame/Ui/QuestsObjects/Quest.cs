@@ -3,11 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
@@ -22,33 +24,72 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
                 InvokeSyncVarNetworkly(nameof(SyncIsFinished), isFinished);
                 if (isFinished)
                 {
-                    textColor = Color.LawnGreen;
-                    background = GameManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor);
+                    questUi.MarkFinished();
                 }
             }
         }
 
+        public Vector2 Position
+        {
+            get { return questUi.Position; }
+            set
+            {
+                questUi.Position = value;
+            }
+        }
+
+        public Vector2 Origin
+        {
+            get { return questUi.Origin; }
+            set
+            {
+                questUi.Origin = value;
+            }
+        }
+
+        public Vector2 Size
+        {
+            get { return questUi.Size; }
+            set
+            {
+                questUi.Size = value;
+            }
+        }
+
+        public PositionType PositionType
+        {
+            get { return questUi.OriginType; }
+            set
+            {
+                questUi.OriginType = value;
+            }
+        }
+
+        private readonly PositionType positionType;
+        private readonly Vector2 origin;
         protected Player player;
+        private QuestUi questUi;
         private readonly string npcName;
         private readonly string text;
         private readonly Action<Player> reward;
         private Color textColor;
         private bool isFinished;
-        private Texture2D background;
 
-        public Quest(string npcName, string text, Action<Player> reward)
+        public Quest(Vector2 origin, PositionType positionType, string npcName, string text, Action<Player> reward)
         {
+            this.origin = origin;
+            this.positionType = positionType;
             this.npcName = npcName;
             this.text = text;
             this.reward = reward;
-            SyncIsFinished = false;
             textColor = Color.Blue;
+            SyncIsFinished = false;
             OnNetworkInitializeEvent += OnNetworkInitialize;
         }
 
         private void OnNetworkInitialize()
         {
-            background = GameManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor);
+            questUi = new QuestUi(origin, positionType, npcName, text, textColor);
         }
 
 
@@ -68,14 +109,9 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             reward.Invoke(player);
         }
 
-        public void DrawAt(SpriteBatch sprite, Vector2 position)
+        public void Draw(SpriteBatch sprite)
         {
-            sprite.Draw(background, position, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, GameManager.GUI_LAYER);
-        }
-
-        public Vector2 GetTextSize()
-        {
-            return background.Bounds.Size.ToVector2();
+            questUi.Draw(sprite);
         }
     }
 }
