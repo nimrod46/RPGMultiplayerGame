@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Ui
 {
-    class QuestUi : UiComponent
+    class QuestUi : UiTextureComponent
     {
         private Color textColor;
         private readonly string npcName;
         private readonly string text;
 
-        public QuestUi(Vector2 origin, PositionType originType, string npcName, string text, Color textColor) : base(origin, originType, GameManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor))
+        public QuestUi(Func<Point, Vector2> origin, PositionType originType, string npcName, string text, Color textColor) : base(origin, originType, GameManager.GUI_LAYER, GameManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor))
         {
             this.npcName = npcName;
             this.text = text;

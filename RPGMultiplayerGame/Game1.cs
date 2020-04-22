@@ -27,6 +27,7 @@ namespace RPGMultiplayerGame
             gameForm = Control.FromHandle(Window.Handle) as Form;
             IsFixedTimeStep = true;
             InactiveSleepTime = new TimeSpan(0);
+            Window.AllowUserResizing = true;
         }
 
         /// <summary>
@@ -45,6 +46,9 @@ namespace RPGMultiplayerGame
             lobby.OnServerOnline += Lobby_OnServerCreated; ;
             lobby.FormClosing += (e, s) => Exit();
             GameManager.Instance.Init(this);
+            Window.ClientSizeChanged += (r ,e) => GameManager.Instance.OnResize();
+
+
         }
 
         /// <summary>
@@ -75,8 +79,13 @@ namespace RPGMultiplayerGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Microsoft.Xna.Framework.Input.Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
                 Exit();
+            if (InputManager.Instance.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
+            {
+                graphics.IsFullScreen = false;
+                graphics.ApplyChanges();
+            }
 
             NetworkBehavior.RunActionsSynchronously();
 
@@ -129,6 +138,10 @@ namespace RPGMultiplayerGame
         private void Instance_OnStartGame(object sender, EventArgs e)
         {
             gameForm.Show();
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
         }
     }
 }

@@ -34,7 +34,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         private readonly ItemSlotUi<T>[] inventoryItems;
         private bool isVisible;
 
-        public Inventory(Vector2 origin, PositionType positionType, int columns, int rows, bool defaultVisibility) : base(origin, positionType)
+        public Inventory(Func<Point, Vector2> origin, PositionType positionType, int columns, int rows, bool defaultVisibility) : base(origin, positionType, GameManager.GUI_LAYER)
         {
             isVisible = defaultVisibility;
             ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType);
@@ -45,8 +45,13 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             {
                 for (int i = 0; i < columns; i++)
                 {
-                    inventoryItem = new ItemSlotUi<T>(Position, PositionType.TopLeft, ItemFactory.GetEmptyItem<T>());
-                    inventoryItem.Position += new Vector2(i * inventoryItem.Size.X, j * inventoryItem.Size.Y);
+                    int x = i; int y = j;
+                    inventoryItem = new ItemSlotUi<T>((windowSize) =>
+                    {
+                        Console.WriteLine(i);
+                        return Position + new Vector2(x * inventoryItem.Size.X, y * inventoryItem.Size.Y);
+                    }
+                    , PositionType.TopLeft, ItemFactory.GetEmptyItem<T>());
                     inventoryItems[index] = inventoryItem;
                     index++;
                 }

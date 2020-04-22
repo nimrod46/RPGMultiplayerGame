@@ -94,6 +94,7 @@
     <Compile Include="Objects\Dialogs\ActionDialog.cs" />
     <Compile Include="Objects\Dialogs\DialogByAnswerIndex.cs" />
     <Compile Include="Objects\Dialogs\QuestDialog1.cs" />
+    <Compile Include="Ui\HealthBar.cs" />
     <Compile Include="Ui\InventoryObjects\ItemSlotUi.cs" />
     <Compile Include="Objects\Items\EmptyItem.cs" />
     <Compile Include="Objects\Items\InteractiveItem.cs" />
@@ -162,6 +163,8 @@
     <Compile Include="TextInput.cs" />
     <Compile Include="Ui\QuestsObjects\QuestUi.cs" />
     <Compile Include="Ui\UiComponent.cs" />
+    <Compile Include="Ui\UiTextComponent.cs" />
+    <Compile Include="Ui\UiTextureComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Fizzler, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4ebff4844e382110, processorArchitecture=MSIL">

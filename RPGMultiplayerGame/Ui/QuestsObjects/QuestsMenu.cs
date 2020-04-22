@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
     {
         private readonly List<Quest> quests = new List<Quest>();
 
-        public QuestsMenu(Vector2 origin, PositionType positionType) : base(origin, positionType)
+        public QuestsMenu(Func<Point, Vector2> origin, PositionType positionType) : base(origin, positionType, GameManager.GUI_LAYER)
         {
         }
 

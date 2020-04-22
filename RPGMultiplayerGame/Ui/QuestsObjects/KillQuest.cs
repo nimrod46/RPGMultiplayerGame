@@ -24,7 +24,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         private readonly EntityId entityId;
         private readonly int numberOfKills;
         private int currentKills;
-        public KillQuest(Vector2 origin, PositionType positionType, string npcName, string text, Action<Player> reward, EntityId entityId, int numberOfKills) : base(origin, positionType, npcName, text, reward)
+        public KillQuest(Func<Point, Vector2> origin, PositionType positionType, string npcName, string text, Action<Player> reward, EntityId entityId, int numberOfKills) : base(origin, positionType, npcName, text, reward)
         {
             this.entityId = entityId;
             this.numberOfKills = numberOfKills;

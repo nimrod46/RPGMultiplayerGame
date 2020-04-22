@@ -68,7 +68,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected bool startedFlickeringAnim;
         protected Vector2 healthBarOffset;
         protected bool damageable;
-        private readonly float maxHealth;
+        protected readonly float maxHealth;
         private float syncHealth;
         private SpawnPoint syncSpawnPoint;
         private Vector2 healthBarSize;
@@ -103,7 +103,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
 
-        public void OnHealthSet()
+        public virtual void OnHealthSet()
         {
             healthBarSize.X = SyncHealth * healthBar.Width / maxHealth;
         }
@@ -170,7 +170,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             MakeObjectFlicker();
         }
 
-        public void Kill(Entity attacker)
+        public virtual void Kill(Entity attacker)
         {
             if (!isInServer)
             {

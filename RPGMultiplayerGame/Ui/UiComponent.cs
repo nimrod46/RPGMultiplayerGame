@@ -13,7 +13,6 @@ namespace RPGMultiplayerGame.Ui
     public abstract class UiComponent : IGameDrawable
     {
         public Vector2 Position { get; set; }
-        public Texture2D Texture { get; set; }
 
         public Vector2 Size
         {
@@ -40,6 +39,10 @@ namespace RPGMultiplayerGame.Ui
                 UpdatePosition();
             }
         }
+
+        public float Layer { get; set; }
+
+        private readonly Func<Point, Vector2> originFunc;
         private PositionType originType;
         private Vector2 origin;
         private Vector2 size;
@@ -53,24 +56,23 @@ namespace RPGMultiplayerGame.Ui
             TopRight
         }
 
-        public UiComponent(Vector2 origin, PositionType originType, Texture2D texture)
-        {
-            Origin = origin;
-            OriginType = originType;       
-            Texture = texture;
-            Size = texture.Bounds.Size.ToVector2();
-        }
+        
 
-        public UiComponent(Vector2 origin, PositionType originType)
+        public UiComponent(Func<Point, Vector2> origin, PositionType originType, float layer)
         {
-            Origin = origin;
+            originFunc = origin;
+            Origin = originFunc.Invoke(GameManager.Instance.GetMapSize());
             OriginType = originType;
+            Layer = layer;
+            GameManager.Instance.AddUiComponent(this);
         }
 
         public UiComponent()
         {
             Origin = Vector2.Zero;
             Size = Vector2.Zero;
+            Layer = 0;
+            GameManager.Instance.AddUiComponent(this);
         }
 
         protected void UpdatePosition()
@@ -87,17 +89,19 @@ namespace RPGMultiplayerGame.Ui
                     Position = Origin - new Vector2(Size.X / 2, Size.Y);
                     break;
                 case PositionType.TopLeft:
-                    Position = Origin;// - new Vector2(Size.X, -Size.Y);
+                    Position = Origin;
                     break;
                 case PositionType.TopRight:
                     Position = Origin - new Vector2(Size.X, 0);
                     break;
             }
         }
+        
+        public abstract void Draw(SpriteBatch sprite);
 
-        public virtual void Draw(SpriteBatch sprite)
+        public void Resize()
         {
-            sprite.Draw(Texture, Position, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, GameManager.GUI_LAYER);
+            Origin = originFunc.Invoke(GameManager.Instance.GetMapSize());
         }
     }
 }

@@ -66,7 +66,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         }
 
         private readonly PositionType positionType;
-        private readonly Vector2 origin;
+        private readonly Func<Point, Vector2> origin;
         protected Player player;
         private QuestUi questUi;
         private readonly string npcName;
@@ -75,7 +75,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         private Color textColor;
         private bool isFinished;
 
-        public Quest(Vector2 origin, PositionType positionType, string npcName, string text, Action<Player> reward)
+        public Quest(Func<Point, Vector2> origin, PositionType positionType, string npcName, string text, Action<Player> reward)
         {
             this.origin = origin;
             this.positionType = positionType;

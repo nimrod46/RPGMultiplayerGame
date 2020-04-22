@@ -11,15 +11,15 @@ using RPGMultiplayerGame.Ui;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
-    public class ItemSlotUi<T> : UiComponent where T : GameItem 
+    public class ItemSlotUi<T> : UiTextureComponent where T : GameItem 
     {
         public T Item { get; set; }
 
-        public ItemSlotUi(Vector2 origin, PositionType positionType) : base(origin, positionType, GameManager.Instance.InventorySlotBackground)
+        public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType) : base(origin, positionType, GameManager.GUI_LAYER, GameManager.Instance.InventorySlotBackground)
         {
         }
 
-        public ItemSlotUi(Vector2 origin, PositionType positionType, T item) : base(origin, positionType, GameManager.Instance.InventorySlotBackground)
+        public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType, T item) : base(origin, positionType, GameManager.GUI_LAYER, GameManager.Instance.InventorySlotBackground)
         {
             Item = item;
         }

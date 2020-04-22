@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            shop = new Inventory<GameItemShop>((GameManager.Instance.GetMapSize().ToVector2() / 2), PositionType.Centered, 5, 5, false);
+            shop = new Inventory<GameItemShop>((windowSize) => (windowSize.ToVector2() / 2), PositionType.Centered, 5, 5, false);
             shop.OnItemClickedEvent += Shop_OnItemClickedEvent;
             dialog = new ComplexDialog(SyncName, "Are you here to buy or what?", false);
             AddItemToShop(new GameItemShop(new CommonWond(), 50));

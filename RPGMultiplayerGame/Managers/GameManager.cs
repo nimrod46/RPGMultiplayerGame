@@ -16,6 +16,7 @@ using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Items;
+using RPGMultiplayerGame.Ui;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -55,7 +56,7 @@ namespace RPGMultiplayerGame.Managers
         public const float CHARECTER_TEXT_LAYER = 0.9f;
 
         static GameManager instance;
-
+      
         public bool IsMouseVisible
         {
             get
@@ -79,6 +80,8 @@ namespace RPGMultiplayerGame.Managers
         public List<Texture2D> textures = new List<Texture2D>();
         public Texture2D HealthBar;
         public Texture2D HealthBarBackground;
+        public Texture2D UiHealthBar;
+        public Texture2D UiHealthBarBackground;
         public SpriteFont PlayerNameFont;
         public Texture2D DialogBackground;
         public SpriteFont DialogTextFont;
@@ -89,6 +92,7 @@ namespace RPGMultiplayerGame.Managers
         private readonly List<IGameUpdateable> updateObjects = new List<IGameUpdateable>();
         private readonly List<Entity> entities = new List<Entity>();
         private readonly List<Monster> monsters = new List<Monster>();
+        private readonly List<UiComponent> uiComponents = new List<UiComponent>();
         private readonly string dialogBackgroundPath;
         private readonly string questBackgroundPath;
         private Game1 game;
@@ -145,6 +149,8 @@ namespace RPGMultiplayerGame.Managers
             animationsByEffects = GetGameTextureByEnum<EffectId>(content);
             HealthBar = content.Load<Texture2D>("HealthBar");
             HealthBarBackground = content.Load<Texture2D>("HealthBarBackground");
+            UiHealthBar = content.Load<Texture2D>("UiHealthBar");
+            UiHealthBarBackground = content.Load<Texture2D>("UiHealthBarBackground");
             PlayerNameFont = content.Load<SpriteFont>("PlayerName");
             DialogTextFont = content.Load<SpriteFont>("DialogText");
             InventorySlotBackground = content.Load<Texture2D>("InventorySlot");
@@ -218,6 +224,33 @@ namespace RPGMultiplayerGame.Managers
             for (int i = 0; i < grapichObjects.Count; i++)
             {
                 grapichObjects[i].Draw(sprite);
+            }
+        }
+
+        public void OnResize()
+        {
+            lock (uiComponents)
+            {
+                foreach (var uiComponent in uiComponents)
+                {
+                    uiComponent.Resize();
+                }
+            }
+        }
+
+        public void AddUiComponent(UiComponent uiComponent)
+        {
+            lock(uiComponents)
+            {
+                uiComponents.Add(uiComponent);
+            }
+        }
+
+        public void RemoveUiComponent(UiComponent uiComponent)
+        {
+            lock (uiComponents)
+            {
+                uiComponents.Remove(uiComponent);
             }
         }
 
