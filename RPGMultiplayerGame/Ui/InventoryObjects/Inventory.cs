@@ -31,12 +31,15 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
         }
 
+        public bool IsIntractable { get; set; }
+
         private readonly ItemSlotUi<T>[] inventoryItems;
         private bool isVisible;
 
         public Inventory(Func<Point, Vector2> origin, PositionType positionType, int columns, int rows, bool defaultVisibility) : base(origin, positionType, GameManager.GUI_LAYER)
         {
             isVisible = defaultVisibility;
+            IsIntractable = false;
             ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType);
             Size = inventoryItem.Size * new Vector2(columns, rows);
             inventoryItems = new ItemSlotUi<T>[columns * rows];
@@ -48,7 +51,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                     int x = i; int y = j;
                     inventoryItem = new ItemSlotUi<T>((windowSize) =>
                     {
-                        Console.WriteLine(i);
                         return Position + new Vector2(x * inventoryItem.Size.X, y * inventoryItem.Size.Y);
                     }
                     , PositionType.TopLeft, ItemFactory.GetEmptyItem<T>());
@@ -62,7 +64,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         public void Update(GameTime gameTime)
         {
-            if (IsVisible)
+            if (IsIntractable)
             {
                 if (InputManager.Instance.GetMouseLeftButtonPressed())
                 {
@@ -70,14 +72,13 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                     {
                         OnItemClickedEvent?.Invoke(item);
                     }
-
                 }
             }
         }
 
         public override void Draw(SpriteBatch sprite)
         {
-            if (IsVisible)
+            if (isVisible)
             {
                 foreach (var item in inventoryItems)
                 {

@@ -91,11 +91,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         if (IsInventoryVisible)
                         {
                             IsInventoryVisible = false;
+                            inventory.IsIntractable = false;
+                            usableItems.IsIntractable = false;
                         }
                     }
                     else
                     {
                         IsInventoryVisible = true;
+                        inventory.IsIntractable = true;
+                        usableItems.IsIntractable = true;
                     }
                 }
 
