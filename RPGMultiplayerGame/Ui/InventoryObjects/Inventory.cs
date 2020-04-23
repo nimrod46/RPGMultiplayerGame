@@ -22,12 +22,19 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         public delegate void ItemClickedEventHandler(T item);
         public event ItemClickedEventHandler OnItemClickedEvent;
 
-        public bool IsVisible
+        public override bool IsVisible
         {
             get => isVisible; set
             {
                 isVisible = value;
-                GameManager.Instance.IsMouseVisible = isVisible;
+                if (inventoryItems != null)
+                {
+                    GameManager.Instance.IsMouseVisible = isVisible;
+                    foreach (var item in inventoryItems)
+                    {
+                        item.IsVisible = isVisible;
+                    }
+                }
             }
         }
 
@@ -36,11 +43,10 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         private readonly ItemSlotUi<T>[] inventoryItems;
         private bool isVisible;
 
-        public Inventory(Func<Point, Vector2> origin, PositionType positionType, int columns, int rows, bool defaultVisibility) : base(origin, positionType, GameManager.GUI_LAYER)
+        public Inventory(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, int columns, int rows) : base(origin, positionType, defaultVisibility, GameManager.GUI_LAYER)
         {
-            isVisible = defaultVisibility;
             IsIntractable = false;
-            ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType);
+            ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType, false);
             Size = inventoryItem.Size * new Vector2(columns, rows);
             inventoryItems = new ItemSlotUi<T>[columns * rows];
             int index = 0;
@@ -53,12 +59,11 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                     {
                         return Position + new Vector2(x * inventoryItem.Size.X, y * inventoryItem.Size.Y);
                     }
-                    , PositionType.TopLeft, ItemFactory.GetEmptyItem<T>());
+                    , PositionType.TopLeft, defaultVisibility, ItemFactory.GetEmptyItem<T>());
                     inventoryItems[index] = inventoryItem;
                     index++;
                 }
             }
-            GameManager.Instance.AddGraphicObject(this);
             GameManager.Instance.AddUpdateObject(this);
         }
 
@@ -78,13 +83,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         public override void Draw(SpriteBatch sprite)
         {
-            if (isVisible)
-            {
-                foreach (var item in inventoryItems)
-                {
-                    item.Draw(sprite);
-                }
-            }
         }
 
         public void UsePotionAtSlot(int slot, Entity entity)

@@ -94,6 +94,7 @@
     <Compile Include="Objects\Dialogs\ActionDialog.cs" />
     <Compile Include="Objects\Dialogs\DialogByAnswerIndex.cs" />
     <Compile Include="Objects\Dialogs\QuestDialog1.cs" />
+    <Compile Include="Ui\Camera.cs" />
     <Compile Include="Ui\HealthBar.cs" />
     <Compile Include="Ui\InventoryObjects\ItemSlotUi.cs" />
     <Compile Include="Objects\Items\EmptyItem.cs" />

@@ -33,10 +33,10 @@ namespace RPGMultiplayerGame.Ui
         private readonly UiTextureComponent health;
         private float maxHealth;
 
-        public HealthBar(Func<Point, Vector2> origin, PositionType originType, float defaultHealth, float maxHealth) : base(origin, originType, GameManager.GUI_LAYER, GameManager.Instance.UiHealthBarBackground)
+        public HealthBar(Func<Point, Vector2> origin, PositionType originType, float defaultHealth, float maxHealth) : base(origin, originType, true, GameManager.GUI_LAYER, GameManager.Instance.UiHealthBarBackground)
         {
-            health = new UiTextureComponent(origin, originType, GameManager.GUI_LAYER * 0.1f, GameManager.Instance.UiHealthBar);
-            healthText = new UiTextComponent((windowSize) => Position + Size / 2, PositionType.Centered, GameManager.GUI_LAYER * 0.01f, GameManager.Instance.PlayerNameFont, defaultHealth.ToString());
+            health = new UiTextureComponent(origin, originType, true, GameManager.GUI_LAYER * 0.1f, GameManager.Instance.UiHealthBar);
+            healthText = new UiTextComponent((windowSize) => Position + Size / 2, PositionType.Centered, true, GameManager.GUI_LAYER * 0.01f, GameManager.Instance.PlayerNameFont, defaultHealth.ToString());
             this.MaxHealth = maxHealth;
         }
 

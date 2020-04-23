@@ -15,7 +15,7 @@ namespace RPGMultiplayerGame.Ui
 
         public Rectangle RenderRigion { get; set; }
 
-        public UiTextureComponent(Func<Point, Vector2> origin, PositionType originType, float layer, Texture2D texture) : base(origin, originType, layer)
+        public UiTextureComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer, Texture2D texture) : base(origin, originType, defaultVisibility, layer)
         {
             Texture = texture;
             RenderRigion = texture.Bounds;
@@ -24,7 +24,10 @@ namespace RPGMultiplayerGame.Ui
 
         public override void Draw(SpriteBatch sprite)
         {
-            sprite.Draw(Texture, Position, RenderRigion, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, Layer);
+            if (IsVisible)
+            {
+                sprite.Draw(Texture, Position, RenderRigion, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, Layer);
+            }
         }
     }
 }

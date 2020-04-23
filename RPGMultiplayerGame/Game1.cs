@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Networking;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Ui;
 using System;
 using System.Threading;
 using System.Windows.Forms;
@@ -18,6 +19,7 @@ namespace RPGMultiplayerGame
     {
         readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        private SpriteBatch uiSpriteBatch;
         readonly Form gameForm;
 
         public Game1()
@@ -48,7 +50,6 @@ namespace RPGMultiplayerGame
             GameManager.Instance.Init(this);
             Window.ClientSizeChanged += (r ,e) => GameManager.Instance.OnResize();
 
-
         }
 
         /// <summary>
@@ -59,6 +60,7 @@ namespace RPGMultiplayerGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            uiSpriteBatch = new SpriteBatch(GraphicsDevice);
           //  MapManager.Instance.LoadSpriteSheet(GraphicsDevice, textures);
             GameManager.Instance.LoadTextures(GraphicsDevice, Content);
         }
@@ -124,9 +126,12 @@ namespace RPGMultiplayerGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
             if (ServerManager.Instance.IsRuning != true)
             {
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+                uiSpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+                GameManager.Instance.DrawUi(uiSpriteBatch);
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, GameManager.Instance.Camera.Transform);
                 GameManager.Instance.Draw(spriteBatch);
                 spriteBatch.End();
+                uiSpriteBatch.End();
             }
             base.Draw(gameTime);
         }

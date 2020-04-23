@@ -25,7 +25,7 @@ namespace RPGMultiplayerGame.Ui
         }
 
 
-        public UiTextComponent(Func<Point, Vector2> origin, PositionType originType, float layer, SpriteFont textFont, string defaultString) : base(origin, originType, layer)
+        public UiTextComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer, SpriteFont textFont, string defaultString) : base(origin, originType, defaultVisibility, layer)
         {
             TextFont = textFont;
             Text = defaultString;
@@ -33,7 +33,10 @@ namespace RPGMultiplayerGame.Ui
 
         public override void Draw(SpriteBatch sprite)
         {
-            sprite.DrawString(TextFont, Text, Position, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, Layer);
+            if (IsVisible)
+            {
+                sprite.DrawString(TextFont, Text, Position, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, Layer);
+            }
         }
     }
 }

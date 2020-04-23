@@ -15,7 +15,7 @@ namespace RPGMultiplayerGame.Ui
         private readonly string npcName;
         private readonly string text;
 
-        public QuestUi(Func<Point, Vector2> origin, PositionType originType, string npcName, string text, Color textColor) : base(origin, originType, GameManager.GUI_LAYER, GameManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor))
+        public QuestUi(Func<Point, Vector2> origin, PositionType originType, string npcName, string text, Color textColor) : base(origin, originType, true, GameManager.GUI_LAYER, GameManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor))
         {
             this.npcName = npcName;
             this.text = text;

@@ -74,6 +74,8 @@ namespace RPGMultiplayerGame.Managers
 
             }
         }
+        public Camera Camera { get; set; }
+
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
         public Dictionary<EffectId, Dictionary<int, List<GameTexture>>> animationsByEffects = new Dictionary<EffectId, Dictionary<int, List<GameTexture>>>();
         public Dictionary<ItemType, Texture2D> itemTextures = new Dictionary<ItemType, Texture2D>();
@@ -110,10 +112,15 @@ namespace RPGMultiplayerGame.Managers
         public void Init(Game1 game)
         {
             this.game = game;
+            Camera  = new Camera(game.GraphicsDevice.Viewport);
         }
 
         public void Update(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
+            if (ClientManager.Instance.Player != null)
+            {
+                Camera.Update(game.GraphicsDevice.Viewport, ClientManager.Instance.Player.Location);
+            }
             game.IsMouseVisible = IsMouseVisible;
             for (int i = 0; i < updateObjects.Count; i++)
             {
@@ -138,9 +145,14 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public Point GetMapSize()
+        public Point GetScreenSize()
         {
             return game.GraphicsDevice.PresentationParameters.Bounds.Size;
+        }
+
+        public Point GeMapSize()
+        {
+            return new Point(1920, 1080);
         }
 
         public void LoadTextures(GraphicsDevice graphicsDevice, ContentManager content)
@@ -178,6 +190,8 @@ namespace RPGMultiplayerGame.Managers
                 }
             }
         }
+
+        
 
         internal Texture2D GetItemByType(ItemType value)
         {
@@ -224,6 +238,14 @@ namespace RPGMultiplayerGame.Managers
             for (int i = 0; i < grapichObjects.Count; i++)
             {
                 grapichObjects[i].Draw(sprite);
+            }
+        }
+
+        public void DrawUi(SpriteBatch sprite)
+        {
+            for (int i = 0; i < uiComponents.Count; i++)
+            {
+                uiComponents[i].Draw(sprite);
             }
         }
 

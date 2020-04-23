@@ -15,23 +15,26 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
     {
         public T Item { get; set; }
 
-        public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType) : base(origin, positionType, GameManager.GUI_LAYER, GameManager.Instance.InventorySlotBackground)
+        public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility) : base(origin, positionType, defaultVisibility, GameManager.GUI_LAYER, GameManager.Instance.InventorySlotBackground)
         {
         }
 
-        public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType, T item) : base(origin, positionType, GameManager.GUI_LAYER, GameManager.Instance.InventorySlotBackground)
+        public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, T item) : base(origin, positionType, defaultVisibility, GameManager.GUI_LAYER, GameManager.Instance.InventorySlotBackground)
         {
             Item = item;
         }
 
         public override void Draw(SpriteBatch sprite)
         {
-            base.Draw(sprite);
-            if (Item.IsExists())
+            if (IsVisible)
             {
-                Item.Draw(sprite, Position + new Vector2(Texture.Width / 2 - Item.Texture.Width / 2,
-                    Texture.Height / 2 - Item.Texture.Height / 2)
-                    ,GameManager.GUI_LAYER * 0.1f);
+                base.Draw(sprite);
+                if (Item.IsExists())
+                {
+                    Item.Draw(sprite, Position + new Vector2(Texture.Width / 2 - Item.Texture.Width / 2,
+                        Texture.Height / 2 - Item.Texture.Height / 2)
+                        , GameManager.GUI_LAYER * 0.1f);
+                }
             }
         }
     }

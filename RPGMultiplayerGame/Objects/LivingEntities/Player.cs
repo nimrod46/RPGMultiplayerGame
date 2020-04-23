@@ -56,14 +56,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 Layer = GameManager.OWN_PLAYER_LAYER;
 
-                inventory = new Inventory<GameItem>((windowSize) => windowSize.ToVector2() / 2, PositionType.Centered, INVENTORY_COLUMNS_NUMBER, INVENTORY_ROWS_NUMBER, false)
+                inventory = new Inventory<GameItem>((windowSize) => windowSize.ToVector2() / 2, PositionType.Centered, false, INVENTORY_COLUMNS_NUMBER, INVENTORY_ROWS_NUMBER)
                 {
                     IsVisible = false
                 };
                 inventory.OnItemClickedEvent += Inventory_OnItemClickedEvent;
-                usableItems = new Inventory<GameItem>((windowSize) => new Vector2(windowSize.X / 2, windowSize.Y - 10), PositionType.ButtomCentered, 5, 1, true);
+                usableItems = new Inventory<GameItem>((windowSize) => new Vector2(windowSize.X / 2, windowSize.Y - 10), PositionType.ButtomCentered, true, 5, 1);
                 usableItems.OnItemClickedEvent += UsableItems_OnItemClickedEvent;
-                equippedItems = new Inventory<GameItem>((windowSize) => new Vector2(10, windowSize.Y - 10), PositionType.ButtomLeft, 3, 1, true);
+                equippedItems = new Inventory<GameItem>((windowSize) => new Vector2(10, windowSize.Y - 10), PositionType.ButtomLeft, true, 3, 1);
                 playerQuests = new QuestsMenu((windowSize) => new Vector2(windowSize.X, 100), PositionType.TopRight);
                 uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, SyncHealth, maxHealth);
             }
@@ -305,8 +305,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
-            playerQuests.Draw(sprite);
-            uiHealthBar.Draw(sprite);
+            //playerQuests.Draw(sprite);
+            //uiHealthBar.Draw(sprite);
         }
 
         public override void Kill(Entity attacker)

@@ -40,6 +40,8 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
+        public virtual bool IsVisible { get; set; }
+
         public float Layer { get; set; }
 
         private readonly Func<Point, Vector2> originFunc;
@@ -58,11 +60,12 @@ namespace RPGMultiplayerGame.Ui
 
         
 
-        public UiComponent(Func<Point, Vector2> origin, PositionType originType, float layer)
+        public UiComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer)
         {
             originFunc = origin;
-            Origin = originFunc.Invoke(GameManager.Instance.GetMapSize());
+            Origin = originFunc.Invoke(GameManager.Instance.GetScreenSize());
             OriginType = originType;
+            IsVisible = defaultVisibility;
             Layer = layer;
             GameManager.Instance.AddUiComponent(this);
         }
@@ -101,7 +104,7 @@ namespace RPGMultiplayerGame.Ui
 
         public void Resize()
         {
-            Origin = originFunc.Invoke(GameManager.Instance.GetMapSize());
+            Origin = originFunc.Invoke(GameManager.Instance.GetScreenSize());
         }
     }
 }
