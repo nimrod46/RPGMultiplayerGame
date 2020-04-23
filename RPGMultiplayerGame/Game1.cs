@@ -83,7 +83,17 @@ namespace RPGMultiplayerGame
                 Exit();
             if (InputManager.Instance.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
             {
+                graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width / 2;
+                graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height / 2;
                 graphics.IsFullScreen = false;
+                graphics.ApplyChanges();
+            }
+            else if((InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) || InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.RightAlt)) &&
+                InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
+            {
+                graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+                graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+                graphics.IsFullScreen = true;
                 graphics.ApplyChanges();
             }
 
