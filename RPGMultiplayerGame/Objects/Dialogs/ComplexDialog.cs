@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
-    public class ComplexDialog : SimpleDialog
+    public class ComplexDialog : SimpleDialog //TODO: Make UI component
     {
         private Texture2D background;
 
