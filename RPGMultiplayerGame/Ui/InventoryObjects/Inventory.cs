@@ -27,13 +27,10 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             get => isVisible; set
             {
                 isVisible = value;
-                if (inventoryItems != null)
+                GameManager.Instance.IsMouseInteractable = isVisible;
+                foreach (var item in inventoryItems)
                 {
-                    GameManager.Instance.IsMouseVisible = isVisible;
-                    foreach (var item in inventoryItems)
-                    {
-                        item.IsVisible = isVisible;
-                    }
+                    item.IsVisible = isVisible;
                 }
             }
         }
@@ -41,12 +38,11 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         public bool IsIntractable { get; set; }
 
         private readonly ItemSlotUi<T>[] inventoryItems;
-        private bool isVisible;
 
         public Inventory(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, int columns, int rows) : base(origin, positionType, defaultVisibility, GameManager.GUI_LAYER)
         {
             IsIntractable = false;
-            ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType, false);
+            ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType, false, ItemFactory.GetEmptyItem<T>());
             Size = inventoryItem.Size * new Vector2(columns, rows);
             inventoryItems = new ItemSlotUi<T>[columns * rows];
             int index = 0;
@@ -67,22 +63,45 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             GameManager.Instance.AddUpdateObject(this);
         }
 
+        private ItemSlotUi<T> lastItemSlot;
         public void Update(GameTime gameTime)
         {
             if (IsIntractable)
             {
-                if (InputManager.Instance.GetMouseLeftButtonPressed())
+                if (TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out ItemSlotUi<T> itemSlot))
                 {
-                    if (TryGetInventoryItemAtScreenLocation(InputManager.Instance.MouseBounds(), out T item))
+                    if (InputManager.Instance.GetMouseLeftButtonPressed())
                     {
-                        OnItemClickedEvent?.Invoke(item);
+                        OnItemClickedEvent?.Invoke(itemSlot.Item);
                     }
+                    if (lastItemSlot != null && lastItemSlot != itemSlot)
+                    {
+                        lastItemSlot.HideDescription();
+                    }
+                    itemSlot.ShowDescription();
+                    lastItemSlot = itemSlot;
+                }
+                else if (lastItemSlot != null)
+                {
+                    lastItemSlot.HideDescription();
+                    lastItemSlot = null;
+                }
+
+            }
+            else if (lastItemSlot != null)
+            {
+                lastItemSlot.HideDescription();
+                lastItemSlot = null;
+            }
+
+            if (!GameManager.Instance.IsMouseInteractable)
+            {
+                if (lastItemSlot != null)
+                {
+                    lastItemSlot.HideDescription();
+                    lastItemSlot = null;
                 }
             }
-        }
-
-        public override void Draw(SpriteBatch sprite)
-        {
         }
 
         public void UsePotionAtSlot(int slot, Entity entity)
@@ -101,7 +120,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             inventoryItems[slot - 1].Item = item;
         }
 
-        public bool TryGetInventoryItemAtScreenLocation(Rectangle rect, out T item)
+        public bool TryGetInventoryItemAtScreenLocation(Rectangle rect, out ItemSlotUi<T> item)
         {
             item = null;
             for (int i = 0; i < inventoryItems.Count(); i++)
@@ -114,7 +133,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 Rectangle rectangle = new Rectangle(inventoryItem.Position.ToPoint(), inventoryItem.Size.ToPoint());
                 if (rectangle.Intersects(rect))
                 {
-                    item = inventoryItem.Item;
+                    item = inventoryItem;
                     return true;
                 }
             }

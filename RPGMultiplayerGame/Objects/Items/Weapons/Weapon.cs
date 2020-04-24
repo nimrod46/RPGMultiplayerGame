@@ -64,5 +64,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public abstract void UpdateWeaponLocation(Entity entity);
 
+        public override string ToString()
+        {
+            return base.ToString() + "\n" +
+                "Weapon" + "\n" +
+                "Name: " + Name + "\n" +
+                "Damage: " + Damage;
+        }
     }
 }

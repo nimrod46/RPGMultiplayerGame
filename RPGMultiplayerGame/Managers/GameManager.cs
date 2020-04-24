@@ -49,15 +49,15 @@ namespace RPGMultiplayerGame.Managers
         }
 
         public const int INVENTORY_ROWS_NUMBER = 4, INVENTORY_COLUMNS_NUMBER = 5;
-        public const float GUI_LAYER = 0.0001f;
-        public const float OWN_PLAYER_LAYER = 0.001f;
-        public const float ENTITY_LAYER = 0.01f;
-        public const float MOVING_OJECT_LAYER = 0.02f;
+        public const float GUI_LAYER = 0.1f;
+        public const float OWN_PLAYER_LAYER = 0.6f;
+        public const float ENTITY_LAYER = 0.7f;
+        public const float MOVING_OJECT_LAYER = 0.8f;
         public const float CHARECTER_TEXT_LAYER = 0.9f;
 
         static GameManager instance;
       
-        public bool IsMouseVisible
+        public bool IsMouseInteractable
         {
             get
             {
@@ -74,6 +74,9 @@ namespace RPGMultiplayerGame.Managers
 
             }
         }
+
+        public bool HideMouse { get; set; }
+
         public Camera Camera { get; set; }
 
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> animationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
@@ -88,6 +91,7 @@ namespace RPGMultiplayerGame.Managers
         public Texture2D DialogBackground;
         public SpriteFont DialogTextFont;
         public Texture2D InventorySlotBackground;
+        public Texture2D ItemDescription;
         public GameMap map; //TODO: Create GameMap with the relevent project class.
         private readonly List<GameObject> gameObjects = new List<GameObject>();
         private readonly List<IGameDrawable> grapichObjects = new List<IGameDrawable>();
@@ -105,8 +109,9 @@ namespace RPGMultiplayerGame.Managers
             map = new GameMap();
             dialogBackgroundPath = "Content\\DialogBackground.svg";
             questBackgroundPath = "Content\\QuestBackground.svg";
-            IsMouseVisible = false;
+            IsMouseInteractable = false;
             isMouseVisibleCounter = 0;
+            HideMouse = false;
         }
 
         public void Init(Game1 game)
@@ -121,7 +126,7 @@ namespace RPGMultiplayerGame.Managers
             {
                 Camera.Update(game.GraphicsDevice.Viewport, ClientManager.Instance.Player.Location);
             }
-            game.IsMouseVisible = IsMouseVisible;
+            game.IsMouseVisible = IsMouseInteractable && !HideMouse;
             for (int i = 0; i < updateObjects.Count; i++)
             {
                 updateObjects[i].Update(gameTime);
@@ -166,6 +171,7 @@ namespace RPGMultiplayerGame.Managers
             PlayerNameFont = content.Load<SpriteFont>("PlayerName");
             DialogTextFont = content.Load<SpriteFont>("DialogText");
             InventorySlotBackground = content.Load<Texture2D>("InventorySlot");
+            ItemDescription = content.Load<Texture2D>("DescriptionBackground");
 
 
             foreach (ItemType gameItemType in Enum.GetValues(typeof(ItemType)))

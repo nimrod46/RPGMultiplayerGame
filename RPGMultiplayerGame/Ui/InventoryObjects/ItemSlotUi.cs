@@ -8,27 +8,50 @@ using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Ui;
+using RPGMultiplayerGame.Ui.InventoryObjects;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
     public class ItemSlotUi<T> : UiTextureComponent where T : GameItem 
     {
-        public T Item { get; set; }
-
-        public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility) : base(origin, positionType, defaultVisibility, GameManager.GUI_LAYER, GameManager.Instance.InventorySlotBackground)
+        public override bool IsVisible
         {
+            get => base.IsVisible; set
+            {
+                base.IsVisible = value;
+                if(!IsVisible)
+                {
+                    HideDescription();
+                }
+            }
         }
+
+        public T Item { get; set; }
+        protected ItemDescription description;
 
         public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, T item) : base(origin, positionType, defaultVisibility, GameManager.GUI_LAYER, GameManager.Instance.InventorySlotBackground)
         {
             Item = item;
+            description = new ItemDescription((s) => InputManager.Instance.MouseBounds().Location.ToVector2(), PositionType.TopLeft, GameManager.GUI_LAYER * 0.001f, () => Item.ToString());
+        }
+
+        public void ShowDescription()
+        {
+            description.IsVisible = true;
+            GameManager.Instance.HideMouse = true;
+        }
+
+        public void HideDescription()
+        {
+            description.IsVisible = false;
+            GameManager.Instance.HideMouse = false;
         }
 
         public override void Draw(SpriteBatch sprite)
         {
-            if (IsVisible)
+            base.Draw(sprite);
+            if (isVisible)
             {
-                base.Draw(sprite);
                 if (Item.IsExists())
                 {
                     Item.Draw(sprite, Position + new Vector2(Texture.Width / 2 - Item.Texture.Width / 2,

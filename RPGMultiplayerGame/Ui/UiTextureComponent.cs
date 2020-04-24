@@ -18,33 +18,26 @@ namespace RPGMultiplayerGame.Ui
             get => texture; set
             {
                 texture = value;
+                RenderRigion = texture.Bounds;
+                Size = texture.Bounds.Size.ToVector2();
                 UpdatePosition();
             }
         }
 
         public Rectangle RenderRigion { get; set; }
 
+
         public UiTextureComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer, Texture2D texture) : base(origin, originType, defaultVisibility, layer)
         {
             Texture = texture;
         }
 
-        protected override void UpdatePosition()
-        {
-            if (texture != null)
-            {
-                RenderRigion = texture.Bounds;
-                size = texture.Bounds.Size.ToVector2();
-                base.UpdatePosition();
-            }
-        }
-
-
         public override void Draw(SpriteBatch sprite)
         {
-            if (IsVisible)
+            base.Draw(sprite);
+            if (isVisible)
             {
-                sprite.Draw(Texture, Position, RenderRigion, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, Layer);
+                sprite.Draw(Texture, DrawPosition, RenderRigion, Color.White, 0, Vector2.Zero, Scale, SpriteEffects.None, Layer);
             }
         }
     }

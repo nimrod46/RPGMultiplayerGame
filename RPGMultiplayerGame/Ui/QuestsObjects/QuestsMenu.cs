@@ -45,10 +45,6 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             return null;
         }
 
-        public override void Draw(SpriteBatch sprite)
-        {
-        }
-
         internal void RemoveQuest(Quest quest)
         {
             lock (quests)

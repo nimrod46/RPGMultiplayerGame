@@ -39,13 +39,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected override void CmdInteractWithPlayer(Player player, int dialogIndex)
         {
             shop.IsVisible = true;
+            shop.IsIntractable = true;
             base.CmdInteractWithPlayer(player, dialogIndex);
         }
 
         public override void CmdStopInteractWithPlayer(Player player)
         {
-            shop.IsVisible = false;
-            base.CmdStopInteractWithPlayer(player);
+            if (shop.IsVisible)
+            {
+                shop.IsVisible = false;
+                shop.IsIntractable = false;
+            }
+                base.CmdStopInteractWithPlayer(player);
+            
         }
 
         public void AddItemToShop(GameItemShop gameItem)
@@ -55,19 +61,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void Shop_OnItemClickedEvent(GameItemShop item)
         {
-            CmdCheckPlayerBuy(ClientManager.Instance.Player, item);
+            InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), ClientManager.Instance.Player);
         }
 
         public void CmdCheckPlayerBuy(Player player, GameItemShop gameItemShop)
         {
             InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), player);
-            if (!isInServer)
+            if (player.IsAbleToBuy(gameItemShop))
             {
-                if (player.IsAbleToBuy(gameItemShop))
-                {
-                    ItemFactory.GivePlayerItemByItem(player, gameItemShop.GameItem);
-                    player.SyncGold -= gameItemShop.Price;
-                }
+                ItemFactory.GivePlayerItemByItem(player, gameItemShop.GameItem);
+                player.SyncGold -= gameItemShop.Price;
             }
         }
     }

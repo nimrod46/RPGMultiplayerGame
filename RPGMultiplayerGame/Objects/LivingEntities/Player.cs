@@ -65,19 +65,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 usableItems.OnItemClickedEvent += UsableItems_OnItemClickedEvent;
                 equippedItems = new Inventory<GameItem>((windowSize) => new Vector2(10, windowSize.Y - 10), PositionType.ButtomLeft, true, 3, 1);
                 playerQuests = new QuestsMenu((windowSize) => new Vector2(windowSize.X, 100), PositionType.TopRight);
-                uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, SyncHealth, maxHealth);
+                uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, () => SyncHealth, maxHealth);
             }
             
             base.OnNetworkInitialize();
-        }
-
-        public override void OnHealthSet()
-        {
-            base.OnHealthSet();
-            if (hasAuthority)
-            {
-                uiHealthBar.Health = SyncHealth;
-            }
         }
 
         public override void Update(GameTime gameTime)
@@ -86,7 +77,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 if (InputManager.Instance.KeyPressed(Keys.I))
                 {
-                    if (GameManager.Instance.IsMouseVisible)
+                    if (GameManager.Instance.IsMouseInteractable)
                     {
                         if (IsInventoryVisible)
                         {

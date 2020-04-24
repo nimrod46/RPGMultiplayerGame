@@ -42,5 +42,10 @@ namespace RPGMultiplayerGame.Objects.Items
         {
             return ItemType != ItemType.None;
         }
+
+        public override string ToString()
+        {
+            return itemType.ToString();
+        }
     }
 }

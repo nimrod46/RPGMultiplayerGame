@@ -94,14 +94,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.OnAttackedBy(attacker, damage);
             if (isInServer)
             {
-                if (targetPlayers.TryGetValue(attacker, out float lastDamage))
+                lock (targetPlayers)
                 {
-                    targetPlayers.Remove(attacker);
-                    targetPlayers.Add(attacker, lastDamage + damage);
-                }
-                else
-                {
-                    targetPlayers.Add(attacker, damage);
+                    if (targetPlayers.TryGetValue(attacker, out float lastDamage))
+                    {
+                        targetPlayers.Remove(attacker);
+                        targetPlayers.Add(attacker, lastDamage + damage);
+                    }
+                    else
+                    {
+                        targetPlayers.Add(attacker, damage);
+                    }
                 }
             }
         }
