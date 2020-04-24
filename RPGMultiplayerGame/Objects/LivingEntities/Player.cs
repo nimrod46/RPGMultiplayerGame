@@ -199,7 +199,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public void AddQuest(Quest quest)
         {
             playerQuests.AddQuest(quest);
-            quest.MakeVisible();
         }
 
         public void RemoveQuest(Quest quest)
@@ -293,13 +292,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     equippedItems.PutItemInSlot(1, potion);
                 }
             }
-        }
-
-        public override void Draw(SpriteBatch sprite)
-        {
-            base.Draw(sprite);
-            //playerQuests.Draw(sprite);
-            //uiHealthBar.Draw(sprite);
         }
 
         public override void Kill(Entity attacker)

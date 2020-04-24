@@ -12,6 +12,16 @@ namespace RPGMultiplayerGame.Ui
 {
     public abstract class UiComponent : IGameDrawable
     {
+        public Func<Point, Vector2> OriginFunc
+        {
+            get => originFunc; set
+            {
+                originFunc = value;
+                Resize();
+                UpdatePosition();
+            }
+        }
+
         public Vector2 Position { get; set; }
 
         public Vector2 Size
@@ -32,7 +42,9 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
-        public PositionType OriginType { get { return originType; }
+        public PositionType OriginType
+        {
+            get { return originType; }
             set
             {
                 originType = value;
@@ -44,10 +56,10 @@ namespace RPGMultiplayerGame.Ui
 
         public float Layer { get; set; }
 
-        protected readonly Func<Point, Vector2> originFunc;
         protected PositionType originType;
         protected Vector2 origin;
         protected Vector2 size;
+        private Func<Point, Vector2> originFunc;
 
         public enum PositionType
         {
@@ -58,12 +70,12 @@ namespace RPGMultiplayerGame.Ui
             TopRight
         }
 
-        
 
-        public UiComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer)
+
+        public UiComponent(Func<Point, Vector2> originFunc, PositionType originType, bool defaultVisibility, float layer)
         {
-            originFunc = origin;
-            Origin = originFunc.Invoke(GameManager.Instance.GetScreenSize());
+            this.OriginFunc = originFunc;
+            Origin = this.OriginFunc.Invoke(GameManager.Instance.GetScreenSize());
             OriginType = originType;
             IsVisible = defaultVisibility;
             Layer = layer;
@@ -74,6 +86,7 @@ namespace RPGMultiplayerGame.Ui
         {
             Origin = Vector2.Zero;
             Size = Vector2.Zero;
+            OriginType = PositionType.TopLeft;
             Layer = 0;
             GameManager.Instance.AddUiComponent(this);
         }
@@ -99,12 +112,12 @@ namespace RPGMultiplayerGame.Ui
                     break;
             }
         }
-        
+
         public abstract void Draw(SpriteBatch sprite);
 
         public void Resize()
         {
-            Origin = originFunc.Invoke(GameManager.Instance.GetScreenSize());
+            Origin = OriginFunc.Invoke(GameManager.Instance.GetScreenSize());
         }
     }
 }

@@ -19,8 +19,6 @@ namespace RPGMultiplayerGame.Ui
         public Rectangle VisibleArea { get; protected set; }
         public Matrix Transform { get; protected set; }
 
-        private float currentMouseWheelValue, previousMouseWheelValue, zoom, previousZoom;
-
         public Camera(Viewport viewport)
         {
             Bounds = viewport.Bounds;
@@ -61,72 +59,12 @@ namespace RPGMultiplayerGame.Ui
             Position = newPosition;
         }
 
-        public void AdjustZoom(float zoomAmount)
-        {
-            Zoom += zoomAmount;
-            if (Zoom < .35f)
-            {
-                Zoom = .35f;
-            }
-            if (Zoom > 2f)
-            {
-                Zoom = 2f;
-            }
-        }
-
         public void Update(Viewport viewport, Vector2 position)
         {
             UpdateMatrix();
 
             Bounds = viewport.Bounds;
             Vector2 cameraMovement = position - Position;
-            Console.WriteLine(cameraMovement);
-            int moveSpeed;
-
-            if (Zoom > .8f)
-            {
-                moveSpeed = 15;
-            }
-            else if (Zoom < .8f && Zoom >= .6f)
-            {
-                moveSpeed = 20;
-            }
-            else if (Zoom < .6f && Zoom > .35f)
-            {
-                moveSpeed = 25;
-            }
-            else if (Zoom <= .35f)
-            {
-                moveSpeed = 30;
-            }
-            else
-            {
-                moveSpeed = 10;
-            }
-
-
-            previousMouseWheelValue = currentMouseWheelValue;
-            currentMouseWheelValue = Mouse.GetState().ScrollWheelValue;
-
-            if (currentMouseWheelValue > previousMouseWheelValue)
-            {
-                AdjustZoom(.05f);
-                Console.WriteLine(moveSpeed);
-            }
-
-            if (currentMouseWheelValue < previousMouseWheelValue)
-            {
-                AdjustZoom(-.05f);
-                Console.WriteLine(moveSpeed);
-            }
-
-            previousZoom = zoom;
-            zoom = Zoom;
-            if (previousZoom != zoom)
-            {
-                Console.WriteLine(zoom);
-
-            }
 
             MoveCamera(cameraMovement);
         }

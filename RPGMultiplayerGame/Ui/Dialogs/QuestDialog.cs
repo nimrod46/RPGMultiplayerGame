@@ -53,8 +53,8 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             inProgressDialog.AddAnswerOption("Ok finished", notFinishedText, false);
             return inProgressDialog.AddAnswerOption("", new ActionDialog(finishedText, new Action<Player, int>((interactivePlayer, answerIndex) =>
            {
-               quest.RewardPlayer(interactivePlayer);
-               quest.Unassign(interactivePlayer);
+               quest.RewardPlayer();
+               quest.Unassign();
            })));
         }
     }

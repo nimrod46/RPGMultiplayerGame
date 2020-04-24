@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Ui
 {
-    class QuestUi : UiTextureComponent
+    public class QuestUi : UiTextureComponent
     {
         private Color textColor;
         private readonly string npcName;

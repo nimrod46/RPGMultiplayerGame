@@ -24,51 +24,15 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
                 InvokeSyncVarNetworkly(nameof(SyncIsFinished), isFinished);
                 if (isFinished)
                 {
-                    questUi.MarkFinished();
+                    QuestUi.MarkFinished();
                 }
-            }
-        }
-
-        public Vector2 Position
-        {
-            get { return questUi.Position; }
-            set
-            {
-                questUi.Position = value;
-            }
-        }
-
-        public Vector2 Origin
-        {
-            get { return questUi.Origin; }
-            set
-            {
-                questUi.Origin = value;
-            }
-        }
-
-        public Vector2 Size
-        {
-            get { return questUi.Size; }
-            set
-            {
-                questUi.Size = value;
-            }
-        }
-
-        public PositionType PositionType
-        {
-            get { return questUi.OriginType; }
-            set
-            {
-                questUi.OriginType = value;
             }
         }
 
         private readonly PositionType positionType;
         private readonly Func<Point, Vector2> origin;
         protected Player player;
-        private QuestUi questUi;
+        public QuestUi QuestUi { get; set; }
         private readonly string npcName;
         private readonly string text;
         private readonly Action<Player> reward;
@@ -88,17 +52,10 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             OnDestroyEvent += OnDestroy;
         }
 
-        private void OnDestroy(NetworkIdentity identity)
-        {
-            questUi.IsVisible = false;
-            ServerManager.Instance.RemoveQuest(player, this);
-        }
-
         private void OnNetworkInitialize()
         {
-            questUi = new QuestUi(origin, positionType, npcName, text, textColor);
+            QuestUi = new QuestUi(origin, positionType, npcName, text, textColor);
         }
-
 
         public virtual void AssignTo(Player player)
         {
@@ -106,24 +63,26 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             player.InvokeCommandMethodNetworkly(nameof(player.AddQuest), this);
         }
 
-        public virtual void Unassign(Player player)
+        public virtual void Unassign()
         {
             player.InvokeCommandMethodNetworkly(nameof(player.RemoveQuest), this);
+            ServerManager.Instance.RemoveQuest(player, this);
+            InvokeBroadcastMethodNetworkly(nameof(Destroy));
         }
 
-        public virtual void RewardPlayer(Player player)
+        public virtual void RewardPlayer()
         {
             reward.Invoke(player);
         }
 
         public void MakeVisible()
         {
-            questUi.IsVisible = true;
+            QuestUi.IsVisible = true;
         }
 
-        public void Draw(SpriteBatch sprite)
+        private void OnDestroy(NetworkIdentity identity)
         {
-            questUi.Draw(sprite);
+            QuestUi.IsVisible = false;
         }
     }
 }

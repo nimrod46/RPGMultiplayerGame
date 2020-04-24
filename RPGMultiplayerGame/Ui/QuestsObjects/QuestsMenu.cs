@@ -23,11 +23,10 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         {
             lock (quests)
             {
-                quest.PositionType = OriginType;
-                quest.Origin = Origin;
-                quest.Position += new Vector2(0, quest.Size.Y * quests.Count);
                 quests.Add(quest);
-                Size += new Vector2(0, quest.Size.Y);
+                Size = new Vector2(quest.QuestUi.Size.X, Size.Y + quest.QuestUi.Size.Y);
+                quest.QuestUi.OriginFunc = (screentSize) => Position + new Vector2(0, quest.QuestUi.Size.Y * quests.Count);
+                quest.MakeVisible();
             }
         }
 
@@ -48,25 +47,17 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
 
         public override void Draw(SpriteBatch sprite)
         {
-            lock (quests)
-            {
-                foreach (var quest in quests)
-                {
-                    quest.Draw(sprite);
-                }
-            }
         }
 
         internal void RemoveQuest(Quest quest)
         {
             lock (quests)
             {
-                int removedIndex = quests.IndexOf(quest);
-                for (int i = removedIndex + 1; i < quests.Count; i++)
-                {
-                    quests[i].Position -= new Vector2(0, -quest.Size.Y);
-                }
                 quests.Remove(quest);
+                foreach (var aQuest in quests)
+                {
+                    aQuest.QuestUi.Resize();
+                }
             }
         }
     }
