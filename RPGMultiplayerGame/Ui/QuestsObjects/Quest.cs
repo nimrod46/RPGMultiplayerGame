@@ -85,6 +85,13 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             textColor = Color.Blue;
             SyncIsFinished = false;
             OnNetworkInitializeEvent += OnNetworkInitialize;
+            OnDestroyEvent += OnDestroy;
+        }
+
+        private void OnDestroy(NetworkIdentity identity)
+        {
+            questUi.IsVisible = false;
+            ServerManager.Instance.RemoveQuest(player, this);
         }
 
         private void OnNetworkInitialize()
@@ -96,17 +103,22 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         public virtual void AssignTo(Player player)
         {
             this.player = player;
-            player.AddQuest(this);
+            player.InvokeCommandMethodNetworkly(nameof(player.AddQuest), this);
         }
 
         public virtual void Unassign(Player player)
         {
-            player.RemoveQuest(this);
+            player.InvokeCommandMethodNetworkly(nameof(player.RemoveQuest), this);
         }
 
         public virtual void RewardPlayer(Player player)
         {
             reward.Invoke(player);
+        }
+
+        public void MakeVisible()
+        {
+            questUi.IsVisible = true;
         }
 
         public void Draw(SpriteBatch sprite)

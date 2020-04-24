@@ -11,7 +11,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
 {
     public class QuestDialog : ComplexDialog
     {
-        private readonly Quest quest;
+        private Quest quest;
         private readonly string questText;
         private readonly string inQuestText;
         private readonly string notFinishedText;
@@ -33,7 +33,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             {
                 if (answerIndex == 0)
                 {
-                    ServerManager.Instance.AddQuest(quest, interactivePlayer);
+                    quest = ServerManager.Instance.AddQuest(quest, interactivePlayer);
                 }
             })));
                 ComplexDialog inProgressDialog = dialog.AddAnswerOption("Okay",new DialogByAnswerIndex(inQuestText,
@@ -44,7 +44,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
                         return -1;
                     }
 
-                    if (!interactivePlayer.GetQuestByType(quest).SyncIsFinished)
+                    if (!quest.SyncIsFinished)
                     {
                         return answerIndex;
                     }
@@ -53,8 +53,8 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             inProgressDialog.AddAnswerOption("Ok finished", notFinishedText, false);
             return inProgressDialog.AddAnswerOption("", new ActionDialog(finishedText, new Action<Player, int>((interactivePlayer, answerIndex) =>
            {
-               interactivePlayer.GetQuestByType(quest).RewardPlayer(interactivePlayer);
-               interactivePlayer.GetQuestByType(quest).Unassign(interactivePlayer);
+               quest.RewardPlayer(interactivePlayer);
+               quest.Unassign(interactivePlayer);
            })));
         }
     }

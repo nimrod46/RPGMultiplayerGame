@@ -44,10 +44,10 @@ namespace RPGMultiplayerGame.Ui
 
         public float Layer { get; set; }
 
-        private readonly Func<Point, Vector2> originFunc;
-        private PositionType originType;
-        private Vector2 origin;
-        private Vector2 size;
+        protected readonly Func<Point, Vector2> originFunc;
+        protected PositionType originType;
+        protected Vector2 origin;
+        protected Vector2 size;
 
         public enum PositionType
         {
@@ -78,7 +78,7 @@ namespace RPGMultiplayerGame.Ui
             GameManager.Instance.AddUiComponent(this);
         }
 
-        protected void UpdatePosition()
+        protected virtual void UpdatePosition()
         {
             switch (OriginType)
             {

@@ -15,7 +15,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected ComplexDialog dialog;
         protected ComplexDialog currentComplexDialog;
         protected SimpleDialog currentSimpleDialog;
-        private Vector2 dialogOffset;
+        protected Vector2 dialogOffset;
 
         public Npc(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, false)
         {
@@ -43,8 +43,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
-            currentComplexDialog?.DrawAt(sprite, Location + dialogOffset);
-            currentSimpleDialog?.DrawAt(sprite, Location + dialogOffset);
+            currentSimpleDialog?.Draw(sprite);
         }
     }
 }

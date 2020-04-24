@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
+using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,9 +13,10 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
-    public class ComplexDialog : SimpleDialog //TODO: Make UI component
+    public class ComplexDialog : UiTextureComponent //TODO: Make UI component
     {
-        private Texture2D background;
+
+        public string Text { get; set; }
 
         public int Index { get; set; }
 
@@ -22,28 +24,28 @@ namespace RPGMultiplayerGame.Objects.Dialogs
         public bool IsProgressing { get; }
 
         private readonly List<KeyValuePair<string, ComplexDialog>> dialogsByAnswers = new List<KeyValuePair<string, ComplexDialog>>();
-        public ComplexDialog(string name, string text, bool isProgressing) : base(text)
+        public ComplexDialog(string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2,screenSize.Y / 4), PositionType.Centered, false, GameManager.GUI_LAYER, GameManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
         {
             Index = 0;
             Name = name;
+            Text = text;
             IsProgressing = isProgressing;
-            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
         }
 
-        public ComplexDialog(int index, string name, string text, bool isProgressing) : base(text)
+        public ComplexDialog(int index, string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, GameManager.GUI_LAYER, GameManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
         {
             Index = index;
             Name = name;
+            Text = text;
             IsProgressing = isProgressing;
-            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
         }
 
-        public ComplexDialog(string text, bool isProgressing) : base(text)
+        public ComplexDialog(string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, GameManager.GUI_LAYER, GameManager.Instance.GetDialogBackgroundByProperties("", text, Color.White))
         {
             Index = 0;
             Name = "";
+            Text = text;
             IsProgressing = isProgressing;
-            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
         }
 
         public virtual ComplexDialog GetLast()
@@ -67,7 +69,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             dialog.Index = GetDialogsCount(this) + 1 + Index;
             dialog.Name = Name;
             dialogsByAnswers.Add(new KeyValuePair<string, ComplexDialog>(optionText, dialog));
-            background = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
+            Texture = GameManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
             return dialog.GetLast();
         }
 
@@ -88,10 +90,9 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             return dialogsByAnswers.Count;
         }
 
-        public new void DrawAt(SpriteBatch sprite, Vector2 location)
+        public override void Draw(SpriteBatch sprite)
         {
-            base.DrawAt(sprite, location);
-            sprite.Draw(background, new Vector2(sprite.GraphicsDevice.Viewport.Width / 2 - background.Width / 2, sprite.GraphicsDevice.Viewport.Height / 4 - background.Height), null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
+            base.Draw(sprite);
         }
 
         public ComplexDialog GetDialogByIndex(int index)

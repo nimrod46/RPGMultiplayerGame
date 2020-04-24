@@ -42,6 +42,7 @@ namespace RPGMultiplayerGame.Managers
         public readonly List<Monster> monsters = new List<Monster>();
         public readonly List<WeaponEffect> weaponEffects = new List<WeaponEffect>();
         public SpawnPoint spawnPoint;
+        private readonly Dictionary<string, List<Quest>> questByPlayersName = new Dictionary<string, List<Quest>>();
 
         public void StartServer()
         {
@@ -74,6 +75,8 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+       
+
         protected void OnClientSynchronized(EndPointId endPointId)
         {
             lock (players)
@@ -104,10 +107,24 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void AddQuest(Quest quest, Player player)
+        public Quest AddQuest(Quest quest, Player player)
         {
             quest = (Quest)NetBehavior.spawnWithServerAuthority(quest.GetType(), quest);
+            if (!questByPlayersName.ContainsKey(player.GetName()))
+            {
+                questByPlayersName.Add(player.GetName(), new List<Quest>(new Quest[] { quest }));
+            }
+            else
+            {
+                questByPlayersName[player.GetName()].Add(quest);
+            }
             quest.AssignTo(player);
+            return quest;
+        }
+
+        public void RemoveQuest(Player player, Quest quest)
+        {
+            questByPlayersName[player.GetName()].Remove(quest);
         }
 
         private void Player_OnDestroyEvent(NetworkIdentity identity)

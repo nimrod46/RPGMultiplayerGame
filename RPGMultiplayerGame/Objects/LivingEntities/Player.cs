@@ -198,20 +198,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void AddQuest(Quest quest)
         {
-            InvokeCommandMethodNetworkly(nameof(AddQuest), quest);
             playerQuests.AddQuest(quest);
+            quest.MakeVisible();
         }
 
         public void RemoveQuest(Quest quest)
         {
-            InvokeCommandMethodNetworkly(nameof(RemoveQuest), quest);
             playerQuests.RemoveQuest(quest);
-        }
-
-
-        public Quest GetQuestByType(Quest quest)
-        {
-            return playerQuests.GetQuestByType(quest);
         }
 
         private void Instance_OnArrowsKeysStateChange(Keys key, bool isDown)
