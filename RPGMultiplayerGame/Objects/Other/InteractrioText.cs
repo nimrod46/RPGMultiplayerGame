@@ -8,19 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGMultiplayerGame.Objects.Dialogs
+namespace RPGMultiplayerGame.Objects.Other
 {
-    public class SimpleDialog
+    public class InteractrioText
     {
         public Npc Parent { get; set; }
         public Vector2 DrawOffset { get; set; }
 
         private readonly SpriteFont font;
-        
+
 
         public string Text { get; private set; }
 
-        public SimpleDialog(string text)
+        public InteractrioText(string text)
         {
             Text = text;
             font = GameManager.Instance.DialogTextFont;

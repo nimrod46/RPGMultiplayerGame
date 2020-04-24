@@ -91,9 +91,9 @@
     <Compile Include="DictionarySortedByValue.cs" />
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
-    <Compile Include="Objects\Dialogs\ActionDialog.cs" />
-    <Compile Include="Objects\Dialogs\DialogByAnswerIndex.cs" />
-    <Compile Include="Objects\Dialogs\QuestDialog1.cs" />
+    <Compile Include="Ui\Dialogs\ActionDialog.cs" />
+    <Compile Include="Ui\Dialogs\DialogByAnswerIndex.cs" />
+    <Compile Include="Ui\Dialogs\QuestDialog.cs" />
     <Compile Include="Ui\Camera.cs" />
     <Compile Include="Ui\HealthBar.cs" />
     <Compile Include="Ui\InventoryObjects\ItemSlotUi.cs" />
@@ -119,8 +119,8 @@
     <Compile Include="Ui\QuestsObjects\KillQuest.cs" />
     <Compile Include="Ui\QuestsObjects\QuestsMenu.cs" />
     <Compile Include="Ui\QuestsObjects\Quest.cs" />
-    <Compile Include="Objects\Dialogs\SimpleDialog.cs" />
-    <Compile Include="Objects\Dialogs\ComplexDialog.cs" />
+    <Compile Include="Objects\Other\InteractrioText.cs" />
+    <Compile Include="Ui\Dialogs\ComplexDialog.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
     <Compile Include="Objects\LivingEntities\Joe.cs" />
     <Compile Include="Objects\Marks\MarkObject.cs" />

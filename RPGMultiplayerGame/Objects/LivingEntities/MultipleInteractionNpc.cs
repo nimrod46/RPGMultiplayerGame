@@ -93,7 +93,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void CmdRequestingInteractWithPlayer(Player player, int dialogIndex)
         {
-            currentSimpleDialog = new SimpleDialog(dialog.GetDialogByIndex(dialogIndex).Text)
+            currentSimpleDialog = new InteractrioText(dialog.GetDialogByIndex(dialogIndex).Text)
             {
                 Parent = this,
                 DrawOffset = dialogOffset
