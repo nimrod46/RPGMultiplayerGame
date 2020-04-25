@@ -14,7 +14,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         private readonly WeaponEffect weaponEffect;
 
-        public RangedWeapon(ItemType itemType, Point size, float damage, string name, WeaponEffect weaponEffect, int coolDownTime) : base(itemType, size, damage, name, coolDownTime)
+        public RangedWeapon(ItemType itemType, string name, Point size, float damage, WeaponEffect weaponEffect, int coolDownTime) : base(itemType, name, size, damage, coolDownTime)
         {
             this.weaponEffect = weaponEffect;
             weaponEffect.SyncDamage = damage;
@@ -33,6 +33,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
                 weaponEffect.SyncAttacker = entity;
                 ServerManager.Instance.Weapon_OnSpawnWeaponEffect(weaponEffect, entity);
             }
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\n" +
+                "Subtype: " + "Ranged weapon";
         }
     }
 }

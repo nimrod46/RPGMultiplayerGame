@@ -16,13 +16,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public float Y { get; set; }
         public Point Size { get; }
         public float Damage { get; set; }
-        protected string Name { get; set; }
 
         protected double coolDownTime;
         private double currentCoolDownTime;
         private bool inCoolDown;
 
-        public Weapon(ItemType itemType, Point size, float damage, string name, double coolDownTime) : base(itemType)
+        public Weapon(ItemType itemType, string name, Point size, float damage, double coolDownTime) : base(itemType, name)
         {
             Size = size;
             Damage = damage;
@@ -67,9 +66,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public override string ToString()
         {
             return base.ToString() + "\n" +
-                "Weapon" + "\n" +
-                "Name: " + Name + "\n" +
-                "Damage: " + Damage;
+                "Type: " + "Weapon" + "\n" +
+                "Damage: " + Damage + "\n" +
+                "Cooldown time: " + coolDownTime;
         }
     }
 }

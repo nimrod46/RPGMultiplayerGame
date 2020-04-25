@@ -11,7 +11,7 @@ namespace RPGMultiplayerGame.Objects.Items.Potions
     public abstract class Potion : StackableGameItem
     {
         private readonly Action<Entity> action;
-        public Potion(ItemType itemType, int count, Action<Entity> action) : base(itemType, count)
+        public Potion(ItemType itemType, string name, int count, Action<Entity> action) : base(itemType, name, count)
         {
             this.action = action;
         }
@@ -20,6 +20,12 @@ namespace RPGMultiplayerGame.Objects.Items.Potions
         {
             action.Invoke(player);
             Use();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\n" +
+                "Type:" + "potion";
         }
     }
 }

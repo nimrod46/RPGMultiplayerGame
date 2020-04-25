@@ -16,7 +16,7 @@ namespace RPGMultiplayerGame.Objects.Items
         {
         }
 
-        public GameItemShop(GameItem gameItem, long price) : base(gameItem.ItemType)
+        public GameItemShop(GameItem gameItem, long price) : base(gameItem.ItemType, gameItem.Name)
         {
             this.GameItem = gameItem;
             Price = price;

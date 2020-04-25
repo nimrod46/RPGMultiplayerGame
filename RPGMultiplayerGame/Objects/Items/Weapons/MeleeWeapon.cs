@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
     public class MeleeWeapon : Weapon
     {
-        public MeleeWeapon(ItemType itemType, Point size, float damage, string name, double coolDownTime) : base(itemType, size, damage, name, coolDownTime)
+        public MeleeWeapon(ItemType itemType, string name, Point size, float damage, double coolDownTime) : base(itemType, name, size, damage, coolDownTime)
         {
         }
 
@@ -52,6 +52,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
                 case Direction.Idle:
                     break;
             }
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\n" + 
+                "Subtype: " + "Melee weapon";
         }
     }
 }

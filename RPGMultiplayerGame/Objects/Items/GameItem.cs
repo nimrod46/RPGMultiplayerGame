@@ -21,16 +21,20 @@ namespace RPGMultiplayerGame.Objects.Items
             }
         }
 
+        public string Name { get; set; }
+
         private ItemType itemType;
 
         public GameItem()
         {
             ItemType = ItemType.None;
+            Name = "";
         }
 
-        public GameItem(ItemType itemType)
+        public GameItem(ItemType itemType, string name)
         {
             ItemType = itemType;
+            Name = name;
         }
 
         public virtual void Draw(SpriteBatch sprite, Vector2 location, float layer)
@@ -45,7 +49,7 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public override string ToString()
         {
-            return itemType.ToString();
+            return Name;
         }
     }
 }

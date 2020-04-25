@@ -9,8 +9,17 @@ namespace RPGMultiplayerGame.Objects.Items.Potions
 {
     public abstract class HealthPotion : Potion
     {
-        public HealthPotion(ItemType itemType, int count, int health) : base(itemType, count, e => { e.SyncHealth += health; })
+        private readonly int health;
+
+        public HealthPotion(ItemType itemType, string name, int count, int health) : base(itemType, name, count, e => { e.SyncHealth += health; })
         {
+            this.health = health;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\n" +
+                "Gives:" + health + " hp\n";
         }
     }
 }
