@@ -17,7 +17,7 @@ namespace RPGMultiplayerGame.Objects.Items
             get => itemType; set
             {
                 itemType = value;
-                Texture = GraphicManager.Instance.GetItemTextureByType(value);
+                Texture = UiManager.Instance.GetItemTextureByType(value);
             }
         }
 

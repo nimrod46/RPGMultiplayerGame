@@ -15,7 +15,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
     {
         private readonly List<Quest> quests = new List<Quest>();
 
-        public QuestsMenu(Func<Point, Vector2> origin, PositionType positionType) : base(origin, positionType, true, GraphicManager.GUI_LAYER)
+        public QuestsMenu(Func<Point, Vector2> origin, PositionType positionType) : base(origin, positionType, true, UiManager.GUI_LAYER)
         {
         }
 

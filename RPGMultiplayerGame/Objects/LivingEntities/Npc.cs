@@ -13,7 +13,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected readonly Dictionary<string, int> playersProgres = new Dictionary<string, int>();
         protected ComplexDialog dialog;
         protected ComplexDialog currentComplexDialog;
-        protected InteractrioText currentSimpleDialog;
+        protected InteractionText currentSimpleDialog;
         protected Vector2 dialogOffset;
 
         public Npc(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, false)

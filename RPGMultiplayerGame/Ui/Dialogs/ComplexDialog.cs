@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
-    public class ComplexDialog : UiTextureComponent //TODO: Make UI component
+    public class ComplexDialog : UiTextureComponent
     {
 
         public string Text { get; set; }
@@ -24,7 +24,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
         public bool IsProgressing { get; }
 
         private readonly List<KeyValuePair<string, ComplexDialog>> dialogsByAnswers = new List<KeyValuePair<string, ComplexDialog>>();
-        public ComplexDialog(string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2,screenSize.Y / 4), PositionType.Centered, false, GraphicManager.GUI_LAYER, GraphicManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
+        public ComplexDialog(string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2,screenSize.Y / 4), PositionType.Centered, false, UiManager.GUI_LAYER, UiManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
         {
             Index = 0;
             Name = name;
@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             IsProgressing = isProgressing;
         }
 
-        public ComplexDialog(int index, string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, GraphicManager.GUI_LAYER, GraphicManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
+        public ComplexDialog(int index, string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, UiManager.GUI_LAYER, UiManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
         {
             Index = index;
             Name = name;
@@ -40,7 +40,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             IsProgressing = isProgressing;
         }
 
-        public ComplexDialog(string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, GraphicManager.GUI_LAYER, GraphicManager.Instance.GetDialogBackgroundByProperties("", text, Color.White))
+        public ComplexDialog(string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, UiManager.GUI_LAYER, UiManager.Instance.GetDialogBackgroundByProperties("", text, Color.White))
         {
             Index = 0;
             Name = "";
@@ -69,7 +69,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             dialog.Index = GetDialogsCount(this) + 1 + Index;
             dialog.Name = Name;
             dialogsByAnswers.Add(new KeyValuePair<string, ComplexDialog>(optionText, dialog));
-            Texture = GraphicManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
+            Texture = UiManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
             return dialog.GetLast();
         }
 

@@ -15,7 +15,7 @@ namespace RPGMultiplayerGame.Ui
         private readonly string npcName;
         private readonly string text;
 
-        public QuestUi(Func<Point, Vector2> origin, PositionType originType, string npcName, string text, Color textColor) : base(origin, originType, false, GraphicManager.GUI_LAYER, GraphicManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor))
+        public QuestUi(Func<Point, Vector2> origin, PositionType originType, string npcName, string text, Color textColor) : base(origin, originType, false, UiManager.GUI_LAYER, UiManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor))
         {
             this.npcName = npcName;
             this.text = text;
@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Ui
         public void MarkFinished()
         {
             textColor = Color.LawnGreen;
-            Texture = GraphicManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor);
+            Texture = UiManager.Instance.GetQuestBackgroundByProperties(npcName, text, textColor);
         }
     }
 }

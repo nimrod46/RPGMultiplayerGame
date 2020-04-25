@@ -63,6 +63,7 @@ namespace RPGMultiplayerGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
             uiSpriteBatch = new SpriteBatch(GraphicsDevice);
             GraphicManager.Instance.LoadTextures(Content);
+            UiManager.Instance.LoadTextures(Content);
         }
 
         /// <summary>

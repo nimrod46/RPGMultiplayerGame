@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Other
 {
-    public class InteractrioText
+    public class InteractionText
     {
         public Npc Parent { get; set; }
         public Vector2 DrawOffset { get; set; }
@@ -20,10 +20,10 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public string Text { get; private set; }
 
-        public InteractrioText(string text)
+        public InteractionText(string text)
         {
             Text = text;
-            font = GraphicManager.Instance.DialogTextFont;
+            font = UiManager.Instance.DialogTextFont;
         }
 
         public virtual void Draw(SpriteBatch sprite)

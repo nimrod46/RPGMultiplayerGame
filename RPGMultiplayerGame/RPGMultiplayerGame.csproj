@@ -122,7 +122,7 @@
     <Compile Include="Ui\QuestsObjects\KillQuest.cs" />
     <Compile Include="Ui\QuestsObjects\QuestsMenu.cs" />
     <Compile Include="Ui\QuestsObjects\Quest.cs" />
-    <Compile Include="Objects\Other\InteractrioText.cs" />
+    <Compile Include="Objects\Other\InteractionText.cs" />
     <Compile Include="Ui\Dialogs\ComplexDialog.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
     <Compile Include="Objects\LivingEntities\Joe.cs" />

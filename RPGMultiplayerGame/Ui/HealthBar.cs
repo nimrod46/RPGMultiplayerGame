@@ -16,10 +16,10 @@ namespace RPGMultiplayerGame.Ui
         private readonly Func<float> healthFunc;
         private readonly float maxHealth;
 
-        public HealthBar(Func<Point, Vector2> origin, PositionType originType, Func<float> healthTextFunc, float maxHealth) : base(origin, originType, true, GraphicManager.GUI_LAYER, GraphicManager.Instance.UiHealthBarBackground)
+        public HealthBar(Func<Point, Vector2> origin, PositionType originType, Func<float> healthTextFunc, float maxHealth) : base(origin, originType, true, UiManager.GUI_LAYER, UiManager.Instance.UiHealthBarBackground)
         {
-            health = new UiTextureComponent(origin, originType, true, GraphicManager.GUI_LAYER * 0.1f, GraphicManager.Instance.UiHealthBar);
-            healthText = new UiTextComponent((windowSize) => Position + Size / 2, PositionType.Centered, true, GraphicManager.GUI_LAYER * 0.01f, GraphicManager.Instance.PlayerNameFont, () => healthTextFunc.Invoke().ToString());
+            health = new UiTextureComponent(origin, originType, true, UiManager.GUI_LAYER * 0.1f, UiManager.Instance.UiHealthBar);
+            healthText = new UiTextComponent((windowSize) => Position + Size / 2, PositionType.Centered, true, UiManager.GUI_LAYER * 0.01f, UiManager.Instance.HealthTextFont, () => healthTextFunc.Invoke().ToString());
             this.healthFunc = healthTextFunc;
             this.maxHealth = maxHealth;
         }

@@ -20,7 +20,7 @@ namespace RPGMultiplayerGame.Objects.Items
         public StackableGameItem(ItemType itemType, string name, int count) : base(itemType, name)
         {
             this.Count = count;
-            spriteFont = GraphicManager.Instance.PlayerNameFont;
+            spriteFont = UiManager.Instance.StackableItemNumberFont;
             textSize = spriteFont.MeasureString(count.ToString());
         }
 

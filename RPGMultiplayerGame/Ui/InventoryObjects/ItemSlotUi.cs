@@ -29,10 +29,10 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         public T Item { get; set; }
         protected ItemDescription description;
 
-        public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, T item) : base(origin, positionType, defaultVisibility, GraphicManager.GUI_LAYER, GraphicManager.Instance.InventorySlotBackground)
+        public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, T item) : base(origin, positionType, defaultVisibility, UiManager.GUI_LAYER, UiManager.Instance.InventorySlotBackground)
         {
             Item = item;
-            description = new ItemDescription((s) => InputManager.Instance.MouseBounds().Location.ToVector2(), PositionType.TopLeft, GraphicManager.GUI_LAYER * 0.001f, () => Item.ToString());
+            description = new ItemDescription((s) => InputManager.Instance.MouseBounds().Location.ToVector2(), PositionType.TopLeft, UiManager.GUI_LAYER * 0.001f, () => Item.ToString());
         }
 
         public void ShowDescription()
@@ -56,7 +56,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 {
                     Item.Draw(sprite, Position + new Vector2(Texture.Width / 2 - Item.Texture.Width / 2,
                         Texture.Height / 2 - Item.Texture.Height / 2)
-                        , GraphicManager.GUI_LAYER * 0.1f);
+                        , UiManager.GUI_LAYER * 0.1f);
                 }
             }
         }
