@@ -90,7 +90,9 @@
   <ItemGroup>
     <Compile Include="DictionarySortedByValue.cs" />
     <Compile Include="Managers\ClientManager.cs" />
+    <Compile Include="Managers\GraphicManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
+    <Compile Include="Managers\UiManager.cs" />
     <Compile Include="Ui\Dialogs\ActionDialog.cs" />
     <Compile Include="Ui\Dialogs\DialogByAnswerIndex.cs" />
     <Compile Include="Ui\Dialogs\QuestDialog.cs" />

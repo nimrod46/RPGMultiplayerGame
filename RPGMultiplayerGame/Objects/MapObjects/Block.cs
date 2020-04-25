@@ -31,14 +31,14 @@ namespace RPGMultiplayerGame.Objects
 
         public override void OnNetworkInitialize()
         {
-            texture = GameManager.Instance.textures[SyncTextureIndex];
+            texture = GraphicManager.Instance.Textures[SyncTextureIndex];
             base.OnNetworkInitialize();
             Init<BlockLib>();
         }
 
         public void OnTextureIndexSet()
         {
-            texture = GameManager.Instance.textures[SyncTextureIndex];
+            texture = GraphicManager.Instance.Textures[SyncTextureIndex];
         }
 
         protected override MapObjectLib CreateMapObject()

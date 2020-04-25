@@ -19,7 +19,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         private Inventory<GameItemShop> shop;
 
-        public Blacksmith() : base(GameManager.EntityId.Blacksmith, 0, 0, 100, GameManager.Instance.PlayerNameFont)
+        public Blacksmith() : base(GraphicManager.EntityId.Blacksmith, 0, 0, 100, GraphicManager.Instance.PlayerNameFont)
         {
             SyncName = "Blacksmith";
             minDistanceForObjectInteraction = 40;

@@ -2,12 +2,8 @@
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static RPGMultiplayerGame.Managers.GameManager;
+using static RPGMultiplayerGame.Managers.GraphicManager;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
@@ -27,7 +23,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         private float syncDamage;
         private readonly List<IdentityId> hittedEntitiesId = new List<IdentityId>();
 
-        public WeaponEffect(EffectId effectId) : base(new Dictionary<int, List<GameTexture>>(Instance.animationsByEffects[effectId]), 0, 0)
+        public WeaponEffect(EffectId effectId) : base(new Dictionary<int, List<GameTexture>>(GraphicManager.Instance.AnimationsByEffects[effectId]), 0, 0)
         {
             this.effectId = effectId;
             speed *= 6;

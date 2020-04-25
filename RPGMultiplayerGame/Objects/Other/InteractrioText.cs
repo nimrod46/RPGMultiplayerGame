@@ -23,7 +23,7 @@ namespace RPGMultiplayerGame.Objects.Other
         public InteractrioText(string text)
         {
             Text = text;
-            font = GameManager.Instance.DialogTextFont;
+            font = GraphicManager.Instance.DialogTextFont;
         }
 
         public virtual void Draw(SpriteBatch sprite)

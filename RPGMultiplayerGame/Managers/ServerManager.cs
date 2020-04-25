@@ -35,7 +35,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public bool IsRuning { get; private set; }
+        public bool IsRunning { get; private set; }
         public readonly List<Player> players = new List<Player>();
 
         public readonly List<IGameUpdateable> serverObjects = new List<IGameUpdateable>();
@@ -52,7 +52,7 @@ namespace RPGMultiplayerGame.Managers
             serverBehavior.OnRemoteIdentityInitialize += OnIdentityInitialize;
             serverBehavior.OnLocalIdentityInitialize += OnIdentityInitialize;
             NetBehavior = serverBehavior;
-            IsRuning = true;
+            IsRunning = true;
         }
 
         private void OnIdentityInitialize(NetworkIdentity identity)

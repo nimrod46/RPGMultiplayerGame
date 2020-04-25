@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             this.collisionOffsetX = collisionOffsetX;
             this.collisionOffsetY = collisionOffsetY;
-            Layer = GameManager.MOVING_OJECT_LAYER;
+            Layer = GraphicManager.MOVING_OJECT_LAYER;
         }
 
         public virtual void SetCurrentEntityState(int entityState, Direction direction)

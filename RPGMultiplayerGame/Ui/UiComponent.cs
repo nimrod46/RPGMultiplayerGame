@@ -82,12 +82,12 @@ namespace RPGMultiplayerGame.Ui
         public UiComponent(Func<Point, Vector2> originFunc, PositionType originType, bool defaultVisibility, float layer)
         {
             this.OriginFunc = originFunc;
-            Origin = this.OriginFunc.Invoke(GameManager.Instance.GetScreenSize());
+            Origin = this.OriginFunc.Invoke(UiManager.Instance.GetScreenSize());
             OriginType = originType;
             isVisible = defaultVisibility;
             Layer = layer;
             Scale = 1;
-            GameManager.Instance.AddUiComponent(this);
+            UiManager.Instance.AddUiComponent(this);
         }
 
         public UiComponent()
@@ -97,7 +97,7 @@ namespace RPGMultiplayerGame.Ui
             OriginType = PositionType.TopLeft;
             Layer = 0;
             Scale = 1;
-            GameManager.Instance.AddUiComponent(this);
+            UiManager.Instance.AddUiComponent(this);
         }
 
         protected virtual void UpdatePosition()
@@ -121,12 +121,12 @@ namespace RPGMultiplayerGame.Ui
                     break;
             }
 
-            if (Position.X + Size.X * Scale > GameManager.Instance.GetScreenSize().X)
+            if (Position.X + Size.X * Scale > UiManager.Instance.GetScreenSize().X)
             {
                 Position += new Vector2(-Size.X * Scale, 0);
             }
 
-            if (Position.Y + Size.Y * Scale > GameManager.Instance.GetScreenSize().Y)
+            if (Position.Y + Size.Y * Scale > UiManager.Instance.GetScreenSize().Y)
             {
                 Position += new Vector2(0, -Size.Y * Scale);
             }
@@ -138,13 +138,13 @@ namespace RPGMultiplayerGame.Ui
         {
             if (IsVisible)
             {
-                Origin = OriginFunc.Invoke(GameManager.Instance.GetScreenSize());
+                Origin = OriginFunc.Invoke(UiManager.Instance.GetScreenSize());
             }
         }
 
         public void Resize()
         {
-            Origin = OriginFunc.Invoke(GameManager.Instance.GetScreenSize());
+            Origin = OriginFunc.Invoke(UiManager.Instance.GetScreenSize());
         }
     }
 }

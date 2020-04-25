@@ -18,21 +18,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected double timeSinceLastGeneratePoint;
         private readonly DictionarySortedByValue<Entity, float> targetPlayers = new DictionarySortedByValue<Entity, float>();
 
-        public Monster(GameManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, true)
+        public Monster(GraphicManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, true)
         {
             minDistanceForObjectInteraction = 60;
-        }
-
-        public override void OnNetworkInitialize()
-        {
-            base.OnNetworkInitialize();
-            GameManager.Instance.AddMonster(this);
-        }
-
-        public override void OnDestroyed(NetworkIdentity identity)
-        {
-            base.OnDestroyed(identity);
-            GameManager.Instance.RemoveMonster(this);
         }
 
         public override void Update(GameTime gameTime)

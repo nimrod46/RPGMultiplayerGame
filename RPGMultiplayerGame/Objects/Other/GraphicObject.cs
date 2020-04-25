@@ -39,7 +39,7 @@ namespace RPGMultiplayerGame.Objects.Other
             base.OnNetworkInitialize();
             if (!isInServer)
             {
-                GameManager.Instance.AddGraphicObject(this);
+                GraphicManager.Instance.AddGraphicObject(this);
             }
             DefaultLayer = Layer;
         }
@@ -66,13 +66,8 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public override void OnDestroyed(NetworkIdentity identity)
         {
-            GameManager.Instance.RemoveGraphicObject(this);
+            GraphicManager.Instance.RemoveGraphicObject(this);
             base.OnDestroyed(identity);
-        }
-
-        public void Draw(GameTime gameTime)
-        {
-            throw new NotImplementedException();
         }
     }
 }

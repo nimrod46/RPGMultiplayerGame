@@ -1,15 +1,10 @@
-﻿using Map;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Networking;
+﻿using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static RPGMultiplayerGame.Managers.GameManager;
+using static RPGMultiplayerGame.Managers.GraphicManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {

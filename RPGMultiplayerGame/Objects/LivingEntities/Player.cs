@@ -43,7 +43,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private long syncGold;
         private HealthBar uiHealthBar;
 
-        public Player() : base(EntityId.Player, 0, 10, 100, GameManager.Instance.PlayerNameFont, true)
+        public Player() : base(GraphicManager.EntityId.Player, 0, 10, 100, GraphicManager.Instance.PlayerNameFont, true)
         {
             scale = 1;
             speed *= 2;
@@ -54,7 +54,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (hasAuthority)
             {
-                Layer = GameManager.OWN_PLAYER_LAYER;
+                Layer = GraphicManager.OWN_PLAYER_LAYER;
 
                 inventory = new Inventory<GameItem>((windowSize) => windowSize.ToVector2() / 2, PositionType.Centered, false, INVENTORY_COLUMNS_NUMBER, INVENTORY_ROWS_NUMBER)
                 {

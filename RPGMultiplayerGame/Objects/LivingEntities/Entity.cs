@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Map;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
@@ -15,7 +7,7 @@ using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Other;
-using static RPGMultiplayerGame.Managers.GameManager;
+using static RPGMultiplayerGame.Managers.GraphicManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 
@@ -77,19 +69,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private readonly double flickerTimeDelay = 0.2;
         private double currentFlickerTime = 0.5;
 
-        public Entity(EntityId entityId, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(new Dictionary<int, List<GameTexture>>(GameManager.Instance.animationsByEntities[entityId]), collisionOffsetX, collisionOffsetY)
+        public Entity(EntityId entityId, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(new Dictionary<int, List<GameTexture>>(GraphicManager.Instance.AnimationsByEntities[entityId]), collisionOffsetX, collisionOffsetY)
         {
             this.EntityId = entityId;
             this.maxHealth = maxHealth;
             this.damageable = damageable;
             isBeingHit = false;
-            healthBar = GameManager.Instance.HealthBar;
-            healthBarBackground = GameManager.Instance.HealthBarBackground;
+            healthBar = GraphicManager.Instance.HealthBar;
+            healthBarBackground = GraphicManager.Instance.HealthBarBackground;
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
             SyncHealth = maxHealth;
             SyncCurrentAnimationType = (int)EntityAnimation.IdleDown;
             syncCurrentEntityState = (int)State.Idle;
-            Layer = GameManager.ENTITY_LAYER;
+            Layer = GraphicManager.ENTITY_LAYER;
             isHidenCompletely = false;
             flickerCount = 5;
             healthBarOffset = Vector2.Zero;

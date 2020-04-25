@@ -9,7 +9,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects
 {
     public class FireBall : WeaponEffect
     {
-        public FireBall() : base(GameManager.EffectId.FireBall)
+        public FireBall() : base(GraphicManager.EffectId.FireBall)
         {
         }
     }

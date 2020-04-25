@@ -13,7 +13,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     public class MultipleInteractionNpc : Npc
     {
-        public MultipleInteractionNpc(GameManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
+        public MultipleInteractionNpc(GraphicManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
         {
         }
 

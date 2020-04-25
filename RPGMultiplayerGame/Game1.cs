@@ -40,6 +40,9 @@ namespace RPGMultiplayerGame
         /// </summary>
         protected override void Initialize()
         {
+            GameManager.Instance.Init(this);
+            GraphicManager.Instance.Init(this);
+            UiManager.Instance.Init(this);
             base.Initialize();
             gameForm.Shown += (e, s) => gameForm.Hide();
             LobbyMenu lobby = new LobbyMenu(gameForm);
@@ -47,9 +50,7 @@ namespace RPGMultiplayerGame
             lobby.OnConnectionEstablished += Lobby_OnConnecting;
             lobby.OnServerOnline += Lobby_OnServerCreated; ;
             lobby.FormClosing += (e, s) => Exit();
-            GameManager.Instance.Init(this);
-            Window.ClientSizeChanged += (r ,e) => GameManager.Instance.OnResize();
-
+            Window.ClientSizeChanged += (r ,e) => UiManager.Instance.OnResize();
         }
 
         /// <summary>
@@ -61,8 +62,7 @@ namespace RPGMultiplayerGame
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             uiSpriteBatch = new SpriteBatch(GraphicsDevice);
-          //  MapManager.Instance.LoadSpriteSheet(GraphicsDevice, textures);
-            GameManager.Instance.LoadTextures(GraphicsDevice, Content);
+            GraphicManager.Instance.LoadTextures(Content);
         }
 
         /// <summary>
@@ -103,12 +103,12 @@ namespace RPGMultiplayerGame
 
             if (gameTime.IsRunningSlowly)
             {
-                Console.WriteLine("RUNING SLOWWWW");
+                Console.WriteLine("RUNNING SLOWWWW");
             }
             base.Update(gameTime);
-            if (ServerManager.Instance.IsRuning != true)
+            if (ServerManager.Instance.IsRunning != true)
             {
-                GameManager.Instance.Update(graphics.GraphicsDevice, gameTime);
+                GameManager.Instance.Update(gameTime);
                 InputManager.Instance.Update(gameTime);
             }
             else
@@ -124,14 +124,14 @@ namespace RPGMultiplayerGame
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            if (ServerManager.Instance.IsRuning != true)
+            if (ServerManager.Instance.IsRunning != true)
             {
                 uiSpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
-                GameManager.Instance.DrawUi(uiSpriteBatch);
-                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, GameManager.Instance.Camera.Transform);
-                GameManager.Instance.Draw(spriteBatch);
-                spriteBatch.End();
+                UiManager.Instance.Draw(uiSpriteBatch);
                 uiSpriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, GameManager.Instance.Camera.Transform);
+                GraphicManager.Instance.Draw(spriteBatch);
+                spriteBatch.End();
             }
             base.Draw(gameTime);
         }

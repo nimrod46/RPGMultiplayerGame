@@ -17,7 +17,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     class Joe : MultipleInteractionNpc
     {
-        public Joe() : base(GameManager.EntityId.Player, 0, 0, 100, GameManager.Instance.PlayerNameFont)
+        public Joe() : base(GraphicManager.EntityId.Player, 0, 0, 100, GraphicManager.Instance.PlayerNameFont)
         {
             SyncName = "Joe";
             minDistanceForObjectInteraction = 40;

@@ -2,11 +2,6 @@
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.QuestsObjects.Quests
 {
@@ -15,7 +10,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects.Quests
         public JoeKillQuest() : base((windowSize) => Microsoft.Xna.Framework.Vector2.Zero, Ui.UiComponent.PositionType.ButtomCentered, nameof(Joe), "Kill 5 bats", new Action<Player>(player => {
             player.AddItemToInventory(ItemType.CommonWond);
             player.SyncHealth = 1000;
-        }), EntityId.Bat, 5)
+        }), GraphicManager.EntityId.Bat, 5)
         {
         }
     }
