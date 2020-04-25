@@ -108,7 +108,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void CmdInteractWithPlayer(Player player, int dialogIndex)
         {
-            currentSimpleDialog = null;
+            
             currentComplexDialog = dialog.GetDialogByIndex(dialogIndex);
             currentComplexDialog.IsVisible = true;
             player.InteractWithNpc(this);
@@ -135,6 +135,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected void CmdShowNextDialogForPlayer(int dialogIndex)
         {
+            currentSimpleDialog = new InteractionText(dialog.GetDialogByIndex(dialogIndex).Text)
+            {
+                Parent = this,
+                DrawOffset = dialogOffset
+            };
             currentComplexDialog.IsVisible = false;
             currentComplexDialog = dialog.GetDialogByIndex(dialogIndex);
             currentComplexDialog.IsVisible = true;
