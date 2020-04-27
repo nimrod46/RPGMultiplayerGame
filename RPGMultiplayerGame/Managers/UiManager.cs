@@ -41,6 +41,7 @@ namespace RPGMultiplayerGame.Managers
         public SpriteFont HealthTextFont { get; internal set; }
         public SpriteFont StackableItemNumberFont { get; internal set; }
         public SpriteFont ItemDescriptionFont { get; internal set; }
+        public SpriteFont GoldTextFont { get; internal set; }
 
         private readonly List<UiComponent> uiComponents = new List<UiComponent>();
         private readonly string dialogBackgroundPath;
@@ -69,6 +70,7 @@ namespace RPGMultiplayerGame.Managers
             HealthTextFont = content.Load<SpriteFont>("Ui\\HealthTextFont");
             StackableItemNumberFont = content.Load<SpriteFont>("Ui\\StackableItemNumberFont");
             ItemDescriptionFont = content.Load<SpriteFont>("Ui\\ItemDescriptionFont");
+            GoldTextFont = content.Load<SpriteFont>("Ui\\GoldTextFont");
 
             foreach (ItemType gameItemType in Enum.GetValues(typeof(ItemType)))
             {

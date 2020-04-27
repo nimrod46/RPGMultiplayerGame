@@ -40,6 +40,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private Inventory<GameItem> inventory;
         private Inventory<GameItem> usableItems;
         private Inventory<GameItem> equippedItems;
+        private UiTextComponent goldText;
         private long syncGold;
         private HealthBar uiHealthBar;
 
@@ -67,6 +68,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 equippedItems = new Inventory<GameItem>((windowSize) => new Vector2(10, windowSize.Y - 10), PositionType.ButtomLeft, true, 3, 1);
                 playerQuests = new QuestsMenu((windowSize) => new Vector2(windowSize.X - 10, 50), PositionType.TopRight);
                 uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, () => SyncHealth, maxHealth);
+                goldText = new UiTextComponent((windowSize) =>  new Vector2(uiHealthBar.Position.X + uiHealthBar.Size.X + 20, uiHealthBar.Position.Y + uiHealthBar.Size.Y / 2), PositionType.CenteredLeft, true, UiManager.GUI_LAYER, UiManager.Instance.GoldTextFont, () => SyncGold.ToString(), Color.DarkGoldenrod);
             }
             
             base.OnNetworkInitialize();

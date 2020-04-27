@@ -61,16 +61,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void Shop_OnItemClickedEvent(GameItemShop item)
         {
-            InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), ClientManager.Instance.Player);
+            InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), ClientManager.Instance.Player, shop.GetItemSlot(item));
         }
 
-        public void CmdCheckPlayerBuy(Player player, GameItemShop gameItemShop)
+        public void CmdCheckPlayerBuy(Player player, int slot)
         {
-            InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), player);
-            if (player.IsAbleToBuy(gameItemShop))
+            if (shop.TryGetItemInSlot(slot, out GameItemShop itemShop))
             {
-                ItemFactory.GivePlayerItemByItem(player, gameItemShop.GameItem);
-                player.SyncGold -= gameItemShop.Price;
+                if (player.IsAbleToBuy(itemShop))
+                {
+                    ItemFactory.GivePlayerItemByItem(player, itemShop.GameItem);
+                    player.SyncGold -= itemShop.Price;
+                }
             }
         }
     }

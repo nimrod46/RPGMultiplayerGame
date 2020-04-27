@@ -29,28 +29,22 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public static T GetItem<T>(ItemType itemType) where T : GameItem
         {
-            switch (itemType)
+            return itemType switch
             {
-                case ItemType.CommonSword:
-                    return new CommonSword() as T;
-                case ItemType.CommonWond:
-                    return new CommonWond() as T;
-                case ItemType.BatClaw:
-                    return new BatClaw() as T;
-                default:
-                    throw new Exception("Cannot create insatance of " + itemType);
-            }
+                ItemType.CommonSword => new CommonSword() as T,
+                ItemType.CommonWond => new CommonWond() as T,
+                ItemType.BatClaw => new BatClaw() as T,
+                _ => throw new Exception("Cannot create insatance of " + itemType),
+            };
         }
 
         public static T GetItem<T>(ItemType itemType, int count) where T : GameItem
         {
-            switch (itemType)
+            return itemType switch
             {
-                case ItemType.CommonHealthPotion:
-                    return new CommonHealthPotion(count) as T;
-                default:
-                    throw new Exception("Cannot create insatance of " + itemType);
-            }
+                ItemType.CommonHealthPotion => new CommonHealthPotion(count) as T,
+                _ => throw new Exception("Cannot create insatance of " + itemType),
+            };
         }
 
         public static void GivePlayerItemByItem<T>(Player player, T item) where T : GameItem

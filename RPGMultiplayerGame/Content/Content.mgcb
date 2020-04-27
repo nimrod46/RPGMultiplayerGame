@@ -2199,6 +2199,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Ui/DialogTextFont.spritefont
 
+#begin Ui/GoldTextFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Ui/GoldTextFont.spritefont
+
 #begin Ui/HealthTextFont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

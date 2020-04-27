@@ -176,14 +176,19 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             return false;
         }
 
-        internal bool TryGetItemInSlot(int slot, out T item)
+        public bool TryGetItemInSlot(int slot, out T item)
         {
             ItemSlotUi<T> itemSlot = inventoryItems[slot - 1];
             item = itemSlot.Item;
             return item != null;
         }
 
-        internal bool TryRemoveItem(GameItem item)
+        public int GetItemSlot(T item)
+        {
+            return inventoryItems.ToList().FindIndex(i => i.Item == item) + 1;
+        }
+
+        public bool TryRemoveItem(GameItem item)
         {
             for (int i = inventoryItems.Length - 1; i >= 0; i--)
             {

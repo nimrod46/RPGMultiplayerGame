@@ -74,7 +74,8 @@ namespace RPGMultiplayerGame.Ui
             ButtomLeft,
             ButtomCentered,
             TopLeft,
-            TopRight
+            TopRight,
+            CenteredLeft
         }
 
 
@@ -118,6 +119,9 @@ namespace RPGMultiplayerGame.Ui
                     break;
                 case PositionType.TopRight:
                     Position = Origin - new Vector2(Size.X, 0);
+                    break;
+                case PositionType.CenteredLeft:
+                    Position = Origin - new Vector2(0, -Size.Y / 2);
                     break;
             }
 

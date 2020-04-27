@@ -29,7 +29,7 @@ namespace RPGMultiplayerGame.Ui.InventoryObjects
 
         public ItemDescription(Func<Point, Vector2> origin, PositionType originType, float layer, Func<string> description) : base(origin, originType, false, layer, UiManager.Instance.ItemDescriptionBackground)
         {
-            this.descriptionText = new UiTextComponent((s) => new Vector2(5, 15), originType, false, layer * 0.1f, UiManager.Instance.ItemDescriptionFont, description);
+            this.descriptionText = new UiTextComponent((s) => new Vector2(5, 15), originType, false, layer * 0.1f, UiManager.Instance.ItemDescriptionFont, description, Color.DeepPink);
             descriptionText.Parent = this;
         }
 
