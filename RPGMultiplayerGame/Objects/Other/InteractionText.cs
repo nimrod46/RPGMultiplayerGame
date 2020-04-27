@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void Draw(SpriteBatch sprite)
         {
-            sprite.DrawString(font, Text, Parent.Location + DrawOffset + new Vector2(-font.MeasureString(Text).X / 2, -font.MeasureString(Text).Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 0);
+            sprite.DrawString(font, Text, Parent.Location + DrawOffset + new Vector2(-font.MeasureString(Text).X / 2, -font.MeasureString(Text).Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Parent.Layer);
         }
     }
 }

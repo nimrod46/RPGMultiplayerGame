@@ -2203,7 +2203,7 @@
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
+/processorParam:TextureFormat=NoChange
 /build:Ui/HealthTextFont.spritefont
 
 #begin Ui/InventorySlot.png

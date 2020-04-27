@@ -43,7 +43,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private long syncGold;
         private HealthBar uiHealthBar;
 
-        public Player() : base(GraphicManager.EntityId.Player, 0, 10, 100, GraphicManager.Instance.PlayerNameFont, true)
+        public Player() : base(GraphicManager.EntityId.Player, 0, 10, 100, GraphicManager.Instance.PlayerNameFont, true, Color.DarkOrange)
         {
             scale = 1;
             speed *= 2;
@@ -55,6 +55,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (hasAuthority)
             {
                 Layer = GraphicManager.OWN_PLAYER_LAYER;
+                NameColor = Color.DarkBlue;
 
                 inventory = new Inventory<GameItem>((windowSize) => windowSize.ToVector2() / 2, PositionType.Centered, false, INVENTORY_COLUMNS_NUMBER, INVENTORY_ROWS_NUMBER)
                 {
@@ -64,7 +65,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 usableItems = new Inventory<GameItem>((windowSize) => new Vector2(windowSize.X / 2, windowSize.Y - 10), PositionType.ButtomCentered, true, 5, 1);
                 usableItems.OnItemClickedEvent += UsableItems_OnItemClickedEvent;
                 equippedItems = new Inventory<GameItem>((windowSize) => new Vector2(10, windowSize.Y - 10), PositionType.ButtomLeft, true, 3, 1);
-                playerQuests = new QuestsMenu((windowSize) => new Vector2(windowSize.X, 100), PositionType.TopRight);
+                playerQuests = new QuestsMenu((windowSize) => new Vector2(windowSize.X - 10, 50), PositionType.TopRight);
                 uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, () => SyncHealth, maxHealth);
             }
             

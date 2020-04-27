@@ -17,6 +17,11 @@ namespace RPGMultiplayerGame.Ui.InventoryObjects
             {
                 base.IsVisible = value;
                 descriptionText.IsVisible = IsVisible;
+                if(!isVisible)
+                {
+                    Scale = 1;
+                    descriptionText.UpdatePosition();
+                }
             }
         }
 
@@ -24,7 +29,7 @@ namespace RPGMultiplayerGame.Ui.InventoryObjects
 
         public ItemDescription(Func<Point, Vector2> origin, PositionType originType, float layer, Func<string> description) : base(origin, originType, false, layer, UiManager.Instance.ItemDescriptionBackground)
         {
-            this.descriptionText = new UiTextComponent((s) => new Vector2(8, 25), originType, false, layer * 0.1f, UiManager.Instance.ItemDescriptionFont, description);
+            this.descriptionText = new UiTextComponent((s) => new Vector2(5, 15), originType, false, layer * 0.1f, UiManager.Instance.ItemDescriptionFont, description);
             descriptionText.Parent = this;
         }
 
@@ -33,15 +38,15 @@ namespace RPGMultiplayerGame.Ui.InventoryObjects
             if (isVisible)
             {
                 float xScale = 1;
-                if (descriptionText.Size.X + descriptionText.Position.X * 2 + 5 > Size.X)
+                if (descriptionText.Size.X + descriptionText.Position.X  * 2> Size.X)
                 {
-                    xScale = (descriptionText.Size.X + descriptionText.Position.X * 2 + 5 - Size.X) / Size.X + 1;
+                    xScale = (descriptionText.Size.X + descriptionText.Position.X * 2 - Size.X) / Size.X + 1;
                 }
 
                 float yScale = 1;
-                if(descriptionText.Size.Y + descriptionText.Position.Y * 2 + 5 > Size.Y)
+                if(descriptionText.Size.Y + descriptionText.Position.Y  * 2 > Size.Y)
                 {
-                    yScale = (descriptionText.Size.Y + descriptionText.Position.Y * 2 + 5 - Size.Y) / Size.Y + 1;
+                    yScale = (descriptionText.Size.Y + descriptionText.Position.Y *2 - Size.Y) / Size.Y + 1;
                 }
                 Scale = MathHelper.Max(xScale, yScale);
                 base.Draw(sprite);

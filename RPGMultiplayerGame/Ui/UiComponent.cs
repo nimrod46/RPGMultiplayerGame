@@ -100,7 +100,7 @@ namespace RPGMultiplayerGame.Ui
             UiManager.Instance.AddUiComponent(this);
         }
 
-        protected virtual void UpdatePosition()
+        public virtual void UpdatePosition()
         {
             switch (OriginType)
             {
@@ -131,7 +131,8 @@ namespace RPGMultiplayerGame.Ui
                 Position += new Vector2(0, -Size.Y * Scale);
             }
 
-            DrawPosition = Position + (Parent != null ? Parent.Position : Vector2.Zero);
+            Position = (Parent != null ? Position * Parent.Scale : Position);
+            DrawPosition = (Parent != null ? Parent.Position + Position : Position);
         }
 
         public virtual void Draw(SpriteBatch sprite)

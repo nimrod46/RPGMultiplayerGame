@@ -18,7 +18,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected double timeSinceLastGeneratePoint;
         private readonly DictionarySortedByValue<Entity, float> targetPlayers = new DictionarySortedByValue<Entity, float>();
 
-        public Monster(GraphicManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, true)
+        public Monster(GraphicManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, true, Color.DarkRed)
         {
             minDistanceForObjectInteraction = 60;
         }

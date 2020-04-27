@@ -16,15 +16,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        protected Vector2 nameOffset;
+        public Color NameColor { get; set; }
+
         protected readonly SpriteFont nameFont;
+        protected Vector2 nameOffset;
         protected Vector2 nameFontSize = Vector2.Zero;
         private string syncName;
 
 
-        public Human(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont, bool damageable) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, damageable)
+        public Human(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont, bool damageable, Color nameColor) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, damageable)
         {
             this.nameFont = nameFont;
+            this.NameColor = nameColor;
             BaseSize = (animationsByType[(int) EntityAnimation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
         }
 
@@ -39,7 +42,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Draw(sprite);
             if (!isHidenCompletely)
             {
-                sprite.DrawString(nameFont, SyncName, Location + nameOffset, Color.Black, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer);
+                sprite.DrawString(nameFont, SyncName, Location + nameOffset, NameColor, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer);
             }
         }
 
