@@ -61,7 +61,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void Shop_OnItemClickedEvent(GameItemShop item)
         {
-            InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), ClientManager.Instance.Player, shop.GetItemSlot(item));
+            InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), GameManager.Instance.Player, shop.GetItemSlot(item));
         }
 
         public void CmdCheckPlayerBuy(Player player, int slot)

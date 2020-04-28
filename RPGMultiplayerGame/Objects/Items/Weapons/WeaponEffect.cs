@@ -35,6 +35,21 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, SyncCurrentDirection);
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            if(!hasAuthority)
+            {
+                return;
+            }
+
+            List<Entity> entities = GameManager.Instance.GetEntitiesIntersectsWith(this);
+            foreach (Entity entity in entities)
+            {
+                Hit(entity);
+            }
+        }
+
         public void Hit(Entity entity)
         {
             if (!hittedEntitiesId.Contains(entity.Id))

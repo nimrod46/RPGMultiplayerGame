@@ -161,9 +161,13 @@ namespace RPGMultiplayerGame.Managers
 
         public void Draw(SpriteBatch sprite)
         {
-            for (int i = 0; i < uiComponents.Count; i++)
+            lock (uiComponents)
             {
-                uiComponents[i].Draw(sprite);
+                foreach (var uiComponent in uiComponents)
+                {
+                    uiComponent.Draw(sprite);
+
+                }
             }
         }
 

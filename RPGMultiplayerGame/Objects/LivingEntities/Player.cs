@@ -20,7 +20,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     {
         readonly List<Keys> currentArrowsKeysPressed = new List<Keys>();
         public delegate void LocalPlayerNameSetEventHandler(Player player);
-        public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSet;
+        public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSetEvent;
 
 
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
@@ -336,7 +336,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
             Init(name);
-            OnLocalPlayerNameSet?.Invoke(this);
+            OnLocalPlayerNameSetEvent?.Invoke(this);
             Console.WriteLine("Welcome: " + SyncName);
         }
     }

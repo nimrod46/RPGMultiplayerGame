@@ -50,7 +50,6 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void OnNetworkInitialize()
         {
-            GameManager.Instance.AddGameObject(this);
             Location = new Vector2(SyncX, SyncY);
         }
 
@@ -92,7 +91,6 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void OnDestroyed(NetworkIdentity identity)
         {
-            GameManager.Instance.RemoveGameObject(this);
         }
     }
 }

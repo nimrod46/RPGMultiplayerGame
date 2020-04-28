@@ -8,6 +8,7 @@ using Networking;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.Other;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -25,50 +26,18 @@ namespace RPGMultiplayerGame.Managers
                 return instance;
             }
         }
-        public Player Player { get; set; }
-        public event EventHandler OnStartGame;
-        public string name;
         protected ClientManager()
         {
         }
 
         public void Start()
         {
-            NetBehavior.OnLocalIdentityInitialize += OnLocalIdentityInitialize;
+            NetBehavior.OnLocalIdentityInitialize += GameManager.Instance.OnIdentityInitialize;
+            NetBehavior.OnRemoteIdentityInitialize += GameManager.Instance.OnIdentityInitialize;
             NetBehavior.Synchronize();
         }
 
-        private void OnLocalIdentityInitialize(NetworkIdentity client)
-        {
-            if (client is Player player)
-            {
-                Player = player;
-                GameManager.Instance.Player = player;
-                player.OnDestroyEvent += Player_OnDestroyEvent;
-                if (name == null)
-                {
-                    player.OnLocalPlayerNameSet += NetworkManager_OnPlayerNameSet;
-                    player.InitName();
-                }
-                else
-                {
-                    player.Init(name);
-                }
-            }
-        }
-
-        private void Player_OnDestroyEvent(NetworkIdentity identity)
-        {
-            Player.IsInventoryVisible = false;
-            Player = null;
-            GameManager.Instance.Player = null;
-        }
-
-        private void NetworkManager_OnPlayerNameSet(Player player)
-        {
-            OnStartGame?.Invoke(this, null);
-            name = player.GetName();
-        }
+        
 
         public bool Connect()
         {

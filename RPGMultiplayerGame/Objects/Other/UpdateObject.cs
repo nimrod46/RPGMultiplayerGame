@@ -10,38 +10,31 @@ namespace RPGMultiplayerGame.Objects.Other
 {
     public abstract class UpdateObject : GameObject, IGameUpdateable
     {
+        private double timeToDestroy;
+        private bool isOnCountDown;
+
         public UpdateObject()
         {
-        }
-
-        public override void OnNetworkInitialize()
-        {
-            base.OnNetworkInitialize();
-            if (isInServer && hasAuthority)
-            {
-                ServerManager.Instance.AddServerGameObject(this);
-            }
-            else
-            {
-                GameManager.Instance.AddUpdateObject(this);
-            }
+            timeToDestroy = 0;
+            isOnCountDown = false;
         }
 
         public virtual void Update(GameTime gameTime)
         {
+            if(isOnCountDown)
+            {
+                timeToDestroy -= gameTime.ElapsedGameTime.TotalSeconds;
+                if(timeToDestroy <= 0)
+                {
+                    InvokeBroadcastMethodNetworkly(nameof(Destroy));
+                }
+            }
         }
 
-        public override void OnDestroyed(NetworkIdentity identity)
+        public void SetTimeToDestroy(double timeToDestroy)
         {
-            base.OnDestroyed(identity);
-            if (isInServer && hasAuthority)
-            {
-                ServerManager.Instance.RemoveServerGameObject(this);
-            }
-            else
-            {
-                GameManager.Instance.RemoveUpdateObject(this);
-            }
+            this.timeToDestroy = timeToDestroy;
+            isOnCountDown = true;
         }
     }
 }

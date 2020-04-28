@@ -36,12 +36,14 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         }
 
         public bool IsIntractable { get; set; }
+        public bool IsDestroyed { get; set; }
 
         private readonly ItemSlotUi<T>[] inventoryItems;
 
         public Inventory(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, int columns, int rows) : base(origin, positionType, defaultVisibility, UiManager.GUI_LAYER)
         {
             IsIntractable = false;
+            IsDestroyed = false;
             ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType, false, ItemFactory.GetEmptyItem<T>());
             Size = inventoryItem.Size * new Vector2(columns, rows);
             inventoryItems = new ItemSlotUi<T>[columns * rows];

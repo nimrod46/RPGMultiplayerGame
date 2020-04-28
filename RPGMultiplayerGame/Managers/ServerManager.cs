@@ -37,46 +37,20 @@ namespace RPGMultiplayerGame.Managers
 
         public bool IsRunning { get; private set; }
         public readonly List<Player> players = new List<Player>();
-
-        public readonly List<IGameUpdateable> serverObjects = new List<IGameUpdateable>();
-        public readonly List<Monster> monsters = new List<Monster>();
-        public readonly List<WeaponEffect> weaponEffects = new List<WeaponEffect>();
-        public SpawnPoint spawnPoint;
         private readonly Dictionary<string, List<Quest>> questByPlayersName = new Dictionary<string, List<Quest>>();
+        public SpawnPoint spawnPoint;
 
         public void StartServer()
         {
             ServerBehavior serverBehavior = new ServerBehavior(1331);
             serverBehavior.Run();
             serverBehavior.OnClientEventHandlerSynchronizedEvent += OnClientSynchronized;
-            serverBehavior.OnRemoteIdentityInitialize += OnIdentityInitialize;
-            serverBehavior.OnLocalIdentityInitialize += OnIdentityInitialize;
+            serverBehavior.OnRemoteIdentityInitialize += GameManager.Instance.OnIdentityInitialize;
+            serverBehavior.OnLocalIdentityInitialize += GameManager.Instance.OnIdentityInitialize;
             NetBehavior = serverBehavior;
             IsRunning = true;
         }
-
-        private void OnIdentityInitialize(NetworkIdentity identity)
-        {
-            if (identity is Monster)
-            {
-                lock (monsters)
-                {
-                    monsters.Add(identity as Monster);
-                    identity.OnDestroyEvent += Monster_OnDestroyEvent;
-                }
-            }
-        }
-
-        private void Monster_OnDestroyEvent(NetworkIdentity identity)
-        {
-            lock (monsters)
-            {
-                monsters.Remove(identity as Monster);
-            }
-        }
-
-       
-
+   
         protected void OnClientSynchronized(EndPointId endPointId)
         {
             lock (players)
@@ -101,10 +75,6 @@ namespace RPGMultiplayerGame.Managers
         {
             weaponEffect = (WeaponEffect)NetBehavior.spawnWithServerAuthority(weaponEffect.GetType(), weaponEffect);
             weaponEffect.SetLocation(entity.GetBoundingRectangle());
-            lock (weaponEffects)
-            {
-                weaponEffects.Add(weaponEffect);
-            }
         }
 
         public Quest AddQuest(Quest quest, Player player)
@@ -129,10 +99,10 @@ namespace RPGMultiplayerGame.Managers
 
         private void Player_OnDestroyEvent(NetworkIdentity identity)
         {
-            lock(players)
+            lock (players)
             {
-                players.Remove((Player) identity);
-               // OnClientSynchronized(identity.ownerId);
+                players.Remove((Player)identity);
+                // OnClientSynchronized(identity.ownerId);
             }
         }
 
@@ -144,7 +114,7 @@ namespace RPGMultiplayerGame.Managers
                 GameObject gObject = null;
                 if (obj is NpcLib)
                 {
-                    Blacksmith  blacksmith = new Blacksmith();
+                    Blacksmith blacksmith = new Blacksmith();
                     blacksmith.SyncX = obj.Rectangle.X;
                     blacksmith.SyncY = obj.Rectangle.Y;
                     NetBehavior.spawnWithServerAuthority(blacksmith.GetType(), blacksmith);
@@ -184,52 +154,14 @@ namespace RPGMultiplayerGame.Managers
                     PathEntity npcMark = identity as PathEntity;
                     foreach (WaypointLib waypoint in objP.waypoints)
                     {
-                        npcMark.AddWaypoint(new Waypoint(new Point(waypoint.Point.X, waypoint.Point.Y), (float) waypoint.Time));
+                        npcMark.AddWaypoint(new Waypoint(new Point(waypoint.Point.X, waypoint.Point.Y), (float)waypoint.Time));
                     }
                 }
-                else if(identity is SpawnPoint spawnPoint)
+                else if (identity is SpawnPoint spawnPoint)
                 {
                     UpdatePlayersSpawnLocation(spawnPoint);
                 }
 
-            }
-        }
-
-        public void Update(GameTime gameTime)
-        {
-            lock (serverObjects)
-            {
-                foreach (IGameUpdateable obj in serverObjects)
-                {
-                    obj.Update(gameTime);
-                }
-            }
-            lock (weaponEffects)
-            {
-                foreach (WeaponEffect weaponEffect in weaponEffects)
-                {
-                   List<Entity> entities = GameManager.Instance.GetEntitiesIntersectsWith(weaponEffect);
-                   foreach(Entity entity in entities)
-                    {
-                        weaponEffect.Hit(entity);
-                    }
-                }
-            }
-        }
-
-        public void AddServerGameObject(IGameUpdateable updateObject)
-        {
-            lock (serverObjects)
-            {
-                serverObjects.Add(updateObject);
-            }
-        }
-
-        public void RemoveServerGameObject(IGameUpdateable updateObject)
-        {
-            lock (serverObjects)
-            {
-                serverObjects.Remove(updateObject);
             }
         }
 
@@ -249,6 +181,6 @@ namespace RPGMultiplayerGame.Managers
                 return !players.Any(player => player.GetName().Equals(name));
             }
         }
-
     }
 }
+

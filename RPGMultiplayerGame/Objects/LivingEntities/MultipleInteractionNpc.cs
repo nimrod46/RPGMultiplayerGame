@@ -46,7 +46,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     InteractWithPlayer(player);
                 }
-                else if (ClientManager.Instance.Player.IsInteractingWith(this) && !player.hasAuthority)
+                else if (GameManager.Instance.Player.IsInteractingWith(this) && !player.hasAuthority)
                 {
                     return;
                 }
@@ -62,7 +62,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     CmdStopInteractWithPlayer(player);
                 }
-                else if (ClientManager.Instance.Player.IsInteractingWith(this) && !player.hasAuthority)
+                else if (GameManager.Instance.Player.IsInteractingWith(this) && !player.hasAuthority)
                 {
                     return;
                 }

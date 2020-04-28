@@ -90,7 +90,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            GameManager.Instance.AddEntity(this);
             textLyer = CHARECTER_TEXT_LAYER + DefaultLayer;
         }
 
@@ -215,12 +214,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             SyncSpawnPoint = spawnPoint;
             SyncX = spawnPoint.SyncX;
             SyncY = spawnPoint.SyncY;
-        }
-
-        public override void OnDestroyed(NetworkIdentity identity)
-        {
-            base.OnDestroyed(identity);
-            GameManager.Instance.RemoveEntity(this);
         }
 
         protected void Attack()

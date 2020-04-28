@@ -109,13 +109,9 @@ namespace RPGMultiplayerGame
             base.Update(gameTime);
             if (ServerManager.Instance.IsRunning != true)
             {
-                GameManager.Instance.Update(gameTime);
                 InputManager.Instance.Update(gameTime);
             }
-            else
-            {
-                ServerManager.Instance.Update(gameTime);
-            }
+            GameManager.Instance.Update(gameTime);
         }
 
         /// <summary>
@@ -147,11 +143,11 @@ namespace RPGMultiplayerGame
         private void Lobby_OnConnecting(Form form)
         {
             form.Hide();
-            ClientManager.Instance.OnStartGame += Instance_OnStartGame;
+            GameManager.Instance.OnStartGame += OnStartGame;
             ClientManager.Instance.Start();
         }
 
-        private void Instance_OnStartGame(object sender, EventArgs e)
+        private void OnStartGame(object sender, EventArgs e)
         {
             gameForm.Show();
             graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;

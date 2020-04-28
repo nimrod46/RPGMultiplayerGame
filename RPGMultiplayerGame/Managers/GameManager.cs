@@ -5,6 +5,8 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Ui;
+using Networking;
+using System;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -45,16 +47,17 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        public event EventHandler OnStartGame;
         public bool HideMouse { get; set; }
         public Player Player { get; set; }
         public Camera Camera { get; set; }
 
         public GameMap map; //TODO: Create GameMap with the relevent project class.
-        private readonly List<GameObject> gameObjects = new List<GameObject>();
         private readonly List<IGameUpdateable> updateObjects = new List<IGameUpdateable>();
         private readonly List<Entity> entities = new List<Entity>();
         private Game1 game;
         private int isMouseVisibleCounter;
+        private string name;
 
         private GameManager()
         {
@@ -71,6 +74,45 @@ namespace RPGMultiplayerGame.Managers
             Camera  = new Camera(game.GraphicsDevice.Viewport);
         }
 
+        public void OnIdentityInitialize(NetworkIdentity identity)
+        {
+            if (identity.hasAuthority && identity is Player player)
+            {
+                Player = player;
+                player.OnDestroyEvent += Player_OnDestroyEvent;
+                if (name == null)
+                {
+                    player.OnLocalPlayerNameSetEvent += OnLocalPlayerNameSet;
+                    player.InitName();
+                }
+                else
+                {
+                    player.Init(name);
+                }
+            }
+            if (identity is IGameUpdateable gameUpdateable)
+            {
+                AddUpdateObject(gameUpdateable);
+            }
+            if (identity is Entity entity)
+            {
+                AddEntity(entity);
+            }
+        }
+
+        private void OnLocalPlayerNameSet(Player player)
+        {
+            OnStartGame?.Invoke(this, null);
+            name = player.GetName();
+        }
+
+        private void Player_OnDestroyEvent(NetworkIdentity identity)
+        {
+            Player.IsInventoryVisible = false;
+            Player = null;
+        }
+
+        readonly List<IGameUpdateable> updateObjectsToRemove = new List<IGameUpdateable>(); 
         public void Update(GameTime gameTime)
         {
             if (Player != null)
@@ -78,27 +120,54 @@ namespace RPGMultiplayerGame.Managers
                 Camera.Update(game.GraphicsDevice.Viewport, Player.Location);
             }
             game.IsMouseVisible = IsMouseInteractable && !HideMouse;
-            for (int i = 0; i < updateObjects.Count; i++)
+
+            lock (updateObjects)
             {
-                updateObjects[i].Update(gameTime);
+                foreach (var obj in updateObjects)
+                {
+                    obj.Update(gameTime);
+                    if(obj.IsDestroyed)
+                    {
+                        updateObjectsToRemove.Add(obj);
+                    }
+                }
             }
+
+            foreach (var obj in updateObjectsToRemove)
+            {
+                updateObjects.Remove(obj);
+            }
+            updateObjectsToRemove.Clear();
+
             int height = game.GraphicsDevice.Viewport.Height;
 
-            for (int i = 0; i < entities.Count; i++)
+            lock (entities)
             {
-                Entity entity = entities[i];
-                Rectangle rectangle = new Rectangle(entity.Location.ToPoint(), entity.BaseSize);
-                float normalizedHieght = (float)rectangle.Bottom / height;
-                if (normalizedHieght > 1)
+                foreach (var entity in entities)
                 {
-                    normalizedHieght = 1;
+                    if(entity.IsDestroyed)
+                    {
+                        updateObjectsToRemove.Add(entity);
+                    }
+                    Rectangle rectangle = new Rectangle(entity.Location.ToPoint(), entity.BaseSize);
+                    float normalizedHieght = (float)rectangle.Bottom / height;
+                    if (normalizedHieght > 1)
+                    {
+                        normalizedHieght = 1;
+                    }
+                    if (normalizedHieght < 0)
+                    {
+                        normalizedHieght = 0;
+                    }
+                    entity.Layer = 1 - normalizedHieght;
                 }
-                if (normalizedHieght < 0)
-                {
-                    normalizedHieght = 0;
-                }
-                entity.Layer = 1 - normalizedHieght;
             }
+
+            foreach (var entity in updateObjectsToRemove)
+            {
+                entities.Remove(entity as Entity);
+            }
+            updateObjectsToRemove.Clear();
         } 
 
         public Point GeMapSize()
@@ -109,17 +178,19 @@ namespace RPGMultiplayerGame.Managers
         public List<Entity> GetEntitiesHitBy(Weapon weapon, Entity attacker)
         {
             List<Entity> damagedEntities = new List<Entity>();
-            for (int i = 0; i < entities.Count; i++)
+            lock (updateObjects)
             {
-                Entity entity = entities[i];
-                if (attacker == entity || attacker.GetType().IsAssignableFrom(entity.GetType()))
+                foreach (var entity in entities)
                 {
-                    continue;
-                }
+                    if (attacker == entity || attacker.GetType().IsAssignableFrom(entity.GetType()))
+                    {
+                        continue;
+                    }
 
-                if (weapon.GetBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
-                {
-                    damagedEntities.Add(entity);
+                    if (weapon.GetBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                    {
+                        damagedEntities.Add(entity);
+                    }
                 }
             }
             return damagedEntities;
@@ -128,47 +199,24 @@ namespace RPGMultiplayerGame.Managers
         public List<Entity> GetEntitiesIntersectsWith(GameObject gameObject)
         {
             List<Entity> entitiesIntersects = new List<Entity>();
-            for (int i = 0; i < entities.Count; i++)
+            lock (updateObjects)
             {
-                Entity entity = entities[i];
-                if (gameObject.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                foreach (var entity in entities)
                 {
-                    entitiesIntersects.Add(entity);
+                    if (gameObject.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                    {
+                        entitiesIntersects.Add(entity);
+                    }
                 }
             }
             return (entitiesIntersects);
         }
 
-       
-        public void AddGameObject(GameObject obj)
-        {
-            lock (gameObjects)
-            {
-                gameObjects.Add(obj);
-            }
-        }
-
-        public void RemoveGameObject(GameObject obj)
-        {
-            lock (gameObjects)
-            {
-                gameObjects.Remove(obj);
-            }
-        }
-
-        public void AddEntity(Entity entity)
+        private void AddEntity(Entity entity)
         {
             lock (entities)
             {
                 entities.Add(entity);
-            }
-        }
-
-        public void RemoveEntity(Entity entity)
-        {
-            lock (entities)
-            {
-                entities.Remove(entity);
             }
         }
 
@@ -177,14 +225,6 @@ namespace RPGMultiplayerGame.Managers
             lock (updateObjects)
             {
                 updateObjects.Add(obj);
-            }
-        }
-
-        public void RemoveUpdateObject(IGameUpdateable obj)
-        {
-            lock (updateObjects)
-            {
-                updateObjects.Remove(obj);
             }
         }
     }
