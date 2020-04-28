@@ -221,21 +221,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (EquippedWeapon.IsAbleToAttack())
             {
                 InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Attacking, SyncCurrentDirection);
-                CmdAttack(this, (int)EquippedWeapon.ItemType);
+                InvokeCommandMethodNetworkly(nameof(CmdAttack), this, EquippedWeapon);
             }
         }
 
-        protected void CmdAttack(Entity attacker, int itemType)
+        protected void CmdAttack(Entity attacker, Weapon weapon)
         {
-            if (!isInServer)
-            {
-                InvokeCommandMethodNetworkly(nameof(CmdAttack), attacker, itemType);
-            }
-            else
-            {
-                Weapon weapon = ItemFactory.GetItem<Weapon>((ItemType)itemType);
-                weapon.Attack(attacker);
-            }
+            weapon.Attack(attacker);
         }
     }
 }

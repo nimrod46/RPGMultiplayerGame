@@ -21,6 +21,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         readonly List<Keys> currentArrowsKeysPressed = new List<Keys>();
         public delegate void LocalPlayerNameSetEventHandler(Player player);
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSetEvent;
+        public delegate void SyncPlayerSaveEventHandler(Player player);
+        public event SyncPlayerSaveEventHandler OnSyncPlayerSaveEvent;
 
 
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
@@ -40,6 +42,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private Inventory<GameItem> inventory;
         private Inventory<GameItem> usableItems;
         private Inventory<GameItem> equippedItems;
+        public List<GameItem> gameItems { get; set; }
         private UiTextComponent goldText;
         private long syncGold;
         private HealthBar uiHealthBar;
@@ -70,7 +73,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, () => SyncHealth, maxHealth);
                 goldText = new UiTextComponent((windowSize) =>  new Vector2(uiHealthBar.Position.X + uiHealthBar.Size.X + 20, uiHealthBar.Position.Y + uiHealthBar.Size.Y / 2), PositionType.CenteredLeft, true, UiManager.GUI_LAYER, UiManager.Instance.GoldTextFont, () => SyncGold.ToString(), Color.DarkGoldenrod);
             }
-            
+            gameItems = new List<GameItem>();
             base.OnNetworkInitialize();
         }
 
@@ -188,6 +191,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             SetName(name);
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
+            InvokeCommandMethodNetworkly(nameof(CmdSync));
+        }
+
+        protected void CmdSync()
+        {
+            OnSyncPlayerSaveEvent.Invoke(this);
+
         }
 
         public void AddQuest(Quest quest)
@@ -251,26 +261,22 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void AddItemToInventoryLocaly(GameItem inventoryItem)
         {
+            gameItems.Add(inventoryItem);
             inventory.TryAddItem(inventoryItem);
         }
 
-        public void AddItemToInventory(ItemType itemType, int count)
+        public void AddItemToInventory(GameItem gameItem)
         {
-            InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType, count);
+            InvokeCommandMethodNetworkly(nameof(AddItemToInventory), gameItem);
+            if(isInServer)
+            {
+                gameItems.Add(gameItem);
+            }
             if (hasAuthority)
             {
-                AddItemToInventoryLocaly(ItemFactory.GetItem<GameItem>(itemType, count));
+                AddItemToInventoryLocaly(gameItem);
             }
-        }
-
-        public void AddItemToInventory(ItemType itemType)
-        {
-            InvokeCommandMethodNetworkly(nameof(AddItemToInventory), itemType);
-            if (hasAuthority)
-            {
-                AddItemToInventoryLocaly(ItemFactory.GetItem<GameItem>(itemType));
-            }
-        }
+        }     
 
         private void MoveFromUsableItemSlot(int slot)
         {
@@ -307,7 +313,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
-            Console.WriteLine("Checing name: " + name);
             if (ServerManager.Instance.IsNameLegal(name))
             {
                 client.CmdSetName(name);

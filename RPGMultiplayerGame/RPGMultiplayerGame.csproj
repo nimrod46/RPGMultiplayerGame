@@ -146,7 +146,7 @@
     </Compile>
     <Compile Include="Managers\NetworkManager.cs" />
     <Compile Include="Objects\LivingEntities\Player.cs" />
-    <Compile Include="Objects\Other\UpdateObject.cs" />
+    <Compile Include="Objects\Other\UpdateableObject.cs" />
     <Compile Include="Objects\Items\Weapons\BatClaw.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponEffects\FireBall.cs" />
     <Compile Include="Objects\Items\Weapons\MeleeWeapon.cs" />

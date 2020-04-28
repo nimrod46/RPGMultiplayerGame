@@ -24,7 +24,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
                 InvokeSyncVarNetworkly(nameof(SyncIsFinished), isFinished);
                 if (isFinished)
                 {
-                    QuestUi.MarkFinished();
+                    QuestUi?.MarkFinished();
                 }
             }
         }
@@ -39,10 +39,10 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         private Color textColor;
         private bool isFinished;
 
-        public Quest(Func<Point, Vector2> origin, PositionType positionType, string npcName, string text, Action<Player> reward)
+        public Quest(string npcName, string text, Action<Player> reward)
         {
-            this.origin = origin;
-            this.positionType = positionType;
+            this.origin = (windowSize) => Vector2.Zero;
+            this.positionType = PositionType.TopLeft;
             this.npcName = npcName;
             this.text = text;
             this.reward = reward;
@@ -55,6 +55,10 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         private void OnNetworkInitialize()
         {
             QuestUi = new QuestUi(origin, positionType, npcName, text, textColor);
+            if(SyncIsFinished)
+            {
+                QuestUi.MarkFinished();
+            }
         }
 
         public virtual void AssignTo(Player player)

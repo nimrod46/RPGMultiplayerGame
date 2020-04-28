@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using Networking;
 namespace RPGMultiplayerGame.Objects.Other
 {
-    public abstract class UpdateObject : GameObject, IGameUpdateable
+    public abstract class UpdateableObject : GameObject, IGameUpdateable
     {
         private double timeToDestroy;
         private bool isOnCountDown;
 
-        public UpdateObject()
+        public UpdateableObject()
         {
             timeToDestroy = 0;
             isOnCountDown = false;

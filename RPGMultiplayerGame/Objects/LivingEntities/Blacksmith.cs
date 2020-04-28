@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             shop.OnItemClickedEvent += Shop_OnItemClickedEvent;
             dialog = new ComplexDialog(SyncName, "Are you here to buy or what?", false);
             AddItemToShop(new GameItemShop(new CommonWond(), 50));
-            AddItemToShop(new GameItemShop(new CommonHealthPotion(10), 10));
+            AddItemToShop(new GameItemShop(new CommonHealthPotion() { SyncCount = 10 }, 10));
             AddItemToShop(new GameItemShop(new CommonSword(), 50));
         }
 
@@ -70,7 +70,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 if (player.IsAbleToBuy(itemShop))
                 {
-                    ItemFactory.GivePlayerItemByItem(player, itemShop.GameItem);
+                    ServerManager.Instance.GivePlayerGameItem(player, itemShop.GameItem);
                     player.SyncGold -= itemShop.Price;
                 }
             }

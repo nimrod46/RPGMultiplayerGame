@@ -1,18 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Networking;
 namespace RPGMultiplayerGame.Objects.Items
 {
-    public class GameItem
+    public class GameItem : NetworkIdentity
     {
         public Texture2D Texture { get; set; }
-        public ItemType ItemType
+        public ItemType SyncItemType
         {
             get => itemType; set
             {
@@ -21,20 +22,20 @@ namespace RPGMultiplayerGame.Objects.Items
             }
         }
 
-        public string Name { get; set; }
+        public string SyncName { get; set; }
 
         private ItemType itemType;
 
         public GameItem()
         {
-            ItemType = ItemType.None;
-            Name = "";
+            SyncItemType = ItemType.None;
+            SyncName = "";
         }
 
         public GameItem(ItemType itemType, string name)
         {
-            ItemType = itemType;
-            Name = name;
+            SyncItemType = itemType;
+            SyncName = name;
         }
 
         public virtual void Draw(SpriteBatch sprite, Vector2 location, float layer)
@@ -44,12 +45,12 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public bool IsExists()
         {
-            return ItemType != ItemType.None;
+            return SyncItemType != ItemType.None;
         }
 
         public override string ToString()
         {
-            return Name;
+            return SyncName;
         }
     }
 }

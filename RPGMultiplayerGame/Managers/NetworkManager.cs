@@ -15,6 +15,8 @@ using RPGMultiplayerGame.MapObjects;
 using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects;
+using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.Items.Potions;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -45,6 +47,10 @@ namespace RPGMultiplayerGame.Managers
             new Bat();
             new JoeKillQuest();
             new FireBall();
+            new BatClaw();
+            new CommonSword();
+            new CommonWond();
+            new CommonHealthPotion();
         }
 
         public void AddServer()

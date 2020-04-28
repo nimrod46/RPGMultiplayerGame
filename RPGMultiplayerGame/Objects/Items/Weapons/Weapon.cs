@@ -25,7 +25,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         {
             Size = size;
             Damage = damage;
-            Name = name;
+            SyncName = name;
             this.coolDownTime = coolDownTime;
             currentCoolDownTime = 0;
             inCoolDown = false;

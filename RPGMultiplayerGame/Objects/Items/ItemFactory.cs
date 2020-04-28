@@ -18,46 +18,46 @@ namespace RPGMultiplayerGame.Objects.Items
         CommonHealthPotion,
     }
 
-    public static class ItemFactory
-    {
-        public static GameItem EmptyItem = new EmptyItem();
+    //public static class ItemFactory
+    //{
+    //    public static GameItem EmptyItem = new EmptyItem();
 
-        public static T GetEmptyItem<T>() where T : GameItem
-        {
-            return Activator.CreateInstance<T>();
-        }
+    //    public static T GetEmptyItem<T>() where T : GameItem
+    //    {
+    //        return Activator.CreateInstance<T>();
+    //    }
 
-        public static T GetItem<T>(ItemType itemType) where T : GameItem
-        {
-            return itemType switch
-            {
-                ItemType.CommonSword => new CommonSword() as T,
-                ItemType.CommonWond => new CommonWond() as T,
-                ItemType.BatClaw => new BatClaw() as T,
-                _ => throw new Exception("Cannot create insatance of " + itemType),
-            };
-        }
+    //    public static T GetItem<T>(ItemType itemType) where T : GameItem
+    //    {
+    //        return itemType switch
+    //        {
+    //            ItemType.CommonSword => new CommonSword() as T,
+    //            ItemType.CommonWond => new CommonWond() as T,
+    //            ItemType.BatClaw => new BatClaw() as T,
+    //            _ => throw new Exception("Cannot create insatance of " + itemType),
+    //        };
+    //    }
 
-        public static T GetItem<T>(ItemType itemType, int count) where T : GameItem
-        {
-            return itemType switch
-            {
-                ItemType.CommonHealthPotion => new CommonHealthPotion(count) as T,
-                _ => throw new Exception("Cannot create insatance of " + itemType),
-            };
-        }
+    //    public static T GetItem<T>(ItemType itemType, int count) where T : GameItem
+    //    {
+    //        return itemType switch
+    //        {
+    //            ItemType.CommonHealthPotion => new CommonHealthPotion(count) as T,
+    //            _ => throw new Exception("Cannot create insatance of " + itemType),
+    //        };
+    //    }
 
-        public static void GivePlayerItemByItem<T>(Player player, T item) where T : GameItem
-        {
-            if(item is StackableGameItem stackableGameItem)
-            {
-                player.AddItemToInventory(item.ItemType, stackableGameItem.Count);
+    //    public static void GivePlayerItemByItem<T>(Player player, T item) where T : GameItem
+    //    {
+    //        if(item is StackableGameItem stackableGameItem)
+    //        {
+    //            player.AddItemToInventory(item.SyncItemType, stackableGameItem.SyncCount);
 
-            }
-            else if (item is GameItem)
-            {
-                player.AddItemToInventory(item.ItemType);
-            }
-        }
-    }
+    //        }
+    //        else if (item is GameItem)
+    //        {
+    //            player.AddItemToInventory(item.SyncItemType);
+    //        }
+    //    }
+    //}
 }

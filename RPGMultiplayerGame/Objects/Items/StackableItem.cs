@@ -11,7 +11,7 @@ namespace RPGMultiplayerGame.Objects.Items
 {
     public abstract class StackableGameItem : InteractiveItem
     {
-        public int Count { get; protected set; }
+        public int SyncCount { get; set; }
 
         private readonly SpriteFont spriteFont;
         private Vector2 textSize;
@@ -19,7 +19,7 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public StackableGameItem(ItemType itemType, string name, int count) : base(itemType, name)
         {
-            this.Count = count;
+            this.SyncCount = count;
             spriteFont = UiManager.Instance.StackableItemNumberFont;
             textSize = spriteFont.MeasureString(count.ToString());
         }
@@ -27,22 +27,22 @@ namespace RPGMultiplayerGame.Objects.Items
         public override void Draw(SpriteBatch sprite, Vector2 location, float layer)
         {
             base.Draw(sprite, location, layer);
-            sprite.DrawString(spriteFont, Count + "", location + new Vector2(Texture.Width, Texture.Height) + new Vector2(-textSize.X + 10, - textSize.Y / 2), Color.Orange, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer * 0.1f);
+            sprite.DrawString(spriteFont, SyncCount + "", location + new Vector2(Texture.Width, Texture.Height) + new Vector2(-textSize.X + 10, - textSize.Y / 2), Color.Orange, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer * 0.1f);
         }
 
         public void Add(StackableGameItem stackableItemToAdd)
         {
-            Count += stackableItemToAdd.Count;
-            textSize = spriteFont.MeasureString(Count.ToString());
+            SyncCount += stackableItemToAdd.SyncCount;
+            textSize = spriteFont.MeasureString(SyncCount.ToString());
         }
 
         public void Use()
         {
-            Count--;
-            textSize = spriteFont.MeasureString(Count.ToString());
-            if(Count == 0)
+            SyncCount--;
+            textSize = spriteFont.MeasureString(SyncCount.ToString());
+            if(SyncCount == 0)
             {
-                ItemType = ItemType.None;
+                SyncItemType = ItemType.None;
             }
         }      
     }

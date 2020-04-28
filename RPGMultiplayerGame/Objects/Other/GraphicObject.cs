@@ -10,7 +10,7 @@ using RPGMultiplayerGame.Managers;
 
 namespace RPGMultiplayerGame.Objects.Other
 {
-    public abstract class GraphicObject : UpdateObject, IGameDrawable
+    public abstract class GraphicObject : UpdateableObject, IGameDrawable
     {
         
 

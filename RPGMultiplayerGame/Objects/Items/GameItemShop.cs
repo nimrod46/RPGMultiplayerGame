@@ -14,10 +14,10 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public GameItemShop() : base()
         {
-            GameItem = ItemFactory.EmptyItem;
+            GameItem = new EmptyItem();
         }
 
-        public GameItemShop(GameItem gameItem, long price) : base(gameItem.ItemType, gameItem.Name)
+        public GameItemShop(GameItem gameItem, long price) : base(gameItem.SyncItemType, gameItem.SyncName)
         {
             this.GameItem = gameItem;
             Price = price;

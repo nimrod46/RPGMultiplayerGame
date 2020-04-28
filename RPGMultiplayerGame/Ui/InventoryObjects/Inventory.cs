@@ -44,7 +44,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             IsIntractable = false;
             IsDestroyed = false;
-            ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType, false, ItemFactory.GetEmptyItem<T>());
+            ItemSlotUi<T> inventoryItem = new ItemSlotUi<T>(origin, positionType, false, Activator.CreateInstance<T>());
             Size = inventoryItem.Size * new Vector2(columns, rows);
             inventoryItems = new ItemSlotUi<T>[columns * rows];
             int index = 0;
@@ -57,7 +57,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                     {
                         return Position + new Vector2(x * inventoryItem.Size.X, y * inventoryItem.Size.Y);
                     }
-                    , PositionType.TopLeft, defaultVisibility, ItemFactory.GetEmptyItem<T>());
+                    , PositionType.TopLeft, defaultVisibility, Activator.CreateInstance<T>());
                     inventoryItems[index] = inventoryItem;
                     index++;
                 }
@@ -146,7 +146,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             if (itemToAdd is StackableGameItem)
             {
-                if (HaveStackbleItem(itemToAdd.ItemType, out StackableGameItem stackableItem))
+                if (HaveStackbleItem(itemToAdd.SyncItemType, out StackableGameItem stackableItem))
                 {
                     stackableItem.Add(itemToAdd as StackableGameItem);
                     return true;
@@ -169,7 +169,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             for (int i = 0; i < inventoryItems.Count(); i++)
             {
                 GameItem item = inventoryItems[i].Item;
-                if (item is StackableGameItem && item.ItemType == itemType)
+                if (item is StackableGameItem && item.SyncItemType == itemType)
                 {
                     stackableItem = item as StackableGameItem;
                     return true;
@@ -194,9 +194,9 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             for (int i = inventoryItems.Length - 1; i >= 0; i--)
             {
-                if (inventoryItems[i].Item.IsExists() && inventoryItems[i].Item.ItemType == item.ItemType)
+                if (inventoryItems[i].Item.IsExists() && inventoryItems[i].Item.SyncItemType == item.SyncItemType)
                 {
-                    inventoryItems[i].Item = ItemFactory.GetEmptyItem<T>();
+                    inventoryItems[i].Item = Activator.CreateInstance<T>();
                     return true;
                 }
             }

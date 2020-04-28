@@ -38,6 +38,7 @@ namespace RPGMultiplayerGame.Managers
         public bool IsRunning { get; private set; }
         public readonly List<Player> players = new List<Player>();
         private readonly Dictionary<string, List<Quest>> questByPlayersName = new Dictionary<string, List<Quest>>();
+        private readonly Dictionary<string, List<GameItem>> itemsByPlayersName = new Dictionary<string, List<GameItem>>();
         public SpawnPoint spawnPoint;
 
         public void StartServer()
@@ -50,7 +51,7 @@ namespace RPGMultiplayerGame.Managers
             NetBehavior = serverBehavior;
             IsRunning = true;
         }
-   
+
         protected void OnClientSynchronized(EndPointId endPointId)
         {
             lock (players)
@@ -58,16 +59,49 @@ namespace RPGMultiplayerGame.Managers
                 Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), endPointId);
                 players.Add(player);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
-                player.AddItemToInventory(ItemType.CommonSword);
-                player.AddItemToInventory(ItemType.CommonWond);
-                player.AddItemToInventory(ItemType.CommonHealthPotion, 10);
-                player.AddItemToInventory(ItemType.CommonHealthPotion, 10);
-                player.AddItemToInventory(ItemType.CommonHealthPotion, 10);
-                player.SyncGold = 100;
+                player.OnSyncPlayerSaveEvent += Player_OnSyncPlayerSaveEvent;
                 if (spawnPoint != null)
                 {
                     player.SetSpawnPoint(spawnPoint);
                 }
+            }
+        }
+
+        private void Player_OnSyncPlayerSaveEvent(Player player)
+        {
+            Console.WriteLine("New player {0} joined", player.GetName());
+            if (itemsByPlayersName.ContainsKey(player.GetName()))
+            {
+                lock(itemsByPlayersName)
+                {
+                    if (itemsByPlayersName.ContainsKey(player.GetName()))
+                    {
+                        foreach (var item in itemsByPlayersName[player.GetName()])
+                        {
+                            GivePlayerGameItem(player, item);
+                        }
+                    }
+                }
+
+                lock (questByPlayersName)
+                {
+                    if (questByPlayersName.ContainsKey(player.GetName()))
+                    {
+                        foreach (var quest in questByPlayersName[player.GetName()])
+                        {
+                            quest.AssignTo(player);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                GivePlayerGameItem(player, new CommonSword());
+                GivePlayerGameItem(player, new CommonWond());
+                GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 });
+                GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 });
+                GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 });
+                player.SyncGold = 100;
             }
         }
 
@@ -77,19 +111,24 @@ namespace RPGMultiplayerGame.Managers
             weaponEffect.SetLocation(entity.GetBoundingRectangle());
         }
 
+        public void GivePlayerGameItem(Player player, GameItem gameItem)
+        {
+            player.AddItemToInventory(NetBehavior.spawnWithClientAuthority(gameItem.GetType(), player.OwnerId, gameItem) as GameItem);
+        }
+
         public Quest AddQuest(Quest quest, Player player)
         {
-            quest = (Quest)NetBehavior.spawnWithServerAuthority(quest.GetType(), quest);
+            Quest netQuest = (Quest)NetBehavior.spawnWithServerAuthority(quest.GetType(), quest);
             if (!questByPlayersName.ContainsKey(player.GetName()))
             {
-                questByPlayersName.Add(player.GetName(), new List<Quest>(new Quest[] { quest }));
+                questByPlayersName.Add(player.GetName(), new List<Quest>(new Quest[] { netQuest }));
             }
             else
             {
-                questByPlayersName[player.GetName()].Add(quest);
+                questByPlayersName[player.GetName()].Add(netQuest);
             }
-            quest.AssignTo(player);
-            return quest;
+            netQuest.AssignTo(player);
+            return netQuest;
         }
 
         public void RemoveQuest(Player player, Quest quest)
@@ -99,10 +138,22 @@ namespace RPGMultiplayerGame.Managers
 
         private void Player_OnDestroyEvent(NetworkIdentity identity)
         {
+            Player player = identity as Player;
             lock (players)
             {
                 players.Remove((Player)identity);
-                // OnClientSynchronized(identity.ownerId);
+                if (!itemsByPlayersName.ContainsKey(player.GetName()))
+                {
+                    itemsByPlayersName.Add(player.GetName(), new List<GameItem>());
+                }
+                else
+                {
+                    itemsByPlayersName[player.GetName()].Clear();
+                }
+                foreach (var item in player.gameItems)
+                {
+                    itemsByPlayersName[player.GetName()].Add(item);
+                }
             }
         }
 
@@ -133,7 +184,8 @@ namespace RPGMultiplayerGame.Managers
                             SyncY = obj.Rectangle.Y
                         };
                         Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
-                        spawnedBat.EquipeWith(ItemFactory.GetItem<Weapon>(ItemType.BatClaw));
+                        BatClaw batClaw = NetBehavior.spawnWithServerAuthority(typeof(BatClaw)) as BatClaw;
+                        spawnedBat.EquipeWith(batClaw);
                     }
                 }
                 else if (obj is SpawnLib)
