@@ -37,7 +37,7 @@ namespace RPGMultiplayerGame.Managers
 
         public bool IsRunning { get; private set; }
         public readonly List<Player> players = new List<Player>();
-        private List<NetworkIdentity> gameIdentities = new List<NetworkIdentity>();
+        private readonly List<NetworkIdentity> gameIdentities = new List<NetworkIdentity>();
         private readonly Dictionary<string, List<Quest>> questByPlayersName = new Dictionary<string, List<Quest>>();
         public GameSave gameSave;
         public SpawnPoint spawnPoint;
@@ -168,14 +168,18 @@ namespace RPGMultiplayerGame.Managers
                 GameObject gObject = null;
                 if (obj is NpcLib)
                 {
-                    Blacksmith blacksmith = new Blacksmith();
-                    blacksmith.SyncX = obj.Rectangle.X;
-                    blacksmith.SyncY = obj.Rectangle.Y;
+                    Blacksmith blacksmith = new Blacksmith
+                    {
+                        SyncX = obj.Rectangle.X,
+                        SyncY = obj.Rectangle.Y
+                    };
                     NetBehavior.spawnWithServerAuthority(blacksmith.GetType(), blacksmith);
 
-                    Joe j = new Joe();
-                    j.SyncX = obj.Rectangle.X;
-                    j.SyncY = obj.Rectangle.Y;
+                    Joe j = new Joe
+                    {
+                        SyncX = obj.Rectangle.X,
+                        SyncY = obj.Rectangle.Y
+                    };
                     NetBehavior.spawnWithServerAuthority(j.GetType(), j);
                     gObject = new Joe();
 

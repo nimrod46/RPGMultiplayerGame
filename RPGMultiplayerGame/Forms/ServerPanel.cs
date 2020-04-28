@@ -25,8 +25,10 @@ namespace RPGMultiplayerGame
             {
                 return;
             }
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "xml|*.xml";
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "xml|*.xml"
+            };
             if (!(openFileDialog.ShowDialog() == DialogResult.OK))
             {
                 return;
