@@ -37,8 +37,9 @@ namespace RPGMultiplayerGame.Managers
 
         public bool IsRunning { get; private set; }
         public readonly List<Player> players = new List<Player>();
+        private List<NetworkIdentity> gameIdentities = new List<NetworkIdentity>();
         private readonly Dictionary<string, List<Quest>> questByPlayersName = new Dictionary<string, List<Quest>>();
-        private readonly Dictionary<string, List<GameItem>> itemsByPlayersName = new Dictionary<string, List<GameItem>>();
+        public GameSave gameSave;
         public SpawnPoint spawnPoint;
 
         public void StartServer()
@@ -48,8 +49,28 @@ namespace RPGMultiplayerGame.Managers
             serverBehavior.OnClientEventHandlerSynchronizedEvent += OnClientSynchronized;
             serverBehavior.OnRemoteIdentityInitialize += GameManager.Instance.OnIdentityInitialize;
             serverBehavior.OnLocalIdentityInitialize += GameManager.Instance.OnIdentityInitialize;
+            serverBehavior.OnRemoteIdentityInitialize += OnIdentityInitialize;
+            serverBehavior.OnLocalIdentityInitialize += OnIdentityInitialize;
             NetBehavior = serverBehavior;
             IsRunning = true;
+            gameSave = new GameSave();
+        }
+
+        private void OnIdentityInitialize(NetworkIdentity identity)
+        {
+            lock (gameIdentities)
+            {
+                gameIdentities.Add(identity);
+            }
+            identity.OnDestroyEvent += Identity_OnDestroyEvent;
+        }
+
+        private void Identity_OnDestroyEvent(NetworkIdentity identity)
+        {
+            lock (gameIdentities)
+            {
+                gameIdentities.Remove(identity);
+            }
         }
 
         protected void OnClientSynchronized(EndPointId endPointId)
@@ -70,19 +91,9 @@ namespace RPGMultiplayerGame.Managers
         private void Player_OnSyncPlayerSaveEvent(Player player)
         {
             Console.WriteLine("New player {0} joined", player.GetName());
-            if (itemsByPlayersName.ContainsKey(player.GetName()))
+            bool isSaveloaded = gameSave.LoadPlayerSave(player);
+            if (isSaveloaded)
             {
-                lock(itemsByPlayersName)
-                {
-                    if (itemsByPlayersName.ContainsKey(player.GetName()))
-                    {
-                        foreach (var item in itemsByPlayersName[player.GetName()])
-                        {
-                            GivePlayerGameItem(player, item);
-                        }
-                    }
-                }
-
                 lock (questByPlayersName)
                 {
                     if (questByPlayersName.ContainsKey(player.GetName()))
@@ -141,19 +152,11 @@ namespace RPGMultiplayerGame.Managers
             Player player = identity as Player;
             lock (players)
             {
+                lock (gameIdentities)
+                {
+                    gameSave.SavePlayerData(player, gameIdentities.Where(o => o is GameItem gameItem && gameItem.OwnerId == player.OwnerId).Cast<GameItem>().ToArray());
+                }
                 players.Remove((Player)identity);
-                if (!itemsByPlayersName.ContainsKey(player.GetName()))
-                {
-                    itemsByPlayersName.Add(player.GetName(), new List<GameItem>());
-                }
-                else
-                {
-                    itemsByPlayersName[player.GetName()].Clear();
-                }
-                foreach (var item in player.gameItems)
-                {
-                    itemsByPlayersName[player.GetName()].Add(item);
-                }
             }
         }
 

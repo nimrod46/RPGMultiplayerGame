@@ -8,10 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Networking;
+using System.Xml.Serialization;
+using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.Items.Potions;
+
 namespace RPGMultiplayerGame.Objects.Items
 {
+    [XmlInclude(typeof(CommonSword))]
+    [XmlInclude(typeof(CommonWond))]
+    [XmlInclude(typeof(CommonHealthPotion))]
+    [XmlInclude(typeof(BatClaw))]
     public class GameItem : NetworkIdentity
     {
+        [XmlIgnore]
         public Texture2D Texture { get; set; }
         public ItemType SyncItemType
         {

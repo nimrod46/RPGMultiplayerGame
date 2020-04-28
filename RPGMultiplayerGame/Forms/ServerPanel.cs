@@ -34,5 +34,17 @@ namespace RPGMultiplayerGame
             XmlManager<GameMap> xml = new XmlManager<GameMap>();
             ServerManager.Instance.LoadMap(xml.Load(openFileDialog.FileName));
         }
+
+        private void Save_Click(object sender, EventArgs e)
+        {
+            XmlManager<GameSave> xml = new XmlManager<GameSave>();
+            xml.Save(@"C:\Users\nimrod\Desktop\game save.xml", ServerManager.Instance.gameSave);
+        }
+
+        private void LoadSave_Click(object sender, EventArgs e)
+        {
+            XmlManager<GameSave> xml = new XmlManager<GameSave>();
+            ServerManager.Instance.gameSave = xml.Load(@"C:\Users\nimrod\Desktop\game save.xml");
+        }
     }
 }
