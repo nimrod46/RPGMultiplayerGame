@@ -10,7 +10,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
     public abstract class Npc : Human
     {
         protected readonly Dictionary<Player, ComplexDialog> curentInteractingPlayersDialogs = new Dictionary<Player, ComplexDialog>();
-        protected readonly Dictionary<string, int> playersProgres = new Dictionary<string, int>();
+        protected Dictionary<string, int> playersProgress = new Dictionary<string, int>();
         protected ComplexDialog dialog;
         protected ComplexDialog currentComplexDialog;
         protected InteractionText currentSimpleDialog;
@@ -37,7 +37,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public abstract void CmdStopInteractWithPlayer(Player player);
 
-       
+        public Dictionary<string, int> CopyPlayerProgress()
+        {
+            return new Dictionary<string, int>(playersProgress);
+        }
+
+        public void SetPlayerProgress(Dictionary<string, int> playersProgress)
+        {
+            this.playersProgress = playersProgress;
+        }
 
         public override void Draw(SpriteBatch sprite)
         {

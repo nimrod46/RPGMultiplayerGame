@@ -89,7 +89,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DictionarySortedByValue.cs" />
-    <Compile Include="GameSave.cs" />
+    <Compile Include="GameSaver\GameSave.cs" />
+    <Compile Include="GameSaver\NpcSave.cs" />
+    <Compile Include="GameSaver\IObjectSave.cs" />
+    <Compile Include="GameSaver\PlayerSave.cs" />
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\GraphicManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />

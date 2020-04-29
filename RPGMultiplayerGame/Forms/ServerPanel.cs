@@ -1,4 +1,5 @@
 ﻿using Map;
+using RPGMultiplayerGame.GameSaver;
 using RPGMultiplayerGame.Managers;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,7 @@ namespace RPGMultiplayerGame
         private void Save_Click(object sender, EventArgs e)
         {
             XmlManager<GameSave> xml = new XmlManager<GameSave>();
+            ServerManager.Instance.SaveGame();
             xml.Save(@"C:\Users\nimrod\Desktop\game save.xml", ServerManager.Instance.gameSave);
         }
 
@@ -47,6 +49,7 @@ namespace RPGMultiplayerGame
         {
             XmlManager<GameSave> xml = new XmlManager<GameSave>();
             ServerManager.Instance.gameSave = xml.Load(@"C:\Users\nimrod\Desktop\game save.xml");
+            ServerManager.Instance.LoadSaveGame();
         }
     }
 }

@@ -78,14 +78,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
 
             ComplexDialog progresDialog;
-            if (!playersProgres.ContainsKey(player.GetName()))
+            if (!playersProgress.ContainsKey(player.GetName()))
             {
-                playersProgres.Add(player.GetName(), dialog.Index);
+                playersProgress.Add(player.GetName(), dialog.Index);
                 progresDialog = dialog;
             }
             else
             {
-                progresDialog = dialog.GetDialogByIndex(playersProgres[player.GetName()]);
+                progresDialog = dialog.GetDialogByIndex(playersProgress[player.GetName()]);
             }
             curentInteractingPlayersDialogs.Add(player, progresDialog);
             InvokeCommandMethodNetworkly(nameof(CmdRequestingInteractWithPlayer), player.OwnerId, player, progresDialog.Index);
@@ -126,7 +126,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 if (currentComplexDialog.IsProgressing)
                 {
-                    playersProgres[player.GetName()] = currentComplexDialog.Index;
+                    playersProgress[player.GetName()] = currentComplexDialog.Index;
                 }
                 curentInteractingPlayersDialogs[player] = currentComplexDialog;
                 InvokeCommandMethodNetworkly(nameof(CmdShowNextDialogForPlayer), player.OwnerId, currentComplexDialog.Index);

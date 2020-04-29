@@ -33,7 +33,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             {
                 if (answerIndex == 0)
                 {
-                    quest = ServerManager.Instance.AddQuest(quest, interactivePlayer);
+                    quest = ServerManager.Instance.AddQuest(interactivePlayer, quest);
                 }
             })));
                 ComplexDialog inProgressDialog = dialog.AddAnswerOption("Okay",new DialogByAnswerIndex(inQuestText,

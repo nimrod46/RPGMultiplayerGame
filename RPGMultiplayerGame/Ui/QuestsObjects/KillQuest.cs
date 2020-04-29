@@ -8,7 +8,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
     public class KillQuest : Quest
     {
-        protected int SyncCurrentKills
+        public int SyncCurrentKills
         {
             get => currentKills; set
             {

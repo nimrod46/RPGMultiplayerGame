@@ -3,22 +3,25 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
+    [XmlInclude(typeof(JoeKillQuest))]
     public class Quest : NetworkIdentity
     {
         public bool SyncIsFinished
         {
             get => isFinished;
-            protected set
+            set
             {
                 isFinished = value;
                 InvokeSyncVarNetworkly(nameof(SyncIsFinished), isFinished);
@@ -29,15 +32,22 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             }
         }
 
+        [XmlIgnore]
+        public QuestUi QuestUi { get; set; }
+
         private readonly PositionType positionType;
         private readonly Func<Point, Vector2> origin;
         protected Player player;
-        public QuestUi QuestUi { get; set; }
         private readonly string npcName;
         private readonly string text;
         private readonly Action<Player> reward;
         private Color textColor;
         private bool isFinished;
+
+        private Quest()
+        {
+
+        }
 
         public Quest(string npcName, string text, Action<Player> reward)
         {
@@ -70,7 +80,6 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         public virtual void Unassign()
         {
             player.InvokeCommandMethodNetworkly(nameof(player.RemoveQuest), this);
-            ServerManager.Instance.RemoveQuest(player, this);
             InvokeBroadcastMethodNetworkly(nameof(Destroy));
         }
 

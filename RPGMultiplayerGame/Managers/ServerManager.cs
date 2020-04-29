@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Map;
 using Microsoft.Xna.Framework;
 using Networking;
+using RPGMultiplayerGame.GameSaver;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.Items;
@@ -36,9 +37,8 @@ namespace RPGMultiplayerGame.Managers
         }
 
         public bool IsRunning { get; private set; }
-        public readonly List<Player> players = new List<Player>();
+        public readonly List<Player> players = new List<Player>();       
         private readonly List<NetworkIdentity> gameIdentities = new List<NetworkIdentity>();
-        private readonly Dictionary<string, List<Quest>> questByPlayersName = new Dictionary<string, List<Quest>>();
         public GameSave gameSave;
         public SpawnPoint spawnPoint;
 
@@ -55,6 +55,8 @@ namespace RPGMultiplayerGame.Managers
             IsRunning = true;
             gameSave = new GameSave();
         }
+
+       
 
         private void OnIdentityInitialize(NetworkIdentity identity)
         {
@@ -78,7 +80,6 @@ namespace RPGMultiplayerGame.Managers
             lock (players)
             {
                 Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), endPointId);
-                players.Add(player);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
                 player.OnSyncPlayerSaveEvent += Player_OnSyncPlayerSaveEvent;
                 if (spawnPoint != null)
@@ -90,20 +91,12 @@ namespace RPGMultiplayerGame.Managers
 
         private void Player_OnSyncPlayerSaveEvent(Player player)
         {
-            Console.WriteLine("New player {0} joined", player.GetName());
-            bool isSaveloaded = gameSave.LoadPlayerSave(player);
+            players.Add(player);
+            Console.WriteLine("Player {0} joined", player.GetName());
+            bool isSaveloaded = gameSave.LoadObjectSave(player);
             if (isSaveloaded)
             {
-                lock (questByPlayersName)
-                {
-                    if (questByPlayersName.ContainsKey(player.GetName()))
-                    {
-                        foreach (var quest in questByPlayersName[player.GetName()])
-                        {
-                            quest.AssignTo(player);
-                        }
-                    }
-                }
+                
             }
             else
             {
@@ -113,8 +106,53 @@ namespace RPGMultiplayerGame.Managers
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 });
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 });
                 player.SyncGold = 100;
+                player.MoveToSpawnPoint();
             }
         }
+
+        public void SaveGame()
+        {
+            lock (players)
+            {
+                foreach (var player in players)
+                {
+                    gameSave.SaveObjectData(player);
+                }
+            }
+
+            lock(gameIdentities)
+            {
+                foreach (var identity in gameIdentities)
+                {
+                    if(identity is Npc npc)
+                    {
+                        gameSave.SaveObjectData(npc);
+                    }
+                }
+            }
+        }
+
+        public void LoadSaveGame()
+        {
+            lock (players)
+            {
+                foreach (var player in players)
+                {
+                    gameSave.LoadObjectSave(player);
+                }
+            }
+            lock (gameIdentities)
+            {
+                foreach (var identity in gameIdentities)
+                {
+                    if (identity is Npc npc)
+                    {
+                        gameSave.LoadObjectSave(npc);
+                    }
+                }
+            }
+        }
+      
 
         public void Weapon_OnSpawnWeaponEffect(WeaponEffect weaponEffect, Entity entity)
         {
@@ -127,24 +165,11 @@ namespace RPGMultiplayerGame.Managers
             player.AddItemToInventory(NetBehavior.spawnWithClientAuthority(gameItem.GetType(), player.OwnerId, gameItem) as GameItem);
         }
 
-        public Quest AddQuest(Quest quest, Player player)
+        public Quest AddQuest(Player player, Quest quest)
         {
-            Quest netQuest = (Quest)NetBehavior.spawnWithServerAuthority(quest.GetType(), quest);
-            if (!questByPlayersName.ContainsKey(player.GetName()))
-            {
-                questByPlayersName.Add(player.GetName(), new List<Quest>(new Quest[] { netQuest }));
-            }
-            else
-            {
-                questByPlayersName[player.GetName()].Add(netQuest);
-            }
+            Quest netQuest = (Quest)NetBehavior.spawnWithClientAuthority(quest.GetType(), player.OwnerId, quest);
             netQuest.AssignTo(player);
             return netQuest;
-        }
-
-        public void RemoveQuest(Player player, Quest quest)
-        {
-            questByPlayersName[player.GetName()].Remove(quest);
         }
 
         private void Player_OnDestroyEvent(NetworkIdentity identity)
@@ -154,7 +179,7 @@ namespace RPGMultiplayerGame.Managers
             {
                 lock (gameIdentities)
                 {
-                    gameSave.SavePlayerData(player, gameIdentities.Where(o => o is GameItem gameItem && gameItem.OwnerId == player.OwnerId).Cast<GameItem>().ToArray());
+                    gameSave.SaveObjectData(player);
                 }
                 players.Remove((Player)identity);
             }
@@ -223,6 +248,10 @@ namespace RPGMultiplayerGame.Managers
 
             }
         }
+        public List<NetworkIdentity> CopyIdentities()
+        {
+            return new List<NetworkIdentity>(gameIdentities);
+        }
 
         public void UpdatePlayersSpawnLocation(SpawnPoint spawnPoint)
         {
@@ -230,6 +259,7 @@ namespace RPGMultiplayerGame.Managers
             foreach (Player player in players)
             {
                 player.SetSpawnPoint(spawnPoint);
+                player.MoveToSpawnPoint();
             }
         }
 
