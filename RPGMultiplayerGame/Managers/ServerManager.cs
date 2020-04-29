@@ -127,10 +127,14 @@ namespace RPGMultiplayerGame.Managers
                     }
                 }
             }
+            XmlManager<GameSave> xml = new XmlManager<GameSave>();
+            xml.Save(@"Content\game save.xml", gameSave);
         }
 
         public void LoadSaveGame()
         {
+            XmlManager<GameSave> xml = new XmlManager<GameSave>();
+            gameSave = xml.Load(@"Content\game save.xml");
             lock (players)
             {
                 foreach (var player in players)

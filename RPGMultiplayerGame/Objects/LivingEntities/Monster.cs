@@ -49,7 +49,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (targetPlayers.GetMaxElement().HasValue)
             {
                 EquippedWeapon.UpdateWeaponLocation(this);
-                if (GameManager.Instance.GetEntitiesHitBy(EquippedWeapon, this).Any())
+                if (GameManager.Instance.GetEntitiesHitBy(EquippedWeapon, this).Where(e => e is Player).Any())
                 {
                     InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
                     Attack();

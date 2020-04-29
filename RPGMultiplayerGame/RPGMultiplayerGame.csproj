@@ -97,6 +97,7 @@
     <Compile Include="Managers\GraphicManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Managers\UiManager.cs" />
+    <Compile Include="Objects\Items\ItemType.cs" />
     <Compile Include="Ui\Dialogs\ActionDialog.cs" />
     <Compile Include="Ui\Dialogs\DialogByAnswerIndex.cs" />
     <Compile Include="Ui\Dialogs\QuestDialog.cs" />
@@ -109,7 +110,6 @@
     <Compile Include="Objects\Items\Potions\CommonHealthPotion.cs" />
     <Compile Include="Objects\Items\Potions\HealthPotion.cs" />
     <Compile Include="Objects\Items\Potions\Potion.cs" />
-    <Compile Include="Objects\Items\ItemFactory.cs" />
     <Compile Include="Objects\Items\GameItemShop.cs" />
     <Compile Include="Objects\LivingEntities\MultipleInteractionNpc.cs" />
     <Compile Include="Objects\Other\AnimatedObject.cs" />
