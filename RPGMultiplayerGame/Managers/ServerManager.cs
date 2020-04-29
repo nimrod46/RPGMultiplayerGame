@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Map;
+﻿using Map;
 using Microsoft.Xna.Framework;
 using Networking;
 using RPGMultiplayerGame.GameSaver;
@@ -16,6 +10,9 @@ using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.QuestsObjects;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using static NetworkingLib.Server;
 using static RPGMultiplayerGame.Objects.LivingEntities.PathEntity;
 
@@ -37,7 +34,7 @@ namespace RPGMultiplayerGame.Managers
         }
 
         public bool IsRunning { get; private set; }
-        public readonly List<Player> players = new List<Player>();       
+        public readonly List<Player> players = new List<Player>();
         private readonly List<NetworkIdentity> gameIdentities = new List<NetworkIdentity>();
         public GameSave gameSave;
         public SpawnPoint spawnPoint;
@@ -56,7 +53,7 @@ namespace RPGMultiplayerGame.Managers
             gameSave = new GameSave();
         }
 
-       
+
 
         private void OnIdentityInitialize(NetworkIdentity identity)
         {
@@ -96,7 +93,7 @@ namespace RPGMultiplayerGame.Managers
             bool isSaveloaded = gameSave.LoadObjectSave(player);
             if (isSaveloaded)
             {
-                
+
             }
             else
             {
@@ -120,11 +117,11 @@ namespace RPGMultiplayerGame.Managers
                 }
             }
 
-            lock(gameIdentities)
+            lock (gameIdentities)
             {
                 foreach (var identity in gameIdentities)
                 {
-                    if(identity is Npc npc)
+                    if (identity is Npc npc)
                     {
                         gameSave.SaveObjectData(npc);
                     }
@@ -152,7 +149,7 @@ namespace RPGMultiplayerGame.Managers
                 }
             }
         }
-      
+
 
         public void Weapon_OnSpawnWeaponEffect(WeaponEffect weaponEffect, Entity entity)
         {

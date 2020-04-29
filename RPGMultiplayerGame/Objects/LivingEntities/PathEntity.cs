@@ -31,13 +31,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private int nextWaypointIndex = 0;
         protected Vector2 nextPoint = Vector2.Zero;
         private int unit;
-        
+
 
         public PathEntity(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, damageable)
         {
             IsLookingAtObject = false;
         }
-       
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -46,7 +46,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 return;
             }
-           
+
             if (!IsLookingAtObject)
             {
                 if (nextPoint == Vector2.Zero)
@@ -145,14 +145,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 SetCurrentEntityState((int)State.Idle, SyncCurrentDirection);
                 return;
             }
-           
+
             Vector2 heading = new Vector2(SyncX, SyncY) - point;
             Direction direction = GetDirection(heading);
             if (GetCurrentEnitytState<State>() != State.Moving || direction != SyncCurrentDirection)
             {
                 SetCurrentEntityState((int)State.Moving, direction);
             }
-        }       
+        }
 
         protected Direction GetDirection(Vector2 heading)
         {

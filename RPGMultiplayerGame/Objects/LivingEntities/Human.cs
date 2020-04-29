@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             this.nameFont = nameFont;
             this.NameColor = nameColor;
-            BaseSize = (animationsByType[(int) EntityAnimation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
+            BaseSize = (animationsByType[(int)EntityAnimation.IdleDown][0].Texture.Bounds.Size.ToVector2() * scale).ToPoint();
         }
 
         protected override void UpdateDrawOffset()

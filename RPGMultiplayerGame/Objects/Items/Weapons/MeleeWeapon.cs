@@ -1,11 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons
@@ -56,7 +52,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public override string ToString()
         {
-            return base.ToString() + "\n" + 
+            return base.ToString() + "\n" +
                 "Subtype: " + "Melee weapon";
         }
     }

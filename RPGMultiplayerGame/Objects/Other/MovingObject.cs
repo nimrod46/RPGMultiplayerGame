@@ -1,12 +1,8 @@
 ﻿using Map;
 using Microsoft.Xna.Framework;
-using Networking;
 using RPGMultiplayerGame.Managers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Other
 {
@@ -104,7 +100,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public T GetCurrentEnitytState<T>() where T : Enum
         {
-            return (T) (object) syncCurrentEntityState;
+            return (T)(object)syncCurrentEntityState;
         }
 
         private Rectangle GetCollisionRect(float x, float y, int width, int height)

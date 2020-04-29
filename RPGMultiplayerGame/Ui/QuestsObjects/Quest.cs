@@ -1,15 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Networking;
-using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using RPGMultiplayerGame.Ui;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
@@ -65,7 +59,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         private void OnNetworkInitialize()
         {
             QuestUi = new QuestUi(origin, positionType, npcName, text, textColor);
-            if(SyncIsFinished)
+            if (SyncIsFinished)
             {
                 QuestUi.MarkFinished();
             }

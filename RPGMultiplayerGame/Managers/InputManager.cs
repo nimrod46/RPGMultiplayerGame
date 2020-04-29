@@ -1,10 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -81,7 +76,7 @@ namespace RPGMultiplayerGame.Managers
             foreach (Keys key in keys)
             {
                 if (KeyReleased(key))
-                { 
+                {
                     return true;
                 }
             }
@@ -105,7 +100,7 @@ namespace RPGMultiplayerGame.Managers
             pressedKey = Keys.None;
             for (int i = (int)firstKey; i <= (int)lastKey; i++)
             {
-                if (KeyPressed((Keys) i))
+                if (KeyPressed((Keys)i))
                 {
                     pressedKey = (Keys)i;
                     return true;

@@ -38,7 +38,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if(!hasAuthority)
+            if (!hasAuthority)
             {
                 return;
             }

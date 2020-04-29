@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Networking;
+﻿using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Ui;
-using static RPGMultiplayerGame.Managers.GameManager;
-using static RPGMultiplayerGame.Ui.UiComponent;
+using System;
+using System.Linq;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {

@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Networking;
-using RPGMultiplayerGame.Managers;
+﻿using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Dialogs;
-using RPGMultiplayerGame.Objects.Other;
-using RPGMultiplayerGame.Objects.QuestsObjects;
 using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
-using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {

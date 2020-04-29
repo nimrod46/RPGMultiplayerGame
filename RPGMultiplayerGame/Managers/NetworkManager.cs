@@ -1,26 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Networking;
+﻿using Networking;
+using RPGMultiplayerGame.MapObjects;
+using RPGMultiplayerGame.Objects;
+using RPGMultiplayerGame.Objects.Items.Potions;
+using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects;
+using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using ServerLobby;
 using System.Windows.Forms;
-using System.Threading;
-using Map;
-using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.LivingEntities;
-using RPGMultiplayerGame.Objects;
-using RPGMultiplayerGame.MapObjects;
-using Microsoft.Xna.Framework;
-using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
-using RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects;
-using RPGMultiplayerGame.Objects.Items.Weapons;
-using RPGMultiplayerGame.Objects.Items.Potions;
 
 namespace RPGMultiplayerGame.Managers
 {
-    public class NetworkManager<T> where T : NetworkBehavior 
+    public class NetworkManager<T> where T : NetworkBehavior
     {
         public T NetBehavior { get; protected set; }
         public Lobby lobby;
@@ -58,7 +49,7 @@ namespace RPGMultiplayerGame.Managers
             lobby.AddServer();
         }
 
-        public void Refersh() 
+        public void Refersh()
         {
             lobby.RefreshAll();
         }
@@ -66,6 +57,6 @@ namespace RPGMultiplayerGame.Managers
         public void Remove(ListViewItem item)
         {
             lobby.Remove(item);
-        }      
+        }
     }
 }

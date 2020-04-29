@@ -1,9 +1,6 @@
-﻿using RPGMultiplayerGame.Objects.LivingEntities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame
 {
@@ -48,7 +45,7 @@ namespace RPGMultiplayerGame
             var wrap = new ValueWrapper(key, value);
             this.innerDict.Add(key, value);
             this.orderedElements.Add(wrap);
-            if(maxValue == null)
+            if (maxValue == null)
             {
                 maxValue = wrap;
             }
@@ -60,7 +57,7 @@ namespace RPGMultiplayerGame
 
         public KeyValuePair<TKey, TValue>? GetMaxElement()
         {
-            if(maxValue == null)
+            if (maxValue == null)
             {
                 return null;
             }
@@ -84,9 +81,9 @@ namespace RPGMultiplayerGame
                 var wrap = new ValueWrapper(key, val);
                 this.orderedElements.Remove(wrap);
                 this.innerDict.Remove(key);
-                if(maxValue.Key.Equals(key))
+                if (maxValue.Key.Equals(key))
                 {
-                   if(orderedElements.Count != 0)
+                    if (orderedElements.Count != 0)
                     {
                         maxValue = orderedElements.ElementAt(Count - 1);
                     }

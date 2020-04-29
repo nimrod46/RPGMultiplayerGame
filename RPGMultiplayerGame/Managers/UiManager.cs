@@ -1,16 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using OffsetGeneratorLib;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Ui;
 using Svg;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -100,7 +96,7 @@ namespace RPGMultiplayerGame.Managers
         public Texture2D GetBackgroundByProperties(string path, string name, string text, Color textColor, params string[] options)
         {
             return SVGToTexture2D(path, name, text, textColor, 0, 0, options);
-        }    
+        }
 
         private Texture2D SVGToTexture2D(string path, string name, string text, Color? textColor = null, int width = 0, int height = 0, params string[] options)
         {

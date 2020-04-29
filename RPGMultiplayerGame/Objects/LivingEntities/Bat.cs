@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using RPGMultiplayerGame.Managers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RPGMultiplayerGame.Managers;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -14,6 +8,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             SyncName = "Bat";
             animationTimeDelay *= 0.7;
-        }      
+        }
     }
 }

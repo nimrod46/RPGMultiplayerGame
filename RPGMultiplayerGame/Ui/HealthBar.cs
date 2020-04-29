@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Ui
 {
@@ -26,7 +22,7 @@ namespace RPGMultiplayerGame.Ui
 
         private void UpdateHealthSize()
         {
-            health.RenderRigion = new Rectangle(health.RenderRigion.Location,new Point((int) (healthFunc.Invoke() * health.Size.X / maxHealth), (int) health.Size.Y));
+            health.RenderRigion = new Rectangle(health.RenderRigion.Location, new Point((int)(healthFunc.Invoke() * health.Size.X / maxHealth), (int)health.Size.Y));
         }
 
         public override void Draw(SpriteBatch sprite)

@@ -2,10 +2,6 @@
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
@@ -36,20 +32,20 @@ namespace RPGMultiplayerGame.Objects.Dialogs
                     quest = ServerManager.Instance.AddQuest(interactivePlayer, quest);
                 }
             })));
-                ComplexDialog inProgressDialog = dialog.AddAnswerOption("Okay",new DialogByAnswerIndex(inQuestText,
-                    new Func<Player, int, int>((interactivePlayer, answerIndex) =>
+            ComplexDialog inProgressDialog = dialog.AddAnswerOption("Okay", new DialogByAnswerIndex(inQuestText,
+                new Func<Player, int, int>((interactivePlayer, answerIndex) =>
+            {
+                if (answerIndex > 0)
                 {
-                    if (answerIndex > 0)
-                    {
-                        return -1;
-                    }
+                    return -1;
+                }
 
-                    if (!quest.SyncIsFinished)
-                    {
-                        return answerIndex;
-                    }
-                    return answerIndex + 1;
-                })));
+                if (!quest.SyncIsFinished)
+                {
+                    return answerIndex;
+                }
+                return answerIndex + 1;
+            })));
             inProgressDialog.AddAnswerOption("Ok finished", notFinishedText, false);
             return inProgressDialog.AddAnswerOption("", new ActionDialog(finishedText, new Action<Player, int>((interactivePlayer, answerIndex) =>
            {

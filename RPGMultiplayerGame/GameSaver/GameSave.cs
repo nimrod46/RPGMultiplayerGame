@@ -1,13 +1,7 @@
-﻿using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.Items;
-using RPGMultiplayerGame.Objects.LivingEntities;
-using RPGMultiplayerGame.Objects.Other;
+﻿using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace RPGMultiplayerGame.GameSaver
 {

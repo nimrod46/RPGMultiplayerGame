@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using RPGMultiplayerGame.MapObjects;
-using RPGMultiplayerGame.Objects.Other;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using RPGMultiplayerGame.Objects.Other;
 
 namespace RPGMultiplayerGame.Objects.MapObjects
 {

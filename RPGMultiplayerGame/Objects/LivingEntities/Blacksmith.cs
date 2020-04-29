@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using RPGMultiplayerGame.Managers;
+﻿using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items;
@@ -50,8 +43,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 shop.IsVisible = false;
                 shop.IsIntractable = false;
             }
-                base.CmdStopInteractWithPlayer(player);
-            
+            base.CmdStopInteractWithPlayer(player);
+
         }
 
         public void AddItemToShop(GameItemShop gameItem)

@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Map;
-using Networking;
-using RPGMultiplayerGame.MapObjects;
-using RPGMultiplayerGame.Objects;
-using RPGMultiplayerGame.Objects.LivingEntities;
-using RPGMultiplayerGame.Objects.Other;
+﻿using Networking;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -37,7 +27,7 @@ namespace RPGMultiplayerGame.Managers
             NetBehavior.Synchronize();
         }
 
-        
+
 
         public bool Connect()
         {

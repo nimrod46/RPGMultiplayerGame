@@ -2,14 +2,10 @@
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
-using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
@@ -24,7 +20,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
         public bool IsProgressing { get; }
 
         private readonly List<KeyValuePair<string, ComplexDialog>> dialogsByAnswers = new List<KeyValuePair<string, ComplexDialog>>();
-        public ComplexDialog(string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2,screenSize.Y / 4), PositionType.Centered, false, UiManager.GUI_LAYER, UiManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
+        public ComplexDialog(string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, UiManager.GUI_LAYER, UiManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
         {
             Index = 0;
             Name = name;

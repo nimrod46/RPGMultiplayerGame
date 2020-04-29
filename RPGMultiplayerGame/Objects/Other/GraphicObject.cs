@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
+using System;
 
 namespace RPGMultiplayerGame.Objects.Other
 {
     public abstract class GraphicObject : UpdateableObject, IGameDrawable
     {
-        
+
 
         public float Layer { get; set; }
         public float DefaultLayer { get; set; }
@@ -22,7 +18,7 @@ namespace RPGMultiplayerGame.Objects.Other
         protected Vector2 drawLocation;
         protected float scale;
         protected bool isVisible;
-        
+
 
         public GraphicObject()
         {

@@ -2,10 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Ui.InventoryObjects
 {
@@ -17,7 +13,7 @@ namespace RPGMultiplayerGame.Ui.InventoryObjects
             {
                 base.IsVisible = value;
                 descriptionText.IsVisible = IsVisible;
-                if(!isVisible)
+                if (!isVisible)
                 {
                     Scale = 1;
                     descriptionText.UpdatePosition();
@@ -38,15 +34,15 @@ namespace RPGMultiplayerGame.Ui.InventoryObjects
             if (isVisible)
             {
                 float xScale = 1;
-                if (descriptionText.Size.X + descriptionText.Position.X  * 2> Size.X)
+                if (descriptionText.Size.X + descriptionText.Position.X * 2 > Size.X)
                 {
                     xScale = (descriptionText.Size.X + descriptionText.Position.X * 2 - Size.X) / Size.X + 1;
                 }
 
                 float yScale = 1;
-                if(descriptionText.Size.Y + descriptionText.Position.Y  * 2 > Size.Y)
+                if (descriptionText.Size.Y + descriptionText.Position.Y * 2 > Size.Y)
                 {
-                    yScale = (descriptionText.Size.Y + descriptionText.Position.Y *2 - Size.Y) / Size.Y + 1;
+                    yScale = (descriptionText.Size.Y + descriptionText.Position.Y * 2 - Size.Y) / Size.Y + 1;
                 }
                 Scale = MathHelper.Max(xScale, yScale);
                 base.Draw(sprite);

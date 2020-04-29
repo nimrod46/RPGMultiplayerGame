@@ -1,14 +1,10 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Networking;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Ui;
 using System;
-using System.Threading;
 using System.Windows.Forms;
-using System.Windows.Threading;
 
 namespace RPGMultiplayerGame
 {
@@ -50,7 +46,7 @@ namespace RPGMultiplayerGame
             lobby.OnConnectionEstablished += Lobby_OnConnecting;
             lobby.OnServerOnline += Lobby_OnServerCreated; ;
             lobby.FormClosing += (e, s) => Exit();
-            Window.ClientSizeChanged += (r ,e) => UiManager.Instance.OnResize();
+            Window.ClientSizeChanged += (r, e) => UiManager.Instance.OnResize();
         }
 
         /// <summary>
@@ -91,7 +87,7 @@ namespace RPGMultiplayerGame
                 graphics.IsFullScreen = false;
                 graphics.ApplyChanges();
             }
-            else if((InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) || InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.RightAlt)) &&
+            else if ((InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) || InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.RightAlt)) &&
                 InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
             {
                 graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;

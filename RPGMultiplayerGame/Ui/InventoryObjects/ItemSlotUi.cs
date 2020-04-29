@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Ui;
 using RPGMultiplayerGame.Ui.InventoryObjects;
+using System;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
-    public class ItemSlotUi<T> : UiTextureComponent where T : GameItem 
+    public class ItemSlotUi<T> : UiTextureComponent where T : GameItem
     {
         public override bool IsVisible
         {
             get => base.IsVisible; set
             {
                 base.IsVisible = value;
-                if(!IsVisible)
+                if (!IsVisible)
                 {
                     HideDescription();
                 }

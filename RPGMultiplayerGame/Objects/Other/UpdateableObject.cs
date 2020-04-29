@@ -1,11 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using RPGMultiplayerGame.Managers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Networking;
 namespace RPGMultiplayerGame.Objects.Other
 {
     public abstract class UpdateableObject : GameObject, IGameUpdateable
@@ -21,10 +14,10 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void Update(GameTime gameTime)
         {
-            if(isOnCountDown)
+            if (isOnCountDown)
             {
                 timeToDestroy -= gameTime.ElapsedGameTime.TotalSeconds;
-                if(timeToDestroy <= 0)
+                if (timeToDestroy <= 0)
                 {
                     InvokeBroadcastMethodNetworkly(nameof(Destroy));
                 }

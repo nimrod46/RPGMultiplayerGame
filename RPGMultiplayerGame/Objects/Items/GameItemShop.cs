@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RPGMultiplayerGame.Objects.Items
+﻿namespace RPGMultiplayerGame.Objects.Items
 {
     public class GameItemShop : GameItem
     {

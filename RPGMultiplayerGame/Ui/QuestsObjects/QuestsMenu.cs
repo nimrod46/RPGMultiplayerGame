@@ -1,13 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static RPGMultiplayerGame.Managers.GameManager;
 
 namespace RPGMultiplayerGame.Objects.QuestsObjects
 {
@@ -36,7 +31,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
             {
                 foreach (var q in quests)
                 {
-                    if(q.GetType() == quest.GetType())
+                    if (q.GetType() == quest.GetType())
                     {
                         return q;
                     }

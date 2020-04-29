@@ -1,16 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.Other;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Networking;
-using System.Xml.Serialization;
-using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items.Potions;
+using RPGMultiplayerGame.Objects.Items.Weapons;
+using System.Xml.Serialization;
 
 namespace RPGMultiplayerGame.Objects.Items
 {

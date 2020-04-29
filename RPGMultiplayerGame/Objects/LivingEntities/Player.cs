@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Networking;
 using RPGMultiplayerGame.Managers;
@@ -11,6 +8,8 @@ using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 using RPGMultiplayerGame.Ui;
+using System;
+using System.Collections.Generic;
 using static RPGMultiplayerGame.Managers.GameManager;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
@@ -70,7 +69,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 equippedItems = new Inventory<GameItem>((windowSize) => new Vector2(10, windowSize.Y - 10), PositionType.ButtomLeft, true, 3, 1);
                 playerQuests = new QuestsMenu((windowSize) => new Vector2(windowSize.X - 10, 50), PositionType.TopRight);
                 uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, () => SyncHealth, maxHealth);
-                goldText = new UiTextComponent((windowSize) =>  new Vector2(uiHealthBar.Position.X + uiHealthBar.Size.X + 20, uiHealthBar.Position.Y + uiHealthBar.Size.Y / 2), PositionType.CenteredLeft, true, UiManager.GUI_LAYER, UiManager.Instance.GoldTextFont, () => SyncGold.ToString(), Color.DarkGoldenrod);
+                goldText = new UiTextComponent((windowSize) => new Vector2(uiHealthBar.Position.X + uiHealthBar.Size.X + 20, uiHealthBar.Position.Y + uiHealthBar.Size.Y / 2), PositionType.CenteredLeft, true, UiManager.GUI_LAYER, UiManager.Instance.GoldTextFont, () => SyncGold.ToString(), Color.DarkGoldenrod);
             }
             base.OnNetworkInitialize();
         }
@@ -195,7 +194,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected void CmdSync()
         {
             OnSyncPlayerSaveEvent.Invoke(this);
-
         }
 
         public void AddQuest(Quest quest)
@@ -269,7 +267,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 AddItemToInventoryLocaly(gameItem);
             }
-        }     
+        }
 
         private void MoveFromUsableItemSlot(int slot)
         {

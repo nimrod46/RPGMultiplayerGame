@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.MapObjects;
-using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Other;
+using System.Collections.Generic;
 using static RPGMultiplayerGame.Managers.GraphicManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
@@ -114,7 +112,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         }
 
         public virtual void EquipeWith(Weapon weapon)
-        {      
+        {
             EquippedWeapon = weapon;
         }
 
@@ -212,7 +210,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public void SetSpawnPoint(SpawnPoint spawnPoint)
         {
             SyncSpawnPoint = spawnPoint;
-           
+
         }
 
         public void MoveToSpawnPoint()

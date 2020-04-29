@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using Map;
+﻿using Map;
 using Microsoft.Xna.Framework;
+using Networking;
+using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
-using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Ui;
-using Networking;
 using System;
+using System.Collections.Generic;
 
 namespace RPGMultiplayerGame.Managers
 {
     public class GameManager
     {
-      
+
         private static GameManager instance;
 
         public static GameManager Instance
@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Managers
         }
 
         public const int INVENTORY_ROWS_NUMBER = 4, INVENTORY_COLUMNS_NUMBER = 5;
-            
+
         public bool IsMouseInteractable
         {
             get
@@ -39,7 +39,7 @@ namespace RPGMultiplayerGame.Managers
             set
             {
                 isMouseVisibleCounter = (value ? isMouseVisibleCounter + 1 : isMouseVisibleCounter - 1);
-                if(isMouseVisibleCounter < 0)
+                if (isMouseVisibleCounter < 0)
                 {
                     isMouseVisibleCounter = 0;
                 }
@@ -62,7 +62,7 @@ namespace RPGMultiplayerGame.Managers
         private GameManager()
         {
             map = new GameMap();
-          
+
             IsMouseInteractable = false;
             isMouseVisibleCounter = 0;
             HideMouse = false;
@@ -71,7 +71,7 @@ namespace RPGMultiplayerGame.Managers
         public void Init(Game1 game)
         {
             this.game = game;
-            Camera  = new Camera(game.GraphicsDevice.Viewport);
+            Camera = new Camera(game.GraphicsDevice.Viewport);
         }
 
         public void OnIdentityInitialize(NetworkIdentity identity)
@@ -112,7 +112,7 @@ namespace RPGMultiplayerGame.Managers
             Player = null;
         }
 
-        readonly List<IGameUpdateable> updateObjectsToRemove = new List<IGameUpdateable>(); 
+        readonly List<IGameUpdateable> updateObjectsToRemove = new List<IGameUpdateable>();
         public void Update(GameTime gameTime)
         {
             if (Player != null)
@@ -126,7 +126,7 @@ namespace RPGMultiplayerGame.Managers
                 foreach (var obj in updateObjects)
                 {
                     obj.Update(gameTime);
-                    if(obj.IsDestroyed)
+                    if (obj.IsDestroyed)
                     {
                         updateObjectsToRemove.Add(obj);
                     }
@@ -145,7 +145,7 @@ namespace RPGMultiplayerGame.Managers
             {
                 foreach (var entity in entities)
                 {
-                    if(entity.IsDestroyed)
+                    if (entity.IsDestroyed)
                     {
                         updateObjectsToRemove.Add(entity);
                     }
@@ -168,7 +168,7 @@ namespace RPGMultiplayerGame.Managers
                 entities.Remove(entity as Entity);
             }
             updateObjectsToRemove.Clear();
-        } 
+        }
 
         public Point GeMapSize()
         {

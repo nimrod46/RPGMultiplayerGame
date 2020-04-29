@@ -3,11 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.Other;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -34,7 +31,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             foreach (var player in currentInteractingPlayers)
             {
-                InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), player, (int) State.Idle);
+                InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), player, (int)State.Idle);
             }
         }
 
@@ -108,7 +105,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void CmdInteractWithPlayer(Player player, int dialogIndex)
         {
-            
+
             currentComplexDialog = dialog.GetDialogByIndex(dialogIndex);
             currentComplexDialog.IsVisible = true;
             player.InteractWithNpc(this);
@@ -148,7 +145,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void CmdStopInteractWithPlayer(Player player)
         {
             InvokeCommandMethodNetworkly(nameof(CmdStopInteractWithPlayer), player.OwnerId, player);
-            if(isInServer)
+            if (isInServer)
             {
                 curentInteractingPlayersDialogs.Remove(player);
                 return;

@@ -1,8 +1,6 @@
-﻿using Microsoft.Xna.Framework;
-using RPGMultiplayerGame.Objects.LivingEntities;
+﻿using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
 using static RPGMultiplayerGame.Managers.GraphicManager;
-using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.QuestsObjects
 {

@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 using Networking;
-using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.LivingEntities;
 using static NetworkingLib.Server;
 
 namespace RPGMultiplayerGame.Objects.Other

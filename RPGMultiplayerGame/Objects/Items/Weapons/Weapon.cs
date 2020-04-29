@@ -1,12 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Networking;
 using RPGMultiplayerGame.Objects.LivingEntities;
-using RPGMultiplayerGame.Objects.Other;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
@@ -33,7 +26,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public void Update(GameTime gameTime)
         {
-            if(inCoolDown)
+            if (inCoolDown)
             {
                 currentCoolDownTime += gameTime.ElapsedGameTime.TotalSeconds;
                 if (currentCoolDownTime >= coolDownTime)
@@ -51,7 +44,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public bool IsAbleToAttack()
         {
-            if(!inCoolDown)
+            if (!inCoolDown)
             {
                 inCoolDown = true;
                 return true;

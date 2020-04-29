@@ -1,9 +1,4 @@
 ﻿using RPGMultiplayerGame.Managers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects
 {
@@ -16,7 +11,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            if(hasAuthority)
+            if (hasAuthority)
             {
                 SetTimeToDestroy(5);
             }
