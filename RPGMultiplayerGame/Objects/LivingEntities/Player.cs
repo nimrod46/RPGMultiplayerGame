@@ -76,8 +76,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             if (hasAuthority)
             {
+                if(SyncIsDead)
+                {
+                    if (InputManager.Instance.KeyPressed(Keys.R))
+                    {
+                        Respawn();
+                    }
+                    return;
+                }
                 if (InputManager.Instance.KeyPressed(Keys.I))
                 {
                     if (GameManager.Instance.IsMouseInteractable)
@@ -149,7 +158,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
-            base.Update(gameTime);
+        }
+
+        public override void Respawn()
+        {
+            base.Respawn();
+            InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
         }
 
         public bool IsAbleToBuy(GameItemShop gameItemShop)
@@ -287,7 +301,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void Kill(Entity attacker)
         {
-            //base.Kill(attacker); //TODO: RETURN
+            base.Kill(attacker);
+            if (hasAuthority)
+            {
+                InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
+            }
         }
 
         public override void OnDestroyed(NetworkIdentity identity)

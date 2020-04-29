@@ -42,6 +42,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             return new Dictionary<string, int>(playersProgress);
         }
 
+        public override void Kill(Entity attacker)
+        {
+            InvokeBroadcastMethodNetworkly(nameof(Destroy));
+        }
+
         public void SetPlayerProgress(Dictionary<string, int> playersProgress)
         {
             this.playersProgress = playersProgress;

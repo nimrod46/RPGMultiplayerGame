@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
-    public class MultipleInteractionNpc : Npc
+    public abstract class MultipleInteractionNpc : Npc
     {
         public MultipleInteractionNpc(GraphicManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont)
         {

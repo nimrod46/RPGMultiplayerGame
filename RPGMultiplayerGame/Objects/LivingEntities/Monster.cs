@@ -39,7 +39,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             foreach (var playerAndDamage in targetPlayers.ToList().Where(pl => !currentInteractingPlayers.Contains(pl.Key)))
             {
-                if (playerAndDamage.Value == 0 || playerAndDamage.Key.IsDestroyed)
+                if (playerAndDamage.Value == 0 || playerAndDamage.Key.IsDestroyed || playerAndDamage.Key.SyncIsDead)
                 {
                     targetPlayers.Remove(playerAndDamage);
                 }
@@ -70,6 +70,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         nextPoint = new Vector2(rand.Next(0, GameManager.Instance.GeMapSize().X), rand.Next(0, GameManager.Instance.GeMapSize().Y));
                     }
                 }
+            }
+        }
+
+        public override void Kill(Entity attacker)
+        {
+            base.Kill(attacker);
+            if (isInServer)
+            {
+                attacker.OnEnitytKillEvent?.Invoke(this);
+                InvokeBroadcastMethodNetworkly(nameof(Destroy));
             }
         }
 

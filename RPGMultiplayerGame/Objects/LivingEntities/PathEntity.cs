@@ -98,7 +98,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             for (int i = 0; i < ServerManager.Instance.players.Count; i++)
             {
                 Player player = ServerManager.Instance.players[i];
-                if (IsObjectInInteractingRadius(player, minDistance))
+                if (!player.SyncIsDead && IsObjectInInteractingRadius(player, minDistance))
                 {
                     currentInteractingPlayers.Add(player);
                 }
