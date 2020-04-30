@@ -1,150 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ArrayOfAnimationPropertiesLib xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown1.png</FullPath>
+    <FullPath>IdleDown\1</FullPath>
     <Offset>
       <X>0</X>
       <Y>0</Y>
     </Offset>
   </AnimationPropertiesLib>
   <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown10.png</FullPath>
+    <FullPath>IdleDown\10</FullPath>
     <Offset>
       <X>-9</X>
+      <Y>-12</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\11</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>-26</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\12</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>-26</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\13</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>-26</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\14</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>-26</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\15</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>-25</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\16</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>-24</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\17</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>-24</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\18</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>-22</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\19</FullPath>
+    <Offset>
+      <X>-10</X>
+      <Y>-18</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\2</FullPath>
+    <Offset>
+      <X>-1</X>
       <Y>0</Y>
     </Offset>
   </AnimationPropertiesLib>
   <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown11.png</FullPath>
+    <FullPath>IdleDown\20</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>1</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\21</FullPath>
+    <Offset>
+      <X>-9</X>
+      <Y>1</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>IdleDown\3</FullPath>
     <Offset>
       <X>-2</X>
-      <Y>11</Y>
+      <Y>-1</Y>
     </Offset>
   </AnimationPropertiesLib>
   <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown12.png</FullPath>
+    <FullPath>IdleDown\4</FullPath>
     <Offset>
-      <X>0</X>
-      <Y>0</Y>
+      <X>-3</X>
+      <Y>-1</Y>
     </Offset>
   </AnimationPropertiesLib>
   <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown13.png</FullPath>
+    <FullPath>IdleDown\5</FullPath>
     <Offset>
-      <X>0</X>
-      <Y>0</Y>
+      <X>-2</X>
+      <Y>-1</Y>
     </Offset>
   </AnimationPropertiesLib>
   <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown14.png</FullPath>
+    <FullPath>IdleDown\6</FullPath>
     <Offset>
-      <X>0</X>
-      <Y>0</Y>
+      <X>-3</X>
+      <Y>-1</Y>
     </Offset>
   </AnimationPropertiesLib>
   <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown15.png</FullPath>
+    <FullPath>IdleDown\7</FullPath>
     <Offset>
-      <X>0</X>
-      <Y>0</Y>
+      <X>3</X>
+      <Y>1</Y>
     </Offset>
   </AnimationPropertiesLib>
   <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown16.png</FullPath>
+    <FullPath>IdleDown\8</FullPath>
     <Offset>
-      <X>0</X>
-      <Y>0</Y>
+      <X>6</X>
+      <Y>1</Y>
     </Offset>
   </AnimationPropertiesLib>
   <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown17.png</FullPath>
+    <FullPath>IdleDown\9</FullPath>
     <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown18.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown19.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown2.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown20.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown21.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown3.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown4.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown5.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown6.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown7.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown8.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
-    </Offset>
-  </AnimationPropertiesLib>
-  <AnimationPropertiesLib>
-    <FullPath>BlacksmithIdleDown9.png</FullPath>
-    <Offset>
-      <X>0</X>
-      <Y>0</Y>
+      <X>4</X>
+      <Y>-12</Y>
     </Offset>
   </AnimationPropertiesLib>
 </ArrayOfAnimationPropertiesLib>

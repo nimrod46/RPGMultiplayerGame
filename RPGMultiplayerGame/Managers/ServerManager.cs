@@ -196,17 +196,11 @@ namespace RPGMultiplayerGame.Managers
                 {
                     Blacksmith blacksmith = new Blacksmith
                     {
-                        SyncX = obj.Rectangle.X,
-                        SyncY = obj.Rectangle.Y
+                        SyncX = obj.Rectangle.X + 15,
+                        SyncY = obj.Rectangle.Y + 15
                     };
                     NetBehavior.spawnWithServerAuthority(blacksmith.GetType(), blacksmith);
 
-                    Joe j = new Joe
-                    {
-                        SyncX = obj.Rectangle.X,
-                        SyncY = obj.Rectangle.Y
-                    };
-                    NetBehavior.spawnWithServerAuthority(j.GetType(), j);
                     gObject = new Joe();
 
                     for (int i = 0; i < 10; i++)

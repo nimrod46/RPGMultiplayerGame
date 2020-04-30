@@ -1,9 +1,12 @@
-﻿using RPGMultiplayerGame.Managers;
+﻿using Microsoft.Xna.Framework;
+using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.Other;
+using System;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
@@ -16,8 +19,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             SyncName = "Blacksmith";
             minDistanceForObjectInteraction = 40;
-            scale = 0.3f;
+            scale = 0.4f;
         }
+
+        protected override void LookAtGameObject(GameObject gameObject, int entityState)
+        {
+           // base.LookAtGameObject(gameObject, entityState);
+        }
+
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();

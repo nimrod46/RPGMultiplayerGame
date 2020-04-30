@@ -116,10 +116,11 @@ namespace RPGMultiplayerGame.Managers
                     for (int k = 1; k <= 32; k++)
                     {
                         string name = "" + (T)(object)i + "\\" + (EntityAnimation)j + "\\" + k;
+                        string partPath = (EntityAnimation)j + "\\" + k;
                         Vector2 offset = Vector2.Zero;
-                        if (animationProperties?.Where(a => name.Contains(a.FullPath)).Count() > 0)
+                        if (animationProperties?.Where(a => partPath.Equals(a.FullPath)).Count() > 0)
                         {
-                            offset = new Vector2(animationProperties.Where(a => name.Contains(a.FullPath)).ToArray()[0].Offset.X, animationProperties.Where(a => name.Contains(a.FullPath)).ToArray()[0].Offset.Y);
+                            offset = new Vector2(animationProperties.Where(a => partPath.Equals(a.FullPath)).ToArray()[0].Offset.X, animationProperties.Where(a => partPath.Equals(a.FullPath)).ToArray()[0].Offset.Y);
                         }
                         try
                         {
