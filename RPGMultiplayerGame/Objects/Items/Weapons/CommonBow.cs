@@ -3,10 +3,11 @@ using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
-    public class CommonWond : RangedWeapon
+    public class CommonBow : RangedWeapon
     {
-        public CommonWond() : base(ItemType.CommonWond, "Common Wand", new Point(0, 0), 50, new FireBall(), 2)
+        public CommonBow() : base(ItemType.CommonBow, "Common Bow", new Point(0, 0), 15, new CommonArrow(), 0.5f)
         {
+            Scale = 0.46f;
         }
     }
 }

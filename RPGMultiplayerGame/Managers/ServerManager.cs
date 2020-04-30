@@ -102,6 +102,7 @@ namespace RPGMultiplayerGame.Managers
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 });
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 });
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 });
+                GivePlayerGameItem(player, new CommonBow());
                 player.SyncGold = 100;
                 player.MoveToSpawnPoint();
             }
@@ -154,7 +155,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void Weapon_OnSpawnWeaponEffect(WeaponEffect weaponEffect)
+        public void Weapon_OnSpawnWeaponEffect(WeaponAmmunition weaponEffect)
         {
             NetBehavior.spawnWithServerAuthority(weaponEffect.GetType(), weaponEffect);
         }

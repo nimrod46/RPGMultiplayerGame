@@ -50,8 +50,8 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             {
                 if (Item.IsExists())
                 {
-                    Item.Draw(sprite, Position + new Vector2(Texture.Width / 2 - Item.Texture.Width / 2,
-                        Texture.Height / 2 - Item.Texture.Height / 2)
+                    Item.Draw(sprite, Position + new Vector2(Texture.Width / 2 - Item.Size.X / 2,
+                        Texture.Height / 2 - Item.Size.Y / 2)
                         , UiManager.GUI_LAYER * 0.1f);
                 }
             }

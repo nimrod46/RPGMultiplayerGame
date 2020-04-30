@@ -28,46 +28,49 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
 
             List<Player> currentInteractingPlayers = GetCurrentPlayersInRadius();
-
-            foreach (var player in currentInteractingPlayers)
+            lock (targetPlayers)
             {
-                if (!targetPlayers.ContainsKey(player))
+                foreach (var player in currentInteractingPlayers)
                 {
-                    targetPlayers.Add(player, 0);
+                    if (!targetPlayers.ContainsKey(player))
+                    {
+                        targetPlayers.Add(player, 0);
+                    }
                 }
-            }
 
-            foreach (var playerAndDamage in targetPlayers.ToList().Where(pl => !currentInteractingPlayers.Contains(pl.Key)))
-            {
-                if (playerAndDamage.Value == 0 || playerAndDamage.Key.IsDestroyed || playerAndDamage.Key.SyncIsDead)
+                foreach (var playerAndDamage in targetPlayers.ToList().Where(pl => !currentInteractingPlayers.Contains(pl.Key)))
                 {
-                    targetPlayers.Remove(playerAndDamage);
+                    if (playerAndDamage.Value == 0 || playerAndDamage.Key.IsDestroyed || playerAndDamage.Key.SyncIsDead)
+                    {
+                        targetPlayers.Remove(playerAndDamage);
+                    }
+                    InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), playerAndDamage.Key);
                 }
-                InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), playerAndDamage.Key);
-            }
 
-            if (targetPlayers.GetMaxElement().HasValue)
-            {
-                EquippedWeapon.UpdateWeaponLocation(this);
-                if (GameManager.Instance.GetEntitiesHitBy(EquippedWeapon, this).Where(e => e is Player).Any())
+                if (targetPlayers.GetMaxElement().HasValue)
                 {
-                    InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
-                    Attack();
+                    EquippedWeapon.UpdateWeaponLocation(this);
+                    if (GameManager.Instance.GetEntitiesHitBy(EquippedWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
+                    {
+                        InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
+                        Attack();
+                    }
+                    else
+                    {
+                        InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
+                    }
                 }
+
                 else
                 {
-                    InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
-                }
-            }
-            else
-            {
-                if (!HavePathToFollow())
-                {
-                    timeSinceLastGeneratePoint += gameTime.ElapsedGameTime.TotalSeconds;
-                    if (timeSinceLastGeneratePoint > generatePointTimeDelay)
+                    if (!HavePathToFollow())
                     {
-                        timeSinceLastGeneratePoint = 0;
-                        nextPoint = new Vector2(rand.Next(0, GameManager.Instance.GeMapSize().X), rand.Next(0, GameManager.Instance.GeMapSize().Y));
+                        timeSinceLastGeneratePoint += gameTime.ElapsedGameTime.TotalSeconds;
+                        if (timeSinceLastGeneratePoint > generatePointTimeDelay)
+                        {
+                            timeSinceLastGeneratePoint = 0;
+                            nextPoint = new Vector2(rand.Next(0, GameManager.Instance.GeMapSize().X), rand.Next(0, GameManager.Instance.GeMapSize().Y));
+                        }
                     }
                 }
             }

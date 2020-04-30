@@ -7,7 +7,7 @@ using static RPGMultiplayerGame.Managers.GraphicManager;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
-    public abstract class WeaponEffect : MovingObject
+    public abstract class WeaponAmmunition : MovingObject
     {
         public float SyncDamage
         {
@@ -18,13 +18,13 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             }
         }
 
-        protected EffectId effectId;
+        protected WeaponAmmunitionId effectId;
         public Entity SyncAttacker { get; set; }
 
         private float syncDamage;
         private readonly List<IdentityId> hittedEntitiesId = new List<IdentityId>();
 
-        public WeaponEffect(EffectId effectId) : base(new Dictionary<int, List<GameTexture>>(GraphicManager.Instance.AnimationsByEffects[effectId]), 0, 0)
+        public WeaponAmmunition(WeaponAmmunitionId effectId) : base(new Dictionary<int, List<GameTexture>>(GraphicManager.Instance.AnimationsByEffects[effectId]), 0, 0)
         {
             this.effectId = effectId;
             speed *= 6;

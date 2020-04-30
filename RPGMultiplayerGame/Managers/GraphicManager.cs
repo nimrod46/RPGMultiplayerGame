@@ -35,9 +35,10 @@ namespace RPGMultiplayerGame.Managers
 
 
 
-        public enum EffectId
+        public enum WeaponAmmunitionId
         {
-            FireBall
+            FireBall,
+            CommonArrow
         }
 
         public const float OWN_PLAYER_LAYER = 0.6f;
@@ -46,7 +47,7 @@ namespace RPGMultiplayerGame.Managers
         public const float CHARECTER_TEXT_LAYER = 0.9f;
 
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> AnimationsByEntities { get; set; }
-        public Dictionary<EffectId, Dictionary<int, List<GameTexture>>> AnimationsByEffects { get; set; }
+        public Dictionary<WeaponAmmunitionId, Dictionary<int, List<GameTexture>>> AnimationsByEffects { get; set; }
         public List<Texture2D> Textures { get; set; }
         public Texture2D HealthBar { get; set; }
         public Texture2D HealthBarBackground { get; set; }
@@ -58,7 +59,7 @@ namespace RPGMultiplayerGame.Managers
         private GraphicManager()
         {
             AnimationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
-            AnimationsByEffects = new Dictionary<EffectId, Dictionary<int, List<GameTexture>>>();
+            AnimationsByEffects = new Dictionary<WeaponAmmunitionId, Dictionary<int, List<GameTexture>>>();
             Textures = new List<Texture2D>();
 
         }
@@ -71,7 +72,7 @@ namespace RPGMultiplayerGame.Managers
         public void LoadTextures(ContentManager content)
         {
             AnimationsByEntities = GetGameTextureByEnum<EntityId>(content);
-            AnimationsByEffects = GetGameTextureByEnum<EffectId>(content);
+            AnimationsByEffects = GetGameTextureByEnum<WeaponAmmunitionId>(content);
             HealthBar = content.Load<Texture2D>("Graphics\\HealthBar");
             HealthBarBackground = content.Load<Texture2D>("Graphics\\HealthBarBackground");
             PlayerNameFont = content.Load<SpriteFont>("Graphics\\PlayerNameFont");

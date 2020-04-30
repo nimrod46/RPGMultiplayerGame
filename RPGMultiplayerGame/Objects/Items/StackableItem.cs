@@ -29,7 +29,7 @@ namespace RPGMultiplayerGame.Objects.Items
         public override void Draw(SpriteBatch sprite, Vector2 location, float layer)
         {
             base.Draw(sprite, location, layer);
-            sprite.DrawString(spriteFont, SyncCount + "", location + new Vector2(Texture.Width, Texture.Height) + new Vector2(-textSize.X + 10, -textSize.Y / 2), Color.Orange, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer * 0.1f);
+            sprite.DrawString(spriteFont, SyncCount + "", location + new Vector2(Size.X, Size.Y) + new Vector2(-textSize.X + 10, -textSize.Y / 2), Color.Orange, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer * 0.1f);
         }
 
         public void Add(StackableGameItem stackableItemToAdd)

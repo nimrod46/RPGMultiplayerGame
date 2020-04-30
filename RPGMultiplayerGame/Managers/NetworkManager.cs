@@ -3,7 +3,7 @@ using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
-using RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects;
+using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using ServerLobby;
@@ -42,6 +42,8 @@ namespace RPGMultiplayerGame.Managers
             new CommonSword();
             new CommonWond();
             new CommonHealthPotion();
+            new CommonBow();
+            new CommonArrow();
         }
 
         public void AddServer()

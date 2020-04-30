@@ -15,35 +15,51 @@ namespace RPGMultiplayerGame.Objects.Items
     public class GameItem : NetworkIdentity
     {
         [XmlIgnore]
-        public Texture2D Texture { get; set; }
+        private Texture2D texture;
+
         public ItemType SyncItemType
         {
             get => itemType; set
             {
                 itemType = value;
-                Texture = UiManager.Instance.GetItemTextureByType(value);
+                texture = UiManager.Instance.GetItemTextureByType(value);
             }
         }
 
         public string SyncName { get; set; }
 
+        public Vector2 Size { get; private set; }
+        protected float Scale
+        {
+            get => scale; set
+            {
+                scale = value;
+                Size = texture.Bounds.Size.ToVector2() * scale;
+            }
+        }
+
+        private float scale;
         private ItemType itemType;
 
         public GameItem()
         {
             SyncItemType = ItemType.None;
             SyncName = "";
+            Scale = 1;
+            Size = texture.Bounds.Size.ToVector2();
         }
 
         public GameItem(ItemType itemType, string name)
         {
             SyncItemType = itemType;
             SyncName = name;
+            Scale = 1;
+            Size = texture.Bounds.Size.ToVector2();
         }
 
         public virtual void Draw(SpriteBatch sprite, Vector2 location, float layer)
         {
-            sprite.Draw(Texture, location, null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, layer);
+            sprite.Draw(texture, location, null, Color.White, 0, Vector2.Zero, Scale, SpriteEffects.None, layer);
         }
 
         public bool IsExists()

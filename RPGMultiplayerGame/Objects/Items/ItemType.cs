@@ -7,5 +7,6 @@
         CommonWond,
         BatClaw,
         CommonHealthPotion,
+        CommonBow,
     }
 }

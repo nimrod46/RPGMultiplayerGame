@@ -8,9 +8,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
     public class RangedWeapon : Weapon
     {
 
-        private readonly WeaponEffect weaponEffect;
+        private readonly WeaponAmmunition weaponEffect;
 
-        public RangedWeapon(ItemType itemType, string name, Point size, float damage, WeaponEffect weaponEffect, int coolDownTime) : base(itemType, name, size, damage, coolDownTime)
+        public RangedWeapon(ItemType itemType, string name, Point size, float damage, WeaponAmmunition weaponEffect, double coolDownTime) : base(itemType, name, size, damage, coolDownTime)
         {
             this.weaponEffect = weaponEffect;
             weaponEffect.SyncDamage = damage;

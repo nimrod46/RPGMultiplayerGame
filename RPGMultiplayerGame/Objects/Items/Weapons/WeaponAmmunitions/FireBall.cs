@@ -1,10 +1,10 @@
 ﻿using RPGMultiplayerGame.Managers;
 
-namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponEffects
+namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 {
-    public class FireBall : WeaponEffect
+    public class FireBall : WeaponAmmunition
     {
-        public FireBall() : base(GraphicManager.EffectId.FireBall)
+        public FireBall() : base(GraphicManager.WeaponAmmunitionId.FireBall)
         {
         }
 
