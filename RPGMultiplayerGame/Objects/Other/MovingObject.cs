@@ -58,7 +58,7 @@ namespace RPGMultiplayerGame.Objects.Other
                 MapObjectLib block = null;
                 Rectangle newLocationRect;
                 System.Drawing.Rectangle rectt;
-                double movment = speed * gameTime.ElapsedGameTime.TotalMilliseconds;
+                double movment = SyncSpeed * gameTime.ElapsedGameTime.TotalMilliseconds;
                 Vector2 newLocation = Location;
                 switch ((Direction)SyncCurrentDirection)
                 {

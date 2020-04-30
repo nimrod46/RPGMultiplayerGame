@@ -99,6 +99,10 @@
     <Compile Include="Managers\UiManager.cs" />
     <Compile Include="Objects\Items\ItemType.cs" />
     <Compile Include="Objects\Items\Weapons\CommonBow.cs" />
+    <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\FlickerEffect.cs" />
+    <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\FreezingEffect.cs" />
+    <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\ISpecielWeaponEffect.cs" />
+    <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\SpecielWeaponEffect.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\CommonArrow.cs" />
     <Compile Include="Ui\Dialogs\ActionDialog.cs" />
     <Compile Include="Ui\Dialogs\DialogByAnswerIndex.cs" />

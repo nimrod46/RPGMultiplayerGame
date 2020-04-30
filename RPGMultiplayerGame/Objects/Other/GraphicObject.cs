@@ -10,13 +10,24 @@ namespace RPGMultiplayerGame.Objects.Other
     {
         public float Layer { get; set; }
         public float DefaultLayer { get; set; }
+        public bool IsVisible { get; set; }
 
-        protected Texture2D texture;
+        protected Texture2D Texture
+        {
+            get => texture; set
+            {
+                texture = value;
+                tintedTexture = texture;
+            }
+        }
+
+        private Texture2D texture;
+        protected Texture2D tintedTexture;
         protected Vector2 offset;
         protected Vector2 drawLocation;
         protected float scale;
-        protected bool isVisible;
-
+        private Color tintColor;
+        private float tintingAlpah;
 
         public GraphicObject()
         {
@@ -24,8 +35,9 @@ namespace RPGMultiplayerGame.Objects.Other
             scale = 1;
             offset = Vector2.Zero;
             drawLocation = Vector2.Zero;
-            isVisible = true;
+            IsVisible = true;
             Layer -= 0.01f;
+            tintColor = Color.White;
         }
 
         public override void OnNetworkInitialize()
@@ -38,13 +50,50 @@ namespace RPGMultiplayerGame.Objects.Other
             DefaultLayer = Layer;
         }
 
+        public void SetTinkColor(Color tintColor, float tintingAlpah)
+        {
+            this.tintColor = tintColor;
+            this.tintingAlpah = tintingAlpah;
+        }
+
+        public Texture2D TintTextureByColor(GraphicsDevice graphicsDevice, Texture2D texture, Color color, float tintingAlpah)
+        {
+            if (color == Color.White)
+            {
+                return texture;
+            }
+
+            int pixelCount = Texture.Width * Texture.Height;
+            Color[] pixels = new Color[pixelCount];
+            texture.GetData(pixels);
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                if (pixels[i].A < 10)
+                {
+                    continue;
+                }
+                byte r = (byte)Math.Min(pixels[i].R * tintingAlpah + color.R * (1 - tintingAlpah), 255);
+                byte g = (byte)Math.Min(pixels[i].G * tintingAlpah + color.G * (1 - tintingAlpah), 255);
+                byte b = (byte)Math.Min(pixels[i].B * tintingAlpah + color.B * (1 - tintingAlpah), 255);
+                pixels[i] = new Color(r, g, b, pixels[i].A);
+            }
+            Texture2D outTexture = new Texture2D(graphicsDevice, texture.Width, texture.Height, false, SurfaceFormat.Color);
+            outTexture.SetData<Color>(pixels);
+            return outTexture;
+        }
+
+        public void ResetTint()
+        {
+            tintColor = Color.White;
+        }
+
         public virtual void Draw(SpriteBatch sprite)
         {
-            if (texture != null)
+            if (tintedTexture != null)
             {
-                if (isVisible)
+                if (IsVisible)
                 {
-                    sprite.Draw(texture, Location + offset, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, Layer);
+                    sprite.Draw(TintTextureByColor(sprite.GraphicsDevice, texture, tintColor, tintingAlpah), Location + offset, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, Layer);
                 }
             }
             else

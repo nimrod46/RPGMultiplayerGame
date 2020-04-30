@@ -8,8 +8,11 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
     public class MeleeWeapon : Weapon
     {
-        public MeleeWeapon(ItemType itemType, string name, Point size, float damage, double coolDownTime) : base(itemType, name, size, damage, coolDownTime)
+        public Point DamageAreaSize { get; }
+
+        public MeleeWeapon(ItemType itemType, string name, Point damageAreaSize, float damage, double coolDownTime) : base(itemType, name, damage, coolDownTime)
         {
+            DamageAreaSize = damageAreaSize;
         }
 
         public override void Attack(Entity attacker)
@@ -20,7 +23,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             {
                 foreach (Entity damagedEntity in damagedEntities)
                 {
-                    damagedEntity.InvokeBroadcastMethodNetworkly(nameof(damagedEntity.OnAttackedBy), attacker, Damage);
+                    Hit(attacker, damagedEntity);
                 }
             }
         }
@@ -38,16 +41,21 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
                     X = entity.GetCenter().X;
                     break;
                 case Direction.Right:
-                    X = entity.GetBoundingRectangle().Right - Size.X;
+                    X = entity.GetBoundingRectangle().Right - DamageAreaSize.X;
                     Y = entity.GetCenter().Y;
                     break;
                 case Direction.Down:
-                    Y = entity.GetBoundingRectangle().Bottom - Size.Y;
+                    Y = entity.GetBoundingRectangle().Bottom - DamageAreaSize.Y;
                     X = entity.GetCenter().X;
                     break;
                 case Direction.Idle:
                     break;
             }
+        }
+
+        public Rectangle GetBoundingRectangle()
+        {
+            return new Rectangle((int)X, (int)Y, DamageAreaSize.X, DamageAreaSize.Y);
         }
 
         public override string ToString()

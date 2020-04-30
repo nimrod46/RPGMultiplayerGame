@@ -10,10 +10,10 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         private readonly WeaponAmmunition weaponEffect;
 
-        public RangedWeapon(ItemType itemType, string name, Point size, float damage, WeaponAmmunition weaponEffect, double coolDownTime) : base(itemType, name, size, damage, coolDownTime)
+        public RangedWeapon(ItemType itemType, string name, float damage, WeaponAmmunition weaponEffect, double coolDownTime) : base(itemType, name, damage, coolDownTime)
         {
             this.weaponEffect = weaponEffect;
-            weaponEffect.SyncDamage = damage;
+            weaponEffect.SyncWeapon = this;
         }
 
         public override void UpdateWeaponLocation(Entity entity)

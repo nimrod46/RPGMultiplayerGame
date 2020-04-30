@@ -52,6 +52,14 @@ namespace RPGMultiplayerGame.Objects.Other
         }
 
         public Direction SyncCurrentDirection { get; set; }
+        public float SyncSpeed
+        {
+            get => syncSpeed; set
+            {
+                syncSpeed = value;
+                InvokeSyncVarNetworkly(nameof(SyncSpeed), syncSpeed);
+            }
+        }
 
         protected Dictionary<int, List<GameTexture>> animationsByType = new Dictionary<int, List<GameTexture>>();
         private int syncCurrentAnimationType;
@@ -59,13 +67,12 @@ namespace RPGMultiplayerGame.Objects.Other
         protected double timeSinceLastFrame;
         protected int currentAnimationIndex;
         protected bool shouldLoopAnimation;
-        protected float speed;
-
+        private float syncSpeed;
 
         public AnimatedObject(Dictionary<int, List<GameTexture>> animationsByType)
         {
             this.animationsByType = animationsByType;
-            speed = 0.5f / 10;
+            SyncSpeed = 0.5f / 10;
             animationTimeDelay = 100;
             shouldLoopAnimation = true;
             SyncCurrentDirection = Direction.Down;
@@ -81,7 +88,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public override void Update(GameTime gameTime)
         {
-            timeSinceLastFrame += (speed * 500);
+            timeSinceLastFrame += (SyncSpeed * 500);
             if (timeSinceLastFrame >= animationTimeDelay)
             {
                 timeSinceLastFrame = 0;
@@ -104,9 +111,9 @@ namespace RPGMultiplayerGame.Objects.Other
         public virtual void UpdateTexture()
         {
             GameTexture gameTexture = animationsByType[SyncCurrentAnimationType][currentAnimationIndex];
-            texture = gameTexture.Texture;
+            Texture = gameTexture.Texture;
             offset = gameTexture.Offset * scale;
-            Size = (texture.Bounds.Size.ToVector2() * scale).ToPoint();
+            Size = (Texture.Bounds.Size.ToVector2() * scale).ToPoint();
         }
 
         public void OnCurrentAnimationTypeSet()

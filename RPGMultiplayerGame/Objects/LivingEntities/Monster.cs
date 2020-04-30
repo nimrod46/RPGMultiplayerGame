@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Items.Weapons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,17 +51,23 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 if (targetPlayers.GetMaxElement().HasValue)
                 {
                     EquippedWeapon.UpdateWeaponLocation(this);
-                    if (GameManager.Instance.GetEntitiesHitBy(EquippedWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
+                    if (EquippedWeapon is MeleeWeapon meleeWeapon)
                     {
-                        InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
-                        Attack();
+                        if (GameManager.Instance.GetEntitiesHitBy(meleeWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
+                        {
+                            InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
+                            Attack();
+                        }
+                        else
+                        {
+                            InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
+                        }
                     }
                     else
                     {
-                        InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
+                        throw new NotImplementedException();
                     }
                 }
-
                 else
                 {
                     if (!HavePathToFollow())

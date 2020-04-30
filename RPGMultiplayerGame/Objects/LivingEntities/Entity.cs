@@ -3,9 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects;
 using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using static RPGMultiplayerGame.Managers.GraphicManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
@@ -74,13 +76,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected Vector2 healthBarOffset;
         protected bool damageable;
         protected readonly float maxHealth;
+        private List<ISpecielWeaponEffect> scheduledActions;
         private float health;
         private SpawnPoint syncSpawnPoint;
         private Vector2 healthBarSize;
-        private int currentFlickerCount;
-        private bool isBeingHit;
-        private readonly double flickerTimeDelay = 0.2;
-        private double currentFlickerTime = 0.5;
         private bool isDead;
 
         public Entity(EntityId entityId, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(new Dictionary<int, List<GameTexture>>(GraphicManager.Instance.AnimationsByEntities[entityId]), collisionOffsetX, collisionOffsetY)
@@ -88,10 +87,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             this.EntityId = entityId;
             this.maxHealth = maxHealth;
             this.damageable = damageable;
-            isBeingHit = false;
             SyncIsDead = false;
             healthBar = GraphicManager.Instance.HealthBar;
             healthBarBackground = GraphicManager.Instance.HealthBarBackground;
+            scheduledActions = new List<ISpecielWeaponEffect>();
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
             SyncHealth = maxHealth;
             SyncCurrentAnimationType = (int)EntityAnimation.IdleDown;
@@ -106,6 +105,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.OnNetworkInitialize();
             textLyer = CHARECTER_TEXT_LAYER + DefaultLayer;
+        }
+
+        public void ScheduledNewAction(ISpecielWeaponEffect specielWeaponEffect)
+        {
+            lock (scheduledActions)
+            {
+                scheduledActions.ForEach(a => { if (!a.AllowMultiple && a.GetType() == specielWeaponEffect.GetType()) a.IsDestroyed = true; } );
+                scheduledActions.Add(specielWeaponEffect);
+            }
         }
 
 
@@ -135,21 +143,29 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void Update(GameTime gameTime)
         {
-            if (isBeingHit)
+            //if (isBeingHit)
+            //{
+            //    currentFlickerTime += gameTime.ElapsedGameTime.TotalSeconds;
+            //    if (currentFlickerTime >= flickerTimeDelay)
+            //    {
+            //        currentFlickerTime = 0;
+            //        isVisible = !isVisible;
+            //        currentFlickerCount++;
+            //        if (currentFlickerCount >= flickerCount)
+            //        {
+            //            isVisible = true;
+            //            isBeingHit = false;
+            //            currentFlickerCount = 0;
+            //        }
+            //    }
+            //}
+            lock(scheduledActions)
             {
-                currentFlickerTime += gameTime.ElapsedGameTime.TotalSeconds;
-                if (currentFlickerTime >= flickerTimeDelay)
+                foreach (var scheduledAction in scheduledActions)
                 {
-                    currentFlickerTime = 0;
-                    isVisible = !isVisible;
-                    currentFlickerCount++;
-                    if (currentFlickerCount >= flickerCount)
-                    {
-                        isVisible = true;
-                        isBeingHit = false;
-                        currentFlickerCount = 0;
-                    }
+                    scheduledAction.Update(gameTime);
                 }
+                scheduledActions.RemoveAll(a => a.IsDestroyed);
             }
             if (hasAuthority)
             {
@@ -173,18 +189,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     InvokeBroadcastMethodNetworkly(nameof(Kill), attacker);
                 }
             }
-            MakeObjectFlicker();
         }
 
         public virtual void Kill(Entity attacker)
         {
             SyncIsDead = true;
-        }
-
-        private void MakeObjectFlicker()
-        {
-            isBeingHit = true;
-            currentFlickerCount = 0;
         }
 
         public override void Draw(SpriteBatch sprite)

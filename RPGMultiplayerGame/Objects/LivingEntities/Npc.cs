@@ -18,7 +18,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public Npc(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, false, Color.BlueViolet)
         {
-            speed *= 0.5f;
+            SyncSpeed *= 0.5f;
         }
 
         public override void OnNameSet()

@@ -175,7 +175,7 @@ namespace RPGMultiplayerGame.Managers
             return new Point(1920, 1080);
         }
 
-        public List<Entity> GetEntitiesHitBy(Weapon weapon, Entity attacker)
+        public List<Entity> GetEntitiesHitBy(MeleeWeapon weapon, Entity attacker)
         {
             List<Entity> damagedEntities = new List<Entity>();
             lock (updateObjects)

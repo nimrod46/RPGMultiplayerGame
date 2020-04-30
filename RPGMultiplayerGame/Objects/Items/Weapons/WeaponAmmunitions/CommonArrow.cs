@@ -6,7 +6,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
     {
         public CommonArrow() : base(GraphicManager.WeaponAmmunitionId.CommonArrow)
         {
-            speed *= 1.5f;
+            SyncSpeed *= 1.5f;
             scale *= 0.5f;
         }
 

@@ -9,25 +9,16 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
     public abstract class WeaponAmmunition : MovingObject
     {
-        public float SyncDamage
-        {
-            get => syncDamage; set
-            {
-                syncDamage = value;
-                InvokeSyncVarNetworkly(nameof(SyncDamage), value);
-            }
-        }
-
         protected WeaponAmmunitionId effectId;
         public Entity SyncAttacker { get; set; }
+        public Weapon SyncWeapon { get; set; }
 
-        private float syncDamage;
-        private readonly List<IdentityId> hittedEntitiesId = new List<IdentityId>();
+        private readonly List<IdentityId> victimsEntitiesId = new List<IdentityId>();
 
         public WeaponAmmunition(WeaponAmmunitionId effectId) : base(new Dictionary<int, List<GameTexture>>(GraphicManager.Instance.AnimationsByEffects[effectId]), 0, 0)
         {
             this.effectId = effectId;
-            speed *= 6;
+            SyncSpeed *= 6;
         }
 
         public override void OnNetworkInitialize()
@@ -52,12 +43,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             }
         }
 
-        public void Hit(Entity entity)
+        public void Hit(Entity victim)
         {
-            if (!hittedEntitiesId.Contains(entity.Id))
+            if (!victimsEntitiesId.Contains(victim.Id))
             {
-                entity.InvokeBroadcastMethodNetworkly(nameof(entity.OnAttackedBy), SyncAttacker, syncDamage);
-                hittedEntitiesId.Add(entity.Id);
+                SyncWeapon.Hit(SyncAttacker, victim);
+                victimsEntitiesId.Add(victim.Id);
             }
         }
 
