@@ -154,11 +154,9 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-
-        public void Weapon_OnSpawnWeaponEffect(WeaponEffect weaponEffect, Entity entity)
+        public void Weapon_OnSpawnWeaponEffect(WeaponEffect weaponEffect)
         {
-            weaponEffect = (WeaponEffect)NetBehavior.spawnWithServerAuthority(weaponEffect.GetType(), weaponEffect);
-            weaponEffect.SetLocation(entity.GetBoundingRectangle());
+            NetBehavior.spawnWithServerAuthority(weaponEffect.GetType(), weaponEffect);
         }
 
         public void GivePlayerGameItem(Player player, GameItem gameItem)

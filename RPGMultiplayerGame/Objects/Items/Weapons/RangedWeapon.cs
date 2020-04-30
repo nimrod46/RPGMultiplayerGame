@@ -27,7 +27,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             {
                 weaponEffect.SyncCurrentDirection = entity.SyncCurrentDirection;
                 weaponEffect.SyncAttacker = entity;
-                ServerManager.Instance.Weapon_OnSpawnWeaponEffect(weaponEffect, entity);
+                ServerManager.Instance.Weapon_OnSpawnWeaponEffect(weaponEffect);
             }
         }
 

@@ -8,8 +8,6 @@ namespace RPGMultiplayerGame.Objects.Other
 {
     public abstract class GraphicObject : UpdateableObject, IGameDrawable
     {
-
-
         public float Layer { get; set; }
         public float DefaultLayer { get; set; }
 
@@ -40,11 +38,6 @@ namespace RPGMultiplayerGame.Objects.Other
             DefaultLayer = Layer;
         }
 
-        public virtual Rectangle GetBoundingRectangle()
-        {
-            return new Rectangle((int)(SyncX + offset.X), (int)(SyncY + offset.Y), Size.X, Size.Y);
-        }
-
         public virtual void Draw(SpriteBatch sprite)
         {
             if (texture != null)
@@ -58,6 +51,11 @@ namespace RPGMultiplayerGame.Objects.Other
             {
                 Console.Error.WriteLine("Cannot draw object: " + Id + " " + GetType());
             }
+        }
+
+        public virtual Rectangle GetBoundingRectangle()
+        {
+            return new Rectangle((int)(SyncX + offset.X), (int)(SyncY + offset.Y), Size.X, Size.Y);
         }
 
         public override void OnDestroyed(NetworkIdentity identity)

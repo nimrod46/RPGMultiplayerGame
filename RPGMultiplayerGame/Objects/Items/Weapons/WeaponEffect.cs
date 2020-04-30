@@ -20,6 +20,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         protected EffectId effectId;
         public Entity SyncAttacker { get; set; }
+
         private float syncDamage;
         private readonly List<IdentityId> hittedEntitiesId = new List<IdentityId>();
 
@@ -32,7 +33,8 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, SyncCurrentDirection);
+            SetCurrentEntityState((int)State.Moving, SyncCurrentDirection);
+            SetLocation();
         }
 
         public override void Update(GameTime gameTime)
@@ -59,8 +61,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             }
         }
 
-        public void SetLocation(Rectangle rectangle)
+        public void SetLocation()
         {
+            Rectangle rectangle = SyncAttacker.GetBoundingRectangle();
             switch ((Direction)SyncCurrentDirection)
             {
                 case Direction.Left:
