@@ -22,6 +22,22 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Attacking
         }
 
+        public enum EntityAnimation
+        {
+            WalkLeft,
+            WalkUp,
+            WalkRight,
+            WalkDown,
+            IdleLeft,
+            IdleUp,
+            IdleRight,
+            IdleDown,
+            AttackLeft,
+            AttackUp,
+            AttackRight,
+            AttackDown,
+        }
+
         public delegate void EntityKill(Entity killedEntity);
         public EntityKill OnEnitytKillEvent;
         protected SpawnPoint SyncSpawnPoint
@@ -138,7 +154,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public virtual void EquipeWith(Weapon weapon)
         {
+            InvokeCommandMethodNetworkly(nameof(EquipeWith), weapon);
             EquippedWeapon = weapon;
+            EquippedWeapon.Attacker = this;
         }
 
         public override void Update(GameTime gameTime)

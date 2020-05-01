@@ -102,6 +102,11 @@ namespace RPGMultiplayerGame.Objects.Other
             }
         }
 
+        public virtual Vector2 GetDrawCenter()
+        {
+            return Location + offset + Size.ToVector2() / 2;
+        }
+
         public virtual Rectangle GetBoundingRectangle()
         {
             return new Rectangle((int)(SyncX + offset.X), (int)(SyncY + offset.Y), Size.X, Size.Y);

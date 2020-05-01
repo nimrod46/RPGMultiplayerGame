@@ -9,7 +9,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
     public class FlickerEffect : SpecielWeaponEffect
     {
-        public FlickerEffect(Entity entity) : base(entity, 0.3, 4, false)
+        public FlickerEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 0.1, 6, false)
         {
 
         }

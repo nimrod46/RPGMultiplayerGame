@@ -6,6 +6,7 @@ using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
+using RPGMultiplayerGame.Objects.VisualEffects;
 using ServerLobby;
 using System.Windows.Forms;
 
@@ -44,6 +45,7 @@ namespace RPGMultiplayerGame.Managers
             new CommonHealthPotion();
             new CommonBow();
             new CommonArrow();
+            new WindStormVisualEffect();
         }
 
         public void AddServer()

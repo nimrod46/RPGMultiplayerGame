@@ -1,16 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
+using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
-    public abstract class Weapon : InteractiveItem
+    public abstract class Weapon : InteractiveItem, IDamageInflicter
     {
         public float X { get; set; }
         public float Y { get; set; }
         public float Damage { get; set; }
+        public Entity Attacker { get; set; }
+        public Direction Direction { get => Attacker.SyncCurrentDirection; set => Attacker.SyncCurrentDirection = value; }
 
         protected List<Type> specielWeaponEffects;
         protected double coolDownTime;
@@ -46,8 +50,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             }
         }
 
-        
-
         public bool IsAbleToAttack()
         {
             if (!inCoolDown)
@@ -58,21 +60,21 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             return false;
         }
 
-        public abstract void Attack(Entity entity);
+        public abstract void Attack(Entity attacker);
 
         public virtual void Hit(Entity attacker, Entity victim)
         {
+            InvokeBroadcastMethodNetworkly(nameof(ActivateEffectsOn), victim, this);
             victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), attacker, Damage);
-            InvokeBroadcastMethodNetworkly(nameof(ActivateEffectsOn), victim);
         }
 
-        protected void ActivateEffectsOn(Entity victim)
+        public void ActivateEffectsOn(Entity victim, IDamageInflicter damageInflicter)
         {
             lock (specielWeaponEffects)
             {
                 foreach (var specielWeaponEffectType in specielWeaponEffects)
                 {
-                    Activator.CreateInstance(specielWeaponEffectType, victim);
+                    Activator.CreateInstance(specielWeaponEffectType, victim, damageInflicter);
                 }
             }
         }

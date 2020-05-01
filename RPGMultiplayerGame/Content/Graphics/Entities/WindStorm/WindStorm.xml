@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAnimationPropertiesLib xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <AnimationPropertiesLib>
+    <FullPath>Idle\1</FullPath>
+    <Offset>
+      <X>0</X>
+      <Y>0</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>Idle\2</FullPath>
+    <Offset>
+      <X>-2</X>
+      <Y>0</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>Idle\3</FullPath>
+    <Offset>
+      <X>0</X>
+      <Y>0</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+  <AnimationPropertiesLib>
+    <FullPath>Idle\4</FullPath>
+    <Offset>
+      <X>0</X>
+      <Y>0</Y>
+    </Offset>
+  </AnimationPropertiesLib>
+</ArrayOfAnimationPropertiesLib>

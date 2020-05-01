@@ -5,13 +5,15 @@ using RPGMultiplayerGame.Objects.Other;
 using System.Collections.Generic;
 using static RPGMultiplayerGame.Managers.GraphicManager;
 
-namespace RPGMultiplayerGame.Objects.Items.Weapons
+namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 {
-    public abstract class WeaponAmmunition : MovingObject
+    public abstract class WeaponAmmunition : MovingObject, IDamageInflicter
     {
         protected WeaponAmmunitionId effectId;
         public Entity SyncAttacker { get; set; }
         public Weapon SyncWeapon { get; set; }
+        public float Damage { get => SyncWeapon.Damage; set => SyncWeapon.Damage = value; }
+        Direction IDamageInflicter.Direction { get => SyncCurrentDirection; set => SyncCurrentDirection = value; }
 
         private readonly List<IdentityId> victimsEntitiesId = new List<IdentityId>();
 
@@ -39,15 +41,16 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             List<Entity> entities = GameManager.Instance.GetEntitiesIntersectsWith(this);
             foreach (Entity entity in entities)
             {
-                Hit(entity);
+                Hit(SyncAttacker, entity);
             }
         }
 
-        public void Hit(Entity victim)
+        public void Hit(Entity attacker, Entity victim)
         {
             if (!victimsEntitiesId.Contains(victim.Id))
             {
-                SyncWeapon.Hit(SyncAttacker, victim);
+                SyncWeapon.InvokeBroadcastMethodNetworkly(nameof(SyncWeapon.ActivateEffectsOn), victim, this);
+                victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), attacker, Damage);
                 victimsEntitiesId.Add(victim.Id);
             }
         }
@@ -76,6 +79,11 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
                 case Direction.Idle:
                     break;
             }
+        }
+
+        public void Attack(Entity attacker)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

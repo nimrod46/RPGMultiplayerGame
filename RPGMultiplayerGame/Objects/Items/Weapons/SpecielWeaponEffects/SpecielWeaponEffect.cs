@@ -26,15 +26,17 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
         public bool AllowMultiple { get; set; }
 
         protected readonly Entity entity;
-        private readonly double delaySec;
-        private readonly int loopCount;
-        private int currentLoopCount;
-        private double timeSinceLastActivationSec;
+        protected readonly IDamageInflicter damageInflicter;
+        protected readonly double delaySec;
+        protected readonly int loopCount;
+        protected int currentLoopCount;
+        protected double timeSinceLastActivationSec;
         private bool isDestroyed;
 
-        public SpecielWeaponEffect(Entity entity, double delaySec, int loopCount, bool allowMultiple)
+        public SpecielWeaponEffect(Entity entity, IDamageInflicter damageInflicter, double delaySec, int loopCount, bool allowMultiple)
         {
             this.entity = entity;
+            this.damageInflicter = damageInflicter;
             this.delaySec = delaySec;
             this.loopCount = loopCount;
             currentLoopCount = 0;
@@ -47,7 +49,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 
         public abstract void Activated();
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             if (isDestroyed)
             {

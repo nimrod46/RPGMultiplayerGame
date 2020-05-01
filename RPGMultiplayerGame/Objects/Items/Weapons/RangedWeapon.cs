@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
 
@@ -8,11 +9,11 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
     public class RangedWeapon : Weapon
     {
 
-        private readonly WeaponAmmunition weaponEffect;
+        private readonly WeaponAmmunition weaponAmmunition;
 
         public RangedWeapon(ItemType itemType, string name, float damage, WeaponAmmunition weaponEffect, double coolDownTime) : base(itemType, name, damage, coolDownTime)
         {
-            this.weaponEffect = weaponEffect;
+            this.weaponAmmunition = weaponEffect;
             weaponEffect.SyncWeapon = this;
         }
 
@@ -21,13 +22,18 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             throw new NotImplementedException();
         }
 
+        public override void Hit(Entity attacker, Entity victim)
+        {
+            base.Hit(attacker, victim);
+        }
+
         public override void Attack(Entity entity)
         {
             if (entity.isInServer)
             {
-                weaponEffect.SyncCurrentDirection = entity.SyncCurrentDirection;
-                weaponEffect.SyncAttacker = entity;
-                ServerManager.Instance.Weapon_OnSpawnWeaponEffect(weaponEffect);
+                weaponAmmunition.SyncCurrentDirection = entity.SyncCurrentDirection;
+                weaponAmmunition.SyncAttacker = entity;
+                ServerManager.Instance.SpawnWeaponAmmunition(weaponAmmunition);
             }
         }
 

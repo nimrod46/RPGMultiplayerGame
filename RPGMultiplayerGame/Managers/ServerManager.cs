@@ -7,9 +7,11 @@ using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.QuestsObjects;
+using RPGMultiplayerGame.Objects.VisualEffects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -155,9 +157,14 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void Weapon_OnSpawnWeaponEffect(WeaponAmmunition weaponEffect)
+        public void SpawnWeaponAmmunition(WeaponAmmunition weaponEffect)
         {
             NetBehavior.spawnWithServerAuthority(weaponEffect.GetType(), weaponEffect);
+        }
+
+        public VisualEffect SpawnVisualEffect(VisualEffect visualEffect)
+        {
+            return NetBehavior.spawnWithServerAuthority(visualEffect.GetType(), visualEffect) as VisualEffect;
         }
 
         public void GivePlayerGameItem(Player player, GameItem gameItem)

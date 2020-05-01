@@ -26,22 +26,6 @@ namespace RPGMultiplayerGame.Objects.Other
             Idle, //TODO: Delete
         }
 
-        public enum EntityAnimation
-        {
-            WalkLeft,
-            WalkUp,
-            WalkRight,
-            WalkDown,
-            IdleLeft,
-            IdleUp,
-            IdleRight,
-            IdleDown,
-            AttackLeft,
-            AttackUp,
-            AttackRight,
-            AttackDown,
-        }
-
         protected int SyncCurrentAnimationType
         {
             get => syncCurrentAnimationType; set
@@ -132,7 +116,7 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             currentAnimationIndex = 0;
             SyncCurrentDirection = direction;
-            SyncCurrentAnimationType = (int)direction + dirToAnimationIndex;
+            SyncCurrentAnimationType = (int)SyncCurrentDirection + dirToAnimationIndex;
             this.shouldLoopAnimation = shouldLoopAnimation;
         }
     }

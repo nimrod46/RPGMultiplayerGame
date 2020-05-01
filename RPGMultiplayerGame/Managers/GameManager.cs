@@ -7,6 +7,7 @@ using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -92,7 +93,7 @@ namespace RPGMultiplayerGame.Managers
             }
             if (identity is IGameUpdateable gameUpdateable)
             {
-                AddUpdateObject(gameUpdateable);
+                new Thread(new ThreadStart(() => AddUpdateObject(gameUpdateable))).Start();
             }
             if (identity is Entity entity)
             {

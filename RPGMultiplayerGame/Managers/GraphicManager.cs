@@ -6,7 +6,9 @@ using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static RPGMultiplayerGame.Objects.LivingEntities.Entity;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
+using static RPGMultiplayerGame.Objects.VisualEffects.VisualEffect;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -34,11 +36,15 @@ namespace RPGMultiplayerGame.Managers
         }
 
 
-
         public enum WeaponAmmunitionId
         {
             FireBall,
             CommonArrow
+        }
+
+        public enum VisualEffectId
+        {
+            WindStorm,
         }
 
         public const float OWN_PLAYER_LAYER = 0.6f;
@@ -48,6 +54,7 @@ namespace RPGMultiplayerGame.Managers
 
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> AnimationsByEntities { get; set; }
         public Dictionary<WeaponAmmunitionId, Dictionary<int, List<GameTexture>>> AnimationsByEffects { get; set; }
+        public Dictionary<VisualEffectId, Dictionary<int, List<GameTexture>>> AnimationsByVisualEffect { get; set; }
         public List<Texture2D> Textures { get; set; }
         public Texture2D HealthBar { get; set; }
         public Texture2D HealthBarBackground { get; set; }
@@ -60,6 +67,7 @@ namespace RPGMultiplayerGame.Managers
         {
             AnimationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
             AnimationsByEffects = new Dictionary<WeaponAmmunitionId, Dictionary<int, List<GameTexture>>>();
+            AnimationsByVisualEffect = new Dictionary<VisualEffectId, Dictionary<int, List<GameTexture>>>();
             Textures = new List<Texture2D>();
 
         }
@@ -71,8 +79,9 @@ namespace RPGMultiplayerGame.Managers
 
         public void LoadTextures(ContentManager content)
         {
-            AnimationsByEntities = GetGameTextureByEnum<EntityId>(content);
-            AnimationsByEffects = GetGameTextureByEnum<WeaponAmmunitionId>(content);
+            AnimationsByEntities = GetGameTextureByEnum<EntityId, EntityAnimation>(content);
+            AnimationsByEffects = GetGameTextureByEnum<WeaponAmmunitionId, EntityAnimation>(content);
+            AnimationsByVisualEffect = GetGameTextureByEnum<VisualEffectId, VisualEffectAnimation>(content);
             HealthBar = content.Load<Texture2D>("Graphics\\HealthBar");
             HealthBarBackground = content.Load<Texture2D>("Graphics\\HealthBarBackground");
             PlayerNameFont = content.Load<SpriteFont>("Graphics\\PlayerNameFont");
@@ -95,7 +104,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        private Dictionary<T, Dictionary<int, List<GameTexture>>> GetGameTextureByEnum<T>(ContentManager content) where T : Enum
+        private Dictionary<T, Dictionary<int, List<GameTexture>>> GetGameTextureByEnum<T, V>(ContentManager content) where T : Enum where V : Enum
         {
             Dictionary<T, Dictionary<int, List<GameTexture>>> gameTextureByEnum = new Dictionary<T, Dictionary<int, List<GameTexture>>>();
             for (int i = 0; i < (int)(object)Enum.GetValues(typeof(T)).Cast<object>().Cast<T>().Last() + 1; i++)
@@ -111,12 +120,12 @@ namespace RPGMultiplayerGame.Managers
                     Console.WriteLine("Warning: no xml found for " + (T)(object)i);
                 }
                 Dictionary<int, List<GameTexture>> animations = new Dictionary<int, List<GameTexture>>();
-                for (int j = 0; j < (int)Enum.GetValues(typeof(EntityAnimation)).Cast<EntityAnimation>().Last() + 1; j++)
+                for (int j = 0; j < (int)(object)Enum.GetValues(typeof(V)).Cast<object>().Cast<V>().Last() + 1; j++)
                 {
                     List<GameTexture> animation = new List<GameTexture>();
                     for (int k = 1; k <= 32; k++)
                     {
-                        string name = "" + (T)(object)i + "\\" + (EntityAnimation)j + "\\" + k;
+                        string name = "" + (T)(object)i + "\\" + (V)(object)j + "\\" + k;
                         string partPath = (EntityAnimation)j + "\\" + k;
                         Vector2 offset = Vector2.Zero;
                         if (animationProperties?.Where(a => partPath.Equals(a.FullPath)).Count() > 0)
