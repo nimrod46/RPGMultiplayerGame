@@ -45,7 +45,12 @@ namespace RPGMultiplayerGame.Managers
             new CommonHealthPotion();
             new CommonBow();
             new CommonArrow();
-            new WindStormVisualEffect();
+            new StormVisualEffect();
+            new ExplotionVisualEffect();
+            new ExplodingArrow();
+            new ExplodingBow();
+            new FreezingArrow();
+            new IceBow();
         }
 
         public void AddServer()

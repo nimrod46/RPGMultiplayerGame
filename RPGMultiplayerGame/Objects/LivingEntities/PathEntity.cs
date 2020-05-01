@@ -111,11 +111,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             return IsObjectInInteractingRadius(gameObject, minDistanceForObjectInteraction);
         }
 
-        protected bool IsObjectInInteractingRadius(GameObject gameObject, float minDistanceForObjectInteraction)
-        {
-            return GetDistanceFrom(gameObject) <= minDistanceForObjectInteraction;
-        }
-
         protected virtual void LookAtGameObject(GameObject gameObject, int entityState)
         {
             IsLookingAtObject = true;

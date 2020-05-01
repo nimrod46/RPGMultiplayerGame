@@ -105,6 +105,8 @@ namespace RPGMultiplayerGame.Managers
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 });
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 });
                 GivePlayerGameItem(player, new CommonBow());
+                GivePlayerGameItem(player, new IceBow());
+                GivePlayerGameItem(player, new ExplodingBow());
                 player.SyncGold = 100;
                 player.MoveToSpawnPoint();
             }

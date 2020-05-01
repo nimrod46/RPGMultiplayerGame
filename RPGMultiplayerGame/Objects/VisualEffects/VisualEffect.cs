@@ -24,10 +24,14 @@ namespace RPGMultiplayerGame.Objects.VisualEffects
         {
         }
 
-        public override void Update(GameTime gameTime)
+        public override void OnNetworkInitialize()
         {
-            base.Update(gameTime);
-            Layer = SyncParent.Layer + 0.01f;
+            base.OnNetworkInitialize();
+            UpdateLocation();
+        }
+
+        public void UpdateLocation()
+        {
             Location = SyncParent.Location;
             Location = Location + SyncParent.GetDrawCenter() - GetDrawCenter();
         }

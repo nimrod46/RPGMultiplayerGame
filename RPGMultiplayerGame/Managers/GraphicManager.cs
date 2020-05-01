@@ -39,12 +39,15 @@ namespace RPGMultiplayerGame.Managers
         public enum WeaponAmmunitionId
         {
             FireBall,
-            CommonArrow
+            CommonArrow,
+            FreezingArrow,
+            ExplodingArrow
         }
 
         public enum VisualEffectId
         {
             WindStorm,
+            Explotion,
         }
 
         public const float OWN_PLAYER_LAYER = 0.6f;
@@ -123,7 +126,7 @@ namespace RPGMultiplayerGame.Managers
                 for (int j = 0; j < (int)(object)Enum.GetValues(typeof(V)).Cast<object>().Cast<V>().Last() + 1; j++)
                 {
                     List<GameTexture> animation = new List<GameTexture>();
-                    for (int k = 1; k <= 32; k++)
+                    for (int k = 1; k <= 100; k++)
                     {
                         string name = "" + (T)(object)i + "\\" + (V)(object)j + "\\" + k;
                         string partPath = (EntityAnimation)j + "\\" + k;

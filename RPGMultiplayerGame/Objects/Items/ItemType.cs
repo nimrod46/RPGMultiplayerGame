@@ -8,5 +8,7 @@
         BatClaw,
         CommonHealthPotion,
         CommonBow,
+        IceBow,
+        ExplodingBow,
     }
 }

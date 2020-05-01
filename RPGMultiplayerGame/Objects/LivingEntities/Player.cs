@@ -136,7 +136,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     if (GetCurrentEnitytState<State>() == State.Attacking)
                     {
-                        if (!InputManager.Instance.KeyDown(Keys.X) || GetIsLoopAnimationFinished())
+                        if (!InputManager.Instance.KeyDown(Keys.X) || IsLoopAnimationFinished())
                         {
                             Instance_OnArrowsKeysStateChange(Keys.None, false);
                         }

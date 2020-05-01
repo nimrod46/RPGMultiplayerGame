@@ -9,7 +9,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public CommonBow() : base(ItemType.CommonBow, "Common Bow", 10, new CommonArrow(), 0.5f)
         {
             Scale = 0.46f;
-            AddSpecielWeaponEffect<StormWeaponEffect>();
         }
     }
 }

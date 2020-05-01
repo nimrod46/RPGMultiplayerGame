@@ -192,6 +192,20 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
         }
 
+        public List<Entity> GetCurrentEntitiesInRadius(float radius)
+        {
+            List<Entity> currentInteractingEntities = new List<Entity>();
+            List<Entity> entities = GameManager.Instance.GetEntities();
+            foreach (var entity in entities)
+            {
+                if (!entity.SyncIsDead && IsObjectInInteractingRadius(entity, radius))
+                {
+                    currentInteractingEntities.Add(entity);
+                }
+            }
+            return currentInteractingEntities;
+        }
+
         public virtual void OnAttackedBy(Entity attacker, float damage)
         {
             if (!damageable)
@@ -266,7 +280,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected void CmdAttack(Entity attacker, Weapon weapon)
         {
-            weapon.Attack(attacker);
+            weapon.Attack();
         }
 
         public virtual void Respawn()

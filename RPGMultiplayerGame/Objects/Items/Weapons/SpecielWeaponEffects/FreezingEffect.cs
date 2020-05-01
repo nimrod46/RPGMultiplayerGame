@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
-    public class FreezingEffect : SpecielWeaponEffect
+    public class FreezingWeaponEffect : SpecielWeaponEffect
     {
-        public FreezingEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 5, 1, false)
+        public FreezingWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 5, 1, false)
         {
 
         }

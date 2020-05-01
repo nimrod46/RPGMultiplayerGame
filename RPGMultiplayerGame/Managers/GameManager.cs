@@ -213,6 +213,11 @@ namespace RPGMultiplayerGame.Managers
             return (entitiesIntersects);
         }
 
+        public List<Entity> GetEntities()
+        {
+            return new List<Entity>(entities);
+        }
+
         private void AddEntity(Entity entity)
         {
             lock (entities)

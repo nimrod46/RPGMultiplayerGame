@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RPGMultiplayerGame.Objects.VisualEffects;
+using System;
 using System.Collections.Generic;
 
 namespace RPGMultiplayerGame.Objects.Other
@@ -76,7 +78,7 @@ namespace RPGMultiplayerGame.Objects.Other
             if (timeSinceLastFrame >= animationTimeDelay)
             {
                 timeSinceLastFrame = 0;
-                if (GetIsLoopAnimationFinished())
+                if (IsLoopAnimationFinished())
                 {
                     if (shouldLoopAnimation)
                     {
@@ -107,7 +109,7 @@ namespace RPGMultiplayerGame.Objects.Other
             UpdateTexture();
         }
 
-        protected bool GetIsLoopAnimationFinished()
+        public bool IsLoopAnimationFinished()
         {
             return currentAnimationIndex + 1 >= animationsByType[SyncCurrentAnimationType].Count;
         }

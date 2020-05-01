@@ -32,6 +32,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
         protected int currentLoopCount;
         protected double timeSinceLastActivationSec;
         private bool isDestroyed;
+        private bool hasBeenActivated;
 
         public SpecielWeaponEffect(Entity entity, IDamageInflicter damageInflicter, double delaySec, int loopCount, bool allowMultiple)
         {
@@ -43,14 +44,20 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             timeSinceLastActivationSec = 0;
             IsDestroyed = false;
             AllowMultiple = allowMultiple;
+            hasBeenActivated = false;
             entity.ScheduledNewAction(this);
-            Activated();
         }
 
         public abstract void Activated();
 
         public virtual void Update(GameTime gameTime)
         {
+            if(!hasBeenActivated)
+            {
+                Activated();
+                hasBeenActivated = true;
+            }
+
             if (isDestroyed)
             {
                 return;
