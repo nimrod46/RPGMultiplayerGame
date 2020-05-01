@@ -22,17 +22,17 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             throw new NotImplementedException();
         }
 
-        public override void Hit(Entity attacker, Entity victim)
+        public override void Hit(Entity victim)
         {
-            base.Hit(attacker, victim);
+            base.Hit(victim);
         }
 
-        public override void Attack(Entity entity)
+        public override void Attack()
         {
-            if (entity.isInServer)
+            if (Attacker.isInServer)
             {
-                weaponAmmunition.SyncCurrentDirection = entity.SyncCurrentDirection;
-                weaponAmmunition.SyncAttacker = entity;
+                weaponAmmunition.SyncCurrentDirection = Attacker.SyncCurrentDirection;
+                weaponAmmunition.SyncAttacker = Attacker;
                 ServerManager.Instance.SpawnWeaponAmmunition(weaponAmmunition);
             }
         }

@@ -60,12 +60,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             return false;
         }
 
-        public abstract void Attack(Entity attacker);
+        public abstract void Attack();
 
-        public virtual void Hit(Entity attacker, Entity victim)
+        public virtual void Hit(Entity victim)
         {
             InvokeBroadcastMethodNetworkly(nameof(ActivateEffectsOn), victim, this);
-            victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), attacker, Damage);
+            victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), Attacker, Damage);
         }
 
         public void ActivateEffectsOn(Entity victim, IDamageInflicter damageInflicter)

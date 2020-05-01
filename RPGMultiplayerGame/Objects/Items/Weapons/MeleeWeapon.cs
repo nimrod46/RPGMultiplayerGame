@@ -15,15 +15,15 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             DamageAreaSize = damageAreaSize;
         }
 
-        public override void Attack(Entity attacker)
+        public override void Attack()
         {
-            UpdateWeaponLocation(attacker);
-            List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(this, attacker);
+            UpdateWeaponLocation(Attacker);
+            List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(this, Attacker);
             if (damagedEntities.Count > 0)
             {
                 foreach (Entity damagedEntity in damagedEntities)
                 {
-                    Hit(attacker, damagedEntity);
+                    Hit(damagedEntity);
                 }
             }
         }

@@ -14,6 +14,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
         public Weapon SyncWeapon { get; set; }
         public float Damage { get => SyncWeapon.Damage; set => SyncWeapon.Damage = value; }
         Direction IDamageInflicter.Direction { get => SyncCurrentDirection; set => SyncCurrentDirection = value; }
+        public Entity Attacker { get => SyncAttacker; set => SyncAttacker = value; }
 
         private readonly List<IdentityId> victimsEntitiesId = new List<IdentityId>();
 
@@ -41,16 +42,16 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
             List<Entity> entities = GameManager.Instance.GetEntitiesIntersectsWith(this);
             foreach (Entity entity in entities)
             {
-                Hit(SyncAttacker, entity);
+                Hit(entity);
             }
         }
 
-        public void Hit(Entity attacker, Entity victim)
+        public void Hit(Entity victim)
         {
             if (!victimsEntitiesId.Contains(victim.Id))
             {
                 SyncWeapon.InvokeBroadcastMethodNetworkly(nameof(SyncWeapon.ActivateEffectsOn), victim, this);
-                victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), attacker, Damage);
+                victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), Attacker, Damage);
                 victimsEntitiesId.Add(victim.Id);
             }
         }
@@ -58,7 +59,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
         public void SetLocation()
         {
             Rectangle rectangle = SyncAttacker.GetBoundingRectangle();
-            switch ((Direction)SyncCurrentDirection)
+            switch (SyncCurrentDirection)
             {
                 case Direction.Left:
                     SyncX = rectangle.Left - Size.X;
@@ -79,11 +80,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
                 case Direction.Idle:
                     break;
             }
-        }
-
-        public void Attack(Entity attacker)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

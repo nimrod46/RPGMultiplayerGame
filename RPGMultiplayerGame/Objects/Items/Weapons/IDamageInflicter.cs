@@ -11,11 +11,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
     public interface IDamageInflicter
     {
         float Damage { get; set; }
+
         Direction Direction { get; set; }
 
-        void Attack(Entity attacker);
+        Entity Attacker { get; set; }
 
-        void Hit(Entity attacker, Entity victim);
+        void Hit(Entity victim);
 
     }
 }
