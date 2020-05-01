@@ -46,6 +46,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             AllowMultiple = allowMultiple;
             hasBeenActivated = false;
             entity.ScheduledNewAction(this);
+            GameManager.Instance.AddUpdateObject(this);
         }
 
         public abstract void Activated();

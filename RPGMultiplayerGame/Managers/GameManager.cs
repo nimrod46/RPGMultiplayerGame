@@ -93,7 +93,7 @@ namespace RPGMultiplayerGame.Managers
             }
             if (identity is IGameUpdateable gameUpdateable)
             {
-                new Thread(new ThreadStart(() => AddUpdateObject(gameUpdateable))).Start();
+                AddUpdateObject(gameUpdateable);
             }
             if (identity is Entity entity)
             {
@@ -228,10 +228,13 @@ namespace RPGMultiplayerGame.Managers
 
         public void AddUpdateObject(IGameUpdateable obj)
         {
-            lock (updateObjects)
+            new Thread(new ThreadStart(() =>
             {
-                updateObjects.Add(obj);
-            }
+                lock (updateObjects)
+                {
+                    updateObjects.Add(obj);
+                }
+            })).Start();
         }
     }
 }

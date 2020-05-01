@@ -92,7 +92,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected Vector2 healthBarOffset;
         protected bool damageable;
         protected readonly float maxHealth;
-        private List<ISpecielWeaponEffect> scheduledActions;
+        private readonly List<ISpecielWeaponEffect> specielWeaponEffect;
         private float health;
         private SpawnPoint syncSpawnPoint;
         private Vector2 healthBarSize;
@@ -106,7 +106,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             SyncIsDead = false;
             healthBar = GraphicManager.Instance.HealthBar;
             healthBarBackground = GraphicManager.Instance.HealthBarBackground;
-            scheduledActions = new List<ISpecielWeaponEffect>();
+            specielWeaponEffect = new List<ISpecielWeaponEffect>();
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
             SyncHealth = maxHealth;
             SyncCurrentAnimationType = (int)EntityAnimation.IdleDown;
@@ -125,10 +125,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void ScheduledNewAction(ISpecielWeaponEffect specielWeaponEffect)
         {
-            lock (scheduledActions)
+            lock (this.specielWeaponEffect)
             {
-                scheduledActions.ForEach(a => { if (!a.AllowMultiple && a.GetType() == specielWeaponEffect.GetType()) a.IsDestroyed = true; } );
-                scheduledActions.Add(specielWeaponEffect);
+                this.specielWeaponEffect.ForEach(a => { if (!a.AllowMultiple && a.GetType() == specielWeaponEffect.GetType()) a.IsDestroyed = true; } );
+                this.specielWeaponEffect.Add(specielWeaponEffect);
             }
         }
 
@@ -161,30 +161,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void Update(GameTime gameTime)
         {
-            //if (isBeingHit)
-            //{
-            //    currentFlickerTime += gameTime.ElapsedGameTime.TotalSeconds;
-            //    if (currentFlickerTime >= flickerTimeDelay)
-            //    {
-            //        currentFlickerTime = 0;
-            //        isVisible = !isVisible;
-            //        currentFlickerCount++;
-            //        if (currentFlickerCount >= flickerCount)
-            //        {
-            //            isVisible = true;
-            //            isBeingHit = false;
-            //            currentFlickerCount = 0;
-            //        }
-            //    }
-            //}
-            lock(scheduledActions)
-            {
-                foreach (var scheduledAction in scheduledActions)
-                {
-                    scheduledAction.Update(gameTime);
-                }
-                scheduledActions.RemoveAll(a => a.IsDestroyed);
-            }
             if (hasAuthority)
             {
                 EquippedWeapon?.Update(gameTime);
