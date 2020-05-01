@@ -15,6 +15,7 @@ using RPGMultiplayerGame.Objects.VisualEffects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using static NetworkingLib.Server;
 using static RPGMultiplayerGame.Objects.LivingEntities.PathEntity;
 
@@ -220,6 +221,7 @@ namespace RPGMultiplayerGame.Managers
                             SyncY = obj.Rectangle.Y
                         };
                         Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
+                        spawnedBat.OnDestroyEvent += SpawnedBat_OnDestroyEvent;
                         BatClaw batClaw = NetBehavior.spawnWithServerAuthority(typeof(BatClaw)) as BatClaw;
                         spawnedBat.EquipeWith(batClaw);
                     }
@@ -252,6 +254,20 @@ namespace RPGMultiplayerGame.Managers
 
             }
         }
+
+        private void SpawnedBat_OnDestroyEvent(NetworkIdentity identity)
+        {
+            (identity as Entity).SyncHealth = 100;
+            new Thread(new ThreadStart(() => 
+            {
+                Thread.Sleep(5000);
+                Bat spawnedBat = NetBehavior.spawnWithServerAuthority(identity.GetType(), identity) as Bat;
+                spawnedBat.OnDestroyEvent += SpawnedBat_OnDestroyEvent;
+                BatClaw batClaw = NetBehavior.spawnWithServerAuthority(typeof(BatClaw)) as BatClaw;
+                spawnedBat.EquipeWith(batClaw);
+            })).Start();
+        }
+
         public List<NetworkIdentity> CopyIdentities()
         {
             return new List<NetworkIdentity>(gameIdentities);

@@ -10,5 +10,11 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             Scale = 0.46f;
             AddSpecielWeaponEffect<StormWeaponEffect>();
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\n" +
+                "Speciel effect: blows away enemies for " + StormWeaponEffect.LASTING_TIME + " seconds";
+        }
     }
 }

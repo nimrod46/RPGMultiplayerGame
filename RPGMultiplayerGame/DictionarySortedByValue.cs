@@ -81,15 +81,18 @@ namespace RPGMultiplayerGame
                 var wrap = new ValueWrapper(key, val);
                 this.orderedElements.Remove(wrap);
                 this.innerDict.Remove(key);
-                if (maxValue.Key.Equals(key))
+                if (maxValue != null)
                 {
-                    if (orderedElements.Count != 0)
+                    if (maxValue.Key.Equals(key))
                     {
-                        maxValue = orderedElements.ElementAt(Count - 1);
-                    }
-                    else
-                    {
-                        maxValue = null;
+                        if (orderedElements.Count != 0)
+                        {
+                            maxValue = orderedElements.ElementAt(Count - 1);
+                        }
+                        else
+                        {
+                            maxValue = null;
+                        }
                     }
                 }
                 return true;

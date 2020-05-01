@@ -11,6 +11,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
     public class ExplotionWeaponEffect : WeaponEffectWithVisual
     {
+        public const float BLAST_RADIUS = 25;
         public ExplotionWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 5, 1, true, new ExplotionVisualEffect())
         {
         }
@@ -20,7 +21,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             base.Activated();
             if (entity.isInServer)
             {
-                List<Entity> entities = entity.GetCurrentEntitiesInRadius(25);
+                List<Entity> entities = entity.GetCurrentEntitiesInRadius(BLAST_RADIUS);
                 foreach (var entity in entities)
                 {
                     damageInflicter.Hit(entity);

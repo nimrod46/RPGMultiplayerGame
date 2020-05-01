@@ -10,6 +10,7 @@ using RPGMultiplayerGame.Objects.QuestsObjects;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using static RPGMultiplayerGame.Managers.GameManager;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
@@ -195,7 +196,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void InitName()
         {
-            CmdCheckName(this, TextInput.getText("Name"));
+            new Thread(new ThreadStart(() => CmdCheckName(this, TextInput.getText("Name")))).Start();
         }
 
         public void Init(string name)

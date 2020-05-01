@@ -10,5 +10,11 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             Scale = 0.46f;
             AddSpecielWeaponEffect<ExplotionWeaponEffect>();
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\n" +
+                "Speciel effect: causing an explotion \n        that hits nearby enemies";
+        }
     }
 }

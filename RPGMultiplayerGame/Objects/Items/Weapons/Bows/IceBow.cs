@@ -10,5 +10,11 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             Scale = 0.46f;
             AddSpecielWeaponEffect<FreezingWeaponEffect>();
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + "\n" +
+                "Speciel effect: slows down enemies for " + FreezingWeaponEffect.LASTING_TIME + " seconds";
+        }
     }
 }

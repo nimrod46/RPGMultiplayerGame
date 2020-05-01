@@ -10,7 +10,8 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
     public class FreezingWeaponEffect : SpecielWeaponEffect
     {
-        public FreezingWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 5, 1, false)
+        public const int LASTING_TIME = 5;
+        public FreezingWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, LASTING_TIME, 1, false)
         {
 
         }

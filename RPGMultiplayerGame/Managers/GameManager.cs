@@ -126,18 +126,19 @@ namespace RPGMultiplayerGame.Managers
             {
                 foreach (var obj in updateObjects)
                 {
-                    obj.Update(gameTime);
+                    obj?.Update(gameTime);
                     if (obj.IsDestroyed)
                     {
                         updateObjectsToRemove.Add(obj);
                     }
                 }
-            }
 
-            foreach (var obj in updateObjectsToRemove)
-            {
-                updateObjects.Remove(obj);
+                foreach (var obj in updateObjectsToRemove)
+                {
+                    updateObjects.Remove(obj);
+                }
             }
+           
             updateObjectsToRemove.Clear();
 
             int height = game.GraphicsDevice.Viewport.Height;

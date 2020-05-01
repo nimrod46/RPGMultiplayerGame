@@ -11,7 +11,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
     public class StormWeaponEffect : WeaponEffectWithVisual
     {
-        public StormWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 2, 1, false, new StormVisualEffect())
+        public const int LASTING_TIME = 2;
+
+        public StormWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, LASTING_TIME, 1, false, new StormVisualEffect())
         {
         }
 
