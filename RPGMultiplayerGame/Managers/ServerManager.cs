@@ -107,6 +107,7 @@ namespace RPGMultiplayerGame.Managers
                 GivePlayerGameItem(player, new CommonBow());
                 GivePlayerGameItem(player, new IceBow());
                 GivePlayerGameItem(player, new ExplodingBow());
+                GivePlayerGameItem(player, new StormBow());
                 player.SyncGold = 100;
                 player.MoveToSpawnPoint();
             }

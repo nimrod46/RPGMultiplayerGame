@@ -4,7 +4,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 {
     public class FireBall : WeaponAmmunition
     {
-        public FireBall() : base(GraphicManager.WeaponAmmunitionId.FireBall)
+        public FireBall() : base(GraphicManager.WeaponAmmunitionId.FireBall, int.MaxValue)
         {
         }
 

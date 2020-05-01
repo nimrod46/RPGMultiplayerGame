@@ -10,5 +10,6 @@
         CommonBow,
         IceBow,
         ExplodingBow,
+        StormBow,
     }
 }

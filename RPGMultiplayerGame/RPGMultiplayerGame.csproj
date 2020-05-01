@@ -98,6 +98,7 @@
     <Compile Include="Managers\ServerManager.cs" />
     <Compile Include="Managers\UiManager.cs" />
     <Compile Include="Objects\Items\ItemType.cs" />
+    <Compile Include="Objects\Items\Weapons\Bows\StormBow.cs" />
     <Compile Include="Objects\Items\Weapons\Bows\IceBow.cs" />
     <Compile Include="Objects\Items\Weapons\Bows\ExplodingBow.cs" />
     <Compile Include="Objects\Items\Weapons\Bows\CommonBow.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\SpecielWeaponEffect.cs" />
     <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\WeaponEffectWithVisual.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\Arrow.cs" />
+    <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\StromArrow.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\ExplodingArrow.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\FreezingArrow.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\CommonArrow.cs" />

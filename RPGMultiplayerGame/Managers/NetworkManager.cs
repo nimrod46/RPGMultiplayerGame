@@ -51,6 +51,8 @@ namespace RPGMultiplayerGame.Managers
             new ExplodingBow();
             new FreezingArrow();
             new IceBow();
+            new StormBow();
+            new StormArrow();
         }
 
         public void AddServer()

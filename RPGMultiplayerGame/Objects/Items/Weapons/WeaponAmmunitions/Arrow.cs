@@ -5,7 +5,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 {
     public abstract class Arrow : WeaponAmmunition
     {
-        public Arrow(WeaponAmmunitionId weaponAmmunitionId) : base(weaponAmmunitionId)
+        public Arrow(WeaponAmmunitionId weaponAmmunitionId, int maxHitCount) : base(weaponAmmunitionId, maxHitCount)
         {
             SyncSpeed *= 1.5f;
         }

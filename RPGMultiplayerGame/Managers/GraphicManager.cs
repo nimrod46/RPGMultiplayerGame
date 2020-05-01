@@ -41,7 +41,8 @@ namespace RPGMultiplayerGame.Managers
             FireBall,
             CommonArrow,
             FreezingArrow,
-            ExplodingArrow
+            ExplodingArrow,
+            StormArrow
         }
 
         public enum VisualEffectId

@@ -2,9 +2,9 @@
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 {
-    public class FreezingArrow : Arrow
+    public class StormArrow : Arrow
     {
-        public FreezingArrow() : base(GraphicManager.WeaponAmmunitionId.FreezingArrow, 1)
+        public StormArrow() : base(GraphicManager.WeaponAmmunitionId.StormArrow, 1)
         {
             scale *= 0.5f;
         }

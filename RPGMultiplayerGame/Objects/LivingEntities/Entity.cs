@@ -161,6 +161,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void Update(GameTime gameTime)
         {
+            lock (specielWeaponEffect)
+            {
+                specielWeaponEffect.RemoveAll(a => a.IsDestroyed);
+            }
+
             if (hasAuthority)
             {
                 EquippedWeapon?.Update(gameTime);
