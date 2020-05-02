@@ -196,7 +196,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void InitName()
         {
-            new Thread(new ThreadStart(() => CmdCheckName(this, TextInput.getText("Name")))).Start();
+            CmdCheckName(this, TextInput.getText("Name"));
         }
 
         public void Init(string name)
@@ -228,7 +228,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 if (isDown)
                 {
                     Direction direction = (Direction)((int)key - (int)Keys.Left);
-                    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, direction);
+                    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (int)State.Moving, direction);
                     currentArrowsKeysPressed.Insert(0, key);
                 }
                 else
@@ -236,13 +236,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     currentArrowsKeysPressed.RemoveAll(k => k == key);
                     if (currentArrowsKeysPressed.Count == 0)
                     {
-                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Idle, SyncCurrentDirection);
+                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (object)(int)State.Idle, SyncCurrentDirection);
                     }
                     else
                     {
                         key = currentArrowsKeysPressed[0];
                         Direction direction = (Direction)((int)key - (int)Keys.Left);
-                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, direction);
+                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (int)State.Moving, direction);
                     }
                 }
             }

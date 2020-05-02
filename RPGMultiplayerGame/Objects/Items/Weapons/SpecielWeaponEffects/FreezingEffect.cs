@@ -35,7 +35,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             if (entity.hasAuthority)
             {
                 entity.SyncSpeed /= 0.5f;
-               Console.WriteLine("END");
             }
         }
     }

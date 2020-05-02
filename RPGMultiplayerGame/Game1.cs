@@ -100,7 +100,7 @@ namespace RPGMultiplayerGame
 
             if (gameTime.IsRunningSlowly)
             {
-                Console.WriteLine("RUNNING SLOWWWW");
+               // Console.WriteLine("RUNNING SLOWWWW");
             }
             base.Update(gameTime);
             if (ServerManager.Instance.IsRunning != true)

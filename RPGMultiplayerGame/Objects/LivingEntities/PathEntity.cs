@@ -61,7 +61,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     {
                         if (GetCurrentEnitytState<State>() == State.Moving)
                         {
-                            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (object)(int)State.Idle, SyncCurrentDirection);
+                            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (object)(int)State.Idle, SyncCurrentDirection);
                         }
                         return;
                     }
