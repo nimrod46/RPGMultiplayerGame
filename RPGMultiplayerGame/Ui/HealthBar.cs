@@ -7,6 +7,15 @@ namespace RPGMultiplayerGame.Ui
 {
     public class HealthBar : UiTextureComponent
     {
+        public override bool IsVisible
+        {
+            get => base.IsVisible; set
+            {
+                base.IsVisible = value;
+                health.IsVisible = isVisible;
+                healthText.IsVisible = isVisible;
+            }
+        }
         private readonly UiTextComponent healthText;
         private readonly UiTextureComponent health;
         private readonly Func<float> healthFunc;

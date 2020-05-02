@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.VisualEffects;
 using System;
 using System.Collections.Generic;
@@ -116,10 +117,15 @@ namespace RPGMultiplayerGame.Objects.Other
 
         protected void AnimationAtDir(Direction direction, int dirToAnimationIndex, bool shouldLoopAnimation)
         {
+            
             currentAnimationIndex = 0;
             SyncCurrentDirection = direction;
             SyncCurrentAnimationType = (int)SyncCurrentDirection + dirToAnimationIndex;
             this.shouldLoopAnimation = shouldLoopAnimation;
+            if (this is Player)
+            {
+                Console.WriteLine(SyncCurrentAnimationType);
+            }
         }
     }
 }

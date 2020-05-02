@@ -14,15 +14,27 @@ namespace RPGMultiplayerGame.Objects.Other
             Moving,
         }
 
+        public bool SyncIsAbleToMove
+        {
+            get => isAbleToMove;
+            set
+            {
+                isAbleToMove = value;
+                InvokeSyncVarNetworkly(nameof(SyncIsAbleToMove), isAbleToMove);
+            }
+        }
+
         protected int syncCurrentEntityState;
         protected int collisionOffsetX;
         protected int collisionOffsetY;
+        private bool isAbleToMove;
 
         public MovingObject(Dictionary<int, List<GameTexture>> animationsByType, int collisionOffsetX, int collisionOffsetY) : base(animationsByType)
         {
             this.collisionOffsetX = collisionOffsetX;
             this.collisionOffsetY = collisionOffsetY;
             Layer = GraphicManager.MOVING_OJECT_LAYER;
+            SyncIsAbleToMove = true;
         }
 
         public virtual void SetCurrentEntityState(int entityState, Direction direction)
@@ -62,6 +74,10 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public void MoveByDistanceAndDir(float speed, Direction direction)
         {
+            if(!SyncIsAbleToMove)
+            {
+                return;
+            }
             Vector2 newLocation = Location;
             switch (direction)
             {

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static RPGMultiplayerGame.Objects.Other.MovingObject;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
@@ -17,10 +18,29 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
         {
         }
 
+        public override void Activated()
+        {
+            base.Activated();
+            if(entity.isInServer)
+            {
+                entity.InvokeBroadcastMethodNetworkly(nameof(entity.SetCurrentEntityState), false, State.Idle, entity.SyncCurrentDirection);
+                entity.SyncIsAbleToMove = false;
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             entity.MoveByDistanceAndDir(5, damageInflicter.Direction);
+        }
+
+        public override void End()
+        {
+            base.End();
+            if (entity.isInServer)
+            {
+                entity.SyncIsAbleToMove = true;
+            }
         }
 
     }

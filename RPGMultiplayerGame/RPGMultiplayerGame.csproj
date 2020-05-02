@@ -209,8 +209,8 @@
     <Reference Include="NetworkBehavior">
       <HintPath>..\..\NetworkBehavior\NetworkBehavior\bin\Debug\NetworkBehavior.dll</HintPath>
     </Reference>
-    <Reference Include="NetworkingLib">
-      <HintPath>..\..\NetworkingLib\NetworkingLib\bin\Debug\netstandard2.0\NetworkingLib.dll</HintPath>
+    <Reference Include="NetworkLib">
+      <HintPath>..\..\NetworkLib\NetworkLib\bin\Debug\NetworkLib.dll</HintPath>
     </Reference>
     <Reference Include="OffsetGeneratorLib">
       <HintPath>..\..\..\..\source\repos\OffsetGeneratorLib\OffsetGeneratorLib\bin\Debug\OffsetGeneratorLib.dll</HintPath>

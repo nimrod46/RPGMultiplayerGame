@@ -36,6 +36,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 InvokeSyncVarNetworkly(nameof(SyncGold), syncGold);
             }
         }
+
         private Npc interactingWith;
         private Npc requestingInteraction;
         private QuestsMenu playerQuests;
@@ -165,6 +166,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.Respawn();
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
+            usableItems.IsVisible = true;
+            equippedItems.IsVisible = true;
+            playerQuests.IsVisible = true;
+            uiHealthBar.IsVisible = true;
+            goldText.IsVisible = true;
+            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, State.Idle, Direction.Down);
         }
 
         public bool IsAbleToBuy(GameItemShop gameItemShop)
@@ -306,6 +313,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (hasAuthority)
             {
                 InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
+                currentArrowsKeysPressed.Clear();
+                inventory.IsVisible = false;
+                usableItems.IsVisible = false; 
+                equippedItems.IsVisible = false;
+                playerQuests.IsVisible = false;
+                uiHealthBar.IsVisible = false;
+                goldText.IsVisible = false;
             }
         }
 

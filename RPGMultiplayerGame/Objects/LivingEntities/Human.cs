@@ -42,7 +42,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Draw(sprite);
             if (!isHidenCompletely)
             {
-                sprite.DrawString(nameFont, SyncName, Location + nameOffset, NameColor, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer);
+                if (!hasAuthority || !isDead)
+                {
+                    sprite.DrawString(nameFont, SyncName, Location + nameOffset, NameColor, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer);
+                }
             }
         }
 

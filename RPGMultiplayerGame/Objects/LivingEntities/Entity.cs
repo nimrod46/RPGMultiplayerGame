@@ -19,7 +19,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             Idle,
             Moving,
-            Attacking
+            Attacking,
+            Death
         }
 
         public enum EntityAnimation
@@ -36,6 +37,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             AttackUp,
             AttackRight,
             AttackDown,
+            DeathLeft,
+            DeathUp,
+            DeathRight,
+            DeathDown
         }
 
         public delegate void EntityKill(Entity killedEntity);
@@ -79,10 +84,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             get => isDead; set
             {
                 isDead = value;
-                InvokeSyncVarNetworkly(nameof(SyncIsDead), value);
+                if (isDead)
+                {
+                    Console.WriteLine("DEATH");
+                    DeathAtDir(SyncCurrentDirection);
+                }
+                InvokeSyncVarNetworkly(nameof(SyncIsDead), isDead);
             }
         }
-
+  
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
         protected float textLyer;
@@ -92,11 +102,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected Vector2 healthBarOffset;
         protected bool damageable;
         protected readonly float maxHealth;
+        protected bool isDead;
         private readonly List<ISpecielWeaponEffect> specielWeaponEffect;
         private float health;
         private SpawnPoint syncSpawnPoint;
         private Vector2 healthBarSize;
-        private bool isDead;
 
         public Entity(EntityId entityId, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(new Dictionary<int, List<GameTexture>>(GraphicManager.Instance.AnimationsByEntities[entityId]), collisionOffsetX, collisionOffsetY)
         {
@@ -206,7 +216,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public virtual void Kill(Entity attacker)
         {
-            SyncIsDead = true;
+            if (isInServer)
+            {
+                SyncIsDead = true;
+            }
         }
 
         public override void Draw(SpriteBatch sprite)
@@ -216,8 +229,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 base.Draw(sprite);
                 if (damageable)
                 {
-                    sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer + 0.001f);
-                    sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer);
+                    if (!hasAuthority || !isDead)
+                    {
+                        sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer + 0.001f);
+                        sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer);
+                    }
                 }
             }
         }
@@ -238,6 +254,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             AnimationAtDir(direction, 8, false);
         }
 
+        protected virtual void DeathAtDir(Direction direction)
+        {
+            AnimationAtDir(direction, 12, false);
+        }
+
         public void SetSpawnPoint(SpawnPoint spawnPoint)
         {
             SyncSpawnPoint = spawnPoint;
@@ -255,11 +276,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (EquippedWeapon.IsAbleToAttack())
             {
                 InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (object)(int)State.Attacking, SyncCurrentDirection);
-                InvokeCommandMethodNetworkly(nameof(CmdAttack), this, EquippedWeapon);
+                InvokeCommandMethodNetworkly(nameof(CmdAttack), EquippedWeapon);
             }
         }
 
-        protected void CmdAttack(Entity attacker, Weapon weapon)
+        protected void CmdAttack(Weapon weapon)
         {
             weapon.Attack();
         }

@@ -27,7 +27,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
         {
             if (entity.isInServer)
             {
-                entity.InvokeBroadcastMethodNetworkly(nameof(entity.SetCurrentEntityState), false, State.Idle, entity.SyncCurrentDirection);
                 Console.WriteLine(visualEffect);
                 visualEffect = ServerManager.Instance.SpawnVisualEffect(visualEffect);
             }

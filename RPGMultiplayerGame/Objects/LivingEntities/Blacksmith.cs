@@ -21,10 +21,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             minDistanceForObjectInteraction = 40;
             scale = 0.4f;
         }
-
-        protected override void LookAtGameObject(GameObject gameObject, int entityState)
+        public override void SetCurrentEntityState(int entityState, Direction direction)
         {
-           // base.LookAtGameObject(gameObject, entityState);
+           // base.SetCurrentEntityState(entityState, direction);
         }
 
         public override void OnNetworkInitialize()
