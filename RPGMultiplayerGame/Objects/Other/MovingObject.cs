@@ -65,7 +65,7 @@ namespace RPGMultiplayerGame.Objects.Other
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (GetCurrentEnitytState<State>() == State.Moving)
+            if (GetCurrentEnitytState<State>() == State.Moving && SyncIsAbleToMove)
             {
                 float movment = SyncSpeed * (float) gameTime.ElapsedGameTime.TotalMilliseconds;
                 MoveByDistanceAndDir(movment, SyncCurrentDirection);
@@ -74,10 +74,6 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public void MoveByDistanceAndDir(float speed, Direction direction)
         {
-            if(!SyncIsAbleToMove)
-            {
-                return;
-            }
             Vector2 newLocation = Location;
             switch (direction)
             {

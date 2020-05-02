@@ -85,7 +85,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     if (InputManager.Instance.KeyPressed(Keys.R))
                     {
-                        Respawn();
+                        Respawn(SyncSpawnPoint.SyncX, SyncSpawnPoint.SyncY);
                     }
                     return;
                 }
@@ -162,9 +162,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public override void Respawn()
+        public override void Respawn(float x, float y)
         {
-            base.Respawn();
+            base.Respawn(x,y);
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
             usableItems.IsVisible = true;
             equippedItems.IsVisible = true;

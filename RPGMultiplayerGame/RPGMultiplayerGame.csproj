@@ -103,6 +103,7 @@
     <Compile Include="Objects\Items\Weapons\Bows\ExplodingBow.cs" />
     <Compile Include="Objects\Items\Weapons\Bows\CommonBow.cs" />
     <Compile Include="Objects\Items\Weapons\IDamageInflicter.cs" />
+    <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\DemageBlast.cs" />
     <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\StormWeaponEffect.cs" />
     <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\ExplotionWeaponEffect.cs" />
     <Compile Include="Objects\Items\Weapons\SpecielWeaponEffects\FlickerEffect.cs" />

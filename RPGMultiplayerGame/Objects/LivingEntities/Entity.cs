@@ -86,13 +86,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 isDead = value;
                 if (isDead)
                 {
-                    Console.WriteLine("DEATH");
-                    DeathAtDir(SyncCurrentDirection);
+                    SetCurrentEntityState((int) State.Death,SyncCurrentDirection);
                 }
                 InvokeSyncVarNetworkly(nameof(SyncIsDead), isDead);
             }
         }
-  
+
+        public bool IsDamageable { get;}
+
         protected readonly Texture2D healthBar;
         protected readonly Texture2D healthBarBackground;
         protected float textLyer;
@@ -100,7 +101,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected bool isHidenCompletely;
         protected bool startedFlickeringAnim;
         protected Vector2 healthBarOffset;
-        protected bool damageable;
         protected readonly float maxHealth;
         protected bool isDead;
         private readonly List<ISpecielWeaponEffect> specielWeaponEffect;
@@ -112,7 +112,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             this.EntityId = entityId;
             this.maxHealth = maxHealth;
-            this.damageable = damageable;
+            this.IsDamageable = damageable;
             SyncIsDead = false;
             healthBar = GraphicManager.Instance.HealthBar;
             healthBarBackground = GraphicManager.Instance.HealthBarBackground;
@@ -156,7 +156,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void UpdateDrawOffset()
         {
-            if (damageable)
+            if (IsDamageable)
             {
                 healthBarOffset = new Vector2(BaseSize.X / 2 - healthBarBackground.Width / 2, -healthBarBackground.Height - 2);
             }
@@ -199,11 +199,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public virtual void OnAttackedBy(Entity attacker, float damage)
         {
-            if (!damageable)
-            {
-                return;
-            }
-
             if (hasAuthority)
             {
                 SyncHealth -= damage;
@@ -227,9 +222,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (!isHidenCompletely)
             {
                 base.Draw(sprite);
-                if (damageable)
+                if (IsDamageable)
                 {
-                    if (!hasAuthority || !isDead)
+                    if (!isDead)
                     {
                         sprite.Draw(healthBarBackground, Location + healthBarOffset, null, Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer + 0.001f);
                         sprite.Draw(healthBar, Location + healthBarOffset, new Rectangle(0, 0, (int)healthBarSize.X, (int)healthBarSize.Y), Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, Layer);
@@ -245,6 +240,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 case State.Attacking:
                     AttackAtDir(direction);
+                    break;
+                case State.Death:
+                    DeathAtDir(direction);
                     break;
             }
         }
@@ -285,10 +283,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             weapon.Attack();
         }
 
-        public virtual void Respawn()
+        public virtual void Respawn(float x, float y)
         {
-            SyncX = syncSpawnPoint.SyncX;
-            SyncY = syncSpawnPoint.SyncY;
+            SyncX = x;
+            SyncY = y;
             SyncHealth = maxHealth;
             SyncIsDead = false;
         }

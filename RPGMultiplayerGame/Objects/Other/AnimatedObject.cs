@@ -122,10 +122,6 @@ namespace RPGMultiplayerGame.Objects.Other
             SyncCurrentDirection = direction;
             SyncCurrentAnimationType = (int)SyncCurrentDirection + dirToAnimationIndex;
             this.shouldLoopAnimation = shouldLoopAnimation;
-            if (this is Player)
-            {
-                Console.WriteLine(SyncCurrentAnimationType);
-            }
         }
     }
 }

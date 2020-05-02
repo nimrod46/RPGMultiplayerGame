@@ -5,6 +5,7 @@ using RPGMultiplayerGame.Objects.Items.Weapons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -23,7 +24,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            if (!hasAuthority)
+            if (!hasAuthority || isDead)
             {
                 return;
             }
@@ -89,8 +90,20 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (isInServer)
             {
                 attacker.OnEnitytKillEvent?.Invoke(this);
-                InvokeBroadcastMethodNetworkly(nameof(Destroy));
+                new Thread(new ThreadStart(() => 
+                {
+                    Thread.Sleep(5000);
+                    //InvokeBroadcastMethodNetworkly(nameof(Destroy)); 
+                    Respawn(SyncX, SyncY);
+                })).Start();
             }
+        }
+
+        public override void Respawn(float x, float y)
+        {
+            targetPlayers.Clear();
+            IsLookingAtObject = false;
+            base.Respawn(x, y);
         }
 
         public override void OnAttackedBy(Entity attacker, float damage)

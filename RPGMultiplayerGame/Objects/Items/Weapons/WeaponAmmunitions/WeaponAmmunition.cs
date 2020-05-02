@@ -52,15 +52,18 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 
         public void Hit(Entity victim)
         {
-            if (!victimsEntitiesId.Contains(victim.Id))
+            if (victim.IsDamageable && maxHitCount != 0)
             {
-                SyncWeapon.InvokeBroadcastMethodNetworkly(nameof(SyncWeapon.ActivateEffectsOn), victim, this);
-                victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), Attacker, Damage);
-                victimsEntitiesId.Add(victim.Id);
-                maxHitCount--;
-                if(maxHitCount == 0)
+                if (!victimsEntitiesId.Contains(victim.Id))
                 {
-                    InvokeBroadcastMethodNetworkly(nameof(Destroy));
+                    SyncWeapon.InvokeBroadcastMethodNetworkly(nameof(SyncWeapon.ActivateEffectsOn), victim, this);
+                    victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), Attacker, Damage);
+                    victimsEntitiesId.Add(victim.Id);
+                    maxHitCount--;
+                    if (maxHitCount == 0)
+                    {
+                        InvokeBroadcastMethodNetworkly(nameof(Destroy));
+                    }
                 }
             }
         }

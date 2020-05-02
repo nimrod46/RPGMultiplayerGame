@@ -27,7 +27,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
         {
             if (entity.isInServer)
             {
-                Console.WriteLine(visualEffect);
                 visualEffect = ServerManager.Instance.SpawnVisualEffect(visualEffect);
             }
 

@@ -87,7 +87,7 @@ namespace RPGMultiplayerGame
                     {
                         if (orderedElements.Count != 0)
                         {
-                            maxValue = orderedElements.ElementAt(Count - 1);
+                            maxValue = orderedElements.ElementAt(orderedElements.Count - 1);
                         }
                         else
                         {
@@ -132,6 +132,7 @@ namespace RPGMultiplayerGame
         {
             this.innerDict.Clear();
             this.orderedElements.Clear();
+            maxValue = null;
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)

@@ -12,8 +12,13 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
     public class ExplotionWeaponEffect : WeaponEffectWithVisual
     {
         public const float BLAST_RADIUS = 25;
+        private readonly DemageBlast demageBlast;
         public ExplotionWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 5, 1, true, new ExplotionVisualEffect())
         {
+            demageBlast = new DemageBlast(damageInflicter.Damage / 2)
+            {
+                Attacker = entity
+            };
         }
 
         public override void Activated()
@@ -24,7 +29,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
                 List<Entity> entities = entity.GetCurrentEntitiesInRadius(BLAST_RADIUS);
                 foreach (var entity in entities)
                 {
-                    damageInflicter.Hit(entity);
+                    demageBlast.Hit(entity);
                 }
             }
         }

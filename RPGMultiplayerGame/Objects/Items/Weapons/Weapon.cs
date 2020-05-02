@@ -64,8 +64,11 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public virtual void Hit(Entity victim)
         {
-            InvokeBroadcastMethodNetworkly(nameof(ActivateEffectsOn), victim, this);
-            victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), Attacker, Damage);
+            if (victim.IsDamageable)
+            {
+                InvokeBroadcastMethodNetworkly(nameof(ActivateEffectsOn), victim, this);
+                victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), Attacker, Damage);
+            }
         }
 
         public void ActivateEffectsOn(Entity victim, IDamageInflicter damageInflicter)

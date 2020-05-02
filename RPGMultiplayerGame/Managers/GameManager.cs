@@ -184,7 +184,7 @@ namespace RPGMultiplayerGame.Managers
             {
                 foreach (var entity in entities)
                 {
-                    if (attacker == entity || attacker.GetType().IsAssignableFrom(entity.GetType()))
+                    if (entity.SyncIsDead || attacker == entity || attacker.GetType().IsAssignableFrom(entity.GetType()))
                     {
                         continue;
                     }
@@ -205,7 +205,7 @@ namespace RPGMultiplayerGame.Managers
             {
                 foreach (var entity in entities)
                 {
-                    if (gameObject.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
+                    if (!entity.SyncIsDead && gameObject.GetBaseBoundingRectangle().Intersects(entity.GetBoundingRectangle()))
                     {
                         entitiesIntersects.Add(entity);
                     }
