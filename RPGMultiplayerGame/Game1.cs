@@ -119,12 +119,12 @@ namespace RPGMultiplayerGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
             if (ServerManager.Instance.IsRunning != true)
             {
-                uiSpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
-                UiManager.Instance.Draw(uiSpriteBatch);
-                uiSpriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, GameManager.Instance.Camera.Transform);
                 GraphicManager.Instance.Draw(spriteBatch);
                 spriteBatch.End();
+                uiSpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
+                UiManager.Instance.Draw(uiSpriteBatch);
+                uiSpriteBatch.End();
             }
             base.Draw(gameTime);
         }

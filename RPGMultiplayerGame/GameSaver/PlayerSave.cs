@@ -31,7 +31,7 @@ namespace RPGMultiplayerGame.GameSaver
 
         public void SaveObjectData(Player player)
         {
-            gameItems.AddRange(ServerManager.Instance.CopyIdentities().Where(i => i is GameItem gameItem && gameItem.OwnerId == player.OwnerId).Cast<GameItem>().Select(i => (GameItem) Activator.CreateInstance(i.GetType())));
+            gameItems.AddRange(ServerManager.Instance.CopyIdentities().Where(i => i is GameItem gameItem && gameItem.OwnerId == player.OwnerId).Cast<GameItem>());
             quests.AddRange(ServerManager.Instance.CopyIdentities().Where(i => i is Quest quest && quest.OwnerId == player.OwnerId).Cast<Quest>());
             gold = player.SyncGold;
             location = new Vector2(player.SyncX, player.SyncY);

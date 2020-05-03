@@ -17,7 +17,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
         {
             demageBlast = new DemageBlast(damageInflicter.Damage / 2)
             {
-                Attacker = entity
+                Attacker = damageInflicter.Attacker
             };
         }
 

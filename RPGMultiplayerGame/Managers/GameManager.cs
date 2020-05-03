@@ -150,9 +150,10 @@ namespace RPGMultiplayerGame.Managers
                     if (entity.IsDestroyed)
                     {
                         updateObjectsToRemove.Add(entity);
+                        continue;
                     }
                     Rectangle rectangle = new Rectangle(entity.Location.ToPoint(), entity.BaseSize);
-                    float normalizedHieght = (float)rectangle.Bottom / height;
+                    float normalizedHieght = (float)Math.Abs(rectangle.Bottom) /  height;
                     if (normalizedHieght > 1)
                     {
                         normalizedHieght = 1;
@@ -161,7 +162,7 @@ namespace RPGMultiplayerGame.Managers
                     {
                         normalizedHieght = 0;
                     }
-                    entity.Layer = 1 - normalizedHieght;
+                    entity.Layer = rectangle.Bottom < 0 ? normalizedHieght : 1 - normalizedHieght;
                 }
             }
 
