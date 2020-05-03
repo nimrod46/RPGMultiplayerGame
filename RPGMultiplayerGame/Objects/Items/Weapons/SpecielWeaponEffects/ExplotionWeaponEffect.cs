@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
-    public class ExplotionWeaponEffect : WeaponEffectWithVisual
+    public class ExplotionWeaponEffect : WeaponEffectWithVisual<ExplotionVisualEffect>
     {
         public const float BLAST_RADIUS = 25;
         private readonly DemageBlast demageBlast;

@@ -12,11 +12,11 @@ using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
-    public abstract class WeaponEffectWithVisual : SpecielWeaponEffect
+    public abstract class WeaponEffectWithVisual<T> : SpecielWeaponEffect where T : VisualEffect
     {
-        protected VisualEffect visualEffect;
+        protected T visualEffect;
 
-        public WeaponEffectWithVisual(Entity entity, IDamageInflicter damageInflicter, double delaySec, int loopCount, bool allowMultiple, VisualEffect visualEffect) : base(entity, damageInflicter, delaySec, loopCount, allowMultiple)
+        public WeaponEffectWithVisual(Entity entity, IDamageInflicter damageInflicter, double delaySec, int loopCount, bool allowMultiple, T visualEffect) : base(entity, damageInflicter, delaySec, loopCount, allowMultiple)
         {
             this.visualEffect = visualEffect;
             visualEffect.GetType();
@@ -27,7 +27,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
         {
             if (entity.isInServer)
             {
-                visualEffect = ServerManager.Instance.SpawnVisualEffect(visualEffect);
+                visualEffect = ServerManager.Instance.Spawn(visualEffect);
             }
 
         }

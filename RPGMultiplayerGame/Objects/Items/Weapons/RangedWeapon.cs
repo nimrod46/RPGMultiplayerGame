@@ -33,7 +33,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             {
                 weaponAmmunition.SyncCurrentDirection = Attacker.SyncCurrentDirection;
                 weaponAmmunition.SyncAttacker = Attacker;
-                ServerManager.Instance.SpawnWeaponAmmunition(weaponAmmunition);
+                ServerManager.Instance.Spawn((dynamic)weaponAmmunition);
             }
         }
 

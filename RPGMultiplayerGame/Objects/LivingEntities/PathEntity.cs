@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.MapObjects;
+using RPGMultiplayerGame.Objects.Marks;
 using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
@@ -22,15 +24,25 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 Time = time;
             }
         }
+        public GameLocation SyncNextPoint
+        {
+            get => nextPoint; set
+            {
+                nextPoint = value;
+                InvokeSyncVarNetworkly(nameof(SyncNextPoint), nextPoint);
+            }
+        }
+
 
         public bool IsLookingAtObject { get; set; }
+
         protected float minDistanceForObjectInteraction;
         private readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
         private double currentPointTime = 0;
         private int nextWaypointIndex = 0;
-        protected Vector2 nextPoint = Vector2.Zero;
         private int unit;
+        private GameLocation nextPoint;
 
 
         public PathEntity(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, bool damageable) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, damageable)
@@ -38,53 +50,75 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             IsLookingAtObject = false;
         }
 
+        public override void OnNetworkInitialize()
+        {
+            base.OnNetworkInitialize();
+            if(isInServer && hasAuthority)
+            {
+                SyncNextPoint = ServerManager.Instance.Spawn<GameLocation>();
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-
-            if (!isServerAuthority || !isInServer || isDead)
+            if(isDead)
             {
                 return;
             }
 
             if (!IsLookingAtObject)
             {
-                if (nextPoint == Vector2.Zero)
+
+                if (SyncNextPoint == null || SyncNextPoint.Location == GameLocation.DefaultGameLocation)
                 {
                     return;
                 }
 
-                if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f) //next point
+                MoveToPoint(SyncNextPoint.SyncX, SyncNextPoint.SyncY);
+
+                if (!isServerAuthority || !isInServer)
                 {
-                    currentTime += gameTime.ElapsedGameTime.TotalSeconds;
-                    if (currentPointTime != 0 && currentTime < currentPointTime)
-                    {
-                        if (GetCurrentEnitytState<State>() == State.Moving)
-                        {
-                            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (object)(int)State.Idle, SyncCurrentDirection);
-                        }
-                        return;
-                    }
+                    return;
+                }
 
-                    if (path.Count == nextWaypointIndex + 1)
-                    {
-                        unit = -1;
-                    }
-                    else if (nextWaypointIndex == 0)
-                    {
-                        unit = 1;
-                    }
-
-                    nextWaypointIndex += unit;
+                if (Vector2.Distance(new Vector2(SyncX, SyncY), SyncNextPoint.Location) <= 2f) //next point
+                {
                     if (HavePathToFollow())
                     {
+                        currentTime += gameTime.ElapsedGameTime.TotalSeconds;
+                        if (currentPointTime != 0 && currentTime < currentPointTime)
+                        {
+                            if (GetCurrentEnitytState<State>() == State.Moving)
+                            {
+                                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (int)State.Idle, SyncCurrentDirection);
+                            }
+                            return;
+                        }
+
+                        if (path.Count == nextWaypointIndex + 1)
+                        {
+                            unit = -1;
+                        }
+                        else if (nextWaypointIndex == 0)
+                        {
+                            unit = 1;
+                        }
+
+                        nextWaypointIndex += unit;
+
                         currentPointTime = path[nextWaypointIndex].Time;
-                        nextPoint = path[nextWaypointIndex].Point.ToVector2();
+                        SyncNextPoint.MoveTo(path[nextWaypointIndex].Point.ToVector2());
+                        currentTime = 0;
                     }
-                    currentTime = 0;
                 }
-                InvokeBroadcastMethodNetworkly(nameof(MoveToPoint), nextPoint.X, nextPoint.Y);
             }
+        }
+
+        public override void Kill(Entity attacker)
+        {
+            base.Kill(attacker);
+            IsLookingAtObject = false;
         }
 
         protected List<Player> GetCurrentPlayersInRadius()
@@ -182,7 +216,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (!path.Contains(waypoint))
             {
                 path.Add(waypoint);
-                nextPoint = path[0].Point.ToVector2();
+                SyncNextPoint.MoveTo(path[0].Point.ToVector2());
             }
         }
     }

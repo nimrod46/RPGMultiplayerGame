@@ -34,8 +34,8 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public GameObject()
         {
-            syncX = -9999;
-            syncY = -9999;
+            SyncX = -9999;
+            SyncY = -9999;
             OnNetworkInitializeEvent += OnNetworkInitialize;
             OnDestroyEvent += OnDestroyed;
         }

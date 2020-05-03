@@ -116,6 +116,7 @@
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\ExplodingArrow.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\FreezingArrow.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\CommonArrow.cs" />
+    <Compile Include="Objects\Marks\GameLocation.cs" />
     <Compile Include="Objects\VisualEffects\VisualEffect.cs" />
     <Compile Include="Objects\VisualEffects\ExplotionVisualEffect.cs" />
     <Compile Include="Objects\VisualEffects\WindStormVisualEffect.cs" />
@@ -203,6 +204,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Map\Map\bin\Debug\Map.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>

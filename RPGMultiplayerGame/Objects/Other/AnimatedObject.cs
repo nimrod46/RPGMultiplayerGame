@@ -31,9 +31,9 @@ namespace RPGMultiplayerGame.Objects.Other
 
         protected int SyncCurrentAnimationType
         {
-            get => syncCurrentAnimationType; set
+            get => currentAnimationType; set
             {
-                syncCurrentAnimationType = value;
+                currentAnimationType = value;
                 UpdateTexture();
             }
         }
@@ -41,20 +41,20 @@ namespace RPGMultiplayerGame.Objects.Other
         public Direction SyncCurrentDirection { get; set; }
         public float SyncSpeed
         {
-            get => syncSpeed; set
+            get => speed; set
             {
-                syncSpeed = value;
-                InvokeSyncVarNetworkly(nameof(SyncSpeed), syncSpeed);
+                speed = value;
+                InvokeSyncVarNetworkly(nameof(SyncSpeed), speed);
             }
         }
 
         protected Dictionary<int, List<GameTexture>> animationsByType = new Dictionary<int, List<GameTexture>>();
-        private int syncCurrentAnimationType;
         protected double animationTimeDelay;
         protected double timeSinceLastFrame;
         protected int currentAnimationIndex;
         protected bool shouldLoopAnimation;
-        private float syncSpeed;
+        private float speed;
+        private int currentAnimationType;
 
         public AnimatedObject(Dictionary<int, List<GameTexture>> animationsByType)
         {

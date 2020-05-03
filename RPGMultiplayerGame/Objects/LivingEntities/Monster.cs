@@ -77,7 +77,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         if (timeSinceLastGeneratePoint > generatePointTimeDelay)
                         {
                             timeSinceLastGeneratePoint = 0;
-                            nextPoint = new Vector2(rand.Next(0, GameManager.Instance.GeMapSize().X), rand.Next(0, GameManager.Instance.GeMapSize().Y));
+                            SyncNextPoint.MoveTo(new Vector2(rand.Next(0, GameManager.Instance.GeMapSize().X), rand.Next(0, GameManager.Instance.GeMapSize().Y)));
                         }
                     }
                 }
@@ -102,7 +102,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void Respawn(float x, float y)
         {
             targetPlayers.Clear();
-            IsLookingAtObject = false;
             base.Respawn(x, y);
         }
 

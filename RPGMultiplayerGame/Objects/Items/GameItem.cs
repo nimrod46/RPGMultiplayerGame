@@ -4,6 +4,7 @@ using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
+using System;
 using System.Xml.Serialization;
 
 namespace RPGMultiplayerGame.Objects.Items
@@ -12,11 +13,15 @@ namespace RPGMultiplayerGame.Objects.Items
     [XmlInclude(typeof(CommonWond))]
     [XmlInclude(typeof(CommonHealthPotion))]
     [XmlInclude(typeof(BatClaw))]
+    [XmlInclude(typeof(CommonBow))]
+    [XmlInclude(typeof(IceBow))]
+    [XmlInclude(typeof(ExplodingBow))]
+    [XmlInclude(typeof(StormBow))]
     public class GameItem : NetworkIdentity
     {
-        [XmlIgnore]
         private Texture2D texture;
 
+        [XmlElement]
         public ItemType SyncItemType
         {
             get => itemType; set
@@ -28,6 +33,7 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public string SyncName { get; set; }
 
+        [XmlIgnore]
         public Vector2 Size { get; private set; }
         protected float Scale
         {

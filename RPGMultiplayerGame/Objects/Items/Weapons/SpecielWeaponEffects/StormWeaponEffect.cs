@@ -10,7 +10,7 @@ using static RPGMultiplayerGame.Objects.Other.MovingObject;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
-    public class StormWeaponEffect : WeaponEffectWithVisual
+    public class StormWeaponEffect : WeaponEffectWithVisual<StormVisualEffect>
     {
         public const int LASTING_TIME = 2;
 

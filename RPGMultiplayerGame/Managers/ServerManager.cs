@@ -79,7 +79,7 @@ namespace RPGMultiplayerGame.Managers
         {
             lock (players)
             {
-                Player player = (Player)NetBehavior.spawnWithClientAuthority(typeof(Player), endPointId);
+                Player player = NetBehavior.SpawnWithClientAuthority<Player>(endPointId);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
                 player.OnSyncPlayerSaveEvent += Player_OnSyncPlayerSaveEvent;
                 if (spawnPoint != null)
@@ -89,17 +89,22 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        public T Spawn<T>(T identity = null) where T : NetworkIdentity
+        {
+            return NetBehavior.SpawnWithServerAuthority<T>(identity);
+        }
+
         private void Player_OnSyncPlayerSaveEvent(Player player)
         {
             players.Add(player);
-            Console.WriteLine("Player {0} joined", player.GetName());
             bool isSaveloaded = gameSave.LoadObjectSave(player);
             if (isSaveloaded)
             {
-
+                Console.WriteLine("Known player joined {0}", player.GetName());
             }
             else
             {
+                Console.WriteLine("New player {0} joined", player.GetName());
                 GivePlayerGameItem(player, new CommonSword());
                 GivePlayerGameItem(player, new CommonWond());
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 });
@@ -130,7 +135,7 @@ namespace RPGMultiplayerGame.Managers
                 {
                     if (identity is Npc npc)
                     {
-                        gameSave.SaveObjectData(npc);
+                      gameSave.SaveObjectData(npc);
                     }
                 }
             }
@@ -161,24 +166,14 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void SpawnWeaponAmmunition(WeaponAmmunition weaponEffect)
+        public void GivePlayerGameItem<T>(Player player, T gameItem) where T : GameItem
         {
-            NetBehavior.spawnWithServerAuthority(weaponEffect.GetType(), weaponEffect);
+            player.AddItemToInventory(NetBehavior.SpawnWithClientAuthority(player.OwnerId, gameItem));
         }
 
-        public VisualEffect SpawnVisualEffect(VisualEffect visualEffect)
+        public T AddQuest<T>(Player player, T quest) where T : Quest
         {
-            return NetBehavior.spawnWithServerAuthority(visualEffect.GetType(), visualEffect) as VisualEffect;
-        }
-
-        public void GivePlayerGameItem(Player player, GameItem gameItem)
-        {
-            player.AddItemToInventory(NetBehavior.spawnWithClientAuthority(gameItem.GetType(), player.OwnerId, gameItem) as GameItem);
-        }
-
-        public Quest AddQuest(Player player, Quest quest)
-        {
-            Quest netQuest = (Quest)NetBehavior.spawnWithClientAuthority(quest.GetType(), player.OwnerId, quest);
+            T netQuest = NetBehavior.SpawnWithClientAuthority(player.OwnerId, quest);
             netQuest.AssignTo(player);
             return netQuest;
         }
@@ -201,18 +196,20 @@ namespace RPGMultiplayerGame.Managers
             GameManager.Instance.map = gameMap;
             foreach (MapObjectLib obj in gameMap.GraphicObjects)
             {
-                GameObject gObject = null;
-                if (obj is NpcLib)
+                if (obj is NpcLib objP)
                 {
                     Blacksmith blacksmith = new Blacksmith
                     {
                         SyncX = obj.Rectangle.X + 15,
                         SyncY = obj.Rectangle.Y + 15
                     };
-                    NetBehavior.spawnWithServerAuthority(blacksmith.GetType(), blacksmith);
+                    NetBehavior.SpawnWithServerAuthority(blacksmith);
 
-                    gObject = new Joe();
-
+                    Joe gObject = new Joe
+                    {
+                        SyncX = obj.Rectangle.X,
+                        SyncY = obj.Rectangle.Y
+                    };
                     for (int i = 0; i < 10; i++)
                     {
                         Bat bat = new Bat
@@ -220,37 +217,38 @@ namespace RPGMultiplayerGame.Managers
                             SyncX = obj.Rectangle.X,
                             SyncY = obj.Rectangle.Y
                         };
-                        Bat spawnedBat = NetBehavior.spawnWithServerAuthority(bat.GetType(), bat) as Bat;
-                        BatClaw batClaw = NetBehavior.spawnWithServerAuthority(typeof(BatClaw)) as BatClaw;
+                        Bat spawnedBat = NetBehavior.SpawnWithServerAuthority(bat);
+                        BatClaw batClaw = NetBehavior.SpawnWithServerAuthority<BatClaw>();
                         spawnedBat.EquipeWith(batClaw);
                     }
-                }
-                else if (obj is SpawnLib)
-                {
-                    gObject = new SpawnPoint();
-                }
-                else if (obj is BlockLib)
-                {
-                    gObject = new Block();
-                    ((Block)gObject).SyncTextureIndex = (obj as BlockLib).ImageIndex;
-                    ((Block)gObject).SyncLayer = obj.Layer;
-                }
-                gObject.SyncX = obj.Rectangle.X;
-                gObject.SyncY = obj.Rectangle.Y;
-                NetworkIdentity identity = NetBehavior.spawnWithServerAuthority(gObject.GetType(), gObject);
-                if (obj is NpcLib objP)
-                {
+                    NetworkIdentity identity = NetBehavior.SpawnWithServerAuthority(gObject);
                     PathEntity npcMark = identity as PathEntity;
                     foreach (WaypointLib waypoint in objP.waypoints)
                     {
                         npcMark.AddWaypoint(new Waypoint(new Point(waypoint.Point.X, waypoint.Point.Y), (float)waypoint.Time));
                     }
                 }
-                else if (identity is SpawnPoint spawnPoint)
+                else if (obj is SpawnLib)
                 {
-                    UpdatePlayersSpawnLocation(spawnPoint);
+                    SpawnPoint gObject = new SpawnPoint
+                    {
+                        SyncX = obj.Rectangle.X,
+                        SyncY = obj.Rectangle.Y
+                    };
+                    gObject = NetBehavior.SpawnWithServerAuthority(gObject);
+                    UpdatePlayersSpawnLocation(gObject);
                 }
-
+                else if (obj is BlockLib)
+                {
+                    Block gObject = new Block
+                    {
+                        SyncX = obj.Rectangle.X,
+                        SyncY = obj.Rectangle.Y,
+                        SyncTextureIndex = (obj as BlockLib).ImageIndex,
+                        SyncLayer = obj.Layer
+                    };
+                    NetBehavior.SpawnWithServerAuthority(gObject);
+                }
             }
         }
 

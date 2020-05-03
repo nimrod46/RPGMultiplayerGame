@@ -4,6 +4,7 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons
@@ -13,7 +14,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public float X { get; set; }
         public float Y { get; set; }
         public float Damage { get; set; }
+        [XmlIgnore]
         public Entity Attacker { get; set; }
+        [XmlIgnore]
         public Direction Direction { get => Attacker.SyncCurrentDirection; set => Attacker.SyncCurrentDirection = value; }
 
         protected List<Type> specielWeaponEffects;
