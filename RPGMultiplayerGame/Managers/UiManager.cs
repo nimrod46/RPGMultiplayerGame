@@ -25,7 +25,7 @@ namespace RPGMultiplayerGame.Managers
                 return instance;
             }
         }
-        public const float GUI_LAYER = 0.1f;
+        public const float GUI_LAYER = 0.01f;
 
         public Dictionary<ItemType, Texture2D> ItemTextures { get; set; }
         public Texture2D UiHealthBar { get; set; }

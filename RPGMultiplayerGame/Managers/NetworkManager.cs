@@ -5,7 +5,6 @@ using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using RPGMultiplayerGame.Objects.LivingEntities;
-using RPGMultiplayerGame.Objects.Marks;
 using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using RPGMultiplayerGame.Objects.VisualEffects;
 using ServerLobby;
@@ -55,7 +54,6 @@ namespace RPGMultiplayerGame.Managers
             new IceBow();
             new StormBow();
             new StormArrow();
-            new GameLocation();
         }
 
         public void AddServer()

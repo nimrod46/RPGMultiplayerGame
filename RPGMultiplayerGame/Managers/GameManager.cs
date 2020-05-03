@@ -141,8 +141,6 @@ namespace RPGMultiplayerGame.Managers
            
             updateObjectsToRemove.Clear();
 
-            int height = game.GraphicsDevice.Viewport.Height;
-
             lock (entities)
             {
                 foreach (var entity in entities)
@@ -152,17 +150,6 @@ namespace RPGMultiplayerGame.Managers
                         updateObjectsToRemove.Add(entity);
                         continue;
                     }
-                    Rectangle rectangle = new Rectangle(entity.Location.ToPoint(), entity.BaseSize);
-                    float normalizedHieght = (float)Math.Abs(rectangle.Bottom) /  height;
-                    if (normalizedHieght > 1)
-                    {
-                        normalizedHieght = 1;
-                    }
-                    if (normalizedHieght < 0)
-                    {
-                        normalizedHieght = 0;
-                    }
-                    entity.Layer = rectangle.Bottom < 0 ? normalizedHieght : 1 - normalizedHieght;
                 }
             }
 

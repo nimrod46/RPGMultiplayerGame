@@ -116,7 +116,6 @@
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\ExplodingArrow.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\FreezingArrow.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\CommonArrow.cs" />
-    <Compile Include="Objects\Marks\GameLocation.cs" />
     <Compile Include="Objects\VisualEffects\VisualEffect.cs" />
     <Compile Include="Objects\VisualEffects\ExplotionVisualEffect.cs" />
     <Compile Include="Objects\VisualEffects\WindStormVisualEffect.cs" />

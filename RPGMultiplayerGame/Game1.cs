@@ -88,7 +88,7 @@ namespace RPGMultiplayerGame
                 graphics.ApplyChanges();
             }
             else if ((InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.LeftAlt) || InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.RightAlt)) &&
-                InputManager.Instance.KeyDown(Microsoft.Xna.Framework.Input.Keys.Enter))
+                InputManager.Instance.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Enter))
             {
                 graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
                 graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;

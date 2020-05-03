@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using OffsetGeneratorLib;
+using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
@@ -160,6 +161,49 @@ namespace RPGMultiplayerGame.Managers
                 for (int i = 0; i < grapichObjects.Count; i++)
                 {
                     grapichObjects[i].Draw(sprite);
+                }
+
+                int height = game.GraphicsDevice.Viewport.Height;
+                if (GameManager.Instance.Player != null)
+                {
+                    lock (grapichObjects)
+                    {
+                        foreach (var graphicObj in grapichObjects)
+                        {
+                            if (graphicObj is Entity entity) {
+                                float playerY = GameManager.Instance.Player.SyncY + GameManager.Instance.Player.BaseSize.Y;
+                                float entityY = entity.SyncY + entity.BaseSize.Y;
+                                if (MathHelper.Distance(playerY, entityY) < height / 2)
+                                {
+                                    if (playerY > entityY)
+                                    {
+                                        entityY = height / 2 + entityY - playerY;
+                                    }
+                                    else
+                                    {
+                                        entityY = height / 2 + entityY - playerY;
+                                    }
+                                    float normalizedHieght = (float)Math.Abs(entityY) / height;
+                                    if (normalizedHieght > 1)
+                                    {
+                                        normalizedHieght = 1;
+                                    }
+                                    if (normalizedHieght < 0)
+                                    {
+                                        normalizedHieght = 0;
+                                    }
+                                    normalizedHieght = entityY < 0 ? normalizedHieght : 1 - normalizedHieght;
+                                    normalizedHieght += Math.Sign(entityY) * (UiManager.GUI_LAYER + 0.01f);
+                                    
+                                    entity.Layer = normalizedHieght;
+                                }
+                                else
+                                {
+                                    entity.Layer = 1;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

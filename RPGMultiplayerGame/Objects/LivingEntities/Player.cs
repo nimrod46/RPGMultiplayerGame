@@ -320,6 +320,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 playerQuests.IsVisible = false;
                 uiHealthBar.IsVisible = false;
                 goldText.IsVisible = false;
+                inventory.IsIntractable = false;
+                usableItems.IsIntractable = false;
             }
         }
 
