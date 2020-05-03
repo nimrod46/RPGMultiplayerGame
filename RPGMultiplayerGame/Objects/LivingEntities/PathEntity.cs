@@ -75,12 +75,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     return;
                 }
 
-                MoveToPoint(SyncNextPoint.SyncX, SyncNextPoint.SyncY);
 
                 if (!isServerAuthority || !isInServer)
                 {
                     return;
                 }
+                MoveToPoint(SyncNextPoint.SyncX, SyncNextPoint.SyncY);
 
                 if (Vector2.Distance(new Vector2(SyncX, SyncY), SyncNextPoint.Location) <= 2f) //next point
                 {
@@ -150,9 +150,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             IsLookingAtObject = true;
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = GetDirection(heading);
-            if (direction != SyncCurrentDirection || syncCurrentEntityState != entityState)
+            if (direction != SyncCurrentDirection || SyncCurrentEntityState != entityState)
             {
-                SetCurrentEntityState(entityState, direction);
+                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), entityState, direction);
             }
         }
 
@@ -171,7 +171,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Vector2 point = new Vector2(x, y);
             if (Vector2.Distance(new Vector2(SyncX, SyncY), point) <= 2f)
             {
-                SetCurrentEntityState((int)State.Idle, SyncCurrentDirection);
+                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Idle, SyncCurrentDirection);
                 return;
             }
 
@@ -179,7 +179,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Direction direction = GetDirection(heading);
             if (GetCurrentEnitytState<State>() != State.Moving || direction != SyncCurrentDirection)
             {
-                SetCurrentEntityState((int)State.Moving, direction);
+                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, direction);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Networking;
+using System;
 using static NetworkingLib.Server;
 
 namespace RPGMultiplayerGame.Objects.Other
@@ -72,7 +73,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void OnXSet()
         {
-            if (MathHelper.Distance(Location.X, SyncX) >= 5f)
+            if (MathHelper.Distance(Location.X, SyncX) >= 5)
             {
                 Location = new Vector2(SyncX, Location.Y);
             }
@@ -80,7 +81,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void OnYSet()
         {
-            if (MathHelper.Distance(Location.Y, SyncY) >= 5f)
+            if (MathHelper.Distance(Location.Y, SyncY) >= 5)
             {
                 Location = new Vector2(Location.X, SyncY);
             }

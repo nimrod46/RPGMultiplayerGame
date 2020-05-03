@@ -29,7 +29,7 @@ namespace RPGMultiplayerGame.Objects.Other
             Idle, //TODO: Delete
         }
 
-        protected int SyncCurrentAnimationType
+        public int SyncCurrentAnimationType
         {
             get => currentAnimationType; set
             {

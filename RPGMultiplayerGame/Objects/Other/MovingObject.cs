@@ -24,7 +24,8 @@ namespace RPGMultiplayerGame.Objects.Other
             }
         }
 
-        protected int syncCurrentEntityState;
+        public int SyncCurrentEntityState { get; set; }
+
         protected int collisionOffsetX;
         protected int collisionOffsetY;
         private bool isAbleToMove;
@@ -39,8 +40,8 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void SetCurrentEntityState(int entityState, Direction direction)
         {
-            syncCurrentEntityState = entityState;
-            switch ((State)syncCurrentEntityState)
+            SyncCurrentEntityState = entityState;
+            switch ((State)SyncCurrentEntityState)
             {
                 case State.Idle:
                     IdleAtDir(direction);
@@ -116,7 +117,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public T GetCurrentEnitytState<T>() where T : Enum
         {
-            return (T)(object)syncCurrentEntityState;
+            return (T)(object)SyncCurrentEntityState;
         }
 
         private Rectangle GetCollisionRect(float x, float y, int width, int height)

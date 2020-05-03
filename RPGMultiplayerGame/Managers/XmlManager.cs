@@ -19,11 +19,9 @@ namespace RPGMultiplayerGame.Managers
             T instance;
             try
             {
-                using (TextReader reader = new StreamReader(path))
-                {
-                    XmlSerializer xml = new XmlSerializer(Type);
-                    instance = (T)xml.Deserialize(reader);
-                }
+                using TextReader reader = new StreamReader(path);
+                XmlSerializer xml = new XmlSerializer(Type);
+                instance = (T)xml.Deserialize(reader);
             }
             catch (Exception)
             {
@@ -34,11 +32,9 @@ namespace RPGMultiplayerGame.Managers
 
         public void Save(string path, T obj)
         {
-            using (TextWriter writer = new StreamWriter(path))
-            {
-                XmlSerializer xml = new XmlSerializer(Type);
-                xml.Serialize(writer, obj);
-            }
+            using TextWriter writer = new StreamWriter(path);
+            XmlSerializer xml = new XmlSerializer(Type);
+            xml.Serialize(writer, obj);
         }
     }
 }

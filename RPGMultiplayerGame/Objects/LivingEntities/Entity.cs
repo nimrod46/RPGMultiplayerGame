@@ -120,7 +120,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
             SyncHealth = maxHealth;
             SyncCurrentAnimationType = (int)EntityAnimation.IdleDown;
-            syncCurrentEntityState = (int)State.Idle;
+            SyncCurrentEntityState = (int)State.Idle;
             Layer = GraphicManager.ENTITY_LAYER;
             isHidenCompletely = false;
             flickerCount = 5;
@@ -236,7 +236,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void SetCurrentEntityState(int entityState, Direction direction)
         {
             base.SetCurrentEntityState(entityState, direction);
-            switch ((State)syncCurrentEntityState)
+            switch ((State)SyncCurrentEntityState)
             {
                 case State.Attacking:
                     AttackAtDir(direction);

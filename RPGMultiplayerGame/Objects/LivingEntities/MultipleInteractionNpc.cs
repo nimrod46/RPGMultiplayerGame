@@ -26,12 +26,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             foreach (var player in curentInteractingPlayersDialogs.Keys.ToList().Where(pl => !currentInteractingPlayers.Contains(pl)))
             {
-                InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), player);
+                StopLookingAtGameObject(player);
             }
 
             foreach (var player in currentInteractingPlayers)
             {
-                InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), player, (int)State.Idle);
+                LookAtGameObject(player, (int)State.Idle);
             }
         }
 
@@ -39,14 +39,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (gameObject is Player player)
             {
-                if (isInServer)
-                {
-                    InteractWithPlayer(player);
-                }
-                else if (GameManager.Instance.Player.IsInteractingWith(this) && !player.hasAuthority)
-                {
-                    return;
-                }
+                InteractWithPlayer(player);
             }
             base.LookAtGameObject(gameObject, entityState);
         }
@@ -55,14 +48,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (gameObject is Player player)
             {
-                if (isInServer)
-                {
-                    CmdStopInteractWithPlayer(player);
-                }
-                else if (GameManager.Instance.Player.IsInteractingWith(this) && !player.hasAuthority)
-                {
-                    return;
-                }
+                CmdStopInteractWithPlayer(player);
             }
             base.StopLookingAtGameObject(gameObject);
         }

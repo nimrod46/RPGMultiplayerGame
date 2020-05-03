@@ -45,8 +45,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     if (playerAndDamage.Value == 0 || playerAndDamage.Key.IsDestroyed || playerAndDamage.Key.SyncIsDead)
                     {
                         targetPlayers.Remove(playerAndDamage);
+                        StopLookingAtGameObject(playerAndDamage.Key);
                     }
-                    InvokeBroadcastMethodNetworkly(nameof(StopLookingAtGameObject), playerAndDamage.Key);
                 }
 
                 if (targetPlayers.GetMaxElement().HasValue)
@@ -56,12 +56,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     {
                         if (GameManager.Instance.GetEntitiesHitBy(meleeWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
                         {
-                            InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
+                            LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
                             Attack();
                         }
                         else
                         {
-                            InvokeBroadcastMethodNetworkly(nameof(LookAtGameObject), targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
+                            LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
                         }
                     }
                     else
