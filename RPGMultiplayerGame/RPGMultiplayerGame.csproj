@@ -89,7 +89,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DictionarySortedByValue.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="GameSaver\GameSave.cs" />
     <Compile Include="GameSaver\NpcSave.cs" />
     <Compile Include="GameSaver\IObjectSave.cs" />

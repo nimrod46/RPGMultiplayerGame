@@ -2,6 +2,7 @@
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
+using System;
 using System.Collections.Generic;
 using static RPGMultiplayerGame.Managers.GraphicManager;
 
@@ -9,8 +10,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 {
     public abstract class WeaponAmmunition : MovingObject, IDamageInflicter
     {
-       
-
         public Entity SyncAttacker { get; set; }
         public Weapon SyncWeapon { get; set; }
         public float Damage { get => SyncWeapon.Damage; set => SyncWeapon.Damage = value; }
@@ -32,7 +31,10 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
         {
             base.OnNetworkInitialize();
             SetCurrentEntityState((int)State.Moving, SyncCurrentDirection);
-            SetLocation();
+            if (isInServer)
+            {
+                SetLocation();
+            }
         }
 
         public override void Update(GameTime gameTime)

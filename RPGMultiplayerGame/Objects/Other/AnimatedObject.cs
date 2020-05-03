@@ -117,7 +117,6 @@ namespace RPGMultiplayerGame.Objects.Other
 
         protected void AnimationAtDir(Direction direction, int dirToAnimationIndex, bool shouldLoopAnimation)
         {
-            
             currentAnimationIndex = 0;
             SyncCurrentDirection = direction;
             SyncCurrentAnimationType = (int)SyncCurrentDirection + dirToAnimationIndex;

@@ -155,9 +155,12 @@ namespace RPGMultiplayerGame.Managers
 
         public void Draw(SpriteBatch sprite)
         {
-            for (int i = 0; i < grapichObjects.Count; i++)
+            lock (grapichObjects)
             {
-                grapichObjects[i].Draw(sprite);
+                for (int i = 0; i < grapichObjects.Count; i++)
+                {
+                    grapichObjects[i].Draw(sprite);
+                }
             }
         }
 

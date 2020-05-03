@@ -1,6 +1,7 @@
 ﻿using Map;
 using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using System;
 using System.Collections.Generic;
 
@@ -106,12 +107,12 @@ namespace RPGMultiplayerGame.Objects.Other
 
             if (block == null)
             {
+                Location = newLocation;
                 if (hasAuthority)
                 {
                     SyncX = newLocation.X;
                     SyncY = newLocation.Y;
                 }
-                Location = newLocation;
             }
         }
 

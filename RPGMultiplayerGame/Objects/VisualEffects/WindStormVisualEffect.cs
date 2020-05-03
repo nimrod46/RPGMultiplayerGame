@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,12 @@ namespace RPGMultiplayerGame.Objects.VisualEffects
             base.Update(gameTime);
             Layer = SyncParent.Layer + 0.01f;
             UpdateLocation();
+        }
+
+        public override void Draw(SpriteBatch sprite)
+        {
+            UpdateLocation();
+            base.Draw(sprite);
         }
     }
 }
