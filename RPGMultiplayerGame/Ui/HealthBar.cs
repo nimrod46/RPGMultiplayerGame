@@ -35,8 +35,8 @@ namespace RPGMultiplayerGame.Ui
             get => base.IsVisible; set
             {
                 base.IsVisible = value;
-                health.IsVisible = isVisible;
-                healthText.IsVisible = isVisible;
+                health.IsVisible = base.IsVisible;
+                healthText.IsVisible = base.IsVisible;
             }
         }
         private readonly UiTextComponent healthText;

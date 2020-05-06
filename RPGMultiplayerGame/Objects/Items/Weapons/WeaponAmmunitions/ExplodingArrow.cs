@@ -6,7 +6,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
     {
         public ExplodingArrow() : base(GraphicManager.WeaponAmmunitionId.ExplodingArrow, 1)
         {
-            scale *= 0.5f;
+            Scale *= 0.5f;
         }
     }
 }

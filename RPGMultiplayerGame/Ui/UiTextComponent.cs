@@ -33,7 +33,7 @@ namespace RPGMultiplayerGame.Ui
         public override void Draw(SpriteBatch sprite)
         {
             base.Draw(sprite);
-            if (isVisible)
+            if (IsVisible)
             {
                 Text = textFunc.Invoke();
                 sprite.DrawString(TextFont, Text, DrawPosition, TextColor, 0, Vector2.Zero, Scale, SpriteEffects.None, Layer);

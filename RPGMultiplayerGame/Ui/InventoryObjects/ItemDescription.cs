@@ -12,8 +12,8 @@ namespace RPGMultiplayerGame.Ui.InventoryObjects
             get => base.IsVisible; set
             {
                 base.IsVisible = value;
-                descriptionText.IsVisible = IsVisible;
-                if (!isVisible)
+                descriptionText.IsVisible = base.IsVisible;
+                if (!IsVisible)
                 {
                     Scale = 1;
                     descriptionText.UpdatePosition();
@@ -31,18 +31,18 @@ namespace RPGMultiplayerGame.Ui.InventoryObjects
 
         public override void Draw(SpriteBatch sprite)
         {
-            if (isVisible)
+            if (IsVisible)
             {
                 float xScale = 1;
-                if (descriptionText.Size.X + descriptionText.Position.X * 2 > Size.X)
+                if (descriptionText.Size.X + descriptionText.Position.X * 2 > Size.X / Scale)
                 {
-                    xScale = (descriptionText.Size.X + descriptionText.Position.X * 2 - Size.X) / Size.X + 1;
+                    xScale = (descriptionText.Size.X + descriptionText.Position.X * 2 - Size.X / Scale) / (Size.X / Scale) + 1;
                 }
 
                 float yScale = 1;
-                if (descriptionText.Size.Y + descriptionText.Position.Y * 2 > Size.Y)
+                if (descriptionText.Size.Y + descriptionText.Position.Y * 2 > Size.Y / Scale)
                 {
-                    yScale = (descriptionText.Size.Y + descriptionText.Position.Y * 2 - Size.Y) / Size.Y + 1;
+                    yScale = (descriptionText.Size.Y + descriptionText.Position.Y * 2 - Size.Y / Scale) / (Size.Y / Scale) + 1;
                 }
                 Scale = MathHelper.Max(xScale, yScale);
                 base.Draw(sprite);

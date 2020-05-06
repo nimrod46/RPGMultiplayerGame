@@ -6,7 +6,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
     {
         public CommonArrow() : base(GraphicManager.WeaponAmmunitionId.CommonArrow, int.MaxValue)
         {
-            scale *= 0.5f;
+            Scale *= 0.5f;
         }
     }
 }

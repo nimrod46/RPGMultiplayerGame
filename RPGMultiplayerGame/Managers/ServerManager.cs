@@ -89,6 +89,10 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
+        public List<GameItem> GetGameItems()
+        {
+            return gameIdentities.Where(i => i is GameItem).Cast<GameItem>().ToList();
+        }
         public T Spawn<T>(T identity = null) where T : NetworkIdentity
         {
             return NetBehavior.SpawnWithServerAuthority<T>(identity);

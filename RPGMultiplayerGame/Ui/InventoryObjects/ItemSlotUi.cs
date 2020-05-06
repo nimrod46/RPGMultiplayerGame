@@ -22,8 +22,16 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
             }
         }
 
-        public T Item { get; set; }
+        public T Item
+        {
+            get => item; set
+            {
+                item = value;
+                Item.SetAsUiItem(this, (g) => new Vector2(Texture.Width / 2, Texture.Height / 2), PositionType.Centered);
+            }
+        }
         protected ItemDescription description;
+        private T item;
 
         public ItemSlotUi(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, T item) : base(origin, positionType, defaultVisibility, UiManager.GUI_LAYER, UiManager.Instance.InventorySlotBackground)
         {
@@ -41,20 +49,6 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             description.IsVisible = false;
             GameManager.Instance.HideMouse = false;
-        }
-
-        public override void Draw(SpriteBatch sprite)
-        {
-            base.Draw(sprite);
-            if (isVisible)
-            {
-                if (Item.IsExists())
-                {
-                    Item.Draw(sprite, Position + new Vector2(Texture.Width / 2 - Item.Size.X / 2,
-                        Texture.Height / 2 - Item.Size.Y / 2)
-                        , UiManager.GUI_LAYER * 0.1f);
-                }
-            }
         }
     }
 }

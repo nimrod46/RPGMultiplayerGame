@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Ui;
+using System;
 
 namespace RPGMultiplayerGame.Objects.Items
 {
@@ -18,18 +20,14 @@ namespace RPGMultiplayerGame.Objects.Items
         private readonly SpriteFont spriteFont;
         private Vector2 textSize;
         private int syncCount;
+        private UiTextComponent countText;
 
         public StackableGameItem(ItemType itemType, string name, int count) : base(itemType, name)
         {
             this.SyncCount = count;
             spriteFont = UiManager.Instance.StackableItemNumberFont;
             textSize = spriteFont.MeasureString(count.ToString());
-        }
-
-        public override void Draw(SpriteBatch sprite, Vector2 location, float layer)
-        {
-            base.Draw(sprite, location, layer);
-            sprite.DrawString(spriteFont, SyncCount + "", location + new Vector2(Size.X, Size.Y) + new Vector2(-textSize.X + 10, -textSize.Y / 2), Color.Orange, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, layer * 0.1f);
+            countText = new UiTextComponent((g) => new Vector2(Size.X, Size.Y), UiComponent.PositionType.ButtomRight, false, UiManager.GUI_LAYER * 0.01f, spriteFont, () => SyncCount.ToString(), Color.Orange);
         }
 
         public void Add(StackableGameItem stackableItemToAdd)
@@ -37,6 +35,17 @@ namespace RPGMultiplayerGame.Objects.Items
             SyncCount += stackableItemToAdd.SyncCount;
             textSize = spriteFont.MeasureString(SyncCount.ToString());
             stackableItemToAdd.InvokeBroadcastMethodNetworkly(nameof(stackableItemToAdd.Destroy));
+        }
+
+        public override void SetAsMapItem(Vector2 location)
+        {
+            base.SetAsMapItem(location);
+            countText.IsVisible = false;
+        }
+
+        public override void SetAsUiItem(UiComponent uiParent, Func<Point, Vector2> origin, UiComponent.PositionType originType)
+        {
+            base.SetAsUiItem(uiParent, origin, originType);
         }
 
         public void Use()

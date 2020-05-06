@@ -10,6 +10,7 @@ using RPGMultiplayerGame.Objects.QuestsObjects;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using static RPGMultiplayerGame.Managers.GameManager;
 using static RPGMultiplayerGame.Ui.UiComponent;
@@ -49,7 +50,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public Player() : base(GraphicManager.EntityId.Player, 0, 10, 100, GraphicManager.Instance.PlayerNameFont, true, Color.DarkOrange)
         {
-            scale = 1;
+            Scale = 1;
             SyncSpeed *= 2;
             SyncName = "null";
         }
@@ -65,9 +66,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     IsVisible = false
                 };
-                inventory.OnItemClickedEvent += Inventory_OnItemClickedEvent;
+                inventory.OnItemLeftClickedEvent += Inventory_OnItemClickedEvent;
+                inventory.OnItemRightClickedEvent += Inventory_OnItemRightClickedEvent;
                 usableItems = new Inventory<GameItem>((windowSize) => new Vector2(windowSize.X / 2, windowSize.Y - 10), PositionType.ButtomCentered, true, 5, 1);
-                usableItems.OnItemClickedEvent += UsableItems_OnItemClickedEvent;
+                usableItems.OnItemLeftClickedEvent += UsableItems_OnItemClickedEvent;
                 equippedItems = new Inventory<GameItem>((windowSize) => new Vector2(10, windowSize.Y - 10), PositionType.ButtomLeft, true, 3, 1);
                 playerQuests = new QuestsMenu((windowSize) => new Vector2(windowSize.X - 10, 50), PositionType.TopRight);
                 uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, () => SyncHealth, maxHealth);
@@ -75,6 +77,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
             base.OnNetworkInitialize();
         }
+
+        private void Inventory_OnItemRightClickedEvent(Inventory<GameItem> inventory, ItemSlotUi<GameItem> item)
+        {
+            inventory.DropItem(item, Location);
+        }
+
 
         public override void Update(GameTime gameTime)
         {
@@ -130,6 +138,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     equippedItems.UsePotionAtSlot(1, this);
                 }
 
+                if (InputManager.Instance.KeyPressed(Keys.C))
+                {
+                    InvokeCommandMethodNetworkly(nameof(CmdTryPickUpItem));
+                }
+
                 if (EquippedWeapon != null && InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
                 {
                     Attack();
@@ -162,6 +175,20 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
+        private void CmdTryPickUpItem()
+        {
+            Console.WriteLine(GetBoundingRectangle());
+            foreach (var item in ServerManager.Instance.GetGameItems())
+            {
+                Console.WriteLine(item.GetBoundingRectangle() + " " + item.SyncName);
+            }
+            GameItem gameItem = ServerManager.Instance.GetGameItems().FirstOrDefault(g => IsIntersectingWith(g));
+            if (gameItem != null)
+            {
+                AddItemToInventory(gameItem);
+            }
+        }
+
         public override void Respawn(float x, float y)
         {
             base.Respawn(x,y);
@@ -179,24 +206,24 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             return SyncGold >= gameItemShop.Price;
         }
 
-        private void Inventory_OnItemClickedEvent(GameItem item)
+        private void Inventory_OnItemClickedEvent(Inventory<GameItem> inv, ItemSlotUi<GameItem> itemSlotUi)
         {
-            if (item is InteractiveItem)
+            if (itemSlotUi.Item is InteractiveItem)
             {
-                if (usableItems.TryAddItem(item))
+                if (usableItems.TryAddItem(itemSlotUi.Item))
                 {
-                    inventory.TryRemoveItem(item);
+                    inventory.TryRemoveItem(itemSlotUi.Item);
                 }
             }
         }
 
-        private void UsableItems_OnItemClickedEvent(GameItem item)
+        private void UsableItems_OnItemClickedEvent(Inventory<GameItem> inv,ItemSlotUi<GameItem> itemSlotUi)
         {
-            if (item is InteractiveItem)
+            if (itemSlotUi.Item is InteractiveItem)
             {
-                if (inventory.TryAddItem(item))
+                if (inventory.TryAddItem(itemSlotUi.Item))
                 {
-                    usableItems.TryRemoveItem(item);
+                    usableItems.TryRemoveItem(itemSlotUi.Item);
                 }
             }
         }

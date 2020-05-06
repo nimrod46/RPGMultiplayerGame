@@ -16,17 +16,17 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 
         public override void Activated()
         {
-            entity.IsVisible = false;
+            entity.SyncIsVisible = false;
         }
 
         public override void Update()
         {
-            entity.IsVisible = !entity.IsVisible;
+            entity.SyncIsVisible = !entity.SyncIsVisible;
         }
 
         public override void End()
         {
-            entity.IsVisible = true;
+            entity.SyncIsVisible = true;
         }
     }
 }

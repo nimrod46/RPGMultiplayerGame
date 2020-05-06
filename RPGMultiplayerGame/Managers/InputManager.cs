@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -48,12 +49,6 @@ namespace RPGMultiplayerGame.Managers
                 OnArrowsKeysStateChange?.Invoke(Keys.Left, currentKeyState.IsKeyDown(Keys.Left));
             }
         }
-
-        public bool GetMouseLeftButtonPressed()
-        {
-            return prevMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed;
-        }
-
         public Rectangle MouseBounds()
         {
             return new Rectangle(currentMouseState.X, currentMouseState.Y, 1, 1);
@@ -93,6 +88,16 @@ namespace RPGMultiplayerGame.Managers
                 }
             }
             return false;
+        }
+
+        public bool GetMouseRightButtonPressed()
+        {
+            return prevMouseState.RightButton == ButtonState.Released && currentMouseState.RightButton == ButtonState.Pressed;
+        }
+
+        public bool GetMouseLeftButtonPressed()
+        {
+            return prevMouseState.LeftButton == ButtonState.Released && currentMouseState.LeftButton == ButtonState.Pressed;
         }
 
         public bool KeyPressed(Keys firstKey, Keys lastKey, out Keys pressedKey)

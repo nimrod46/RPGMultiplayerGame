@@ -6,7 +6,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
     {
         public StormArrow() : base(GraphicManager.WeaponAmmunitionId.StormArrow, 1)
         {
-            scale *= 0.5f;
+            Scale *= 0.5f;
         }
     }
 }

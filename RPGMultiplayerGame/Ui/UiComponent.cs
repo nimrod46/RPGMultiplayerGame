@@ -3,11 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Other;
 using System;
+using System.Xml.Serialization;
 
 namespace RPGMultiplayerGame.Ui
 {
     public abstract class UiComponent : IGameDrawable
     {
+        [XmlIgnore]
         public Func<Point, Vector2> OriginFunc
         {
             get => originFunc; set
@@ -24,7 +26,12 @@ namespace RPGMultiplayerGame.Ui
 
         public Vector2 Size
         {
-            get => size; set
+            get
+            {
+                return size * Scale;
+            }
+
+            set
             {
                 size = value;
                 UpdatePosition();
@@ -50,8 +57,9 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
-        public virtual bool IsVisible { get => isVisible; set => isVisible = value; }
+        public virtual bool IsVisible { get { return IsVisibleFunc == null ? isVisible : IsVisibleFunc.Invoke(); } set => isVisible = value; }
 
+        public Func<bool> IsVisibleFunc { get; set; }
         public float Layer { get; set; }
 
         public float Scale { get; set; }
@@ -60,9 +68,9 @@ namespace RPGMultiplayerGame.Ui
 
         protected PositionType originType;
         protected Vector2 origin;
-        protected Vector2 size;
         private Func<Point, Vector2> originFunc;
-        protected bool isVisible;
+        private bool isVisible;
+        private Vector2 size;
 
         public enum PositionType
         {
@@ -71,30 +79,33 @@ namespace RPGMultiplayerGame.Ui
             ButtomCentered,
             TopLeft,
             TopRight,
-            CenteredLeft
+            CenteredLeft,
+            ButtomRight
         }
 
 
 
         public UiComponent(Func<Point, Vector2> originFunc, PositionType originType, bool defaultVisibility, float layer)
         {
+            Scale = 1;
             this.OriginFunc = originFunc;
             Origin = this.OriginFunc.Invoke(UiManager.Instance.GetScreenSize());
             OriginType = originType;
             isVisible = defaultVisibility;
             Layer = layer;
-            Scale = 1;
             UiManager.Instance.AddUiComponent(this);
+            IsVisibleFunc = null;
         }
 
         public UiComponent()
         {
+            Scale = 1;
             Origin = Vector2.Zero;
             Size = Vector2.Zero;
             OriginType = PositionType.TopLeft;
             Layer = 0;
-            Scale = 1;
             UiManager.Instance.AddUiComponent(this);
+            IsVisibleFunc = null;
         }
 
         public virtual void UpdatePosition()
@@ -121,14 +132,14 @@ namespace RPGMultiplayerGame.Ui
                     break;
             }
 
-            if (Position.X + Size.X * Scale > UiManager.Instance.GetScreenSize().X)
+            if (Position.X + Size.X > UiManager.Instance.GetScreenSize().X)
             {
-                Position += new Vector2(-Size.X * Scale, 0);
+                Position += new Vector2(-Size.X, 0);
             }
 
-            if (Position.Y + Size.Y * Scale > UiManager.Instance.GetScreenSize().Y)
+            if (Position.Y + Size.Y > UiManager.Instance.GetScreenSize().Y)
             {
-                Position += new Vector2(0, -Size.Y * Scale);
+                Position += new Vector2(0, -Size.Y);
             }
 
             Position = (Parent != null ? Position * Parent.Scale : Position);
@@ -146,6 +157,11 @@ namespace RPGMultiplayerGame.Ui
         public void Resize()
         {
             Origin = OriginFunc.Invoke(UiManager.Instance.GetScreenSize());
+        }
+
+        public void Delete()
+        {
+            UiManager.Instance.RemoveUiComponent(this);
         }
     }
 }

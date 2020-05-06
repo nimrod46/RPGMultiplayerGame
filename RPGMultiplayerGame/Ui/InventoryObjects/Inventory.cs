@@ -12,17 +12,18 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 {
     public class Inventory<T> : UiComponent, IGameUpdateable where T : GameItem
     {
-        public delegate void ItemClickedEventHandler(T item);
-        public event ItemClickedEventHandler OnItemClickedEvent;
+        public delegate void ItemClickedEventHandler(Inventory<T> inventory, ItemSlotUi<T> item);
+        public event ItemClickedEventHandler OnItemLeftClickedEvent;
+        public event ItemClickedEventHandler OnItemRightClickedEvent;
 
         public override bool IsVisible
         {
-            get => isVisible; set
+            get => base.IsVisible; set
             {
-                isVisible = value;
+                base.IsVisible = value;
                 foreach (var item in inventoryItems)
                 {
-                    item.IsVisible = isVisible;
+                    item.IsVisible = value;
                 }
             }
         }
@@ -79,7 +80,11 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 {
                     if (InputManager.Instance.GetMouseLeftButtonPressed())
                     {
-                        OnItemClickedEvent?.Invoke(itemSlot.Item);
+                        OnItemLeftClickedEvent?.Invoke(this, itemSlot);
+                    }
+                    else if(InputManager.Instance.GetMouseRightButtonPressed())
+                    {
+                        OnItemRightClickedEvent?.Invoke(this, itemSlot);
                     }
                     if (lastItemSlot != null && lastItemSlot != itemSlot)
                     {
@@ -109,6 +114,12 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                     lastItemSlot = null;
                 }
             }
+        }
+
+        public void DropItem(ItemSlotUi<T> itemSlot, Vector2 location)
+        {
+            itemSlot.Item.SetAsMapItem(location);
+            TryRemoveItem(itemSlot.Item);
         }
 
         public void UsePotionAtSlot(int slot, Entity entity)
@@ -162,6 +173,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 var inventoryItem = inventoryItems[i];
                 if (!inventoryItem.Item.IsExists())
                 {
+                    inventoryItem.Item.Delete();
                     inventoryItem.Item = itemToAdd;
                     return true;
                 }

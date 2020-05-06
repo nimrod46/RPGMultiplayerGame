@@ -99,8 +99,7 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             GameTexture gameTexture = animationsByType[SyncCurrentAnimationType][currentAnimationIndex];
             Texture = gameTexture.Texture;
-            offset = gameTexture.Offset * scale;
-            Size = (Texture.Bounds.Size.ToVector2() * scale).ToPoint();
+            offset = gameTexture.Offset * Scale;
         }
 
         public void OnCurrentAnimationTypeSet()

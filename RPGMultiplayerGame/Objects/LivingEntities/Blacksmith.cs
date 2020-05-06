@@ -19,7 +19,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             SyncName = "Blacksmith";
             minDistanceForObjectInteraction = 40;
-            scale = 0.4f;
+            Scale = 0.4f;
         }
         public override void SetCurrentEntityState(int entityState, Direction direction)
         {
@@ -30,7 +30,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.OnNetworkInitialize();
             shop = new Inventory<GameItemShop>((windowSize) => (windowSize.ToVector2() / 2), PositionType.Centered, false, 5, 5);
-            shop.OnItemClickedEvent += Shop_OnItemClickedEvent;
+            shop.OnItemLeftClickedEvent += Shop_OnItemClickedEvent;
             dialog = new ComplexDialog(SyncName, "Are you here to buy or what?", false);
             AddItemToShop(new GameItemShop(new CommonWond(), 50));
             AddItemToShop(new GameItemShop(new CommonHealthPotion() { SyncCount = 10 }, 10));
@@ -64,9 +64,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             shop.TryAddItem(gameItem);
         }
 
-        private void Shop_OnItemClickedEvent(GameItemShop item)
+        private void Shop_OnItemClickedEvent(Inventory<GameItemShop> inventory, ItemSlotUi<GameItemShop> uiItemSlot)
         {
-            InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), GameManager.Instance.Player, shop.GetItemSlot(item));
+            InvokeCommandMethodNetworkly(nameof(CmdCheckPlayerBuy), GameManager.Instance.Player, shop.GetItemSlot(uiItemSlot.Item));
         }
 
         public void CmdCheckPlayerBuy(Player player, int slot)

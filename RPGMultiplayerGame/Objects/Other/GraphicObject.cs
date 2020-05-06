@@ -10,32 +10,42 @@ namespace RPGMultiplayerGame.Objects.Other
     {
         public float Layer { get; set; }
         public float DefaultLayer { get; set; }
-        public bool IsVisible { get; set; }
+        public virtual bool SyncIsVisible
+        {
+            get => syncIsVisible; set
+            {
+                syncIsVisible = value;
+                InvokeSyncVarNetworkly(nameof(SyncIsVisible), syncIsVisible);
+            }
+        }
 
         protected Texture2D Texture
         {
             get => texture; set
             {
                 texture = value;
+                Size = (Texture.Bounds.Size.ToVector2() * Scale).ToPoint();
                 tintedTexture = texture;
             }
         }
+
+        public float Scale { get; protected set; }
 
         private Texture2D texture;
         protected Texture2D tintedTexture;
         protected Vector2 offset;
         protected Vector2 drawLocation;
-        protected float scale;
         private Color tintColor;
         private float tintingAlpah;
+        private bool syncIsVisible;
 
         public GraphicObject()
         {
             Layer = 1;
-            scale = 1;
+            Scale = 1;
             offset = Vector2.Zero;
             drawLocation = Vector2.Zero;
-            IsVisible = true;
+            SyncIsVisible = true;
             Layer -= 0.01f;
             tintColor = Color.White;
         }
@@ -91,9 +101,9 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             if (tintedTexture != null)
             {
-                if (IsVisible)
+                if (SyncIsVisible)
                 {
-                    sprite.Draw(TintTextureByColor(sprite.GraphicsDevice, texture, tintColor, tintingAlpah), Location + offset, null, Color.White, 0, Vector2.Zero, scale, SpriteEffects.None, Layer);
+                    sprite.Draw(TintTextureByColor(sprite.GraphicsDevice, texture, tintColor, tintingAlpah), Location + offset, null, Color.White, 0, Vector2.Zero, Scale, SpriteEffects.None, Layer);
                 }
             }
             else
@@ -110,6 +120,11 @@ namespace RPGMultiplayerGame.Objects.Other
         public virtual Rectangle GetBoundingRectangle()
         {
             return new Rectangle((int)(SyncX + offset.X), (int)(SyncY + offset.Y), Size.X, Size.Y);
+        }
+
+        public bool IsIntersectingWith(GraphicObject graphicObject)
+        {
+            return GetBoundingRectangle().Intersects(graphicObject.GetBoundingRectangle());
         }
 
         public override void OnDestroyed(NetworkIdentity identity)
