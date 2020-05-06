@@ -23,7 +23,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             base.Activated();
             if(entity.isInServer)
             {
-                entity.InvokeBroadcastMethodNetworkly(nameof(entity.SetCurrentEntityState), false, State.Idle, entity.SyncCurrentDirection);
+                entity.InvokeBroadcastMethodNetworkly(nameof(entity.SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, State.Idle, entity.SyncCurrentDirection);
                 entity.SyncIsAbleToMove = false;
             }
         }

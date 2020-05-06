@@ -19,8 +19,9 @@
 
         public override string ToString()
         {
-            return GameItem.ToString() + "\n"
-                + "Price: " + Price + " Gold";
+            return GameItem.ToString() + "\n" +
+                "Price: " + Price + " Gold" +
+                 (GameItem is StackableGameItem stackableItem ? "\nCount: " + stackableItem.SyncCount : "" );
         }
     }
 }

@@ -171,7 +171,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             playerQuests.IsVisible = true;
             uiHealthBar.IsVisible = true;
             goldText.IsVisible = true;
-            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, State.Idle, Direction.Down);
+            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, State.Idle, Direction.Down);
         }
 
         public bool IsAbleToBuy(GameItemShop gameItemShop)
@@ -235,7 +235,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 if (isDown)
                 {
                     Direction direction = (Direction)((int)key - (int)Keys.Left);
-                    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (int)State.Moving, direction);
+                    InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (int)State.Moving, direction);
                     currentArrowsKeysPressed.Insert(0, key);
                 }
                 else
@@ -243,13 +243,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     currentArrowsKeysPressed.RemoveAll(k => k == key);
                     if (currentArrowsKeysPressed.Count == 0)
                     {
-                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (object)(int)State.Idle, SyncCurrentDirection);
+                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (object)(int)State.Idle, SyncCurrentDirection);
                     }
                     else
                     {
                         key = currentArrowsKeysPressed[0];
                         Direction direction = (Direction)((int)key - (int)Keys.Left);
-                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (int)State.Moving, direction);
+                        InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (int)State.Moving, direction);
                     }
                 }
             }

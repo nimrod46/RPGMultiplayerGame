@@ -72,7 +72,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         {
                             if (GetCurrentEnitytState<State>() == State.Moving)
                             {
-                                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), false, (int)State.Idle, SyncCurrentDirection);
+                                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (int)State.Idle, SyncCurrentDirection);
                             }
                             return;
                         }
@@ -133,7 +133,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Direction direction = GetDirection(heading);
             if (direction != SyncCurrentDirection || SyncCurrentEntityState != entityState)
             {
-                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), entityState, direction);
+                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, entityState, direction);
             }
         }
 
@@ -152,7 +152,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Vector2 point = new Vector2(x, y);
             if (Vector2.Distance(new Vector2(SyncX, SyncY), point) <= 2f)
             {
-                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Idle, SyncCurrentDirection);
+                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (int)State.Idle, SyncCurrentDirection);
                 return;
             }
 
@@ -160,7 +160,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             Direction direction = GetDirection(heading);
             if (GetCurrentEnitytState<State>() != State.Moving || direction != SyncCurrentDirection)
             {
-                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Moving, direction);
+                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (int)State.Moving, direction);
             }
         }
 
