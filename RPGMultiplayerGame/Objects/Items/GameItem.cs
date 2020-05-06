@@ -28,6 +28,7 @@ namespace RPGMultiplayerGame.Objects.Items
             {
                 itemType = value;
                 texture = UiManager.Instance.GetItemTextureByType(value);
+                InvokeSyncVarNetworkly(nameof(SyncItemType), itemType);
             }
         }
 
@@ -71,6 +72,11 @@ namespace RPGMultiplayerGame.Objects.Items
         public bool IsExists()
         {
             return SyncItemType != ItemType.None;
+        }
+
+        public void Delete()
+        {
+            SyncItemType = ItemType.None;
         }
 
         public override string ToString()

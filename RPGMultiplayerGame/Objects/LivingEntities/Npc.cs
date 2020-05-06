@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.Other;
+using RPGMultiplayerGame.Objects.QuestsObjects;
 using System.Collections.Generic;
 using static RPGMultiplayerGame.Managers.GraphicManager;
 
@@ -57,5 +58,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Draw(sprite);
             currentSimpleDialog?.Draw(sprite);
         }
+
+        public abstract void AssignQuestTo(Player player, Quest quest);
     }
 }

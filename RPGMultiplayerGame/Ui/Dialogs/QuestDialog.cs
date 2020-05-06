@@ -5,21 +5,26 @@ using System;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {
-    public class QuestDialog<T> : ComplexDialog where T : Quest
+    public class QuestDialog : ComplexDialog
     {
-        private T quest;
+        private Quest quest;
         private readonly string questText;
         private readonly string inQuestText;
         private readonly string notFinishedText;
         private readonly string finishedText;
 
-        public QuestDialog(string text, T quest, string questText, string inQuestText, string notFinishedText, string finishedText) : base(text, true)
+        public QuestDialog(string text, Quest quest, string questText, string inQuestText, string notFinishedText, string finishedText) : base(text, true)
         {
             this.quest = quest;
             this.questText = questText;
             this.inQuestText = inQuestText;
             this.notFinishedText = notFinishedText;
             this.finishedText = finishedText;
+        }
+
+        public void AssignPlayer(Player player, Quest quest)
+        {
+            quest = ServerManager.Instance.AddQuest(player, (dynamic) quest);
         }
 
         public override ComplexDialog GetLast()
@@ -29,7 +34,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             {
                 if (answerIndex == 0)
                 {
-                    quest = ServerManager.Instance.AddQuest(interactivePlayer, quest);
+                    AssignPlayer(interactivePlayer, quest);
                 }
             })));
             ComplexDialog inProgressDialog = dialog.AddAnswerOption("Okay", new DialogByAnswerIndex(inQuestText,

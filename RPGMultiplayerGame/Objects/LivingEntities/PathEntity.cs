@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.MapObjects;
-using RPGMultiplayerGame.Objects.Marks;
 using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;

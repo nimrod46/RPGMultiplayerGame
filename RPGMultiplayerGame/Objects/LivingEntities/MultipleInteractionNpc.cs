@@ -5,6 +5,8 @@ using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.Other;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using RPGMultiplayerGame.Objects.QuestsObjects;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {
@@ -149,5 +151,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             currentComplexDialog = null;
             currentSimpleDialog = null;
         }
+
+        public override void AssignQuestTo(Player player, Quest quest)
+        {
+            Console.WriteLine(dialog.GetDialogByIndex(playersProgress[player.GetName()] - 2));
+           (dialog.GetDialogByIndex(playersProgress[player.GetName()] - 2) as QuestDialog).AssignPlayer(player, quest);
+        }
+
     }
 }

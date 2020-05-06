@@ -29,10 +29,11 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         [XmlIgnore]
         public QuestUi QuestUi { get; set; }
 
+        public string NpcName { get; }
+
         private readonly PositionType positionType;
         private readonly Func<Point, Vector2> origin;
         protected Player player;
-        private readonly string npcName;
         private readonly string text;
         private readonly Action<Player> reward;
         private Color textColor;
@@ -47,7 +48,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         {
             this.origin = (windowSize) => Vector2.Zero;
             this.positionType = PositionType.TopLeft;
-            this.npcName = npcName;
+            this.NpcName = npcName;
             this.text = text;
             this.reward = reward;
             textColor = Color.Blue;
@@ -58,7 +59,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
 
         private void OnNetworkInitialize()
         {
-            QuestUi = new QuestUi(origin, positionType, npcName, text, textColor);
+            QuestUi = new QuestUi(origin, positionType, NpcName, text, textColor);
             if (SyncIsFinished)
             {
                 QuestUi.MarkFinished();

@@ -147,13 +147,6 @@ namespace RPGMultiplayerGame.Managers
         {
             XmlManager<GameSave> xml = new XmlManager<GameSave>();
             gameSave = xml.Load(@"Content\game save.xml");
-            lock (players)
-            {
-                foreach (var player in players)
-                {
-                    gameSave.LoadObjectSave(player);
-                }
-            }
             lock (gameIdentities)
             {
                 foreach (var identity in gameIdentities)
@@ -162,6 +155,14 @@ namespace RPGMultiplayerGame.Managers
                     {
                         gameSave.LoadObjectSave(npc);
                     }
+                }
+            }
+            
+            lock (players)
+            {
+                foreach (var player in players)
+                {
+                    gameSave.LoadObjectSave(player);
                 }
             }
         }
@@ -176,6 +177,26 @@ namespace RPGMultiplayerGame.Managers
             T netQuest = NetBehavior.SpawnWithClientAuthority(player.OwnerId, quest);
             netQuest.AssignTo(player);
             return netQuest;
+        }
+
+        public void ReAssignPlayer(Player player, Quest quest)
+        {
+            GetNpcByName(quest.NpcName).AssignQuestTo(player, quest);
+        }
+
+        private Npc GetNpcByName(string name)
+        {
+            lock(gameIdentities)
+            {
+                foreach (var identity in gameIdentities)
+                {
+                    if(identity is Npc npc && npc.GetName() == name)
+                    {
+                        return npc;
+                    }
+                }
+                return null;
+            }
         }
 
         private void Player_OnDestroyEvent(NetworkIdentity identity)
