@@ -34,7 +34,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             dialog = new ComplexDialog(SyncName, "Are you here to buy or what?", false);
             AddItemToShop(new GameItemShop(new CommonWond(), 50));
             AddItemToShop(new GameItemShop(new CommonHealthPotion() { SyncCount = 10 }, 10));
-            AddItemToShop(new GameItemShop(new CommonSword(), 50));
+            AddItemToShop(new GameItemShop(new CommonSword(), 10));
+            AddItemToShop(new GameItemShop(new CommonBow(), 10));
+            AddItemToShop(new GameItemShop(new ExplodingBow(), 50));
+            AddItemToShop(new GameItemShop(new IceBow(), 50));
+            AddItemToShop(new GameItemShop(new StormBow(), 50));
         }
 
         protected override void CmdInteractWithPlayer(Player player, int dialogIndex)
