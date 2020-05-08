@@ -1,4 +1,6 @@
-﻿namespace RPGMultiplayerGame.Objects.Items
+﻿using Microsoft.Xna.Framework.Graphics;
+
+namespace RPGMultiplayerGame.Objects.Items
 {
     public class GameItemShop : GameItem
     {
@@ -15,6 +17,8 @@
         {
             this.GameItem = gameItem;
             Price = price;
+            Scale = gameItem.Scale;
+            UiScale = gameItem.UiScale;
         }
 
         public override string ToString()

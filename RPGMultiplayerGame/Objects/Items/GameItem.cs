@@ -55,6 +55,7 @@ namespace RPGMultiplayerGame.Objects.Items
             SyncItemType = ItemType.None;
             SyncName = "";
             Scale = 1;
+            Layer = GraphicManager.ITEM_LAYER;
             uiItem = new UiTextureComponent((g) => Vector2.Zero, PositionType.Centered, false, UiManager.GUI_LAYER * 0.1f, Texture);
         }
 
@@ -63,6 +64,7 @@ namespace RPGMultiplayerGame.Objects.Items
             SyncItemType = itemType;
             SyncName = name;
             Scale = 1;
+            Layer = GraphicManager.ITEM_LAYER;
             uiItem = new UiTextureComponent((g) => Vector2.Zero, PositionType.Centered, false, UiManager.GUI_LAYER * 0.1f, Texture);
         }
 
@@ -71,7 +73,7 @@ namespace RPGMultiplayerGame.Objects.Items
             InvokeBroadcastMethodNetworkly(nameof(SetAsUiItemLocaly));
             UiParent = uiParent;
             SyncIsVisible = false;
-            uiItem.IsVisibleFunc = () => uiParent.IsVisible;
+            uiItem.IsVisibleFunc = () => uiParent.IsVisible && IsExists();
             uiItem.OriginFunc = origin;
             uiItem.OriginType = originType;
         }

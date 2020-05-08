@@ -4,6 +4,7 @@
     {
         public CommonHealthPotion() : base(ItemType.CommonHealthPotion, "Common health potion", 1, 20)
         {
+            Scale = 0.4f;
         }
     }
 }

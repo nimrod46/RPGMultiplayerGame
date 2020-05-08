@@ -7,7 +7,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
     {
         public StormBow() : base(ItemType.StormBow, "Storm Bow", 40, new StormArrow(), 0.5f)
         {
-            Scale = 0.46f;
+            Scale = 0.25f;
             UiScale = 0.46f;
             AddSpecielWeaponEffect<StormWeaponEffect>();
         }

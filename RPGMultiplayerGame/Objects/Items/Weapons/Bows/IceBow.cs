@@ -7,7 +7,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
     {
         public IceBow() : base(ItemType.IceBow, "Ice Bow", 40, new FreezingArrow(), 0.5f)
         {
-            Scale = 0.46f;
+            Scale = 0.25f;
             UiScale = 0.46f;
             AddSpecielWeaponEffect<FreezingWeaponEffect>();
         }

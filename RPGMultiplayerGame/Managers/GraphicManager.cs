@@ -53,6 +53,7 @@ namespace RPGMultiplayerGame.Managers
         }
 
         public const float OWN_PLAYER_LAYER = 0.6f;
+        public const float ITEM_LAYER = 0.6f;
         public const float ENTITY_LAYER = 0.7f;
         public const float MOVING_OJECT_LAYER = 0.8f;
         public const float CHARECTER_TEXT_LAYER = 0.9f;

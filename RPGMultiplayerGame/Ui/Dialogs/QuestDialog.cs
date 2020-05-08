@@ -24,7 +24,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
 
         public void AssignPlayer(Player player, Quest quest)
         {
-            quest = ServerManager.Instance.AddQuest(player, (dynamic) quest);
+            this.quest = ServerManager.Instance.AddQuest(player, (dynamic) quest);
         }
 
         public override ComplexDialog GetLast()

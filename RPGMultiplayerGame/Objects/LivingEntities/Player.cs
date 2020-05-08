@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using static NetworkingLib.Server;
 using static RPGMultiplayerGame.Managers.GameManager;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
@@ -24,7 +25,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public event LocalPlayerNameSetEventHandler OnLocalPlayerNameSetEvent;
         public delegate void SyncPlayerSaveEventHandler(Player player);
         public event SyncPlayerSaveEventHandler OnSyncPlayerSaveEvent;
-
+        public delegate void PlayerPickUpItemEventHandler(Player player);
+        public event PlayerPickUpItemEventHandler OnPlayerPickUpItemEvent;
 
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
 
@@ -77,13 +79,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
             base.OnNetworkInitialize();
         }
-
-        private void Inventory_OnItemRightClickedEvent(Inventory<GameItem> inventory, ItemSlotUi<GameItem> item)
-        {
-            inventory.DropItem(item, Location);
-        }
-
-
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -177,16 +172,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void CmdTryPickUpItem()
         {
-            Console.WriteLine(GetBoundingRectangle());
-            foreach (var item in ServerManager.Instance.GetGameItems())
-            {
-                Console.WriteLine(item.GetBoundingRectangle() + " " + item.SyncName);
-            }
-            GameItem gameItem = ServerManager.Instance.GetGameItems().FirstOrDefault(g => IsIntersectingWith(g));
-            if (gameItem != null)
-            {
-                AddItemToInventory(gameItem);
-            }
+            OnPlayerPickUpItemEvent?.Invoke(this);
         }
 
         public override void Respawn(float x, float y)
@@ -312,10 +298,25 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public void AddItemToInventory(GameItem gameItem)
         {
             InvokeCommandMethodNetworkly(nameof(AddItemToInventory), gameItem);
+            if (isInServer)
+            {
+                gameItem.SetAuthority(OwnerId);
+            }
             if (hasAuthority)
             {
                 AddItemToInventoryLocaly(gameItem);
             }
+        }
+
+        private void Inventory_OnItemRightClickedEvent(Inventory<GameItem> inventory, ItemSlotUi<GameItem> itemSlotUi)
+        {
+            InvokeCommandMethodNetworkly(nameof(PlayerDropItem), itemSlotUi.Item);
+            inventory.DropItem(itemSlotUi, Location);
+        }
+
+        public void PlayerDropItem(GameItem item)
+        {
+            item.SetAuthority(EndPointId.InvalidIdentityId);
         }
 
         private void MoveFromUsableItemSlot(int slot)

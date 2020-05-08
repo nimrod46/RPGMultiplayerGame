@@ -82,10 +82,20 @@ namespace RPGMultiplayerGame.Managers
                 Player player = NetBehavior.SpawnWithClientAuthority<Player>(endPointId);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
                 player.OnSyncPlayerSaveEvent += Player_OnSyncPlayerSaveEvent;
+                player.OnPlayerPickUpItemEvent += Player_OnPlayerPickUpItemEvent;
                 if (spawnPoint != null)
                 {
                     player.SetSpawnPoint(spawnPoint);
                 }
+            }
+        }
+
+        private void Player_OnPlayerPickUpItemEvent(Player player)
+        {
+            GameItem gameItem = GetGameItems().FirstOrDefault(g => player.IsIntersectingWith(g));
+            if (gameItem != null && gameItem.isServerAuthority)
+            {
+                player.AddItemToInventory(gameItem);
             }
         }
 
@@ -109,15 +119,15 @@ namespace RPGMultiplayerGame.Managers
             else
             {
                 Console.WriteLine("New player {0} joined", player.GetName());
-                GivePlayerGameItem(player, new CommonSword());
-                GivePlayerGameItem(player, new CommonWond());
+                //GivePlayerGameItem(player, new CommonSword());
+                //GivePlayerGameItem(player, new CommonWond());
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 });
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 });
                 GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 });
-                GivePlayerGameItem(player, new CommonBow());
-                GivePlayerGameItem(player, new IceBow());
-                GivePlayerGameItem(player, new ExplodingBow());
-                GivePlayerGameItem(player, new StormBow());
+                //GivePlayerGameItem(player, new CommonBow());
+                //GivePlayerGameItem(player, new IceBow());
+                //GivePlayerGameItem(player, new ExplodingBow());
+                //GivePlayerGameItem(player, new StormBow());
                 player.SyncGold = 100;
                 player.MoveToSpawnPoint();
             }
@@ -173,7 +183,7 @@ namespace RPGMultiplayerGame.Managers
 
         public void GivePlayerGameItem<T>(Player player, T gameItem) where T : GameItem
         {
-            player.AddItemToInventory(NetBehavior.SpawnWithClientAuthority(player.OwnerId, gameItem));
+            player.AddItemToInventory(NetBehavior.SpawnWithServerAuthority((dynamic) gameItem));
         }
 
         public T AddQuest<T>(Player player, T quest) where T : Quest

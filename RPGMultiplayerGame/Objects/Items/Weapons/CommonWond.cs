@@ -7,6 +7,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
     {
         public CommonWond() : base(ItemType.CommonWond, "Common Wand", 15, new FireBall(), 2)
         {
+            Scale = 0.5f;
         }
     }
 }
