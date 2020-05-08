@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Xml.Serialization;
 

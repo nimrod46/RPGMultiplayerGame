@@ -13,10 +13,10 @@ namespace RPGMultiplayerGame
     /// </summary>
     public class Game1 : Game
     {
-        readonly GraphicsDeviceManager graphics;
+        private readonly GraphicsDeviceManager graphics;
+        private readonly Form gameForm;
         private SpriteBatch spriteBatch;
         private SpriteBatch uiSpriteBatch;
-        readonly Form gameForm;
 
         public Game1()
         {

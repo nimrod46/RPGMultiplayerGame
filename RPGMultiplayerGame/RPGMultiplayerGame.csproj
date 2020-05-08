@@ -93,6 +93,7 @@
     <Compile Include="GameSaver\NpcSave.cs" />
     <Compile Include="GameSaver\IObjectSave.cs" />
     <Compile Include="GameSaver\PlayerSave.cs" />
+    <Compile Include="Graphics\ColoredText.cs" />
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\GraphicManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />
@@ -119,13 +120,13 @@
     <Compile Include="Objects\VisualEffects\VisualEffect.cs" />
     <Compile Include="Objects\VisualEffects\ExplotionVisualEffect.cs" />
     <Compile Include="Objects\VisualEffects\WindStormVisualEffect.cs" />
-    <Compile Include="Ui\Dialogs\ActionDialog.cs" />
-    <Compile Include="Ui\Dialogs\DialogByAnswerIndex.cs" />
-    <Compile Include="Ui\Dialogs\QuestDialog.cs" />
-    <Compile Include="Ui\Camera.cs" />
-    <Compile Include="Ui\HealthBar.cs" />
-    <Compile Include="Ui\InventoryObjects\ItemDescription.cs" />
-    <Compile Include="Ui\InventoryObjects\ItemSlotUi.cs" />
+    <Compile Include="Graphics\Ui\Dialogs\ActionDialog.cs" />
+    <Compile Include="Graphics\Ui\Dialogs\DialogByAnswerIndex.cs" />
+    <Compile Include="Graphics\Ui\Dialogs\QuestDialog.cs" />
+    <Compile Include="Graphics\Ui\Camera.cs" />
+    <Compile Include="Graphics\Ui\HealthBar.cs" />
+    <Compile Include="Graphics\Ui\InventoryObjects\ItemDescription.cs" />
+    <Compile Include="Graphics\Ui\InventoryObjects\ItemSlotUi.cs" />
     <Compile Include="Objects\Items\EmptyItem.cs" />
     <Compile Include="Objects\Items\InteractiveItem.cs" />
     <Compile Include="Objects\Items\Potions\CommonHealthPotion.cs" />
@@ -137,18 +138,18 @@
     <Compile Include="Objects\LivingEntities\Monster.cs" />
     <Compile Include="Objects\LivingEntities\Bat.cs" />
     <Compile Include="Objects\LivingEntities\PathEntity.cs" />
-    <Compile Include="Ui\InventoryObjects\Inventory.cs" />
+    <Compile Include="Graphics\Ui\InventoryObjects\Inventory.cs" />
     <Compile Include="Objects\Items\StackableItem.cs" />
     <Compile Include="Objects\Items\GameItem.cs" />
-    <Compile Include="Objects\Other\IGameDrawable.cs" />
+    <Compile Include="Graphics\IGameDrawable.cs" />
     <Compile Include="Objects\Other\IGameUpdateable.cs" />
     <Compile Include="Objects\Other\MovingObject.cs" />
-    <Compile Include="Ui\QuestsObjects\Quests\JoeKillQuest.cs" />
-    <Compile Include="Ui\QuestsObjects\KillQuest.cs" />
-    <Compile Include="Ui\QuestsObjects\QuestsMenu.cs" />
-    <Compile Include="Ui\QuestsObjects\Quest.cs" />
+    <Compile Include="Graphics\Ui\QuestsObjects\Quests\JoeKillQuest.cs" />
+    <Compile Include="Graphics\Ui\QuestsObjects\KillQuest.cs" />
+    <Compile Include="Graphics\Ui\QuestsObjects\QuestsMenu.cs" />
+    <Compile Include="Graphics\Ui\QuestsObjects\Quest.cs" />
     <Compile Include="Objects\Other\InteractionText.cs" />
-    <Compile Include="Ui\Dialogs\ComplexDialog.cs" />
+    <Compile Include="Graphics\Ui\Dialogs\ComplexDialog.cs" />
     <Compile Include="Objects\LivingEntities\Blacksmith.cs" />
     <Compile Include="Objects\LivingEntities\Joe.cs" />
     <Compile Include="Objects\Marks\MarkObject.cs" />
@@ -190,10 +191,10 @@
     </Compile>
     <Compile Include="Managers\XmlManager.cs" />
     <Compile Include="TextInput.cs" />
-    <Compile Include="Ui\QuestsObjects\QuestUi.cs" />
-    <Compile Include="Ui\UiComponent.cs" />
-    <Compile Include="Ui\UiTextComponent.cs" />
-    <Compile Include="Ui\UiTextureComponent.cs" />
+    <Compile Include="Graphics\Ui\QuestsObjects\QuestUi.cs" />
+    <Compile Include="Graphics\Ui\UiComponent.cs" />
+    <Compile Include="Graphics\Ui\UiTextComponent.cs" />
+    <Compile Include="Graphics\Ui\UiTextureComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Fizzler, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4ebff4844e382110, processorArchitecture=MSIL">

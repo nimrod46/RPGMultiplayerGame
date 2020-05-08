@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using OffsetGeneratorLib;
+using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Objects.LivingEntities;
-using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;

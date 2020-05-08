@@ -23,7 +23,7 @@ namespace RPGMultiplayerGame.Objects.Items
     [XmlInclude(typeof(StormBow))]
     public class GameItem : GraphicObject
     {
-        public const float ITEM_LAYER = UiManager.GUI_LAYER * 0.01f;
+        public const float ITEM_LAYER = UiManager.GUI_LAYER * 0.1f;
         public ItemType SyncItemType
         {
             get => itemType; set

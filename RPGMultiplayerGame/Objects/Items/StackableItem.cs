@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Objects.Items
             this.SyncCount = count;
             spriteFont = UiManager.Instance.StackableItemNumberFont;
             textSize = spriteFont.MeasureString(count.ToString());
-            countText = new UiTextComponent((g) => new Vector2(Size.X, Size.Y), UiComponent.PositionType.ButtomRight, false, UiManager.GUI_LAYER * 0.01f, spriteFont, () => SyncCount.ToString(), Color.Orange);
+            countText = new UiTextComponent((g) => new Vector2(Size.X, Size.Y), UiComponent.PositionType.ButtomRight, false, ITEM_LAYER * 0.1f, spriteFont, () => SyncCount.ToString(), Color.Orange);
         }
 
         public void Add(StackableGameItem stackableItemToAdd)

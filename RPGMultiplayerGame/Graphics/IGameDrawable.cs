@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace RPGMultiplayerGame.Objects.Other
+namespace RPGMultiplayerGame.Graphics
 {
     public interface IGameDrawable
     {
