@@ -23,7 +23,6 @@ namespace RPGMultiplayerGame.Objects.Items
     [XmlInclude(typeof(StormBow))]
     public class GameItem : GraphicObject
     {
-        [XmlElement]
         public ItemType SyncItemType
         {
             get => itemType; set
@@ -36,15 +35,7 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public string SyncName { get; set; }
 
-        public UiComponent UiParent
-        {
-            get => parent; set
-            {
-                parent = value;
-                uiItem.Parent = UiParent;
-            }
-        }
-
+        [XmlIgnore]
         public float UiScale { get { return uiItem.Scale; } set { uiItem.Scale = value; } }
 
         protected UiTextureComponent uiItem;
@@ -71,9 +62,8 @@ namespace RPGMultiplayerGame.Objects.Items
         public virtual void SetAsUiItem(UiComponent uiParent, Func<Point, Vector2> origin, PositionType originType)
         {
             InvokeBroadcastMethodNetworkly(nameof(SetAsUiItemLocaly));
-            UiParent = uiParent;
+            uiItem.Parent = uiParent;
             SyncIsVisible = false;
-            uiItem.IsVisibleFunc = () => uiParent.IsVisible && IsExists();
             uiItem.OriginFunc = origin;
             uiItem.OriginType = originType;
         }
@@ -89,13 +79,13 @@ namespace RPGMultiplayerGame.Objects.Items
             SyncX = location.X;
             SyncY = location.Y;
             SyncIsVisible = true;
+            uiItem.Parent = null;
         }
 
         public void SetAsMapItemLocaly()
         {
             Size = (Texture.Bounds.Size.ToVector2() * Scale).ToPoint();
             uiItem.IsVisible = false;
-            uiItem.IsVisibleFunc = () => false;
         }
 
         public bool IsExists()

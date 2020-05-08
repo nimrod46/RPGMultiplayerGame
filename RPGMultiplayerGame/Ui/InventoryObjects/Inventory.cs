@@ -199,7 +199,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             ItemSlotUi<T> itemSlot = inventoryItems[slot - 1];
             item = itemSlot.Item;
-            return item != null;
+            return item.IsExists();
         }
 
         public int GetItemSlot(T item)
@@ -211,7 +211,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
         {
             for (int i = inventoryItems.Length - 1; i >= 0; i--)
             {
-                if (inventoryItems[i].Item.IsExists() && inventoryItems[i].Item.SyncItemType == item.SyncItemType)
+                if (inventoryItems[i].Item.IsExists() && inventoryItems[i].Item == item)
                 {
                     inventoryItems[i].Item = Activator.CreateInstance<T>();
                     return true;

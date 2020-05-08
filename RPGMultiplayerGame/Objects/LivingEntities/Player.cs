@@ -323,15 +323,22 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (usableItems.TryGetItemInSlot(slot, out GameItem item))
             {
+                usableItems.TryRemoveItem(item);
+                int equippedSlot = 0;
                 if (item is Weapon weapon)
                 {
                     EquipeWith(weapon);
-                    equippedItems.PutItemInSlot(2, EquippedWeapon);
+                    equippedSlot = 2;
                 }
                 else if (item is Potion potion)
                 {
-                    equippedItems.PutItemInSlot(1, potion);
+                    equippedSlot = 1;
                 }
+                if (equippedItems.TryGetItemInSlot(equippedSlot, out GameItem otherItem))
+                {
+                    usableItems.TryAddItem(otherItem);
+                }
+                equippedItems.PutItemInSlot(equippedSlot, item);
             }
         }
 

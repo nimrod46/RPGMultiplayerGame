@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using System;
+using System.Xml.Serialization;
 
 namespace RPGMultiplayerGame.Objects.Other
 {
@@ -29,6 +30,7 @@ namespace RPGMultiplayerGame.Objects.Other
             }
         }
 
+        [XmlIgnore]
         public float Scale { get; protected set; }
 
         private Texture2D texture;

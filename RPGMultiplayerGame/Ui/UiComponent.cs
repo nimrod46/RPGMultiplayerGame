@@ -57,9 +57,8 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
-        public virtual bool IsVisible { get { return IsVisibleFunc == null ? isVisible : IsVisibleFunc.Invoke(); } set => isVisible = value; }
+        public virtual bool IsVisible { get { return Parent == null ? isVisible : Parent.IsVisible; } set => isVisible = value; }
 
-        public Func<bool> IsVisibleFunc { get; set; }
         public float Layer { get; set; }
 
         public float Scale { get; set; }
@@ -94,7 +93,6 @@ namespace RPGMultiplayerGame.Ui
             isVisible = defaultVisibility;
             Layer = layer;
             UiManager.Instance.AddUiComponent(this);
-            IsVisibleFunc = null;
         }
 
         public UiComponent()
@@ -105,7 +103,6 @@ namespace RPGMultiplayerGame.Ui
             OriginType = PositionType.TopLeft;
             Layer = 0;
             UiManager.Instance.AddUiComponent(this);
-            IsVisibleFunc = null;
         }
 
         public virtual void UpdatePosition()
@@ -129,6 +126,9 @@ namespace RPGMultiplayerGame.Ui
                     break;
                 case PositionType.CenteredLeft:
                     Position = Origin - new Vector2(0, -Size.Y / 2);
+                    break;
+                case PositionType.ButtomRight:
+                    Position = Origin - new Vector2(Size.X, Size.Y);
                     break;
             }
 

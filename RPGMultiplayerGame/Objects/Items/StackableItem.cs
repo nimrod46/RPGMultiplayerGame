@@ -41,11 +41,22 @@ namespace RPGMultiplayerGame.Objects.Items
         {
             base.SetAsMapItem(location);
             countText.IsVisible = false;
+            countText.Parent = null;
         }
 
         public override void SetAsUiItem(UiComponent uiParent, Func<Point, Vector2> origin, UiComponent.PositionType originType)
         {
             base.SetAsUiItem(uiParent, origin, originType);
+            countText.OriginFunc = (g) => new Vector2(uiParent.Size.X - 2, uiParent.Size.Y);
+            countText.Parent = uiParent;
+        }
+
+        public override void Draw(SpriteBatch sprite)
+        {
+            base.Draw(sprite);
+            Console.WriteLine(countText?.Position);
+            Console.WriteLine(countText.Parent?.Position);
+            Console.WriteLine(countText.Parent?.Size);
         }
 
         public void Use()
