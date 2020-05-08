@@ -95,14 +95,19 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public void Delete()
         {
+            BroadcastDestroy();
             SyncItemType = ItemType.None;
-            OnDestroyed(this);
-            uiItem.Delete();
         }
 
         public override string ToString()
         {
             return SyncName;
+        }
+
+        public override void OnDestroyed(NetworkIdentity identity)
+        {
+            base.OnDestroyed(identity);
+            uiItem.Delete();
         }
     }
 }

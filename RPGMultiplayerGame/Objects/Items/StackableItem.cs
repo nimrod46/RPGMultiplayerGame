@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Ui;
 using System;
@@ -51,22 +52,20 @@ namespace RPGMultiplayerGame.Objects.Items
             countText.Parent = uiParent;
         }
 
-        public override void Draw(SpriteBatch sprite)
-        {
-            base.Draw(sprite);
-            Console.WriteLine(countText?.Position);
-            Console.WriteLine(countText.Parent?.Position);
-            Console.WriteLine(countText.Parent?.Size);
-        }
-
         public void Use()
         {
             SyncCount--;
             textSize = spriteFont.MeasureString(SyncCount.ToString());
             if (SyncCount == 0)
             {
-                SyncItemType = ItemType.None;
+                Delete();
             }
+        }
+
+        public override void OnDestroyed(NetworkIdentity identity)
+        {
+            base.OnDestroyed(identity);
+            countText.Delete();
         }
     }
 }
