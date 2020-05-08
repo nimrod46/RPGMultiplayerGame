@@ -18,10 +18,10 @@ namespace RPGMultiplayerGame.Objects.Items
             }
         }
 
+        private readonly UiTextComponent countText;
         private readonly SpriteFont spriteFont;
         private Vector2 textSize;
         private int syncCount;
-        private UiTextComponent countText;
 
         public StackableGameItem(ItemType itemType, string name, int count) : base(itemType, name)
         {
@@ -50,6 +50,7 @@ namespace RPGMultiplayerGame.Objects.Items
             base.SetAsUiItem(uiParent, origin, originType);
             countText.OriginFunc = (g) => new Vector2(uiParent.Size.X - 2, uiParent.Size.Y);
             countText.Parent = uiParent;
+            countText.IsVisible = true;
         }
 
         public void Use()

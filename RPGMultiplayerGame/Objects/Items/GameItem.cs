@@ -23,6 +23,7 @@ namespace RPGMultiplayerGame.Objects.Items
     [XmlInclude(typeof(StormBow))]
     public class GameItem : GraphicObject
     {
+        public const float ITEM_LAYER = UiManager.GUI_LAYER * 0.01f;
         public ItemType SyncItemType
         {
             get => itemType; set
@@ -39,15 +40,15 @@ namespace RPGMultiplayerGame.Objects.Items
         public float UiScale { get { return uiItem.Scale; } set { uiItem.Scale = value; } }
 
         protected UiTextureComponent uiItem;
+        private readonly UiComponent parent;
         private ItemType itemType;
-        private UiComponent parent;
         public GameItem()
         {
             SyncItemType = ItemType.None;
             SyncName = "";
             Scale = 1;
             Layer = GraphicManager.ITEM_LAYER;
-            uiItem = new UiTextureComponent((g) => Vector2.Zero, PositionType.Centered, false, UiManager.GUI_LAYER * 0.1f, Texture);
+            uiItem = new UiTextureComponent((g) => Vector2.Zero, PositionType.Centered, false, ITEM_LAYER, Texture);
         }
 
         public GameItem(ItemType itemType, string name)
@@ -56,7 +57,7 @@ namespace RPGMultiplayerGame.Objects.Items
             SyncName = name;
             Scale = 1;
             Layer = GraphicManager.ITEM_LAYER;
-            uiItem = new UiTextureComponent((g) => Vector2.Zero, PositionType.Centered, false, UiManager.GUI_LAYER * 0.1f, Texture);
+            uiItem = new UiTextureComponent((g) => Vector2.Zero, PositionType.Centered, false, ITEM_LAYER, Texture);
         }
 
         public virtual void SetAsUiItem(UiComponent uiParent, Func<Point, Vector2> origin, PositionType originType)
@@ -64,6 +65,7 @@ namespace RPGMultiplayerGame.Objects.Items
             InvokeBroadcastMethodNetworkly(nameof(SetAsUiItemLocaly));
             uiItem.Parent = uiParent;
             SyncIsVisible = false;
+            uiItem.IsVisible = true;
             uiItem.OriginFunc = origin;
             uiItem.OriginType = originType;
         }
@@ -80,6 +82,7 @@ namespace RPGMultiplayerGame.Objects.Items
             SyncY = location.Y;
             SyncIsVisible = true;
             uiItem.Parent = null;
+            uiItem.IsVisible = false;
         }
 
         public void SetAsMapItemLocaly()

@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
+using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -19,8 +21,10 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         [XmlIgnore]
         public Direction Direction { get => Attacker.SyncCurrentDirection; set => Attacker.SyncCurrentDirection = value; }
 
+
         protected List<Type> specielWeaponEffects;
         protected double coolDownTime;
+        private readonly UiTextureComponent coolDownCover;
         private double currentCoolDownTime;
         private bool inCoolDown;
 
@@ -33,6 +37,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             inCoolDown = false;
             specielWeaponEffects = new List<Type>();
             AddSpecielWeaponEffect<FlickerEffect>();
+            coolDownCover = new UiTextureComponent((g) => Vector2.Zero, UiComponent.PositionType.TopLeft, false, ITEM_LAYER * 0.1f, UiManager.Instance.CoolDownCover);
         }
 
         public void AddSpecielWeaponEffect<T>() where T : ISpecielWeaponEffect
@@ -40,16 +45,29 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             specielWeaponEffects.Add(typeof(T));
         }
 
-        public void Update(GameTime gameTime)
+        public override void SetAsUiItem(UiComponent uiParent, Func<Point, Vector2> origin, UiComponent.PositionType originType)
+        {
+            base.SetAsUiItem(uiParent, origin, originType);
+            coolDownCover.Size = uiParent.Size;
+            coolDownCover.Parent = uiParent;
+        }
+
+        public override void Update(GameTime gameTime)
         {
             if (inCoolDown)
             {
+                coolDownCover.IsVisible = true;
+                coolDownCover.RenderRigion = new Rectangle(coolDownCover.RenderRigion.Location, new Point((int)(coolDownCover.Size.X * (coolDownTime - currentCoolDownTime) / coolDownTime), (int) coolDownCover.Size.Y));
                 currentCoolDownTime += gameTime.ElapsedGameTime.TotalSeconds;
                 if (currentCoolDownTime >= coolDownTime)
                 {
                     currentCoolDownTime = 0;
                     inCoolDown = false;
                 }
+            }
+            else
+            {
+                coolDownCover.IsVisible = false;
             }
         }
 

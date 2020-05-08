@@ -57,7 +57,7 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
-        public virtual bool IsVisible { get { return Parent == null ? isVisible : Parent.IsVisible; } set => isVisible = value; }
+        public virtual bool IsVisible { get { return Parent == null ? isVisible : Parent.IsVisible && isVisible; } set => isVisible = value; }
 
         public float Layer { get; set; }
 

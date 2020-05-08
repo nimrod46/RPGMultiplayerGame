@@ -33,6 +33,7 @@ namespace RPGMultiplayerGame.Managers
         public Texture2D ItemDescriptionBackground { get; set; }
         public Texture2D InventorySlotBackground { get; set; }
         public Texture2D DialogBackground { get; set; }
+        public Texture2D CoolDownCover { get; set; }
         public SpriteFont DialogTextFont { get; set; }
         public SpriteFont HealthTextFont { get; internal set; }
         public SpriteFont StackableItemNumberFont { get; internal set; }
@@ -62,12 +63,12 @@ namespace RPGMultiplayerGame.Managers
             UiHealthBarBackground = content.Load<Texture2D>("Ui\\UiHealthBarBackground");
             InventorySlotBackground = content.Load<Texture2D>("Ui\\InventorySlot");
             ItemDescriptionBackground = content.Load<Texture2D>("Ui\\DescriptionBackground");
+            CoolDownCover = content.Load<Texture2D>("Ui\\CoolDownCover");
             DialogTextFont = content.Load<SpriteFont>("Ui\\DialogTextFont");
             HealthTextFont = content.Load<SpriteFont>("Ui\\HealthTextFont");
             StackableItemNumberFont = content.Load<SpriteFont>("Ui\\StackableItemNumberFont");
             ItemDescriptionFont = content.Load<SpriteFont>("Ui\\ItemDescriptionFont");
             GoldTextFont = content.Load<SpriteFont>("Ui\\GoldTextFont");
-
             foreach (ItemType gameItemType in Enum.GetValues(typeof(ItemType)))
             {
                 ItemTextures.Add(gameItemType, content.Load<Texture2D>("Ui\\" + gameItemType.ToString()));
