@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using NetworkingLib;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects;
 using RPGMultiplayerGame.Objects.LivingEntities;
@@ -20,21 +21,37 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public Entity Attacker { get; set; }
         [XmlIgnore]
         public Direction Direction { get => Attacker.SyncCurrentDirection; set => Attacker.SyncCurrentDirection = value; }
+        public bool SyncIsInCoolDown
+        {
+            get => isInCoolDown; set
+            {
+                isInCoolDown = value;
+                InvokeSyncVarNetworkly(nameof(SyncIsInCoolDown), isInCoolDown);
+            }
+        }
 
+        public double SyncCurrentCoolDownTime
+        {
+            get => currentCoolDownTime; set
+            {
+                currentCoolDownTime = value;
+                InvokeSyncVarNetworkly(nameof(SyncCurrentCoolDownTime), currentCoolDownTime, Server.NetworkInterfaceType.UDP);
+            }
+        }
 
         protected List<Type> specielWeaponEffects;
         protected double coolDownTime;
         private readonly UiTextureComponent coolDownCover;
         private double currentCoolDownTime;
-        private bool inCoolDown;
+        private bool isInCoolDown;
 
         public Weapon(ItemType itemType, string name, float damage, double coolDownTime) : base(itemType, name)
         {
             Damage = damage;
             SyncName = name;
             this.coolDownTime = coolDownTime;
-            currentCoolDownTime = 0;
-            inCoolDown = false;
+            SyncCurrentCoolDownTime = 0;
+            SyncIsInCoolDown = false;
             specielWeaponEffects = new List<Type>();
             AddSpecielWeaponEffect<FlickerEffect>();
             coolDownCover = new UiTextureComponent((g) => Vector2.Zero, UiComponent.PositionType.TopLeft, false, ITEM_LAYER * 0.1f, UiManager.Instance.CoolDownCover);
@@ -54,34 +71,55 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public override void Update(GameTime gameTime)
         {
-            if (inCoolDown)
+            if (SyncIsInCoolDown)
             {
-                coolDownCover.IsVisible = true;
-                coolDownCover.RenderRigion = new Rectangle(coolDownCover.RenderRigion.Location, new Point((int)(coolDownCover.Size.X * (coolDownTime - currentCoolDownTime) / coolDownTime), (int) coolDownCover.Size.Y));
-                currentCoolDownTime += gameTime.ElapsedGameTime.TotalSeconds;
-                if (currentCoolDownTime >= coolDownTime)
+                if (isInServer)
                 {
-                    currentCoolDownTime = 0;
-                    inCoolDown = false;
+                    SyncCurrentCoolDownTime += gameTime.ElapsedGameTime.TotalSeconds;
+                    if (SyncCurrentCoolDownTime >= coolDownTime)
+                    {
+                        SyncCurrentCoolDownTime = 0;
+                        SyncIsInCoolDown = false;
+                    }
+                }
+                else
+                {
+                    coolDownCover.IsVisible = true;
+                    coolDownCover.RenderRigion = new Rectangle(coolDownCover.RenderRigion.Location, new Point((int)(coolDownCover.Size.X * (coolDownTime - SyncCurrentCoolDownTime) / coolDownTime), (int)coolDownCover.Size.Y));
                 }
             }
             else
             {
-                coolDownCover.IsVisible = false;
+                if (!isInServer)
+                {
+                    coolDownCover.IsVisible = false;
+                }
             }
+
         }
 
         public bool IsAbleToAttack()
         {
-            if (!inCoolDown)
-            {
-                inCoolDown = true;
-                return true;
-            }
-            return false;
+            return !SyncIsInCoolDown;
         }
 
-        public abstract void Attack();
+        public void Attack()
+        {
+            if (isInServer)
+            {
+                if (IsAbleToAttack())
+                {
+                    SyncIsInCoolDown = true;
+                    PreformeAttack();
+                }
+            }
+            else
+            {
+                throw new Exception("Method \"" + nameof(Attack) + "\" in Weapon class was called in client");
+            }
+        }
+
+        public abstract void PreformeAttack();
 
         public virtual void Hit(Entity victim)
         {

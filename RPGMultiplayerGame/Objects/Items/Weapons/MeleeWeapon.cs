@@ -15,7 +15,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             DamageAreaSize = damageAreaSize;
         }
 
-        public override void Attack()
+        public override void PreformeAttack()
         {
             UpdateWeaponLocation(Attacker);
             List<Entity> damagedEntities = GameManager.Instance.GetEntitiesHitBy(this, Attacker);

@@ -27,14 +27,11 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             base.Hit(victim);
         }
 
-        public override void Attack()
+        public override void PreformeAttack()
         {
-            if (Attacker.isInServer)
-            {
-                weaponAmmunition.SyncCurrentDirection = Attacker.SyncCurrentDirection;
-                weaponAmmunition.SyncAttacker = Attacker;
-                ServerManager.Instance.Spawn((dynamic)weaponAmmunition);
-            }
+            weaponAmmunition.SyncCurrentDirection = Attacker.SyncCurrentDirection;
+            weaponAmmunition.SyncAttacker = Attacker;
+            ServerManager.Instance.Spawn((dynamic)weaponAmmunition);
         }
 
         public override string ToString()
