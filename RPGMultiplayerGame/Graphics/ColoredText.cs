@@ -55,13 +55,6 @@ namespace RPGMultiplayerGame.Graphics
             Layer = layer;
         }
 
-        //§15§asedfs§12§sdfgs
-        /*
-         * 15
-         * asedfs
-         * 12
-         * sdfgs
-         */
         private List<ReachText> GetGenerateTextParts(string text)
         {
             lock (reachTexts)
@@ -73,41 +66,67 @@ namespace RPGMultiplayerGame.Graphics
                 Size = Vector2.Zero;
                 List<ReachText> reachTexts = new List<ReachText>();
                 Color nextColor = Color.White;
-                foreach (var textPart in text.Split('\n'))
+                foreach (var t in text.Split('\n'))
                 {
+                    string textLine = t;
                     Vector2 textSize = Vector2.Zero;
                     float xSum = 0;
                     float yMax = 0;
-                    if (!textPart.Contains("§"))
+                    try
                     {
-                        textSize = font.MeasureString(textPart);
-                        reachTexts.Add(new ReachText(textPart, nextColor, new Vector2(xSum, Size.Y)));
-                        yMax = Math.Max(yMax, textSize.Y);
-                        xSum += textSize.X;
-                        Size = new Vector2(Math.Max(textSize.X, Size.X), Size.Y + yMax);
-                        continue;
-                    }
-                    foreach (var subTextPart in textPart.Split('§'))
-                    {
-                        if (string.IsNullOrWhiteSpace(subTextPart))
+                        if((textLine.Split('§').Length - 1) % 2 != 0)
                         {
-                            continue;
+                            throw new Exception("Invalid color code");
                         }
+                            
+                        while (!string.IsNullOrWhiteSpace(textLine))
+                        {
+                            int firstIndexOfCmd = textLine.IndexOf('§');
+                            string subTextPart;
+                            string colorCode;
+                            if (firstIndexOfCmd == -1)
+                            {
+                                subTextPart = textLine;
+                                textLine = "";
+                                colorCode = "";
+                            }
+                            else
+                            {
+                                subTextPart = textLine.Substring(0, firstIndexOfCmd);
+                                textLine = textLine.Substring(firstIndexOfCmd, textLine.Length - firstIndexOfCmd);
+                                int lastIndexOfCmd = textLine.IndexOf('§', 1);
+                                colorCode = textLine.Substring(0, lastIndexOfCmd + 1).Replace("§", "");
+                                textLine = textLine.Substring(lastIndexOfCmd + 1, textLine.Length - lastIndexOfCmd - 1);
+                                Console.WriteLine(colorCode);
+                            }
 
-                        int colorCode = (int)System.Drawing.KnownColor.White;
-                        if (int.TryParse(subTextPart, out colorCode))
-                        {
-                            System.Drawing.Color systemColor = System.Drawing.Color.FromKnownColor((System.Drawing.KnownColor)colorCode);
-                            nextColor = Color.FromNonPremultiplied(systemColor.R, systemColor.G, systemColor.B, systemColor.A);
+                            int color = (int)System.Drawing.KnownColor.White;
+
+                            {
+                                textSize = font.MeasureString(subTextPart);
+                                reachTexts.Add(new ReachText(subTextPart, nextColor, new Vector2(xSum, Size.Y)));
+                                yMax = Math.Max(yMax, textSize.Y);
+                                xSum += textSize.X;
+                                nextColor = Color.White;
+                            }
+
+                            if (int.TryParse(colorCode, out color))
+                            {
+                                System.Drawing.Color systemColor = System.Drawing.Color.FromKnownColor((System.Drawing.KnownColor)color);
+                                nextColor = Color.FromNonPremultiplied(systemColor.R, systemColor.G, systemColor.B, systemColor.A);
+                            }
+
                         }
-                        else
-                        {
-                            textSize = font.MeasureString(subTextPart);
-                            reachTexts.Add(new ReachText(subTextPart, nextColor, new Vector2(xSum, Size.Y)));
-                            yMax = Math.Max(yMax, textSize.Y);
-                            xSum += textSize.X;
-                            nextColor = Color.White;
-                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Warning: failed to parse color text with exception: ");
+                        Console.WriteLine(e);
+                        textLine = textLine.Replace("§", "");
+                        textSize = font.MeasureString(textLine);
+                        reachTexts.Add(new ReachText(textLine, nextColor, new Vector2(0, Size.Y)));
+                        yMax = Math.Max(yMax, textSize.Y);
+                        nextColor = Color.White;
                     }
                     Size = new Vector2(Math.Max(textSize.X, Size.X), Size.Y + yMax);
                 }
