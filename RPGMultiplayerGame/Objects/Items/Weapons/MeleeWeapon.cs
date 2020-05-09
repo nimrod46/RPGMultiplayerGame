@@ -30,7 +30,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public override void UpdateWeaponLocation(Entity entity)
         {
-            switch ((Direction)entity.SyncCurrentDirection)
+            switch (entity.SyncCurrentDirection)
             {
                 case Direction.Left:
                     X = entity.GetBoundingRectangle().Left;

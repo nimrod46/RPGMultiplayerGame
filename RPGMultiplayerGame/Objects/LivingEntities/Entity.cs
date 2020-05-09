@@ -265,8 +265,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void MoveToSpawnPoint()
         {
-            SyncX = SyncSpawnPoint.SyncX;
-            SyncY = SyncSpawnPoint.SyncY;
+            if (SyncSpawnPoint != null)
+            {
+                SyncX = SyncSpawnPoint.SyncX;
+                SyncY = SyncSpawnPoint.SyncY;
+            }
         }
 
         protected void Attack()

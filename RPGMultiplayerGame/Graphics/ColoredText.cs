@@ -43,15 +43,17 @@ namespace RPGMultiplayerGame.Graphics
         public float Layer { get; }
 
         private readonly SpriteFont font;
+        private readonly Color defaultColor;
         private List<ReachText> reachTexts = new List<ReachText>();
         private string text;
 
-        public ColoredText(SpriteFont font, string text, Vector2 position, float layer)
+        public ColoredText(SpriteFont font, string text, Vector2 position, Color defaultColor, float layer)
         {
             this.font = font;
             Size = Vector2.Zero;
             Text = text;
             Position = position;
+            this.defaultColor = defaultColor;
             Layer = layer;
         }
 
@@ -65,7 +67,7 @@ namespace RPGMultiplayerGame.Graphics
                 }
                 Size = Vector2.Zero;
                 List<ReachText> reachTexts = new List<ReachText>();
-                Color nextColor = Color.White;
+                Color nextColor = defaultColor;
                 foreach (var t in text.Split('\n'))
                 {
                     string textLine = t;
@@ -97,7 +99,6 @@ namespace RPGMultiplayerGame.Graphics
                                 int lastIndexOfCmd = textLine.IndexOf('§', 1);
                                 colorCode = textLine.Substring(0, lastIndexOfCmd + 1).Replace("§", "");
                                 textLine = textLine.Substring(lastIndexOfCmd + 1, textLine.Length - lastIndexOfCmd - 1);
-                                Console.WriteLine(colorCode);
                             }
 
                             int color = (int)System.Drawing.KnownColor.White;
@@ -107,7 +108,7 @@ namespace RPGMultiplayerGame.Graphics
                                 reachTexts.Add(new ReachText(subTextPart, nextColor, new Vector2(xSum, Size.Y)));
                                 yMax = Math.Max(yMax, textSize.Y);
                                 xSum += textSize.X;
-                                nextColor = Color.White;
+                                nextColor = defaultColor;
                             }
 
                             if (int.TryParse(colorCode, out color))
@@ -120,13 +121,13 @@ namespace RPGMultiplayerGame.Graphics
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Warning: failed to parse color text with exception: ");
+                        Console.WriteLine("Warning: failed to parse color text with exception:");
                         Console.WriteLine(e);
                         textLine = textLine.Replace("§", "");
                         textSize = font.MeasureString(textLine);
                         reachTexts.Add(new ReachText(textLine, nextColor, new Vector2(0, Size.Y)));
                         yMax = Math.Max(yMax, textSize.Y);
-                        nextColor = Color.White;
+                        nextColor = defaultColor;
                     }
                     Size = new Vector2(Math.Max(textSize.X, Size.X), Size.Y + yMax);
                 }

@@ -40,7 +40,7 @@ namespace RPGMultiplayerGame.Objects.Items
         public float UiScale { get { return uiItem.Scale; } set { uiItem.Scale = value; } }
 
         protected UiTextureComponent uiItem;
-        private readonly UiComponent parent;
+
         private ItemType itemType;
         public GameItem()
         {

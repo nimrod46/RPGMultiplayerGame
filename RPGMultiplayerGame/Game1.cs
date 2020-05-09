@@ -96,8 +96,6 @@ namespace RPGMultiplayerGame
                 graphics.ApplyChanges();
             }
 
-            NetworkBehavior.RunActionsSynchronously();
-
             if (gameTime.IsRunningSlowly)
             {
                Console.WriteLine("RUNNING SLOWWWW");
@@ -107,6 +105,8 @@ namespace RPGMultiplayerGame
             {
                 InputManager.Instance.Update(gameTime);
             }
+            ClientManager.Instance.Update();
+            ServerManager.Instance.Update();
             GameManager.Instance.Update(gameTime);
         }
 

@@ -1,4 +1,6 @@
-﻿using Networking;
+﻿using Microsoft.Xna.Framework;
+using Networking;
+using System;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -20,6 +22,18 @@ namespace RPGMultiplayerGame.Managers
         {
         }
 
+        public void Update()
+        {
+            if(NetBehavior == null)
+            {
+                return;
+            }
+            if(NetBehavior.IsConnected)
+            {
+                NetBehavior.RunActionsSynchronously();
+            }
+        }
+
         public void Start()
         {
             NetBehavior.OnLocalIdentityInitialize += GameManager.Instance.OnIdentityInitialize;
@@ -38,5 +52,7 @@ namespace RPGMultiplayerGame.Managers
             }
             return false;
         }
+
+        
     }
 }

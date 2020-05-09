@@ -66,6 +66,17 @@ namespace RPGMultiplayerGame.Managers
             }
             identity.OnDestroyEvent += Identity_OnDestroyEvent;
         }
+        public void Update()
+        {
+            if (NetBehavior == null)
+            {
+                return;
+            }
+            if (NetBehavior.IsRunning)
+            {
+                NetBehavior.RunActionsSynchronously();
+            }
+        }
 
         private void Identity_OnDestroyEvent(NetworkIdentity identity)
         {
@@ -110,28 +121,31 @@ namespace RPGMultiplayerGame.Managers
 
         private void Player_OnSyncPlayerSaveEvent(Player player)
         {
-            players.Add(player);
-            bool isSaveloaded = gameSave.LoadObjectSave(player);
-            if (isSaveloaded)
+            lock (players)
             {
-                Console.WriteLine("Known player joined {0}", player.GetName());
+                players.Add(player);
+                bool isSaveloaded = gameSave.LoadObjectSave(player);
+                if (isSaveloaded)
+                {
+                    Console.WriteLine("Known player joined {0}", player.GetName());
+                }
+                else
+                {
+                    Console.WriteLine("New player {0} joined", player.GetName());
+                    GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 });
+                    GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 });
+                    GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 });
+                    //GivePlayerGameItem(player, new CommonSword());
+                    //GivePlayerGameItem(player, new CommonWond());
+                    //GivePlayerGameItem(player, new CommonBow());
+                    //GivePlayerGameItem(player, new IceBow());
+                    //GivePlayerGameItem(player, new ExplodingBow());
+                    //GivePlayerGameItem(player, new StormBow());
+                    player.SyncGold = 100;
+                    player.MoveToSpawnPoint();
+                }
             }
-            else
-            {
-                Console.WriteLine("New player {0} joined", player.GetName());
-                GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 });
-                GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 });
-                GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 });
-                //GivePlayerGameItem(player, new CommonSword());
-                //GivePlayerGameItem(player, new CommonWond());
-                //GivePlayerGameItem(player, new CommonBow());
-                //GivePlayerGameItem(player, new IceBow());
-                //GivePlayerGameItem(player, new ExplodingBow());
-                //GivePlayerGameItem(player, new StormBow());
-                player.SyncGold = 100;
-                player.MoveToSpawnPoint();
-            }
-        }
+        }  
 
         public void SaveGame()
         {
@@ -229,60 +243,64 @@ namespace RPGMultiplayerGame.Managers
         public void LoadMap(GameMap gameMap)
         {
             GameManager.Instance.map = gameMap;
-            foreach (MapObjectLib obj in gameMap.GraphicObjects)
+            lock (players)
             {
-                if (obj is NpcLib objP)
+                foreach (MapObjectLib obj in gameMap.GraphicObjects)
                 {
-                    Blacksmith blacksmith = new Blacksmith
+                    Thread.Sleep(50);
+                    if (obj is NpcLib objP)
                     {
-                        SyncX = obj.Rectangle.X + 15,
-                        SyncY = obj.Rectangle.Y + 15
-                    };
-                    NetBehavior.SpawnWithServerAuthority(blacksmith);
+                        Blacksmith blacksmith = new Blacksmith
+                        {
+                            SyncX = obj.Rectangle.X + 15,
+                            SyncY = obj.Rectangle.Y + 15
+                        };
+                        NetBehavior.SpawnWithServerAuthority(blacksmith);
 
-                    Joe gObject = new Joe
-                    {
-                        SyncX = obj.Rectangle.X,
-                        SyncY = obj.Rectangle.Y
-                    };
-                    for (int i = 0; i < 10; i++)
-                    {
-                        Bat bat = new Bat
+                        Joe gObject = new Joe
                         {
                             SyncX = obj.Rectangle.X,
                             SyncY = obj.Rectangle.Y
                         };
-                        Bat spawnedBat = NetBehavior.SpawnWithServerAuthority(bat);
-                        BatClaw batClaw = NetBehavior.SpawnWithServerAuthority<BatClaw>();
-                        spawnedBat.EquipeWith(batClaw);
+                        for (int i = 0; i < 10; i++)
+                        {
+                            Bat bat = new Bat
+                            {
+                                SyncX = obj.Rectangle.X,
+                                SyncY = obj.Rectangle.Y
+                            };
+                            Bat spawnedBat = NetBehavior.SpawnWithServerAuthority(bat);
+                            BatClaw batClaw = NetBehavior.SpawnWithServerAuthority<BatClaw>();
+                            spawnedBat.EquipeWith(batClaw);
+                        }
+                        NetworkIdentity identity = NetBehavior.SpawnWithServerAuthority(gObject);
+                        PathEntity npcMark = identity as PathEntity;
+                        foreach (WaypointLib waypoint in objP.waypoints)
+                        {
+                            npcMark.AddWaypoint(new Waypoint(new Point(waypoint.Point.X, waypoint.Point.Y), (float)waypoint.Time));
+                        }
                     }
-                    NetworkIdentity identity = NetBehavior.SpawnWithServerAuthority(gObject);
-                    PathEntity npcMark = identity as PathEntity;
-                    foreach (WaypointLib waypoint in objP.waypoints)
+                    else if (obj is SpawnLib)
                     {
-                        npcMark.AddWaypoint(new Waypoint(new Point(waypoint.Point.X, waypoint.Point.Y), (float)waypoint.Time));
+                        SpawnPoint gObject = new SpawnPoint
+                        {
+                            SyncX = obj.Rectangle.X,
+                            SyncY = obj.Rectangle.Y
+                        };
+                        gObject = NetBehavior.SpawnWithServerAuthority(gObject);
+                        UpdatePlayersSpawnLocation(gObject);
                     }
-                }
-                else if (obj is SpawnLib)
-                {
-                    SpawnPoint gObject = new SpawnPoint
+                    else if (obj is BlockLib)
                     {
-                        SyncX = obj.Rectangle.X,
-                        SyncY = obj.Rectangle.Y
-                    };
-                    gObject = NetBehavior.SpawnWithServerAuthority(gObject);
-                    UpdatePlayersSpawnLocation(gObject);
-                }
-                else if (obj is BlockLib)
-                {
-                    Block gObject = new Block
-                    {
-                        SyncX = obj.Rectangle.X,
-                        SyncY = obj.Rectangle.Y,
-                        SyncTextureIndex = (obj as BlockLib).ImageIndex,
-                        SyncLayer = obj.Layer
-                    };
-                    NetBehavior.SpawnWithServerAuthority(gObject);
+                        Block gObject = new Block
+                        {
+                            SyncX = obj.Rectangle.X,
+                            SyncY = obj.Rectangle.Y,
+                            SyncTextureIndex = (obj as BlockLib).ImageIndex,
+                            SyncLayer = obj.Layer
+                        };
+                        NetBehavior.SpawnWithServerAuthority(gObject);
+                    }
                 }
             }
         }

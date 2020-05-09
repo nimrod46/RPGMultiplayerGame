@@ -28,7 +28,7 @@ namespace RPGMultiplayerGame.Ui
         public UiTextComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer, SpriteFont textFont, Func<string> textFunc, Color textColor) : base(origin, originType, defaultVisibility, layer)
         {
             TextFont = textFont;
-            coloredText = new ColoredText(TextFont, Text, DrawPosition, layer);
+            coloredText = new ColoredText(TextFont, Text, DrawPosition, textColor, layer);
             this.textFunc = textFunc;
             TextColor = textColor;
             Text = textFunc.Invoke();
