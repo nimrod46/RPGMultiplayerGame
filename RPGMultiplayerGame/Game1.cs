@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame_Textbox;
 using Networking;
 using RPGMultiplayerGame.Managers;
 using System;
@@ -17,15 +19,19 @@ namespace RPGMultiplayerGame
         private readonly Form gameForm;
         private SpriteBatch spriteBatch;
         private SpriteBatch uiSpriteBatch;
+        private GameTextBox textBox;
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            //this.Content = new ContentManager(Services, "yourDirectoryHere");
             Content.RootDirectory = "Content";
             gameForm = Control.FromHandle(Window.Handle) as Form;
             IsFixedTimeStep = true;
             InactiveSleepTime = new TimeSpan(0);
             Window.AllowUserResizing = true;
+            MonoGame_Textbox.KeyboardInput.Initialize(this, 500f, 20);
+            MonoGame_Textbox.KeyboardInput.KeyPressed += KeyboardInput_KeyPressed;
         }
 
         /// <summary>
@@ -60,6 +66,16 @@ namespace RPGMultiplayerGame
             uiSpriteBatch = new SpriteBatch(GraphicsDevice);
             GraphicManager.Instance.LoadTextures(Content);
             UiManager.Instance.LoadTextures(Content);
+            Rectangle viewport = new Rectangle(50, 50, 400, 200);
+            textBox = new GameTextBox(viewport, 200, "This is a test. Move the cursor, select, delete, write...",
+              GraphicsDevice, GraphicManager.Instance.PlayerNameFont, Color.LightGray, Color.DarkGreen, 30);
+            textBox.EnterDown += TextBox_EnterDown;
+
+        }
+
+        private void TextBox_EnterDown(object sender, MonoGame_Textbox.KeyboardInput.KeyEventArgs e)
+        {
+            Console.WriteLine("ENTER");
         }
 
         /// <summary>
@@ -78,6 +94,7 @@ namespace RPGMultiplayerGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == Microsoft.Xna.Framework.Input.ButtonState.Pressed)
                 Exit();
             if (InputManager.Instance.KeyPressed(Microsoft.Xna.Framework.Input.Keys.Escape))
@@ -95,16 +112,23 @@ namespace RPGMultiplayerGame
                 graphics.IsFullScreen = true;
                 graphics.ApplyChanges();
             }
-
+            if (ServerManager.Instance.IsRunning != true)
+            {
+                MonoGame_Textbox.KeyboardInput.Update();
+                if (!textBox.Active)
+                {
+                    InputManager.Instance.Update(gameTime);
+                }
+                else
+                {
+                    textBox.Update();
+                }
+            }
             if (gameTime.IsRunningSlowly)
             {
                Console.WriteLine("RUNNING SLOWWWW");
             }
-            base.Update(gameTime);
-            if (ServerManager.Instance.IsRunning != true)
-            {
-                InputManager.Instance.Update(gameTime);
-            }
+          
             ClientManager.Instance.Update();
             ServerManager.Instance.Update();
             GameManager.Instance.Update(gameTime);
@@ -124,11 +148,18 @@ namespace RPGMultiplayerGame
                 spriteBatch.End();
                 uiSpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
                 UiManager.Instance.Draw(uiSpriteBatch);
+                textBox.Draw(uiSpriteBatch);
                 uiSpriteBatch.End();
             }
             base.Draw(gameTime);
         }
-
+        private void KeyboardInput_KeyPressed(object sender, MonoGame_Textbox.KeyboardInput.KeyEventArgs e, KeyboardState ks)
+        {
+            if (e.KeyCode == Microsoft.Xna.Framework.Input.Keys.OemTilde)
+            {
+                textBox.Active = !textBox.Active;
+            }
+        }
         private void Lobby_OnServerCreated(Form form)
         {
             form.Hide();

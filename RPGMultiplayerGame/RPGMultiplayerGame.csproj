@@ -93,7 +93,13 @@
     <Compile Include="GameSaver\NpcSave.cs" />
     <Compile Include="GameSaver\IObjectSave.cs" />
     <Compile Include="GameSaver\PlayerSave.cs" />
-    <Compile Include="Graphics\ColoredText.cs" />
+    <Compile Include="Graphics\ColoredTextRenderer.cs" />
+    <Compile Include="Graphics\Ui\TextBoxObjects\Cursor.cs" />
+    <Compile Include="Graphics\Ui\TextBoxObjects\Extensions.cs" />
+    <Compile Include="Graphics\Ui\TextBoxObjects\KeyboardInput.cs" />
+    <Compile Include="Graphics\Ui\TextBoxObjects\Text.cs" />
+    <Compile Include="Graphics\Ui\TextBoxObjects\GameTextBox.cs" />
+    <Compile Include="Graphics\Ui\TextBoxObjects\TextRenderer.cs" />
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\GraphicManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />

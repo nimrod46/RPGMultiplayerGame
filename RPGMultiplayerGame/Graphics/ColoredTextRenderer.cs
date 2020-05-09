@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Graphics
 {
-    public class ColoredText : IGameDrawable
+    public class ColoredTextRenderer : IGameDrawable
     {
 
         private struct ReachText
@@ -18,6 +18,7 @@ namespace RPGMultiplayerGame.Graphics
             public Color Color { get; }
 
             public Vector2 Position { get; }
+
 
             public ReachText(string text, Color color, Vector2 position)
             {
@@ -42,14 +43,15 @@ namespace RPGMultiplayerGame.Graphics
         public Vector2 Size { get; protected set; }
         public float Layer { get; }
 
-        private readonly SpriteFont font;
+        public SpriteFont Font { get; }
+
         private readonly Color defaultColor;
         private List<ReachText> reachTexts = new List<ReachText>();
         private string text;
 
-        public ColoredText(SpriteFont font, string text, Vector2 position, Color defaultColor, float layer)
+        public ColoredTextRenderer(SpriteFont font, string text, Vector2 position, Color defaultColor, float layer)
         {
-            this.font = font;
+            this.Font = font;
             Size = Vector2.Zero;
             Text = text;
             Position = position;
@@ -65,7 +67,7 @@ namespace RPGMultiplayerGame.Graphics
                 {
                     return new List<ReachText>();
                 }
-                Size = Vector2.Zero;
+                Vector2 size = Vector2.Zero;
                 List<ReachText> reachTexts = new List<ReachText>();
                 Color nextColor = defaultColor;
                 foreach (var t in text.Split('\n'))
@@ -104,8 +106,8 @@ namespace RPGMultiplayerGame.Graphics
                             int color = (int)System.Drawing.KnownColor.White;
 
                             {
-                                textSize = font.MeasureString(subTextPart);
-                                reachTexts.Add(new ReachText(subTextPart, nextColor, new Vector2(xSum, Size.Y)));
+                                textSize = Font.MeasureString(subTextPart);
+                                reachTexts.Add(new ReachText(subTextPart, nextColor, new Vector2(xSum, size.Y)));
                                 yMax = Math.Max(yMax, textSize.Y);
                                 xSum += textSize.X;
                                 nextColor = defaultColor;
@@ -124,13 +126,14 @@ namespace RPGMultiplayerGame.Graphics
                         Console.WriteLine("Warning: failed to parse color text with exception:");
                         Console.WriteLine(e);
                         textLine = textLine.Replace("§", "");
-                        textSize = font.MeasureString(textLine);
-                        reachTexts.Add(new ReachText(textLine, nextColor, new Vector2(0, Size.Y)));
+                        textSize = Font.MeasureString(textLine);
+                        reachTexts.Add(new ReachText(textLine, nextColor, new Vector2(0, size.Y)));
                         yMax = Math.Max(yMax, textSize.Y);
                         nextColor = defaultColor;
                     }
-                    Size = new Vector2(Math.Max(textSize.X, Size.X), Size.Y + yMax);
+                    size = new Vector2(Math.Max(textSize.X, size.X), size.Y + yMax);
                 }
+                Size = size;
                 return reachTexts;
             }
         }
@@ -141,7 +144,7 @@ namespace RPGMultiplayerGame.Graphics
             {
                 foreach (var reachText in reachTexts)
                 {
-                    spriteBatch.DrawString(font, reachText.Text, Position + reachText.Position, reachText.Color, 0, Vector2.Zero, 1, SpriteEffects.None, Layer);
+                    spriteBatch.DrawString(Font, reachText.Text, Position + reachText.Position, reachText.Color, 0, Vector2.Zero, 1, SpriteEffects.None, Layer);
                 }
             }
         }

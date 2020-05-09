@@ -247,7 +247,6 @@ namespace RPGMultiplayerGame.Managers
             {
                 foreach (MapObjectLib obj in gameMap.GraphicObjects)
                 {
-                    Thread.Sleep(50);
                     if (obj is NpcLib objP)
                     {
                         Blacksmith blacksmith = new Blacksmith
