@@ -52,6 +52,7 @@ namespace RPGMultiplayerGame.Managers
             serverBehavior.OnRemoteIdentityInitialize += OnIdentityInitialize;
             serverBehavior.OnLocalIdentityInitialize += OnIdentityInitialize;
             NetBehavior = serverBehavior;
+            NetBehavior.SpawnWithServerAuthority<GameChat>();
             IsRunning = true;
             gameSave = new GameSave();
         }

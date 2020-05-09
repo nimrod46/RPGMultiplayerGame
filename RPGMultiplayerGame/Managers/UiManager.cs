@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using RPGMultiplayerGame.Graphics.Ui;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Ui;
 using Svg;
@@ -25,6 +26,7 @@ namespace RPGMultiplayerGame.Managers
                 return instance;
             }
         }
+        public const char COLOR_CODE_SPLITTER = '|';
         public const float GUI_LAYER = 0.01f;
 
         public Dictionary<ItemType, Texture2D> ItemTextures { get; set; }
@@ -40,7 +42,7 @@ namespace RPGMultiplayerGame.Managers
         public SpriteFont ItemDescriptionFont { get; internal set; }
         public SpriteFont GoldTextFont { get; internal set; }
 
-        private readonly List<UiComponent> uiComponents = new List<UiComponent>();
+        private readonly List<IUiComponent> uiComponents = new List<IUiComponent>();
         private readonly string dialogBackgroundPath;
         private readonly string questBackgroundPath;
         private Game1 game;
@@ -179,7 +181,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void AddUiComponent(UiComponent uiComponent)
+        public void AddUiComponent(IUiComponent uiComponent)
         {
             lock (uiComponents)
             {
@@ -187,7 +189,7 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void RemoveUiComponent(UiComponent uiComponent)
+        public void RemoveUiComponent(IUiComponent uiComponent)
         {
             lock (uiComponents)
             {

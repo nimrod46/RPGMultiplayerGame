@@ -59,6 +59,7 @@ namespace RPGMultiplayerGame.Managers
         private Game1 game;
         private int isMouseVisibleCounter;
         private string name;
+        private GameChat gameChat;
 
         private GameManager()
         {
@@ -98,6 +99,11 @@ namespace RPGMultiplayerGame.Managers
             if (identity is Entity entity)
             {
                 AddEntity(entity);
+            }
+            if(identity is GameChat gameChat)
+            {
+                this.gameChat = gameChat;
+                gameChat.Initialize(game);
             }
         }
 
@@ -158,6 +164,24 @@ namespace RPGMultiplayerGame.Managers
                 entities.Remove(entity as Entity);
             }
             updateObjectsToRemove.Clear();
+
+            if (ServerManager.Instance.IsRunning != true)
+            {
+                MonoGame_Textbox.KeyboardInput.Update();
+                if(gameChat == null)
+                {
+                    InputManager.Instance.Update(gameTime);
+                    return;
+                }
+                if (!gameChat.IsActive)
+                {
+                    InputManager.Instance.Update(gameTime);
+                }
+                else
+                {
+                    gameChat.Update();
+                }
+            }
         }
 
         public Point GeMapSize()

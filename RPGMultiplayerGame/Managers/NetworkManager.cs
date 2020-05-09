@@ -54,6 +54,7 @@ namespace RPGMultiplayerGame.Managers
             new IceBow();
             new StormBow();
             new StormArrow();
+            new GameChat();
         }
 
         public void AddServer()

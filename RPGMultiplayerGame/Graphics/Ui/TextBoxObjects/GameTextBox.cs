@@ -63,7 +63,12 @@ namespace MonoGame_Textbox
                 String = text
             };
 
-            Renderer = new TextRenderer(this, area, spriteFont, Color.Black);
+            Renderer = new TextRenderer(this)
+            {
+                Area = area,
+                Font = spriteFont,
+                Color = Color.Black
+            };
 
             Cursor = new Cursor(this, cursorColor, selectionColor, new Rectangle(0, 0, 1, 1), ticksPerToggle);
 

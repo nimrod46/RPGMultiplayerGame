@@ -104,7 +104,7 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public override string ToString()
         {
-            return "§37§"+ SyncName;
+            return "|37|"+ SyncName;
         }
 
         public override void OnDestroyed(NetworkIdentity identity)

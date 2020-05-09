@@ -1,13 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Graphics;
+using RPGMultiplayerGame.Graphics.Ui;
 using RPGMultiplayerGame.Managers;
 using System;
 using System.Xml.Serialization;
 
 namespace RPGMultiplayerGame.Ui
 {
-    public abstract class UiComponent : IGameDrawable
+    public abstract class UiComponent : IUiComponent
     {
         [XmlIgnore]
         public Func<Point, Vector2> OriginFunc

@@ -10,7 +10,6 @@ namespace RPGMultiplayerGame.Graphics
 {
     public class ColoredTextRenderer : IGameDrawable
     {
-
         private struct ReachText
         {
             public string Text { get; }
@@ -45,15 +44,17 @@ namespace RPGMultiplayerGame.Graphics
 
         public SpriteFont Font { get; }
 
+        private readonly char colorCodeSplitter;
         private readonly Color defaultColor;
         private List<ReachText> reachTexts = new List<ReachText>();
         private string text;
 
-        public ColoredTextRenderer(SpriteFont font, string text, Vector2 position, Color defaultColor, float layer)
+        public ColoredTextRenderer(SpriteFont font, string text, char colorCodeSplitter, Vector2 position, Color defaultColor, float layer)
         {
             this.Font = font;
             Size = Vector2.Zero;
             Text = text;
+            this.colorCodeSplitter = colorCodeSplitter;
             Position = position;
             this.defaultColor = defaultColor;
             Layer = layer;
@@ -78,14 +79,14 @@ namespace RPGMultiplayerGame.Graphics
                     float yMax = 0;
                     try
                     {
-                        if((textLine.Split('§').Length - 1) % 2 != 0)
+                        if((textLine.Split(colorCodeSplitter).Length - 1) % 2 != 0)
                         {
                             throw new Exception("Invalid color code");
                         }
                             
                         while (!string.IsNullOrWhiteSpace(textLine))
                         {
-                            int firstIndexOfCmd = textLine.IndexOf('§');
+                            int firstIndexOfCmd = textLine.IndexOf(colorCodeSplitter);
                             string subTextPart;
                             string colorCode;
                             if (firstIndexOfCmd == -1)
@@ -98,8 +99,8 @@ namespace RPGMultiplayerGame.Graphics
                             {
                                 subTextPart = textLine.Substring(0, firstIndexOfCmd);
                                 textLine = textLine.Substring(firstIndexOfCmd, textLine.Length - firstIndexOfCmd);
-                                int lastIndexOfCmd = textLine.IndexOf('§', 1);
-                                colorCode = textLine.Substring(0, lastIndexOfCmd + 1).Replace("§", "");
+                                int lastIndexOfCmd = textLine.IndexOf(colorCodeSplitter, 1);
+                                colorCode = textLine.Substring(0, lastIndexOfCmd + 1).Replace(colorCodeSplitter.ToString(), "");
                                 textLine = textLine.Substring(lastIndexOfCmd + 1, textLine.Length - lastIndexOfCmd - 1);
                             }
 
@@ -125,7 +126,7 @@ namespace RPGMultiplayerGame.Graphics
                     {
                         Console.WriteLine("Warning: failed to parse color text with exception:");
                         Console.WriteLine(e);
-                        textLine = textLine.Replace("§", "");
+                        textLine = textLine.Replace(colorCodeSplitter.ToString(), "");
                         textSize = Font.MeasureString(textLine);
                         reachTexts.Add(new ReachText(textLine, nextColor, new Vector2(0, size.Y)));
                         yMax = Math.Max(yMax, textSize.Y);

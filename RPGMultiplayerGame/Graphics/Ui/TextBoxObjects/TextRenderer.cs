@@ -27,8 +27,6 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RPGMultiplayerGame.Graphics;
-using System;
 
 namespace MonoGame_Textbox
 {
@@ -39,8 +37,8 @@ namespace MonoGame_Textbox
         public Color Color { get; set; }
 
         private readonly GameTextBox box;
-        private readonly ColoredTextRenderer coloredTextRenderer;
         private RenderTarget2D target;
+        private SpriteBatch batch;
 
         // Cached texture that has all of the characters.
         private Texture2D text;
@@ -62,17 +60,14 @@ namespace MonoGame_Textbox
             target?.Dispose();
             target = null;
             Font = null;
-            //batch?.Dispose();
-            //batch = null;
+            batch?.Dispose();
+            batch = null;
         }
 
-        public TextRenderer(GameTextBox box, Rectangle area, SpriteFont font, Color color)
+        public TextRenderer(GameTextBox box)
         {
             this.box = box;
-            Area = area;
-            Font = font;
-            Color = color;
-            coloredTextRenderer = new ColoredTextRenderer(Font, box.Text.String, Area.Location.ToVector2(), Color, 0);
+
             X = new short[this.box.Text.MaxLength];
             Y = new short[this.box.Text.MaxLength];
             Width = new byte[this.box.Text.MaxLength];
@@ -86,19 +81,17 @@ namespace MonoGame_Textbox
             {
                 return;
             }
-
+            box.Text.IsDirty = false;
             MeasureCharacterWidths();
-            coloredTextRenderer.Text = RenderText();//box.Text.String;
-        //    text = RenderText();
+            text = RenderText();
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //if (text != null)
-            //{
-            //    spriteBatch.Draw(text, Area, Color.White);
-            //}
-            coloredTextRenderer.Draw(spriteBatch);
+            if (text != null)
+            {
+                spriteBatch.Draw(text, Area, Color.White);
+            }
         }
 
         public int CharAt(Point localLocation)
@@ -150,51 +143,50 @@ namespace MonoGame_Textbox
             float front = Font.MeasureString(value.Substring(0, location)).X;
             float end = Font.MeasureString(value.Substring(0, location + 1)).X;
 
-            return (byte) (end - front);
+            return (byte)(end - front);
         }
 
-        private string RenderText()
+        private Texture2D RenderText()
         {
-            //if (batch == null)
-            //{
-            //    batch = new SpriteBatch(box.GraphicsDevice);
-            //}
+            if (batch == null)
+            {
+                batch = new SpriteBatch(box.GraphicsDevice);
+            }
             if (target == null)
             {
                 target = new RenderTarget2D(box.GraphicsDevice, Area.Width, Area.Height);
             }
 
-            //box.GraphicsDevice.SetRenderTarget(target);
+            box.GraphicsDevice.SetRenderTarget(target);
 
-         //   box.GraphicsDevice.Clear(Color.Transparent);
+            box.GraphicsDevice.Clear(Color.Transparent);
 
             int start = 0;
             float height = 0.0f;
-             
-            //  batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-            string text = "";
+
+            batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+
             while (true)
             {
-                start = RenderLine(out string tempTexd, start, height);
-                text += "\n" + tempTexd;
-                Console.WriteLine(tempTexd);
+                start = RenderLine(batch, start, height);
+
                 if (start >= box.Text.Length)
                 {
-                //    batch.End();
-                  //  box.GraphicsDevice.SetRenderTarget(null);
+                    batch.End();
+                    box.GraphicsDevice.SetRenderTarget(null);
 
-                    return text;
+                    return target;
                 }
 
                 height += Font.LineSpacing;
             }
         }
 
-        private int RenderLine(out string text,int start, float height)
+        private int RenderLine(SpriteBatch spriteBatch, int start, float height)
         {
             int breakLocation = start;
             float lineLength = 0.0f;
-            byte r = (byte) (height / Font.LineSpacing);
+            byte r = (byte)(height / Font.LineSpacing);
 
             string t = box.Text.String;
             string tempText;
@@ -203,8 +195,8 @@ namespace MonoGame_Textbox
             for (int iCount = start; iCount < box.Text.Length; iCount++)
             {
                 // Calculate screen location of current character.
-                X[iCount] = (short) lineLength;
-                Y[iCount] = (short) height;
+                X[iCount] = (short)lineLength;
+                Y[iCount] = (short)height;
                 row[iCount] = r;
 
                 // Calculate the width of the current line.
@@ -218,16 +210,14 @@ namespace MonoGame_Textbox
                         // Have to split a word.
                         // Render line and return start of new line.
                         tempText = t.Substring(start, iCount - start);
-                        text = tempText;
-                        //spriteBatch.DrawString(Font, tempText, new Vector2(0.0f, height), Color);
+                        spriteBatch.DrawString(Font, tempText, new Vector2(0.0f, height), Color);
                         return iCount + 1;
                     }
 
                     // Have a character we can split on.
                     // Render line and return start of new line.
                     tempText = t.Substring(start, breakLocation - start);
-                        text = tempText;
-                    //spriteBatch.DrawString(Font, tempText, new Vector2(0.0f, height), Color);
+                    spriteBatch.DrawString(Font, tempText, new Vector2(0.0f, height), Color);
                     return breakLocation;
                 }
 
@@ -239,8 +229,7 @@ namespace MonoGame_Textbox
                     case '\n':
                         //Render line and return start of new line.
                         tempText = t.Substring(start, iCount - start);
-                        text = tempText;
-                        //spriteBatch.DrawString(Font, tempText, new Vector2(0.0f, height), Color);
+                        spriteBatch.DrawString(Font, tempText, new Vector2(0.0f, height), Color);
                         return iCount + 1;
                     // These characters are good break locations.
                     case '-':
@@ -253,9 +242,7 @@ namespace MonoGame_Textbox
             // We hit the end of the text box render line and return
             // _textData.Length so RenderText knows to return.
             tempText = t.Substring(start, box.Text.Length - start);
-            text = tempText;
-
-            //spriteBatch.DrawString(Font, tempText, new Vector2(0.0f, height), Color);
+            spriteBatch.DrawString(Font, tempText, new Vector2(0.0f, height), Color);
             return box.Text.Length;
         }
     }

@@ -146,7 +146,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public override string ToString()
         {
             return base.ToString() + "\n" +
-                "Type: " + "§12§Weapon" + "\n" +
+                "Type: " + "|12|Weapon" + "\n" +
                 "Damage: " + Damage + "\n" +
                 "Cooldown time: " + coolDownTime;
         }
