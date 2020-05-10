@@ -26,6 +26,8 @@
 // ***************************************************************************
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -46,9 +48,9 @@ namespace MonoGame_Textbox
         public readonly Text Text;
         public readonly TextRenderer Renderer;
         public readonly Cursor Cursor;
-
         public event EventHandler<KeyboardInput.KeyEventArgs> EnterDown;
-
+        private readonly List<string> lastTexts = new List<string>();
+        private int currentMemoryTextIndex;
         private string clipboard;
 
         public bool Active { get; set; }
@@ -84,6 +86,13 @@ namespace MonoGame_Textbox
             Delete();
         }
 
+        public void TextSended()
+        {
+            lastTexts.Add(Text.String);
+            currentMemoryTextIndex = lastTexts.Count;
+            Clear();
+        }
+
         public void Clear()
         {
             Text.RemoveCharacters(0, Text.Length);
@@ -98,6 +107,30 @@ namespace MonoGame_Textbox
                 int oldPos = Cursor.TextCursor;
                 switch (e.KeyCode)
                 {
+                    case Keys.Up:
+                        if (!lastTexts.Any())
+                        {
+                            return;
+                        }
+                        currentMemoryTextIndex--;
+                        if(currentMemoryTextIndex < 0)
+                        {
+                            currentMemoryTextIndex = 0;
+                        }
+                        Text.String = lastTexts[currentMemoryTextIndex];
+                        break;
+                    case Keys.Down:
+                        if (!lastTexts.Any())
+                        {
+                            return;
+                        }
+                        currentMemoryTextIndex++;
+                        if (currentMemoryTextIndex > lastTexts.Count - 1)
+                        {
+                            currentMemoryTextIndex = lastTexts.Count - 1;
+                        }
+                        Text.String = lastTexts[currentMemoryTextIndex];
+                        break;
                     case Keys.Enter:
                         EnterDown?.Invoke(this, e);
                         break;

@@ -74,7 +74,7 @@ namespace MonoGame_Textbox
 
         public delegate void KeyEventHandler(object sender, KeyEventArgs e, KeyboardState ks);
 
-        public static readonly char[] SPECIAL_CHARACTERS = {'\a', '\b', '\n', '\r', '\f', '\t', '\v', '`'};
+        public static readonly char[] SPECIAL_CHARACTERS = {'\a', '\b', '\n', '\r', '\f', '\t', '\v', '`', '|', '~'};
 
         private static Game game;
 

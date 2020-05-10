@@ -1,4 +1,5 @@
-﻿using RPGMultiplayerGame.Managers;
+﻿using RPGMultiplayerGame.Graphics.Ui.QuestsObjects;
+using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
@@ -7,11 +8,11 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects.Quests
 {
     public class JoeKillQuest : KillQuest
     {
-        public JoeKillQuest() : base(nameof(Joe), "Kill 5 bats", new Action<Player>(player =>
+        public JoeKillQuest() : base(nameof(Joe), "Kill 5 bats", new Action<QuestReward, Player>((questReward,player) =>
         {
-            ServerManager.Instance.GivePlayerGameItem(player, new CommonWond());
-            player.SyncHealth = 1000;
-            player.SyncGold += 150;
+            questReward.RewardPlayerWithItem(player, new IceBow());
+            questReward.RewardPlayerWithHealth(player,1000);
+            questReward.RewardPlayerWithGold(player,150);
         }), GraphicManager.EntityId.Bat, 5)
         {
         }

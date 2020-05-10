@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public delegate void SyncPlayerSaveEventHandler(Player player);
         public event SyncPlayerSaveEventHandler OnSyncPlayerSaveEvent;
         public delegate void PlayerPickUpItemEventHandler(Player player);
-        public event PlayerPickUpItemEventHandler OnPlayerPickUpItemEvent;
+        public event PlayerPickUpItemEventHandler OnRemotePlayerTryToPickUpItemEvent;
 
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
 
@@ -172,7 +172,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void CmdTryPickUpItem()
         {
-            OnPlayerPickUpItemEvent?.Invoke(this);
+            OnRemotePlayerTryToPickUpItemEvent?.Invoke(this);
         }
 
         public override void Respawn(float x, float y)

@@ -1,4 +1,5 @@
-﻿using RPGMultiplayerGame.Objects.LivingEntities;
+﻿using RPGMultiplayerGame.Graphics.Ui.QuestsObjects;
+using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
 using static RPGMultiplayerGame.Managers.GraphicManager;
 
@@ -18,7 +19,7 @@ namespace RPGMultiplayerGame.Objects.QuestsObjects
         private readonly EntityId entityId;
         private readonly int numberOfKills;
         private int currentKills;
-        public KillQuest(string npcName, string text, Action<Player> reward, EntityId entityId, int numberOfKills) : base(npcName, text, reward)
+        public KillQuest(string npcName, string text, Action<QuestReward, Player> reward, EntityId entityId, int numberOfKills) : base(npcName, text, reward)
         {
             this.entityId = entityId;
             this.numberOfKills = numberOfKills;

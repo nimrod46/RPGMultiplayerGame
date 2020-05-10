@@ -42,7 +42,7 @@ namespace RPGMultiplayerGame.GameSaver
             ServerManager.Instance.CopyIdentities().Where(i => i is GameItem gameItem && gameItem.OwnerId == player.OwnerId).Cast<GameItem>().ToList().ForEach(i => i.Delete());
             foreach (var item in gameItems)
             {
-                ServerManager.Instance.GivePlayerGameItem(player, (dynamic) item);
+                ServerManager.Instance.GivePlayerGameItem(player, (dynamic) item, "");
             }
             foreach (var quest in quests)
             {

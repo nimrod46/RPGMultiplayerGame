@@ -30,20 +30,10 @@ namespace RPGMultiplayerGame.Ui
         public UiTextComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer, SpriteFont textFont, Func<string> textFunc, Color textColor) : base(origin, originType, defaultVisibility, layer)
         {
             TextFont = textFont;
-            coloredText = new ColoredTextRenderer(TextFont, Text, UiManager.COLOR_CODE_SPLITTER, DrawPosition, textColor, layer);
+            coloredText = new ColoredTextRenderer(TextFont, Text, DrawPosition, textColor, layer);
             this.TextFunc = textFunc;
             TextColor = textColor;
             Text = textFunc.Invoke();
-        }
-
-        public string ColorToColorCode(System.Drawing.KnownColor color)
-        {
-            return coloredText.ColorToColorCode(color);
-        }
-
-        public string ColorToColorCode(System.Drawing.KnownColor color, string text)
-        {
-            return coloredText.ColorToColorCode(color, text);
         }
 
         public override void Draw(SpriteBatch sprite)

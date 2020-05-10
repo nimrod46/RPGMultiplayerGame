@@ -12,6 +12,7 @@ using RPGMultiplayerGame.Graphics.Ui;
 using RPGMultiplayerGame.Ui;
 using static RPGMultiplayerGame.Ui.UiComponent;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Graphics;
 
 namespace RPGMultiplayerGame.Managers
 {
@@ -46,7 +47,7 @@ namespace RPGMultiplayerGame.Managers
             MonoGame_Textbox.KeyboardInput.Initialize(game, 500f, 20);
             MonoGame_Textbox.KeyboardInput.KeyPressed += KeyboardInput_KeyPressed;
             Rectangle viewport = new Rectangle(25, 25, 400, 200);
-            textBox = new GameTextBox(viewport, 200, "This is a test. Move the cursor, select, delete, write...",
+            textBox = new GameTextBox(viewport, 200, "",
               game.GraphicsDevice, GraphicManager.Instance.PlayerNameFont, Color.LightGray, Color.DarkGreen, 30);
             textBox.EnterDown += TextBox_EnterDown;
             chatMassages = new UiTextComponent((g) => new Vector2(25, 50), PositionType.TopLeft, true, 0, GraphicManager.Instance.PlayerNameFont, () => massgaes, Color.Black);
@@ -62,6 +63,8 @@ namespace RPGMultiplayerGame.Managers
             InvokeBroadcastMethodNetworkly(nameof(LocallyAddPlayerMassage), massage, LocalPlayer);
         }
 
+       
+
         public void LocallyAddPlayerMassage(string massage, Player player)
         {
             System.Drawing.KnownColor color;
@@ -73,11 +76,17 @@ namespace RPGMultiplayerGame.Managers
             {
                 color = System.Drawing.KnownColor.DarkOrange;
             }
-            massage = chatMassages.ColorToColorCode(color, player.GetName() + ": ") + massage;
+            massage = ColoredTextRenderer.ColorToColorCode(color, player.GetName() + ": ") + massage;
             LocallyAddMassage(massage);
         }
 
-        public void LocallyAddMassage(string massage)
+        public void LocallyAddGeneralMassage(string massage)
+        {
+            massage = ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.Chocolate) + massage;
+            LocallyAddMassage(massage);
+        }
+
+        private void LocallyAddMassage(string massage)
         {
             massgaes = massage + "\n " + massgaes;
         }
@@ -85,7 +94,7 @@ namespace RPGMultiplayerGame.Managers
         private void TextBox_EnterDown(object sender, MonoGame_Textbox.KeyboardInput.KeyEventArgs e)
         {
             BoardcastlyAddPlayerMassage(textBox.Text.String);
-            textBox.Clear();
+            textBox.TextSended();
         }
 
         private void KeyboardInput_KeyPressed(object sender, MonoGame_Textbox.KeyboardInput.KeyEventArgs e, KeyboardState ks)

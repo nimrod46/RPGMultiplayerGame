@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.InventoryObjects;
@@ -75,7 +76,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 if (player.IsAbleToBuy(itemShop))
                 {
-                    ServerManager.Instance.GivePlayerGameItem(player, itemShop.GameItem);
+                    ServerManager.Instance.GivePlayerGameItem(player, itemShop.GameItem, "You bought: ");
                     player.SyncGold -= itemShop.Price;
                 }
             }

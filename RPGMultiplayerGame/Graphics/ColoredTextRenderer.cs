@@ -44,17 +44,17 @@ namespace RPGMultiplayerGame.Graphics
 
         public SpriteFont Font { get; }
 
-        private readonly char colorCodeSplitter;
+        private const char COLOR_CODE_CHAR_SPLITTER = '#';
         private readonly Color defaultColor;
         private List<ReachText> reachTexts = new List<ReachText>();
+        private Stack<Color> lastColors = new Stack<Color>();
         private string text;
 
-        public ColoredTextRenderer(SpriteFont font, string text, char colorCodeSplitter, Vector2 position, Color defaultColor, float layer)
+        public ColoredTextRenderer(SpriteFont font, string text, Vector2 position, Color defaultColor, float layer)
         {
             this.Font = font;
             Size = Vector2.Zero;
             Text = text;
-            this.colorCodeSplitter = colorCodeSplitter;
             Position = position;
             this.defaultColor = defaultColor;
             Layer = layer;
@@ -79,14 +79,14 @@ namespace RPGMultiplayerGame.Graphics
                     float yMax = 0;
                     try
                     {
-                        if((textLine.Split(colorCodeSplitter).Length - 1) % 2 != 0)
+                        if((textLine.Split(COLOR_CODE_CHAR_SPLITTER).Length - 1) % 2 != 0)
                         {
                             throw new Exception("Invalid color code");
                         }
                             
                         while (!string.IsNullOrWhiteSpace(textLine))
                         {
-                            int firstIndexOfCmd = textLine.IndexOf(colorCodeSplitter);
+                            int firstIndexOfCmd = textLine.IndexOf(COLOR_CODE_CHAR_SPLITTER);
                             string subTextPart;
                             string colorCode;
                             if (firstIndexOfCmd == -1)
@@ -99,8 +99,8 @@ namespace RPGMultiplayerGame.Graphics
                             {
                                 subTextPart = textLine.Substring(0, firstIndexOfCmd);
                                 textLine = textLine.Substring(firstIndexOfCmd, textLine.Length - firstIndexOfCmd);
-                                int lastIndexOfCmd = textLine.IndexOf(colorCodeSplitter, 1);
-                                colorCode = textLine.Substring(0, lastIndexOfCmd + 1).Replace(colorCodeSplitter.ToString(), "");
+                                int lastIndexOfCmd = textLine.IndexOf(COLOR_CODE_CHAR_SPLITTER, 1);
+                                colorCode = textLine.Substring(0, lastIndexOfCmd + 1).Replace(COLOR_CODE_CHAR_SPLITTER.ToString(), "");
                                 textLine = textLine.Substring(lastIndexOfCmd + 1, textLine.Length - lastIndexOfCmd - 1);
                             }
 
@@ -111,17 +111,25 @@ namespace RPGMultiplayerGame.Graphics
                                 reachTexts.Add(new ReachText(subTextPart, nextColor, new Vector2(xSum, size.Y)));
                                 yMax = Math.Max(yMax, textSize.Y);
                                 xSum += textSize.X;
-                                nextColor = defaultColor;
+                                //nextColor = defaultColor;
                             }
 
                             if (int.TryParse(colorCode, out color))
                             {
+                                lastColors.Push(nextColor);
                                 System.Drawing.Color systemColor = System.Drawing.Color.FromKnownColor((System.Drawing.KnownColor)color);
                                 nextColor = Color.FromNonPremultiplied(systemColor.R, systemColor.G, systemColor.B, systemColor.A);
                             }
-                            else if(string.IsNullOrWhiteSpace(colorCode))
+                            else if (string.IsNullOrWhiteSpace(colorCode))
                             {
-                                nextColor = defaultColor;
+                                if (lastColors.Count > 0)
+                                {
+                                    nextColor = lastColors.Pop();
+                                }
+                                else
+                                {
+                                    nextColor = defaultColor;
+                                }
                             }
 
                         }
@@ -130,7 +138,7 @@ namespace RPGMultiplayerGame.Graphics
                     {
                         Console.WriteLine("Warning: failed to parse color text with exception:");
                         Console.WriteLine(e);
-                        textLine = textLine.Replace(colorCodeSplitter.ToString(), "");
+                        textLine = textLine.Replace(COLOR_CODE_CHAR_SPLITTER.ToString(), "");
                         textSize = Font.MeasureString(textLine);
                         reachTexts.Add(new ReachText(textLine, nextColor, new Vector2(0, size.Y)));
                         yMax = Math.Max(yMax, textSize.Y);
@@ -154,14 +162,14 @@ namespace RPGMultiplayerGame.Graphics
             }
         }
 
-        public string ColorToColorCode(System.Drawing.KnownColor color)
+        public static string ColorToColorCode(System.Drawing.KnownColor color)
         {
-            return colorCodeSplitter + "" + (int)color + colorCodeSplitter;
+            return COLOR_CODE_CHAR_SPLITTER + "" + (int)color + COLOR_CODE_CHAR_SPLITTER;
         }
 
-        public string ColorToColorCode(System.Drawing.KnownColor color, string text)
+        public static string ColorToColorCode(System.Drawing.KnownColor color, string text)
         {
-            return colorCodeSplitter + "" + (int)color + colorCodeSplitter + text + colorCodeSplitter + colorCodeSplitter;
+            return COLOR_CODE_CHAR_SPLITTER + "" + (int)color + COLOR_CODE_CHAR_SPLITTER + text + COLOR_CODE_CHAR_SPLITTER + COLOR_CODE_CHAR_SPLITTER;
         }
     }
 }

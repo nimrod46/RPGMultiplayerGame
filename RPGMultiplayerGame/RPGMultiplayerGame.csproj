@@ -95,6 +95,7 @@
     <Compile Include="GameSaver\PlayerSave.cs" />
     <Compile Include="Graphics\ColoredTextRenderer.cs" />
     <Compile Include="Graphics\Ui\IUiComponent.cs" />
+    <Compile Include="Graphics\Ui\QuestsObjects\QuestReward.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\Cursor.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\Extensions.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\KeyboardInput.cs" />

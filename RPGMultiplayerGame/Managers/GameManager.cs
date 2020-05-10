@@ -52,6 +52,7 @@ namespace RPGMultiplayerGame.Managers
         public bool HideMouse { get; set; }
         public Player Player { get; set; }
         public Camera Camera { get; set; }
+        public GameChat GameChat { get; set; }
 
         public GameMap map; //TODO: Create GameMap with the relevent project class.
         private readonly List<IGameUpdateable> updateObjects = new List<IGameUpdateable>();
@@ -59,7 +60,6 @@ namespace RPGMultiplayerGame.Managers
         private Game1 game;
         private int isMouseVisibleCounter;
         private string name;
-        private GameChat gameChat;
 
         private GameManager()
         {
@@ -91,7 +91,7 @@ namespace RPGMultiplayerGame.Managers
                 {
                     player.Init(name);
                 }
-                this.gameChat.LocalPlayer = player;
+                this.GameChat.LocalPlayer = player;
             }
             if (identity is IGameUpdateable gameUpdateable)
             {
@@ -104,7 +104,7 @@ namespace RPGMultiplayerGame.Managers
             if(identity is GameChat gameChat)
             {
                 gameChat.Initialize(game);
-                this.gameChat = gameChat;
+                this.GameChat = gameChat;
             }
         }
 
@@ -169,18 +169,18 @@ namespace RPGMultiplayerGame.Managers
             if (ServerManager.Instance.IsRunning != true)
             {
                 MonoGame_Textbox.KeyboardInput.Update();
-                if(gameChat == null)
+                if(GameChat == null)
                 {
                     InputManager.Instance.Update(gameTime);
                     return;
                 }
-                if (!gameChat.IsActive)
+                if (!GameChat.IsActive)
                 {
                     InputManager.Instance.Update(gameTime);
                 }
                 else
                 {
-                    gameChat.Update();
+                    GameChat.Update();
                 }
             }
         }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Networking;
 using RPGMultiplayerGame.GameSaver;
+using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.Items;
@@ -94,7 +95,7 @@ namespace RPGMultiplayerGame.Managers
                 Player player = NetBehavior.SpawnWithClientAuthority<Player>(endPointId);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
                 player.OnSyncPlayerSaveEvent += Player_OnSyncPlayerSaveEvent;
-                player.OnPlayerPickUpItemEvent += Player_OnPlayerPickUpItemEvent;
+                player.OnRemotePlayerTryToPickUpItemEvent += Player_OnPlayerPickUpItemEvent;
                 if (spawnPoint != null)
                 {
                     player.SetSpawnPoint(spawnPoint);
@@ -133,15 +134,15 @@ namespace RPGMultiplayerGame.Managers
                 else
                 {
                     Console.WriteLine("New player {0} joined", player.GetName());
-                    GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 });
-                    GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 });
-                    GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 });
-                    //GivePlayerGameItem(player, new CommonSword());
-                    //GivePlayerGameItem(player, new CommonWond());
-                    //GivePlayerGameItem(player, new CommonBow());
-                    //GivePlayerGameItem(player, new IceBow());
-                    //GivePlayerGameItem(player, new ExplodingBow());
-                    //GivePlayerGameItem(player, new StormBow());
+                    GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 }, "");
+                    GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 }, "");
+                    GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 }, "");
+                    //GivePlayerGameItem(player, new CommonSword(), "");
+                    //GivePlayerGameItem(player, new CommonWond(), "");
+                    //GivePlayerGameItem(player, new CommonBow(), "");
+                    //GivePlayerGameItem(player, new IceBow(), "");
+                    //GivePlayerGameItem(player, new ExplodingBow(), "");
+                    //GivePlayerGameItem(player, new StormBow(), "");
                     player.SyncGold = 100;
                     player.MoveToSpawnPoint();
                 }
@@ -196,9 +197,13 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void GivePlayerGameItem<T>(Player player, T gameItem) where T : GameItem
+        public void GivePlayerGameItem<T>(Player player, T gameItem, string itemRecivedTextPefix) where T : GameItem
         {
-            player.AddItemToInventory(NetBehavior.SpawnWithServerAuthority((dynamic) gameItem));
+            player.AddItemToInventory(NetBehavior.SpawnWithServerAuthority((dynamic)gameItem));
+            if (!string.IsNullOrWhiteSpace(itemRecivedTextPefix))
+            {
+                SendGeneralMassageToPlayer(itemRecivedTextPefix + ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.Gold, gameItem.SyncName.ToString()), player);
+            }
         }
 
         public T AddQuest<T>(Player player, T quest) where T : Quest
@@ -326,6 +331,11 @@ namespace RPGMultiplayerGame.Managers
             {
                 return !players.Any(player => player.GetName().Equals(name));
             }
+        }
+
+        public void SendGeneralMassageToPlayer(string massage, Player player)
+        {
+            GameManager.Instance.GameChat.InvokeCommandMethodNetworkly(nameof(GameManager.Instance.GameChat.LocallyAddGeneralMassage), player.OwnerId, massage);
         }
     }
 }
