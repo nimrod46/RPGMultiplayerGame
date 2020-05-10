@@ -9,8 +9,8 @@ namespace RPGMultiplayerGame.Ui
     public class UiTextComponent : UiComponent
     {
         private string text;
-        private readonly Func<string> textFunc;
 
+        public Func<string> TextFunc { get; set; }
         public SpriteFont TextFont { get; private set; }
         public Color TextColor { get; set; }
 
@@ -24,15 +24,26 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
+
         private readonly ColoredTextRenderer coloredText;
 
         public UiTextComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer, SpriteFont textFont, Func<string> textFunc, Color textColor) : base(origin, originType, defaultVisibility, layer)
         {
             TextFont = textFont;
             coloredText = new ColoredTextRenderer(TextFont, Text, UiManager.COLOR_CODE_SPLITTER, DrawPosition, textColor, layer);
-            this.textFunc = textFunc;
+            this.TextFunc = textFunc;
             TextColor = textColor;
             Text = textFunc.Invoke();
+        }
+
+        public string ColorToColorCode(System.Drawing.KnownColor color)
+        {
+            return coloredText.ColorToColorCode(color);
+        }
+
+        public string ColorToColorCode(System.Drawing.KnownColor color, string text)
+        {
+            return coloredText.ColorToColorCode(color, text);
         }
 
         public override void Draw(SpriteBatch sprite)
@@ -41,7 +52,7 @@ namespace RPGMultiplayerGame.Ui
             base.Draw(sprite);
             if (IsVisible)
             {
-                Text = textFunc.Invoke();
+                Text = TextFunc.Invoke();
                 coloredText.Draw(sprite);
             }
         }

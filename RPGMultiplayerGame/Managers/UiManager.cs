@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame.Managers
                 return instance;
             }
         }
-        public const char COLOR_CODE_SPLITTER = '|';
+        public const char COLOR_CODE_SPLITTER = '#';
         public const float GUI_LAYER = 0.01f;
 
         public Dictionary<ItemType, Texture2D> ItemTextures { get; set; }
@@ -164,7 +164,10 @@ namespace RPGMultiplayerGame.Managers
             {
                 foreach (var uiComponent in uiComponents)
                 {
-                    uiComponent.Draw(sprite);
+                    if (uiComponent.IsVisible)
+                    {
+                        uiComponent.Draw(sprite);
+                    }
 
                 }
             }

@@ -91,6 +91,7 @@ namespace RPGMultiplayerGame.Managers
                 {
                     player.Init(name);
                 }
+                this.gameChat.LocalPlayer = player;
             }
             if (identity is IGameUpdateable gameUpdateable)
             {
@@ -102,8 +103,8 @@ namespace RPGMultiplayerGame.Managers
             }
             if(identity is GameChat gameChat)
             {
-                this.gameChat = gameChat;
                 gameChat.Initialize(game);
+                this.gameChat = gameChat;
             }
         }
 

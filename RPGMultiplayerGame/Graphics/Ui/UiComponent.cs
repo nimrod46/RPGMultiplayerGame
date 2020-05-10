@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Networking;
 using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Graphics.Ui;
 using RPGMultiplayerGame.Managers;
@@ -100,8 +101,10 @@ namespace RPGMultiplayerGame.Ui
         {
             Scale = 1;
             Origin = Vector2.Zero;
+            this.OriginFunc = (g) => Vector2.Zero;
             Size = Vector2.Zero;
             OriginType = PositionType.TopLeft;
+            isVisible = false;
             Layer = 0;
             UiManager.Instance.AddUiComponent(this);
         }

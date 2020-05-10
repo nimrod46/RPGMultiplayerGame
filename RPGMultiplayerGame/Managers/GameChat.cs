@@ -9,27 +9,47 @@ using System.Text;
 using System.Threading.Tasks;
 using Networking;
 using RPGMultiplayerGame.Graphics.Ui;
+using RPGMultiplayerGame.Ui;
+using static RPGMultiplayerGame.Ui.UiComponent;
+using RPGMultiplayerGame.Objects.LivingEntities;
 
 namespace RPGMultiplayerGame.Managers
 {
-    public class GameChat : NetworkIdentity, IUiComponent
+    public class GameChat : NetworkIdentity
     {
         private GameTextBox textBox;
-        public bool IsActive { get => textBox.Active; set => textBox.Active = value; }
-
-        public GameChat()
+        public bool IsActive
         {
+            get
+            {
+
+                return textBox.Active;
+            }
+            set
+            {
+                textBox.Active = value;
+            }
+        }
+
+        public Player LocalPlayer { get; set; }
+
+        private UiTextComponent chatMassages;
+        private string massgaes;
+
+        public GameChat() : base()
+        {
+            massgaes = "";
         }
 
         public void Initialize(Game game)
         {
             MonoGame_Textbox.KeyboardInput.Initialize(game, 500f, 20);
             MonoGame_Textbox.KeyboardInput.KeyPressed += KeyboardInput_KeyPressed;
-            Rectangle viewport = new Rectangle(50, 50, 400, 200);
+            Rectangle viewport = new Rectangle(25, 25, 400, 200);
             textBox = new GameTextBox(viewport, 200, "This is a test. Move the cursor, select, delete, write...",
               game.GraphicsDevice, GraphicManager.Instance.PlayerNameFont, Color.LightGray, Color.DarkGreen, 30);
             textBox.EnterDown += TextBox_EnterDown;
-            UiManager.Instance.AddUiComponent(this);
+            chatMassages = new UiTextComponent((g) => new Vector2(25, 50), PositionType.TopLeft, true, 0, GraphicManager.Instance.PlayerNameFont, () => massgaes, Color.Black);
         }
 
         internal void Update()
@@ -37,35 +57,43 @@ namespace RPGMultiplayerGame.Managers
             textBox.Update();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void BoardcastlyAddPlayerMassage(string massage)
         {
-            textBox.Draw(spriteBatch);
+            InvokeBroadcastMethodNetworkly(nameof(LocallyAddPlayerMassage), massage, LocalPlayer);
         }
 
-        public void BoardcastAddMassage(string massage)
+        public void LocallyAddPlayerMassage(string massage, Player player)
         {
-            InvokeBroadcastMethodNetworkly(nameof(BoardcastAddMassage), massage);
-            Console.WriteLine(massage);
+            System.Drawing.KnownColor color;
+            if (player.hasAuthority)
+            {
+                color = System.Drawing.KnownColor.DarkBlue;
+            }
+            else
+            {
+                color = System.Drawing.KnownColor.DarkOrange;
+            }
+            massage = chatMassages.ColorToColorCode(color, player.GetName() + ": ") + massage;
+            LocallyAddMassage(massage);
+        }
+
+        public void LocallyAddMassage(string massage)
+        {
+            massgaes = massage + "\n " + massgaes;
         }
 
         private void TextBox_EnterDown(object sender, MonoGame_Textbox.KeyboardInput.KeyEventArgs e)
         {
-            BoardcastAddMassage(textBox.Text.String);
+            BoardcastlyAddPlayerMassage(textBox.Text.String);
             textBox.Clear();
         }
 
-
         private void KeyboardInput_KeyPressed(object sender, MonoGame_Textbox.KeyboardInput.KeyEventArgs e, KeyboardState ks)
         {
-            if (e.KeyCode == Microsoft.Xna.Framework.Input.Keys.OemTilde)
+            if (e.KeyCode == Keys.OemTilde)
             {
-                textBox.Active = !textBox.Active;
+                IsActive = !IsActive;
             }
-        }
-
-        public void Resize()
-        {
-            //throw new NotImplementedException();
         }
     }
 }

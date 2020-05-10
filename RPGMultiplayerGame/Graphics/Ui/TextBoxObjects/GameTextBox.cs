@@ -29,10 +29,11 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RPGMultiplayerGame.Ui;
 
 namespace MonoGame_Textbox
 {
-    public class GameTextBox
+    public class GameTextBox : UiComponent
     {
         public GraphicsDevice GraphicsDevice { get; set; }
 
@@ -74,11 +75,13 @@ namespace MonoGame_Textbox
 
             KeyboardInput.CharPressed += CharacterTyped;
             KeyboardInput.KeyPressed += KeyPressed;
+            IsVisible = true;
         }
 
         public void Dispose()
         {
             KeyboardInput.Dispose();
+            Delete();
         }
 
         public void Clear()
@@ -307,7 +310,7 @@ namespace MonoGame_Textbox
             Cursor.Update();
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             Renderer.Draw(spriteBatch);
             if (Active)

@@ -73,7 +73,7 @@ namespace RPGMultiplayerGame.Graphics
                 Color nextColor = defaultColor;
                 foreach (var t in text.Split('\n'))
                 {
-                    string textLine = t;
+                    string textLine = t.Trim();
                     Vector2 textSize = Vector2.Zero;
                     float xSum = 0;
                     float yMax = 0;
@@ -119,6 +119,10 @@ namespace RPGMultiplayerGame.Graphics
                                 System.Drawing.Color systemColor = System.Drawing.Color.FromKnownColor((System.Drawing.KnownColor)color);
                                 nextColor = Color.FromNonPremultiplied(systemColor.R, systemColor.G, systemColor.B, systemColor.A);
                             }
+                            else if(string.IsNullOrWhiteSpace(colorCode))
+                            {
+                                nextColor = defaultColor;
+                            }
 
                         }
                     }
@@ -148,6 +152,16 @@ namespace RPGMultiplayerGame.Graphics
                     spriteBatch.DrawString(Font, reachText.Text, Position + reachText.Position, reachText.Color, 0, Vector2.Zero, 1, SpriteEffects.None, Layer);
                 }
             }
+        }
+
+        public string ColorToColorCode(System.Drawing.KnownColor color)
+        {
+            return colorCodeSplitter + "" + (int)color + colorCodeSplitter;
+        }
+
+        public string ColorToColorCode(System.Drawing.KnownColor color, string text)
+        {
+            return colorCodeSplitter + "" + (int)color + colorCodeSplitter + text + colorCodeSplitter + colorCodeSplitter;
         }
     }
 }

@@ -8,6 +8,8 @@ namespace RPGMultiplayerGame.Graphics.Ui
 {
     public interface IUiComponent : IGameDrawable
     {
+        bool IsVisible { get; set; }
+
         void Resize();
     }
 }
