@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using NetworkingLib;
+using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects;
 using RPGMultiplayerGame.Objects.LivingEntities;
@@ -146,7 +147,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public override string ToString()
         {
             return base.ToString() + "\n" +
-                "Type: " + "|12|Weapon" + "\n" +
+                "Type: " + ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.OrangeRed, "Weapon") + "\n" +
                 "Damage: " + Damage + "\n" +
                 "Cooldown time: " + coolDownTime;
         }

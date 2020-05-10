@@ -76,95 +76,28 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 playerQuests = new QuestsMenu((windowSize) => new Vector2(windowSize.X - 10, 50), PositionType.TopRight);
                 uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, () => SyncHealth, maxHealth);
                 goldText = new UiTextComponent((windowSize) => new Vector2(uiHealthBar.Position.X + uiHealthBar.Size.X + 20, uiHealthBar.Position.Y + uiHealthBar.Size.Y / 2), PositionType.CenteredLeft, true, UiManager.GUI_LAYER, UiManager.Instance.GoldTextFont, () => SyncGold.ToString(), Color.DarkGoldenrod);
+                InputManager.Instance.OnAnswerKeyPressed += OnAnswerKeyPressed;
+                InputManager.Instance.OnAttackKeyPressed += OnAttackKeyPressed; ;
+                InputManager.Instance.OnOpenCloseInventoryKeyPressed += OnOpenCloseInventoryKeyPressed;
+                InputManager.Instance.OnPotionUseKeyPressed += OnPotionUseKeyPressed;
+                InputManager.Instance.OnRespawnKeyPressed += OnRespawnKeyPressed;
+                InputManager.Instance.OnStartInteractWithNpcKeyPressed += OnStartInteractWithNpcKeyPressed;
+                InputManager.Instance.OnUsableItemSlotKeyPressed += OnUsableItemSlotKeyPressed;
+                InputManager.Instance.OnPickUpItemKeyPressed += OnPickUpItemKeyPressed;
             }
             base.OnNetworkInitialize();
         }
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             if (hasAuthority)
             {
-                if(SyncIsDead)
+                if (GetCurrentEnitytState<State>() == State.Attacking)
                 {
-                    if (InputManager.Instance.KeyPressed(Keys.R))
+                    if (IsLoopAnimationFinished())
                     {
-                        Respawn(SyncSpawnPoint.SyncX, SyncSpawnPoint.SyncY);
-                    }
-                    return;
-                }
-                if (InputManager.Instance.KeyPressed(Keys.I))
-                {
-                    if (GameManager.Instance.IsMouseInteractable)
-                    {
-                        if (IsInventoryVisible)
-                        {
-                            IsInventoryVisible = false;
-                            inventory.IsIntractable = false;
-                            usableItems.IsIntractable = false;
-                        }
-                    }
-                    else
-                    {
-                        IsInventoryVisible = true;
-                        inventory.IsIntractable = true;
-                        usableItems.IsIntractable = true;
-                    }
-                }
-
-                if (InputManager.Instance.KeyPressed(Keys.A))
-                {
-                    MoveFromUsableItemSlot(1);
-                }
-                else if (InputManager.Instance.KeyPressed(Keys.S))
-                {
-                    MoveFromUsableItemSlot(2);
-                }
-                else if (InputManager.Instance.KeyPressed(Keys.D))
-                {
-                    MoveFromUsableItemSlot(3);
-                }
-                else if (InputManager.Instance.KeyPressed(Keys.F))
-                {
-                    MoveFromUsableItemSlot(4);
-                }
-
-                if (InputManager.Instance.KeyPressed(Keys.Z))
-                {
-                    equippedItems.UsePotionAtSlot(1, this);
-                }
-
-                if (InputManager.Instance.KeyPressed(Keys.C))
-                {
-                    InvokeCommandMethodNetworkly(nameof(CmdTryPickUpItem));
-                }
-
-                if (EquippedWeapon != null && InputManager.Instance.KeyPressed(Keys.X) && !(GetCurrentEnitytState<State>() == State.Attacking))
-                {
-                    Attack();
-                }
-                else
-                {
-                    if (GetCurrentEnitytState<State>() == State.Attacking)
-                    {
-                        if (!InputManager.Instance.KeyDown(Keys.X) || IsLoopAnimationFinished())
-                        {
-                            Instance_OnArrowsKeysStateChange(Keys.None, false);
-                        }
-                    }
-                }
-                if (requestingInteraction != null)
-                {
-                    if (InputManager.Instance.KeyPressed(Keys.Q))
-                    {
-                        requestingInteraction.InvokeCommandMethodNetworkly(nameof(requestingInteraction.InteractionAcceptedByPlayer), this);
-
-                    }
-                }
-                if (interactingWith != null)
-                {
-                    if (InputManager.Instance.KeyPressed(Keys.D1, Keys.D9, out Keys pressedKey))
-                    {
-                        interactingWith.InvokeCommandMethodNetworkly(nameof(interactingWith.CmdChooseDialogOption), this, pressedKey - Keys.D1);
+                        Instance_OnArrowsKeysStateChange(Keys.None, false);
                     }
                 }
             }
@@ -330,7 +263,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     EquipeWith(weapon);
                     equippedSlot = 2;
                 }
-                else if (item is Potion potion)
+                else if (item is Potion)
                 {
                     equippedSlot = 1;
                 }
@@ -364,6 +297,79 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             base.OnDestroyed(identity);
             InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
+        }
+
+        private void OnPickUpItemKeyPressed()
+        {
+            InvokeCommandMethodNetworkly(nameof(CmdTryPickUpItem));
+        }
+
+        private void OnUsableItemSlotKeyPressed(int slot)
+        {
+            MoveFromUsableItemSlot(slot);
+        }
+
+        private void OnStartInteractWithNpcKeyPressed()
+        {
+            if (requestingInteraction != null)
+            {
+                requestingInteraction.InvokeCommandMethodNetworkly(nameof(requestingInteraction.InteractionAcceptedByPlayer), this);
+            }
+        }
+
+        private void OnRespawnKeyPressed()
+        {
+            if (SyncIsDead)
+            {
+                Respawn(SyncSpawnPoint.SyncX, SyncSpawnPoint.SyncY);
+            }
+        }
+
+        private void OnPotionUseKeyPressed()
+        {
+            equippedItems.UsePotionAtSlot(1, this);
+        }
+
+        private void OnOpenCloseInventoryKeyPressed()
+        {
+            if (GameManager.Instance.IsMouseInteractable)
+            {
+                if (IsInventoryVisible)
+                {
+                    IsInventoryVisible = false;
+                    inventory.IsIntractable = false;
+                    usableItems.IsIntractable = false;
+                }
+            }
+            else
+            {
+                IsInventoryVisible = true;
+                inventory.IsIntractable = true;
+                usableItems.IsIntractable = true;
+            }
+        }
+
+        private void OnAttackKeyPressed(bool isDown)
+        {
+            if (isDown)
+            {
+                if (EquippedWeapon != null && !(GetCurrentEnitytState<State>() == State.Attacking))
+                {
+                    Attack();
+                }
+            }
+            else
+            {
+
+            }
+        }
+
+        private void OnAnswerKeyPressed(int index)
+        {
+            if (interactingWith != null)
+            {
+                interactingWith.InvokeCommandMethodNetworkly(nameof(interactingWith.CmdChooseDialogOption), this, index);
+            }
         }
 
         protected void CmdCheckName(Player client, string name)

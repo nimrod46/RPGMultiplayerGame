@@ -62,6 +62,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 }
             }
             IsVisible = defaultVisibility;
+            IsEnabled = true;
         }
 
         public void Intracte()

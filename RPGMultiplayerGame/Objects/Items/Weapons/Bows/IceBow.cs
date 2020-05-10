@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             AddSpecielWeaponEffect<FreezingWeaponEffect>();
         }
 
-        public override string ToString()
+        public override string ToString() //TTODO: Move All "Speciel effect" description to one class
         {
             return base.ToString() + "\n" +
                 "Speciel effect: slows down enemies for " + FreezingWeaponEffect.LASTING_TIME + " seconds";

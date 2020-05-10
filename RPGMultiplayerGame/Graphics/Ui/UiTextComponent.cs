@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame.Ui
             this.TextFunc = textFunc;
             TextColor = textColor;
             Text = textFunc.Invoke();
-            lastTextFronFunc = Text;
+            lastTextFronFunc = "";
             IsVisible = defaultVisibility;
             IsEnabled = true;
         }
@@ -45,6 +45,14 @@ namespace RPGMultiplayerGame.Ui
             {
                 Text = newText;
                 lastTextFronFunc = newText;
+            }
+        }
+
+        public override void UpdatePosition()
+        {
+            base.UpdatePosition();
+            if (ColoredText != null)
+            {
                 ColoredText.Position = DrawPosition;
             }
         }

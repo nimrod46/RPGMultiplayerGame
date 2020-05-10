@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Networking;
+using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items.Potions;
@@ -104,7 +105,7 @@ namespace RPGMultiplayerGame.Objects.Items
 
         public override string ToString()
         {
-            return "|37|"+ SyncName;
+            return ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.DarkBlue, SyncName);
         }
 
         public override void OnDestroyed(NetworkIdentity identity)
