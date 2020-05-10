@@ -8,43 +8,57 @@ namespace RPGMultiplayerGame.Ui
 {
     public class UiTextComponent : UiComponent
     {
-        private string text;
 
         public Func<string> TextFunc { get; set; }
         public SpriteFont TextFont { get; private set; }
         public Color TextColor { get; set; }
 
+        public ColoredTextRenderer ColoredText { get; }
         public string Text
         {
-            get => text; set
+            get => ColoredText.Text; set
             {
-                text = value;
-                coloredText.Text = text;
-                Size = coloredText.Size;
+                ColoredText.Text = value;
+                Size = ColoredText.Size;
             }
         }
 
+        private string lastTextFronFunc;
 
-        private readonly ColoredTextRenderer coloredText;
-
-        public UiTextComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer, SpriteFont textFont, Func<string> textFunc, Color textColor) : base(origin, originType, defaultVisibility, layer)
+        public UiTextComponent(Func<Point, Vector2> origin, PositionType originType, bool defaultVisibility, float layer, SpriteFont textFont, Func<string> textFunc, Color textColor) : base(origin, originType, layer)
         {
             TextFont = textFont;
-            coloredText = new ColoredTextRenderer(TextFont, Text, DrawPosition, textColor, layer);
+            ColoredText = new ColoredTextRenderer(TextFont, "", DrawPosition, textColor, layer);
             this.TextFunc = textFunc;
             TextColor = textColor;
             Text = textFunc.Invoke();
+            lastTextFronFunc = Text;
+            IsVisible = defaultVisibility;
+            IsEnabled = true;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            string newText = TextFunc.Invoke();
+            if (newText != lastTextFronFunc)
+            {
+                Text = newText;
+                lastTextFronFunc = newText;
+                ColoredText.Position = DrawPosition;
+            }
+        }
+
+        public override void Resize()
+        {
+            base.Resize();
+            ColoredText.Position = DrawPosition;
         }
 
         public override void Draw(SpriteBatch sprite)
         {
-            coloredText.Position = DrawPosition;
             base.Draw(sprite);
-            if (IsVisible)
-            {
-                Text = TextFunc.Invoke();
-                coloredText.Draw(sprite);
-            }
+            ColoredText.Draw(sprite);
         }
     }
 }

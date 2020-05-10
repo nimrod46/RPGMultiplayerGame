@@ -32,7 +32,7 @@ namespace RPGMultiplayerGame.Graphics.Ui.QuestsObjects
 
         public void RewardPlayerWithItem(Player player, GameItem item)
         {
-            ServerManager.Instance.GivePlayerGameItem<GameItem>(player, item, "You have been rewarded with: ");
+            ServerManager.Instance.GivePlayerGameItem(player, item, "You have been rewarded with: ");
         }
     }
 }

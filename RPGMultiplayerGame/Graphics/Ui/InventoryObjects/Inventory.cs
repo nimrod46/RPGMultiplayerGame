@@ -36,11 +36,10 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                 GameManager.Instance.IsMouseInteractable = isIntractable;
             }
         }
-        public bool IsDestroyed { get; set; }
         private readonly ItemSlotUi<T>[] inventoryItems;
         private bool isIntractable;
 
-        public Inventory(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, int columns, int rows) : base(origin, positionType, defaultVisibility, UiManager.GUI_LAYER)
+        public Inventory(Func<Point, Vector2> origin, PositionType positionType, bool defaultVisibility, int columns, int rows) : base(origin, positionType, UiManager.GUI_LAYER)
         {
             isIntractable = false;
             IsDestroyed = false;
@@ -62,7 +61,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
                     index++;
                 }
             }
-            GameManager.Instance.AddUpdateObject(this);
+            IsVisible = defaultVisibility;
         }
 
         public void Intracte()
@@ -72,7 +71,7 @@ namespace RPGMultiplayerGame.Objects.InventoryObjects
 
         private ItemSlotUi<T> lastItemSlot;
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             if (IsIntractable)
             {

@@ -9,12 +9,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Networking;
 using RPGMultiplayerGame.Graphics.Ui;
-using RPGMultiplayerGame.Ui;
 using static RPGMultiplayerGame.Ui.UiComponent;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Graphics;
+using RPGMultiplayerGame.Managers;
 
-namespace RPGMultiplayerGame.Managers
+namespace RPGMultiplayerGame.Ui
 {
     public class GameChat : NetworkIdentity
     {
@@ -35,11 +35,9 @@ namespace RPGMultiplayerGame.Managers
         public Player LocalPlayer { get; set; }
 
         private UiTextComponent chatMassages;
-        private string massgaes;
 
         public GameChat() : base()
         {
-            massgaes = "";
         }
 
         public void Initialize(Game game)
@@ -50,10 +48,11 @@ namespace RPGMultiplayerGame.Managers
             textBox = new GameTextBox(viewport, 200, "",
               game.GraphicsDevice, GraphicManager.Instance.PlayerNameFont, Color.LightGray, Color.DarkGreen, 30);
             textBox.EnterDown += TextBox_EnterDown;
-            chatMassages = new UiTextComponent((g) => new Vector2(25, 50), PositionType.TopLeft, true, 0, GraphicManager.Instance.PlayerNameFont, () => massgaes, Color.Black);
+            chatMassages = new UiTextComponent((g) => new Vector2(25, 50), PositionType.TopLeft, true, 0, GraphicManager.Instance.PlayerNameFont, () => "", Color.Black);
+            chatMassages.ColoredText.MaxNumberOfLines = 10;
         }
 
-        internal void Update()
+        public void Update()
         {
             textBox.Update();
         }
@@ -62,8 +61,6 @@ namespace RPGMultiplayerGame.Managers
         {
             InvokeBroadcastMethodNetworkly(nameof(LocallyAddPlayerMassage), massage, LocalPlayer);
         }
-
-       
 
         public void LocallyAddPlayerMassage(string massage, Player player)
         {
@@ -88,7 +85,7 @@ namespace RPGMultiplayerGame.Managers
 
         private void LocallyAddMassage(string massage)
         {
-            massgaes = massage + "\n " + massgaes;
+            chatMassages.ColoredText.AppendTextLine(massage);
         }
 
         private void TextBox_EnterDown(object sender, MonoGame_Textbox.KeyboardInput.KeyEventArgs e)

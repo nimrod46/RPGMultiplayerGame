@@ -24,6 +24,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             }
         }
         public bool AllowMultiple { get; set; }
+        public bool IsEnabled { get; set; }
 
         protected readonly Entity entity;
         protected readonly IDamageInflicter damageInflicter;
@@ -47,6 +48,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             hasBeenActivated = false;
             entity.ScheduledNewAction(this);
             GameManager.Instance.AddUpdateObject(this);
+            IsEnabled = true;
         }
 
         public abstract void Activated();

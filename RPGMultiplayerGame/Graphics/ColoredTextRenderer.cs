@@ -40,14 +40,17 @@ namespace RPGMultiplayerGame.Graphics
         public Vector2 Position { get; set; }
 
         public Vector2 Size { get; protected set; }
+
         public float Layer { get; }
 
         public SpriteFont Font { get; }
 
+        public int MaxNumberOfLines { get; set; }
+
         private const char COLOR_CODE_CHAR_SPLITTER = '#';
         private readonly Color defaultColor;
         private List<ReachText> reachTexts = new List<ReachText>();
-        private Stack<Color> lastColors = new Stack<Color>();
+        private readonly Stack<Color> lastColors = new Stack<Color>();
         private string text;
 
         public ColoredTextRenderer(SpriteFont font, string text, Vector2 position, Color defaultColor, float layer)
@@ -58,6 +61,7 @@ namespace RPGMultiplayerGame.Graphics
             Position = position;
             this.defaultColor = defaultColor;
             Layer = layer;
+            MaxNumberOfLines = int.MaxValue;
         }
 
         private List<ReachText> GetGenerateTextParts(string text)
@@ -159,6 +163,15 @@ namespace RPGMultiplayerGame.Graphics
                 {
                     spriteBatch.DrawString(Font, reachText.Text, Position + reachText.Position, reachText.Color, 0, Vector2.Zero, 1, SpriteEffects.None, Layer);
                 }
+            }
+        }
+
+        public void AppendTextLine(string textToAdd)
+        {
+            Text = textToAdd + "\n" + Text;
+            if (Text.Split('\n').Count() > MaxNumberOfLines)
+            {
+                Text = Text.Substring(0, Text.LastIndexOf('\n'));
             }
         }
 

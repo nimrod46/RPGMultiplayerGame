@@ -102,7 +102,7 @@
     <Compile Include="Graphics\Ui\TextBoxObjects\Text.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\GameTextBox.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\TextRenderer.cs" />
-    <Compile Include="Managers\GameChat.cs" />
+    <Compile Include="Graphics\Ui\GameChat.cs" />
     <Compile Include="Managers\ClientManager.cs" />
     <Compile Include="Managers\GraphicManager.cs" />
     <Compile Include="Managers\ServerManager.cs" />

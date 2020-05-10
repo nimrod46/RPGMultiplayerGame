@@ -6,6 +6,8 @@ namespace RPGMultiplayerGame.Objects.Other
     {
         public bool IsDestroyed { get; set; }
 
+        public bool IsEnabled { get; set; }
+
         void Update(GameTime gameTime);
     }
 }

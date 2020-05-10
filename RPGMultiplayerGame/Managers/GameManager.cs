@@ -133,7 +133,10 @@ namespace RPGMultiplayerGame.Managers
             {
                 foreach (var obj in updateObjects)
                 {
-                    obj?.Update(gameTime);
+                    if (obj.IsEnabled)
+                    {
+                        obj?.Update(gameTime);
+                    }
                     if (obj.IsDestroyed)
                     {
                         updateObjectsToRemove.Add(obj);
@@ -247,6 +250,17 @@ namespace RPGMultiplayerGame.Managers
                 lock (updateObjects)
                 {
                     updateObjects.Add(obj);
+                }
+            })).Start();
+        }
+
+        public void RemoveUpdateObject(IGameUpdateable obj)
+        {
+            new Thread(new ThreadStart(() =>
+            {
+                lock (updateObjects)
+                {
+                    updateObjects.Remove(obj);
                 }
             })).Start();
         }

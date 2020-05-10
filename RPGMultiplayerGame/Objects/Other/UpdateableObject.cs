@@ -3,6 +3,8 @@ namespace RPGMultiplayerGame.Objects.Other
 {
     public abstract class UpdateableObject : GameObject, IGameUpdateable
     {
+        public bool IsEnabled { get; set; }
+
         private double timeToDestroy;
         private bool isOnCountDown;
 
@@ -10,6 +12,7 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             timeToDestroy = 0;
             isOnCountDown = false;
+            IsEnabled = true;
         }
 
         public virtual void Update(GameTime gameTime)

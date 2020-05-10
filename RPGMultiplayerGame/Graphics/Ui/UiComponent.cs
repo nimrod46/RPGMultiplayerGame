@@ -4,12 +4,13 @@ using Networking;
 using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Graphics.Ui;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Xml.Serialization;
 
 namespace RPGMultiplayerGame.Ui
 {
-    public abstract class UiComponent : IUiComponent
+    public abstract class UiComponent : IUiComponent, IGameUpdateable
     {
         [XmlIgnore]
         public Func<Point, Vector2> OriginFunc
@@ -17,8 +18,9 @@ namespace RPGMultiplayerGame.Ui
             get => originFunc; set
             {
                 originFunc = value;
-                Resize();
-                UpdatePosition();
+              //  Resize();
+              //  UpdatePosition();
+              Origin = originFunc.Invoke(UiManager.Instance.GetScreenSize());
             }
         }
 
@@ -64,13 +66,15 @@ namespace RPGMultiplayerGame.Ui
         public float Layer { get; set; }
 
         public float Scale { get; set; }
+        public bool IsDestroyed { get; set; }
+        public bool IsEnabled { get; set; }
 
         public UiComponent Parent;
 
         protected PositionType originType;
         protected Vector2 origin;
         private Func<Point, Vector2> originFunc;
-        private bool isVisible;
+        protected bool isVisible;
         private Vector2 size;
 
         public enum PositionType
@@ -86,15 +90,16 @@ namespace RPGMultiplayerGame.Ui
 
 
 
-        public UiComponent(Func<Point, Vector2> originFunc, PositionType originType, bool defaultVisibility, float layer)
+        public UiComponent(Func<Point, Vector2> originFunc, PositionType originType, float layer)
         {
             Scale = 1;
             this.OriginFunc = originFunc;
             Origin = this.OriginFunc.Invoke(UiManager.Instance.GetScreenSize());
             OriginType = originType;
-            isVisible = defaultVisibility;
+            isVisible = false;
             Layer = layer;
             UiManager.Instance.AddUiComponent(this);
+            GameManager.Instance.AddUpdateObject(this);
         }
 
         public UiComponent()
@@ -107,6 +112,7 @@ namespace RPGMultiplayerGame.Ui
             isVisible = false;
             Layer = 0;
             UiManager.Instance.AddUiComponent(this);
+            GameManager.Instance.AddUpdateObject(this);
         }
 
         public virtual void UpdatePosition()
@@ -158,7 +164,7 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
-        public void Resize()
+        public virtual void Resize()
         {
             Origin = OriginFunc.Invoke(UiManager.Instance.GetScreenSize());
         }
@@ -166,6 +172,11 @@ namespace RPGMultiplayerGame.Ui
         public void Delete()
         {
             UiManager.Instance.RemoveUiComponent(this);
+            GameManager.Instance.RemoveUpdateObject(this);
+        }
+
+        public virtual void Update(GameTime gameTime)
+        {
         }
     }
 }
