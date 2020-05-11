@@ -31,6 +31,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Ui;
 
 namespace MonoGame_Textbox
@@ -48,7 +49,7 @@ namespace MonoGame_Textbox
         public readonly Text Text;
         public readonly TextRenderer Renderer;
         public readonly Cursor Cursor;
-        public event EventHandler<KeyboardInput.KeyEventArgs> EnterDown;
+        public event EventHandler EnterDown;
         private readonly List<string> lastTexts = new List<string>();
         private int currentMemoryTextIndex;
         private string clipboard;
@@ -75,14 +76,13 @@ namespace MonoGame_Textbox
 
             Cursor = new Cursor(this, cursorColor, selectionColor, new Rectangle(0, 0, 1, 1), ticksPerToggle);
 
-            KeyboardInput.CharPressed += CharacterTyped;
-            KeyboardInput.KeyPressed += KeyPressed;
+            InputManager.Instance.OnCharPressed += CharacterTyped;
+            InputManager.Instance.OnKeyPressed += OnKeyPressed;
             IsVisible = true;
         }
 
         public void Dispose()
         {
-            KeyboardInput.Dispose();
             Delete();
         }
 
@@ -100,12 +100,12 @@ namespace MonoGame_Textbox
             Cursor.SelectedChar = null;
         }
 
-        private void KeyPressed(object sender, KeyboardInput.KeyEventArgs e, KeyboardState ks)
+        private void OnKeyPressed(Keys keyPressed)
         {
             if (Active)
             {
                 int oldPos = Cursor.TextCursor;
-                switch (e.KeyCode)
+                switch (keyPressed)
                 {
                     case Keys.Up:
                         if (!lastTexts.Any())
@@ -132,10 +132,10 @@ namespace MonoGame_Textbox
                         Text.String = lastTexts[currentMemoryTextIndex];
                         break;
                     case Keys.Enter:
-                        EnterDown?.Invoke(this, e);
+                        EnterDown?.Invoke(this, null);
                         break;
                     case Keys.Left:
-                        if (KeyboardInput.CtrlDown)
+                        if (InputManager.Instance.CtrlDown)
                         {
                             Cursor.TextCursor = IndexOfLastCharBeforeWhitespace(Cursor.TextCursor, Text.Characters);
                         }
@@ -146,7 +146,7 @@ namespace MonoGame_Textbox
                         ShiftMod(oldPos);
                         break;
                     case Keys.Right:
-                        if (KeyboardInput.CtrlDown)
+                        if (InputManager.Instance.CtrlDown)
                         {
                             Cursor.TextCursor = IndexOfNextCharAfterWhitespace(Cursor.TextCursor, Text.Characters);
                         }
@@ -178,7 +178,7 @@ namespace MonoGame_Textbox
                         }
                         break;
                     case Keys.A:
-                        if (KeyboardInput.CtrlDown)
+                        if (InputManager.Instance.CtrlDown)
                         {
                             if (Text.Length > 0)
                             {
@@ -188,13 +188,13 @@ namespace MonoGame_Textbox
                         }
                         break;
                     case Keys.C:
-                        if (KeyboardInput.CtrlDown)
+                        if (InputManager.Instance.CtrlDown)
                         {
                             clipboard = DelSelection(true);
                         }
                         break;
                     case Keys.X:
-                        if (KeyboardInput.CtrlDown)
+                        if (InputManager.Instance.CtrlDown)
                         {
                             if (Cursor.SelectedChar.HasValue)
                             {
@@ -203,7 +203,7 @@ namespace MonoGame_Textbox
                         }
                         break;
                     case Keys.V:
-                        if (KeyboardInput.CtrlDown)
+                        if (InputManager.Instance.CtrlDown)
                         {
                             if (clipboard != null)
                             {
@@ -225,7 +225,7 @@ namespace MonoGame_Textbox
 
         private void ShiftMod(int oldPos)
         {
-            if (KeyboardInput.ShiftDown)
+            if (InputManager.Instance.ShiftDown)
             {
                 if (Cursor.SelectedChar == null)
                 {
@@ -238,17 +238,17 @@ namespace MonoGame_Textbox
             }
         }
 
-        private void CharacterTyped(object sender, KeyboardInput.CharacterEventArgs e, KeyboardState ks)
+        private void CharacterTyped(char character)
         {
-            if (Active && !KeyboardInput.CtrlDown)
+            if (Active && !InputManager.Instance.CtrlDown)
             {
-                if (IsLegalCharacter(Renderer.Font, e.Character) && !e.Character.Equals('\r') &&
-                    !e.Character.Equals('\n'))
+                if (IsLegalCharacter(Renderer.Font, character) && !character.Equals('\r') &&
+                    !character.Equals('\n'))
                 {
                     DelSelection();
                     if (Text.Length < Text.MaxLength)
                     {
-                        Text.InsertCharacter(Cursor.TextCursor, e.Character);
+                        Text.InsertCharacter(Cursor.TextCursor, character);
                         Cursor.TextCursor++;
                     }
                 }

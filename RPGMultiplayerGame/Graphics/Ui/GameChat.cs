@@ -42,14 +42,18 @@ namespace RPGMultiplayerGame.Ui
 
         public void Initialize(Game game)
         {
-            MonoGame_Textbox.KeyboardInput.Initialize(game, 500f, 20);
-            MonoGame_Textbox.KeyboardInput.KeyPressed += KeyboardInput_KeyPressed;
+            InputManager.Instance.OnInputStateChange += OnInputStateChange;
             Rectangle viewport = new Rectangle(25, 25, 400, 200);
             textBox = new GameTextBox(viewport, 200, "",
               game.GraphicsDevice, GraphicManager.Instance.PlayerNameFont, Color.LightGray, Color.DarkGreen, 30);
             textBox.EnterDown += TextBox_EnterDown;
             chatMassages = new UiTextComponent((g) => new Vector2(25, 50), PositionType.TopLeft, true, 0, GraphicManager.Instance.PlayerNameFont, () => "", Color.Black);
             chatMassages.ColoredText.MaxNumberOfLines = 10;
+        }
+
+        private void OnInputStateChange(InputManager.InputState inputState)
+        {
+            IsActive = inputState == InputManager.InputState.Chat;
         }
 
         public void Update()
@@ -88,17 +92,12 @@ namespace RPGMultiplayerGame.Ui
             chatMassages.ColoredText.AppendTextLine(massage);
         }
 
-        private void TextBox_EnterDown(object sender, MonoGame_Textbox.KeyboardInput.KeyEventArgs e)
+        private void TextBox_EnterDown(object sender, EventArgs eventArgs)
         {
-            BoardcastlyAddPlayerMassage(textBox.Text.String);
-            textBox.TextSended();
-        }
-
-        private void KeyboardInput_KeyPressed(object sender, MonoGame_Textbox.KeyboardInput.KeyEventArgs e, KeyboardState ks)
-        {
-            if (e.KeyCode == Keys.OemTilde)
+            if (!string.IsNullOrWhiteSpace(textBox.Text.String))
             {
-                IsActive = !IsActive;
+                BoardcastlyAddPlayerMassage(textBox.Text.String);
+                textBox.TextSended();
             }
         }
     }

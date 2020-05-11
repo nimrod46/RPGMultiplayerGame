@@ -123,6 +123,7 @@ namespace RPGMultiplayerGame.Managers
         readonly List<IGameUpdateable> updateObjectsToRemove = new List<IGameUpdateable>();
         public void Update(GameTime gameTime)
         {
+            GameChat?.Update();
             if (Player != null)
             {
                 Camera.Update(game.GraphicsDevice.Viewport, Player.Location);
@@ -167,25 +168,7 @@ namespace RPGMultiplayerGame.Managers
             {
                 entities.Remove(entity as Entity);
             }
-            updateObjectsToRemove.Clear();
-
-            if (ServerManager.Instance.IsRunning != true)
-            {
-                MonoGame_Textbox.KeyboardInput.Update();
-                if(GameChat == null)
-                {
-                    InputManager.Instance.Update(gameTime);
-                    return;
-                }
-                if (!GameChat.IsActive)
-                {
-                    InputManager.Instance.Update(gameTime);
-                }
-                else
-                {
-                    GameChat.Update();
-                }
-            }
+            updateObjectsToRemove.Clear();          
         }
 
         public Point GeMapSize()

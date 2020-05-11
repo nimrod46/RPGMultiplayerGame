@@ -98,7 +98,6 @@
     <Compile Include="Graphics\Ui\QuestsObjects\QuestReward.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\Cursor.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\Extensions.cs" />
-    <Compile Include="Graphics\Ui\TextBoxObjects\KeyboardInput.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\Text.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\GameTextBox.cs" />
     <Compile Include="Graphics\Ui\TextBoxObjects\TextRenderer.cs" />

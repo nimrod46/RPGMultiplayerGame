@@ -76,7 +76,7 @@ namespace RPGMultiplayerGame.Objects.Other
             if (MathHelper.Distance(Location.X, SyncX) >= 5)
             {
                 Location = new Vector2(SyncX, Location.Y);
-                Console.WriteLine("Location correction for: {0}", GetType().Name);
+               // Console.WriteLine("Location correction for: {0}", GetType().Name);
             }
         }
 
@@ -85,7 +85,7 @@ namespace RPGMultiplayerGame.Objects.Other
             if (MathHelper.Distance(Location.Y, SyncY) >= 5)
             {
                 Location = new Vector2(Location.X, SyncY);
-                Console.WriteLine("Location correction for: {0}", GetType().Name);
+              //  Console.WriteLine("Location correction for: {0}", GetType().Name);
             }
         }
 

@@ -51,6 +51,7 @@ namespace RPGMultiplayerGame
             lobby.OnServerOnline += Lobby_OnServerCreated; ;
             lobby.FormClosing += (e, s) => Exit();
             Window.ClientSizeChanged += (r, e) => UiManager.Instance.OnResize();
+            InputManager.Instance.Initialize(this, 500f, 20);
         }
 
         /// <summary>
@@ -106,10 +107,16 @@ namespace RPGMultiplayerGame
             {
                Console.WriteLine("RUNNING SLOWWWW");
             }
-          
-            ClientManager.Instance.Update();
-            ServerManager.Instance.Update();
             GameManager.Instance.Update(gameTime);
+            if (ServerManager.Instance.IsRunning)
+            {
+                ServerManager.Instance.Update();
+            }
+            else
+            {
+                InputManager.Instance.Update(gameTime);
+                ClientManager.Instance.Update();
+            }
         }
 
         /// <summary>

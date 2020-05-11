@@ -76,6 +76,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 playerQuests = new QuestsMenu((windowSize) => new Vector2(windowSize.X - 10, 50), PositionType.TopRight);
                 uiHealthBar = new HealthBar((windowSize) => new Vector2(equippedItems.Position.X + equippedItems.Size.X + 10, windowSize.Y - 10), PositionType.ButtomLeft, () => SyncHealth, maxHealth);
                 goldText = new UiTextComponent((windowSize) => new Vector2(uiHealthBar.Position.X + uiHealthBar.Size.X + 20, uiHealthBar.Position.Y + uiHealthBar.Size.Y / 2), PositionType.CenteredLeft, true, UiManager.GUI_LAYER, UiManager.Instance.GoldTextFont, () => SyncGold.ToString(), Color.DarkGoldenrod);
+                InputManager.Instance.OnInputStateChange += OnInputStateChange;
                 InputManager.Instance.OnAnswerKeyPressed += OnAnswerKeyPressed;
                 InputManager.Instance.OnAttackKeyPressed += OnAttackKeyPressed; ;
                 InputManager.Instance.OnOpenCloseInventoryKeyPressed += OnOpenCloseInventoryKeyPressed;
@@ -86,6 +87,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 InputManager.Instance.OnPickUpItemKeyPressed += OnPickUpItemKeyPressed;
             }
             base.OnNetworkInitialize();
+        }
+
+        private void OnInputStateChange(InputManager.InputState inputState)
+        {
+            if(inputState != InputManager.InputState.PlayerControl)
+            {
+                ClearArrowsState();
+            }
         }
 
         public override void Update(GameTime gameTime)
@@ -201,6 +210,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
+        private void ClearArrowsState()
+        {
+            currentArrowsKeysPressed.Clear();
+            Instance_OnArrowsKeysStateChange(Keys.None, false);
+        }
+
         public bool IsInteractingWith(Npc npc)
         {
             return interactingWith == npc || requestingInteraction == npc;
@@ -281,7 +296,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (hasAuthority)
             {
                 InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
-                currentArrowsKeysPressed.Clear();
+                ClearArrowsState();
                 inventory.IsVisible = false;
                 usableItems.IsVisible = false; 
                 equippedItems.IsVisible = false;
