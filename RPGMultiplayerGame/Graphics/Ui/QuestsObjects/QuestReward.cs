@@ -20,9 +20,9 @@ namespace RPGMultiplayerGame.Graphics.Ui.QuestsObjects
         public void RewardPlayerWithGold(Player player, long gold)
         {
            player.SyncGold += gold;
-            ServerManager.Instance.SendGeneralMassageToPlayer("You have been rewarded with: " + 
-                ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.Gold, gold.ToString()) 
-                + " gold", player);
+            ServerManager.Instance.SendGeneralMassageToPlayer(player, "You have been rewarded with: " +
+                ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.Gold, gold.ToString())
+                + " gold");
         }
 
         public void RewardPlayerWithHealth(Player player, float health)

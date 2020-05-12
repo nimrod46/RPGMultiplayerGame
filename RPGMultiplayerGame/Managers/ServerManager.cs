@@ -109,7 +109,7 @@ namespace RPGMultiplayerGame.Managers
             GameItem gameItem = GetGameItems().FirstOrDefault(g => player.IsIntersectingWith(g));
             if (gameItem != null && gameItem.isServerAuthority)
             {
-                player.AddItemToInventory(gameItem);
+                GivePlayerExistingItem(player, gameItem, "You picked up: ");
             }
         }
 
@@ -131,10 +131,14 @@ namespace RPGMultiplayerGame.Managers
                 if (isSaveloaded)
                 {
                     Console.WriteLine("Known player joined {0}", player.GetName());
+                    SendGeneralMassageToPlayer(player, "Welcome back {0}", ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.DarkBlue, player.GetName()));
+                    BroadcastGeneralMassage("{0} joined the server", ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.DarkBlue, player.GetName()));
                 }
                 else
                 {
                     Console.WriteLine("New player {0} joined", player.GetName());
+                    SendGeneralMassageToPlayer(player, "Welcome {0}", ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.DarkBlue, player.GetName()));
+                    BroadcastGeneralMassage("{0} joined the server", ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.DarkBlue, player.GetName()));
                     GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 }, "");
                     GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 }, "");
                     GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 }, "");
@@ -200,10 +204,15 @@ namespace RPGMultiplayerGame.Managers
 
         public void GivePlayerGameItem<T>(Player player, T gameItem, string itemRecivedTextPefix) where T : GameItem
         {
-            player.AddItemToInventory(NetBehavior.SpawnWithServerAuthority((dynamic)gameItem));
+            GivePlayerExistingItem(player, NetBehavior.SpawnWithServerAuthority((dynamic)gameItem), itemRecivedTextPefix);
+        }
+
+        private void GivePlayerExistingItem(Player player, GameItem gameItem, string itemRecivedTextPefix)
+        {
+            player.AddItemToInventory(gameItem);
             if (!string.IsNullOrWhiteSpace(itemRecivedTextPefix))
             {
-                SendGeneralMassageToPlayer(itemRecivedTextPefix + ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.Gold, gameItem.SyncName.ToString()), player);
+                SendGeneralMassageToPlayer(player, itemRecivedTextPefix + ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.Gold, gameItem.SyncName.ToString()));
             }
         }
 
@@ -334,9 +343,24 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void SendGeneralMassageToPlayer(string massage, Player player)
+        public void SendGeneralMassageToPlayer(Player player, string massage, params object[] args)
+        { 
+            GameManager.Instance.GameChat.InvokeCommandMethodNetworkly(nameof(GameManager.Instance.GameChat.LocallyAddGeneralMassage), player.OwnerId, FormatText(massage, args));
+        }
+
+        public void BroadcastGeneralMassage(string massage, params object[] args)
         {
-            GameManager.Instance.GameChat.InvokeCommandMethodNetworkly(nameof(GameManager.Instance.GameChat.LocallyAddGeneralMassage), player.OwnerId, massage);
+           
+            GameManager.Instance.GameChat.BoardcastlyAddGeneralMassage(FormatText(massage, args));
+        }
+
+        private string FormatText(string massage, params object[] args)
+        {
+            for (int i = 0; i < args.Length; i++)
+            {
+                massage = massage.Replace("{" + i + "}", args[i].ToString());
+            }
+            return massage;
         }
     }
 }

@@ -13,6 +13,7 @@ using static RPGMultiplayerGame.Ui.UiComponent;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Managers;
+using static NetworkingLib.Server;
 
 namespace RPGMultiplayerGame.Ui
 {
@@ -66,7 +67,7 @@ namespace RPGMultiplayerGame.Ui
             InvokeBroadcastMethodNetworkly(nameof(LocallyAddPlayerMassage), massage, LocalPlayer);
         }
 
-        public void LocallyAddPlayerMassage(string massage, Player player)
+        public void LocallyAddPlayerMassage(Player player, string massage)
         {
             System.Drawing.KnownColor color;
             if (player.hasAuthority)
@@ -81,6 +82,11 @@ namespace RPGMultiplayerGame.Ui
             LocallyAddMassage(massage);
         }
 
+        public void BoardcastlyAddGeneralMassage(string massage)
+        {
+            InvokeBroadcastMethodNetworkly(nameof(LocallyAddGeneralMassage), massage);
+        }
+
         public void LocallyAddGeneralMassage(string massage)
         {
             massage = ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.Chocolate) + massage;
@@ -88,7 +94,7 @@ namespace RPGMultiplayerGame.Ui
         }
 
         private void LocallyAddMassage(string massage)
-        {
+        {        
             chatMassages.ColoredText.AppendTextLine(massage);
         }
 
