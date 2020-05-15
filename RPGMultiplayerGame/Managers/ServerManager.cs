@@ -54,7 +54,7 @@ namespace RPGMultiplayerGame.Managers
             serverBehavior.OnRemoteIdentityInitialize += OnIdentityInitialize;
             serverBehavior.OnLocalIdentityInitialize += OnIdentityInitialize;
             NetBehavior = serverBehavior;
-            NetBehavior.SpawnWithServerAuthority<GameChat>();
+            NetBehavior.SpawnWithServerAuthority(typeof(GameChat));
             IsRunning = true;
             gameSave = new GameSave();
         }
@@ -93,7 +93,7 @@ namespace RPGMultiplayerGame.Managers
         {
             lock (players)
             {
-                Player player = NetBehavior.SpawnWithClientAuthority<Player>(endPointId);
+                Player player = NetBehavior.SpawnWithClientAuthority(typeof(Player), endPointId);
                 player.OnDestroyEvent += Player_OnDestroyEvent;
                 player.OnSyncPlayerSaveEvent += Player_OnSyncPlayerSaveEvent;
                 player.OnRemotePlayerTryToPickUpItemEvent += Player_OnPlayerPickUpItemEvent;
@@ -117,9 +117,9 @@ namespace RPGMultiplayerGame.Managers
         {
             return gameIdentities.Where(i => i is GameItem).Cast<GameItem>().ToList();
         }
-        public T Spawn<T>(T identity = null) where T : NetworkIdentity
+        public dynamic Spawn(NetworkIdentity identity)
         {
-            return NetBehavior.SpawnWithServerAuthority<T>(identity);
+            return NetBehavior.SpawnWithServerAuthority(identity);
         }
 
         private void Player_OnSyncPlayerSaveEvent(Player player)
@@ -142,8 +142,8 @@ namespace RPGMultiplayerGame.Managers
                     GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 }, "");
                     GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 }, "");
                     GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 }, "");
-                    //GivePlayerGameItem(player, new CommonSword(), "");
                     //GivePlayerGameItem(player, new CommonWond(), "");
+                    //GivePlayerGameItem(player, new CommonSword(), "");
                     //GivePlayerGameItem(player, new CommonBow(), "");
                     //GivePlayerGameItem(player, new IceBow(), "");
                     //GivePlayerGameItem(player, new ExplodingBow(), "");
@@ -218,7 +218,7 @@ namespace RPGMultiplayerGame.Managers
 
         public T AddQuest<T>(Player player, T quest) where T : Quest
         {
-            T netQuest = NetBehavior.SpawnWithClientAuthority(player.OwnerId, quest);
+            T netQuest = NetBehavior.SpawnWithClientAuthority(quest, player.OwnerId);
             netQuest.AssignTo(player);
             return netQuest;
         }
@@ -285,7 +285,7 @@ namespace RPGMultiplayerGame.Managers
                                 SyncY = obj.Rectangle.Y
                             };
                             Bat spawnedBat = NetBehavior.SpawnWithServerAuthority(bat);
-                            BatClaw batClaw = NetBehavior.SpawnWithServerAuthority<BatClaw>();
+                            BatClaw batClaw = NetBehavior.SpawnWithServerAuthority(typeof(BatClaw));
                             spawnedBat.EquipeWith(batClaw);
                         }
                         NetworkIdentity identity = NetBehavior.SpawnWithServerAuthority(gObject);

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Map;
+using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
@@ -49,6 +50,15 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
             foreach (Entity entity in entities)
             {
                 Hit(entity);
+            }
+        }
+
+        protected override void OnCollidingWithBlock(BlockLib block)
+        {
+            base.OnCollidingWithBlock(block);
+            if(hasAuthority)
+            {
+                BroadcastDestroy();
             }
         }
 

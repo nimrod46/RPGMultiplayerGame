@@ -189,6 +189,7 @@
     <Compile Include="Objects\Items\Weapons\CommonWond.cs" />
     <Compile Include="Objects\Items\Weapons\Weapon.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\WeaponAmmunition.cs" />
+    <Compile Include="Operations.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\ServerPanel.cs">

@@ -1,8 +1,10 @@
 ﻿using Map;
 using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using System;
 using System.Collections.Generic;
+using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.Other
 {
@@ -26,6 +28,10 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public int SyncCurrentEntityState { get; set; }
 
+        public Vector2 CollisionSize { get; set; }
+
+        public PositionType CollisionSizeType { get; set; }
+
         protected int collisionOffsetX;
         protected int collisionOffsetY;
         private bool isAbleToMove;
@@ -36,6 +42,8 @@ namespace RPGMultiplayerGame.Objects.Other
             this.collisionOffsetY = collisionOffsetY;
             Layer = GraphicManager.MOVING_OJECT_LAYER;
             SyncIsAbleToMove = true;
+            CollisionSize = Vector2.Zero;
+            CollisionSizeType = PositionType.None;
         }
 
         public virtual void SetCurrentEntityState(int entityState, Direction direction)
@@ -92,8 +100,10 @@ namespace RPGMultiplayerGame.Objects.Other
                     break;
             }
             MapObjectLib block = null;
+            Rectangle newLocationRect;
+            
+            newLocationRect = GetCollisionRect(newLocation, CollisionSize);
             System.Drawing.Rectangle rectt;
-            Rectangle newLocationRect = GetCollisionRect(newLocation.X, newLocation.Y, Size.X, Size.Y);
             rectt = new System.Drawing.Rectangle(newLocationRect.X, newLocationRect.Y, newLocationRect.Width, newLocationRect.Height);
             for (int i = 0; i < GameManager.Instance.map.GraphicObjects.Count; i++)
             {
@@ -113,6 +123,14 @@ namespace RPGMultiplayerGame.Objects.Other
                     SyncY = newLocation.Y;
                 }
             }
+            else
+            {
+                OnCollidingWithBlock(block as BlockLib);
+            }
+        }
+
+        protected virtual void OnCollidingWithBlock(BlockLib block)
+        {
         }
 
         public T GetCurrentEnitytState<T>() where T : Enum
@@ -120,9 +138,18 @@ namespace RPGMultiplayerGame.Objects.Other
             return (T)(object)SyncCurrentEntityState;
         }
 
-        private Rectangle GetCollisionRect(float x, float y, int width, int height)
+        private Rectangle GetCollisionRect(Vector2 location, Vector2 size)
         {
-            return new Rectangle((int)x + collisionOffsetX, (int)y + collisionOffsetY, width - collisionOffsetX, height - collisionOffsetY);
+            if (CollisionSizeType == PositionType.None)
+            {
+                CollisionSize = BaseSize.ToVector2();
+            }
+            else
+            {
+                location = Operations.GetPositionByTopLeftPosition(CollisionSizeType, location, BaseSize.ToVector2());
+                location = Operations.GetTopLeftPositionByPorsitionType(PositionType.Centered, location, CollisionSize);
+            }
+            return new Rectangle((int)location.X + collisionOffsetX, (int)location.Y + collisionOffsetY, (int) size.X - collisionOffsetX, (int) size.Y - collisionOffsetY);
         }
     }
 }

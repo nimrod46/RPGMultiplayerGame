@@ -79,13 +79,16 @@ namespace RPGMultiplayerGame.Ui
 
         public enum PositionType
         {
+            None,
             Centered,
             ButtomLeft,
             ButtomCentered,
             TopLeft,
             TopRight,
             CenteredLeft,
-            ButtomRight
+            ButtomRight,
+            TopCentered,
+            CenteredRight
         }
 
 
@@ -117,30 +120,7 @@ namespace RPGMultiplayerGame.Ui
 
         public virtual void UpdatePosition()
         {
-            switch (OriginType)
-            {
-                case PositionType.Centered:
-                    Position = Origin - Size / 2;
-                    break;
-                case PositionType.ButtomLeft:
-                    Position = Origin - new Vector2(0, Size.Y);
-                    break;
-                case PositionType.ButtomCentered:
-                    Position = Origin - new Vector2(Size.X / 2, Size.Y);
-                    break;
-                case PositionType.TopLeft:
-                    Position = Origin;
-                    break;
-                case PositionType.TopRight:
-                    Position = Origin - new Vector2(Size.X, 0);
-                    break;
-                case PositionType.CenteredLeft:
-                    Position = Origin - new Vector2(0, -Size.Y / 2);
-                    break;
-                case PositionType.ButtomRight:
-                    Position = Origin - new Vector2(Size.X, Size.Y);
-                    break;
-            }
+            Position = Operations.GetTopLeftPositionByPorsitionType(OriginType, Origin, Size);
 
             if (Position.X + Size.X > UiManager.Instance.GetScreenSize().X)
             {
