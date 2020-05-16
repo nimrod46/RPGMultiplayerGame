@@ -142,12 +142,12 @@ namespace RPGMultiplayerGame.Managers
                     GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 10 }, "");
                     GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 15 }, "");
                     GivePlayerGameItem(player, new CommonHealthPotion() { SyncCount = 4 }, "");
-                    //GivePlayerGameItem(player, new CommonWond(), "");
-                    //GivePlayerGameItem(player, new CommonSword(), "");
-                    //GivePlayerGameItem(player, new CommonBow(), "");
-                    //GivePlayerGameItem(player, new IceBow(), "");
-                    //GivePlayerGameItem(player, new ExplodingBow(), "");
-                    //GivePlayerGameItem(player, new StormBow(), "");
+                    GivePlayerGameItem(player, new CommonWond(), "");
+                    GivePlayerGameItem(player, new CommonSword(), "");
+                    GivePlayerGameItem(player, new CommonBow(), "");
+                    GivePlayerGameItem(player, new IceBow(), "");
+                    GivePlayerGameItem(player, new ExplodingBow(), "");
+                    GivePlayerGameItem(player, new StormBow(), "");
                     player.SyncGold = 100;
                     player.MoveToSpawnPoint();
                 }

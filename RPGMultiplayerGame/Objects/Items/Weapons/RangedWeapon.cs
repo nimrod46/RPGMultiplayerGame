@@ -22,16 +22,11 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             throw new NotImplementedException();
         }
 
-        public override void Hit(Entity victim)
-        {
-            base.Hit(victim);
-        }
-
         public override void PreformeAttack()
         {
             weaponAmmunition.SyncCurrentDirection = Attacker.SyncCurrentDirection;
             weaponAmmunition.SyncAttacker = Attacker;
-            ServerManager.Instance.Spawn((dynamic)weaponAmmunition);
+            ServerManager.Instance.Spawn(weaponAmmunition);
         }
 
         public override string ToString()

@@ -22,23 +22,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         public Entity Attacker { get; set; }
         [XmlIgnore]
         public Direction Direction { get => Attacker.SyncCurrentDirection; set => Attacker.SyncCurrentDirection = value; }
-        public bool SyncIsInCoolDown
-        {
-            get => isInCoolDown; set
-            {
-                isInCoolDown = value;
-                InvokeSyncVarNetworkly(nameof(SyncIsInCoolDown), isInCoolDown);
-            }
-        }
-
-        public double SyncCurrentCoolDownTime
-        {
-            get => currentCoolDownTime; set
-            {
-                currentCoolDownTime = value;
-                InvokeSyncVarNetworkly(nameof(SyncCurrentCoolDownTime), currentCoolDownTime, Server.NetworkInterfaceType.UDP);
-            }
-        }
 
         protected List<Type> specielWeaponEffects;
         protected double coolDownTime;
@@ -51,8 +34,8 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             Damage = damage;
             SyncName = name;
             this.coolDownTime = coolDownTime;
-            SyncCurrentCoolDownTime = 0;
-            SyncIsInCoolDown = false;
+            currentCoolDownTime = 0;
+            isInCoolDown = false;
             specielWeaponEffects = new List<Type>();
             AddSpecielWeaponEffect<FlickerEffect>();
             coolDownCover = new UiTextureComponent((g) => Vector2.Zero, UiComponent.PositionType.TopLeft, false, ITEM_LAYER * 0.1f, UiManager.Instance.CoolDownCover);
@@ -72,51 +55,45 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public override void Update(GameTime gameTime)
         {
-            if (SyncIsInCoolDown)
+            if (!hasAuthority)
             {
-                if (isInServer)
+                return;
+            }
+            if (isInCoolDown)
+            {
+                currentCoolDownTime += gameTime.ElapsedGameTime.TotalSeconds;
+                if (currentCoolDownTime >= coolDownTime)
                 {
-                    SyncCurrentCoolDownTime += gameTime.ElapsedGameTime.TotalSeconds;
-                    if (SyncCurrentCoolDownTime >= coolDownTime)
-                    {
-                        SyncCurrentCoolDownTime = 0;
-                        SyncIsInCoolDown = false;
-                    }
+                    isInCoolDown = false;
+                    currentCoolDownTime = 0;
                 }
                 else
                 {
                     coolDownCover.IsVisible = true;
-                    coolDownCover.RenderRigion = new Rectangle(coolDownCover.RenderRigion.Location, new Point((int)(coolDownCover.Size.X * (coolDownTime - SyncCurrentCoolDownTime) / coolDownTime), (int)coolDownCover.Size.Y));
+                    coolDownCover.RenderRigion = new Rectangle(coolDownCover.RenderRigion.Location, new Point((int)(coolDownCover.Size.X * (coolDownTime - currentCoolDownTime) / coolDownTime), (int)coolDownCover.Size.Y));
                 }
             }
             else
             {
-                if (!isInServer)
-                {
-                    coolDownCover.IsVisible = false;
-                }
+                coolDownCover.IsVisible = false;
             }
 
         }
 
         public bool IsAbleToAttack()
         {
-            return !SyncIsInCoolDown;
+            return !isInCoolDown;
         }
 
         public void Attack()
         {
             if (isInServer)
             {
-                if (IsAbleToAttack())
-                {
-                    SyncIsInCoolDown = true;
-                    PreformeAttack();
-                }
+                PreformeAttack();
             }
             else
             {
-                throw new Exception("Method \"" + nameof(Attack) + "\" in Weapon class was called in client");
+                isInCoolDown = true;
             }
         }
 

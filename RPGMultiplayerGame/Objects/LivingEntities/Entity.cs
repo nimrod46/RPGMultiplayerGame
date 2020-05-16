@@ -277,12 +277,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (EquippedWeapon.IsAbleToAttack())
             {
                 InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (object)(int)State.Attacking, SyncCurrentDirection);
-                InvokeCommandMethodNetworkly(nameof(CmdAttack), EquippedWeapon);
+                CmdAttack(EquippedWeapon);
             }
         }
 
         protected void CmdAttack(Weapon weapon)
         {
+            InvokeCommandMethodNetworkly(nameof(CmdAttack), weapon);
             weapon.Attack();
         }
 

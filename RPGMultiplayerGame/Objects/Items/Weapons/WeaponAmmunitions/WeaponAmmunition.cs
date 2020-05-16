@@ -1,6 +1,7 @@
 ﻿using Map;
 using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.MathExtention;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using System;
@@ -32,10 +33,30 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
         {
             base.OnNetworkInitialize();
             SetCurrentEntityState((int)State.Moving, SyncCurrentDirection);
-            if (isInServer)
+            switch (SyncCurrentDirection)
             {
-                SetLocation();
+                case Direction.Left:
+                    CollisionSizeType = Ui.UiComponent.PositionType.Centered;
+                    CollisionSize = new Vector2(Size.X, 1f);
+                    break;
+                case Direction.Up:
+                    CollisionSizeType = Ui.UiComponent.PositionType.Centered;
+                    CollisionSize = new Vector2(1f, Size.Y);
+                    break;
+                case Direction.Right:
+                    CollisionSizeType = Ui.UiComponent.PositionType.Centered;
+                    CollisionSize = new Vector2(Size.X, 1f);
+                    break;
+                case Direction.Down:
+                    CollisionSizeType = Ui.UiComponent.PositionType.Centered;
+                    CollisionSize = new Vector2(1f, Size.Y);
+                    break;
+                case Direction.Idle:
+                    break;
+                default:
+                    break;
             }
+            SetLocation();
         }
 
         public override void Update(GameTime gameTime)
@@ -49,7 +70,10 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
             List<Entity> entities = GameManager.Instance.GetEntitiesIntersectsWith(this);
             foreach (Entity entity in entities)
             {
-                Hit(entity);
+                if (entity != Attacker)
+                {
+                    Hit(entity);
+                }
             }
         }
 
@@ -58,7 +82,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
             base.OnCollidingWithBlock(block);
             if(hasAuthority)
             {
-                BroadcastDestroy();
+               BroadcastDestroy();
             }
         }
 
@@ -82,28 +106,10 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 
         public void SetLocation()
         {
-            Rectangle rectangle = SyncAttacker.GetBoundingRectangle();
-            switch (SyncCurrentDirection)
-            {
-                case Direction.Left:
-                    SyncX = rectangle.Left - Size.X;
-                    SyncY = rectangle.Center.Y - Size.Y / 2;
-                    break;
-                case Direction.Up:
-                    SyncY = rectangle.Top - Size.Y;
-                    SyncX = rectangle.Center.X - Size.X / 2;
-                    break;
-                case Direction.Right:
-                    SyncX = rectangle.Right;
-                    SyncY = rectangle.Center.Y - Size.Y / 2;
-                    break;
-                case Direction.Down:
-                    SyncY = rectangle.Bottom;
-                    SyncX = rectangle.Center.X - Size.X / 2;
-                    break;
-                case Direction.Idle:
-                    break;
-            }
+            Vector2 location = Operations.GetPositionByTopLeftPosition(Ui.UiComponent.PositionType.Centered, new Vector2(SyncAttacker.SyncX, SyncAttacker.SyncY), SyncAttacker.Size.ToVector2());
+            location = Operations.GetTopLeftPositionByPorsitionType(Ui.UiComponent.PositionType.Centered, location, Size.ToVector2());
+            SyncX = location.X;
+            SyncY = location.Y;
         }
     }
 }

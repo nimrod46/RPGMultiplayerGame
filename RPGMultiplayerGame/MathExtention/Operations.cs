@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
-namespace RPGMultiplayerGame
+namespace RPGMultiplayerGame.MathExtention
 {
     public class Operations
     {

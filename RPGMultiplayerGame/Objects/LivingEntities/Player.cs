@@ -50,7 +50,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private long syncGold;
         private HealthBar uiHealthBar;
 
-        public Player() : base(GraphicManager.EntityId.Player, 0, 10, 100, GraphicManager.Instance.PlayerNameFont, true, Color.DarkOrange)
+        public Player() : base(GraphicManager.EntityId.Player, 0, 8, 100, GraphicManager.Instance.PlayerNameFont, true, Color.DarkOrange)
         {
             Scale = 1;
             SyncSpeed *= 2;

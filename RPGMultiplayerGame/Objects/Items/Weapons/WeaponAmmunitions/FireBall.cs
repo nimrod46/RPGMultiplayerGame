@@ -16,27 +16,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
             if (hasAuthority)
             {
                 SetTimeToDestroy(5);
-            }
-            switch (SyncCurrentDirection)
-            {
-                case Direction.Left:
-                    CollisionSizeType = Ui.UiComponent.PositionType.CenteredLeft;
-                    break;
-                case Direction.Up:
-                    CollisionSizeType = Ui.UiComponent.PositionType.TopCentered;
-                    break;
-                case Direction.Right:
-                    CollisionSizeType = Ui.UiComponent.PositionType.CenteredRight;
-                    break;
-                case Direction.Down:
-                    CollisionSizeType = Ui.UiComponent.PositionType.ButtomCentered;
-                    break;
-                case Direction.Idle:
-                    break;
-                default:
-                    break;
-            }
-            CollisionSize = new Vector2(0.1f, 0.1f);
+            }        
         }
     }
 }
