@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.MathExtention;
 using System;
 using System.Xml.Serialization;
 
@@ -69,32 +70,6 @@ namespace RPGMultiplayerGame.Objects.Other
             this.tintingAlpah = tintingAlpah;
         }
 
-        public Texture2D TintTextureByColor(GraphicsDevice graphicsDevice, Texture2D texture, Color color, float tintingAlpah)
-        {
-            if (color == Color.White)
-            {
-                return texture;
-            }
-
-            int pixelCount = Texture.Width * Texture.Height;
-            Color[] pixels = new Color[pixelCount];
-            texture.GetData(pixels);
-            for (int i = 0; i < pixels.Length; i++)
-            {
-                if (pixels[i].A < 10)
-                {
-                    continue;
-                }
-                byte r = (byte)Math.Min(pixels[i].R * tintingAlpah + color.R * (1 - tintingAlpah), 255);
-                byte g = (byte)Math.Min(pixels[i].G * tintingAlpah + color.G * (1 - tintingAlpah), 255);
-                byte b = (byte)Math.Min(pixels[i].B * tintingAlpah + color.B * (1 - tintingAlpah), 255);
-                pixels[i] = new Color(r, g, b, pixels[i].A);
-            }
-            Texture2D outTexture = new Texture2D(graphicsDevice, texture.Width, texture.Height, false, SurfaceFormat.Color);
-            outTexture.SetData<Color>(pixels);
-            return outTexture;
-        }
-
         public void ResetTint()
         {
             tintColor = Color.White;
@@ -106,7 +81,7 @@ namespace RPGMultiplayerGame.Objects.Other
             {
                 if (SyncIsVisible)
                 {
-                    sprite.Draw(TintTextureByColor(sprite.GraphicsDevice, texture, tintColor, tintingAlpah), Location + offset, null, Color.White, 0, Vector2.Zero, Scale, SpriteEffects.None, Layer);
+                    sprite.Draw(Operations.TintTextureByColor(sprite.GraphicsDevice, texture, tintColor, tintingAlpah), Location + offset, null, Color.White, 0, Vector2.Zero, Scale, SpriteEffects.None, Layer);
                 }
             }
             else

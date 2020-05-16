@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,32 @@ namespace RPGMultiplayerGame.MathExtention
                 PositionType.None => origin,
                 _ => throw new NotImplementedException("Unknown case in: " + nameof(GetPositionByTopLeftPosition)),
             };
+        }
+
+        public static Texture2D TintTextureByColor(GraphicsDevice graphicsDevice, Texture2D texture, Color color, float tintingAlpah)
+        {
+            if (color == Color.White)
+            {
+                return texture;
+            }
+
+            int pixelCount = texture.Width * texture.Height;
+            Color[] pixels = new Color[pixelCount];
+            texture.GetData(pixels);
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                if (pixels[i].A < 10)
+                {
+                    continue;
+                }
+                byte r = (byte)Math.Min(pixels[i].R * tintingAlpah + color.R * (1 - tintingAlpah), 255);
+                byte g = (byte)Math.Min(pixels[i].G * tintingAlpah + color.G * (1 - tintingAlpah), 255);
+                byte b = (byte)Math.Min(pixels[i].B * tintingAlpah + color.B * (1 - tintingAlpah), 255);
+                pixels[i] = new Color(r, g, b, pixels[i].A);
+            }
+            Texture2D outTexture = new Texture2D(graphicsDevice, texture.Width, texture.Height, false, SurfaceFormat.Color);
+            outTexture.SetData<Color>(pixels);
+            return outTexture;
         }
     }
 }

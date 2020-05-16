@@ -27,6 +27,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
             this.effectId = effectId;
             this.maxHitCount = maxHitCount;
             SyncSpeed *= 6;
+            animationTimeDelay *= 12;
         }
 
         public override void OnNetworkInitialize()
