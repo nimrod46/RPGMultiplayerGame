@@ -29,6 +29,8 @@ namespace RPGMultiplayerGame.Objects.Other
         }
         public virtual Point Size { get; set; }
         public Point BaseSize { get; set; }
+        protected readonly float defaultMinDistanceToUpdate;
+        protected float minDistanceToUpdate;
         protected object movmentLock = new object();
         private float syncX;
         private float syncY;
@@ -39,6 +41,8 @@ namespace RPGMultiplayerGame.Objects.Other
             SyncY = -9999;
             OnNetworkInitializeEvent += OnNetworkInitialize;
             OnDestroyEvent += OnDestroyed;
+            defaultMinDistanceToUpdate = 5;
+            minDistanceToUpdate = defaultMinDistanceToUpdate;
         }
 
         public virtual void OnNetworkInitialize()
@@ -73,7 +77,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void OnXSet()
         {
-            if (MathHelper.Distance(Location.X, SyncX) >= 5)
+            if (MathHelper.Distance(Location.X, SyncX) >= minDistanceToUpdate)
             {
                 Location = new Vector2(SyncX, Location.Y);
                // Console.WriteLine("Location correction for: {0}", GetType().Name);
@@ -82,7 +86,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public virtual void OnYSet()
         {
-            if (MathHelper.Distance(Location.Y, SyncY) >= 5)
+            if (MathHelper.Distance(Location.Y, SyncY) >= minDistanceToUpdate)
             {
                 Location = new Vector2(Location.X, SyncY);
               //  Console.WriteLine("Location correction for: {0}", GetType().Name);
