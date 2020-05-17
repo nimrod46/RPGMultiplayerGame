@@ -14,13 +14,14 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
     {
         public const float LASTING_TIME = 1.5f;
 
-        public StormWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, LASTING_TIME, 1, false, new StormVisualEffect())
+        public StormWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, LASTING_TIME, 1, new StormVisualEffect())
         {
+            ScheduledAction();
         }
 
-        public override void Activated()
+        public override void OnActivated()
         {
-            base.Activated();
+            base.OnActivated();
             if(entity.isInServer)
             {
                 entity.InvokeBroadcastMethodNetworkly(nameof(entity.SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, State.Idle, entity.SyncCurrentDirection);

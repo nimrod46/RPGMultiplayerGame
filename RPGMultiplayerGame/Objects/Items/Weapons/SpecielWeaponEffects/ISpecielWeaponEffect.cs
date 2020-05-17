@@ -10,9 +10,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
     public interface ISpecielWeaponEffect : IGameUpdateable
     {
-        bool AllowMultiple { get; set; }
+        void Activate();
 
-        void Activated();
+        void OnActivated();
 
         void Update();
 

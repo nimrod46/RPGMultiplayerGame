@@ -23,7 +23,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
                 }
             }
         }
-        public bool AllowMultiple { get; set; }
         public bool IsEnabled { get; set; }
 
         protected readonly Entity entity;
@@ -35,7 +34,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
         private bool isDestroyed;
         private bool hasBeenActivated;
 
-        public SpecielWeaponEffect(Entity entity, IDamageInflicter damageInflicter, double delaySec, int loopCount, bool allowMultiple)
+        public SpecielWeaponEffect(Entity entity, IDamageInflicter damageInflicter, double delaySec, int loopCount)
         {
             this.entity = entity;
             this.damageInflicter = damageInflicter;
@@ -44,27 +43,36 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             currentLoopCount = 0;
             timeSinceLastActivationSec = 0;
             IsDestroyed = false;
-            AllowMultiple = allowMultiple;
             hasBeenActivated = false;
-            entity.ScheduledNewAction(this);
             GameManager.Instance.AddUpdateObject(this);
             IsEnabled = true;
         }
 
-        public abstract void Activated();
+        public void ScheduledAction()
+        {
+            entity.ScheduledNewAction(this);
+        }
+
+        public void Activate()
+        {
+            if (!hasBeenActivated)
+            {
+                OnActivated();
+                hasBeenActivated = true;
+            }
+        }
+
+        public abstract void OnActivated();
 
         public virtual void Update(GameTime gameTime)
         {
-            if(!hasBeenActivated)
-            {
-                Activated();
-                hasBeenActivated = true;
-            }
-
             if (isDestroyed)
             {
                 return;
             }
+
+            Activate();
+
             timeSinceLastActivationSec += gameTime.ElapsedGameTime.TotalSeconds;
             if (timeSinceLastActivationSec >= delaySec)
             {

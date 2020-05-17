@@ -44,9 +44,7 @@ namespace RPGMultiplayerGame.Objects.Other
             get => speed; set
             {
                 speed = value;
-                Console.WriteLine(speed);
                 minDistanceToUpdate = defaultMinDistanceToUpdate * speed * 5;
-                Console.WriteLine(minDistanceToUpdate + " " + GetType());
                 InvokeSyncVarNetworkly(nameof(SyncSpeed), speed);
             }
         }

@@ -11,12 +11,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
     public class FreezingWeaponEffect : SpecielWeaponEffect
     {
         public const int LASTING_TIME = 5;
-        public FreezingWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, LASTING_TIME, 1, false)
+        public FreezingWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, LASTING_TIME, 1)
         {
-
+            ScheduledAction();
         }
 
-        public override void Activated()
+        public override void OnActivated()
         {
             entity.SetTinkColor(Color.DodgerBlue, 0.7f);
             if (entity.hasAuthority)

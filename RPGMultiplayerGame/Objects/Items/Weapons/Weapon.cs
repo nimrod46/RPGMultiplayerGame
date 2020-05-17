@@ -91,7 +91,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             {
                 PreformeAttack();
             }
-            else
+            if(hasAuthority)
             {
                 isInCoolDown = true;
             }

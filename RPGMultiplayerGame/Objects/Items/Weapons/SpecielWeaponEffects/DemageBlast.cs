@@ -14,8 +14,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             Damage = damage;
         }
 
-
-
         public void Hit(Entity victim)
         {
             if (victim.IsDamageable)

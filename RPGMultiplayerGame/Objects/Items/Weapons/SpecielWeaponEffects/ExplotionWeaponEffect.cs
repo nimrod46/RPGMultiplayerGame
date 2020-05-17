@@ -13,7 +13,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
     {
         public const float BLAST_RADIUS = 25;
         private readonly DemageBlast demageBlast;
-        public ExplotionWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 5, 1, true, new ExplotionVisualEffect())
+        public ExplotionWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 5, 1, new ExplotionVisualEffect())
         {
             demageBlast = new DemageBlast(damageInflicter.Damage / 2)
             {
@@ -21,9 +21,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             };
         }
 
-        public override void Activated()
+        public override void OnActivated()
         {
-            base.Activated();
+            base.OnActivated();
             if (entity.isInServer)
             {
                 List<Entity> entities = entity.GetCurrentEntitiesInRadius(BLAST_RADIUS);

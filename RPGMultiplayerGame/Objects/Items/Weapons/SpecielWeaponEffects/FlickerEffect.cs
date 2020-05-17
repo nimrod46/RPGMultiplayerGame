@@ -9,24 +9,31 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
     public class FlickerEffect : SpecielWeaponEffect
     {
-        public FlickerEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 0.15, 6, false)
+        public FlickerEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, 0.15, 6)
         {
-
+            ScheduledAction();
         }
 
-        public override void Activated()
+        public override void OnActivated()
         {
             entity.SyncIsVisible = false;
         }
 
         public override void Update()
         {
-            entity.SyncIsVisible = !entity.SyncIsVisible;
+            if (entity.hasAuthority)
+            {
+                entity.SyncIsVisible = !entity.SyncIsVisible;
+            }
+
         }
 
         public override void End()
         {
-            entity.SyncIsVisible = true;
+            if (entity.hasAuthority)
+            {
+                entity.SyncIsVisible = true;
+            }
         }
     }
 }

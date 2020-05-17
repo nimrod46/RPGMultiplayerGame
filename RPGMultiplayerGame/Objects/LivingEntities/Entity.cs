@@ -135,9 +135,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public void ScheduledNewAction(ISpecielWeaponEffect specielWeaponEffect)
         {
+            if(SyncIsDead)
+            {
+                return;
+            }
+
             lock (this.specielWeaponEffect)
             {
-                this.specielWeaponEffect.ForEach(a => { if (!a.AllowMultiple && a.GetType() == specielWeaponEffect.GetType()) a.IsDestroyed = true; } );
+                //this.specielWeaponEffect.ForEach(a => { if (!a.AllowMultiple && a.GetType() == specielWeaponEffect.GetType()) a.IsDestroyed = true; } );
+                this.specielWeaponEffect.ForEach(a => { if (a.GetType() == specielWeaponEffect.GetType()) a.IsDestroyed = true; } );
+                specielWeaponEffect.Activate();
                 this.specielWeaponEffect.Add(specielWeaponEffect);
             }
         }
@@ -215,6 +222,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 SyncIsDead = true;
             }
+            specielWeaponEffect.ForEach(a =>  a.IsDestroyed = true);
         }
 
         public override void Draw(SpriteBatch sprite)

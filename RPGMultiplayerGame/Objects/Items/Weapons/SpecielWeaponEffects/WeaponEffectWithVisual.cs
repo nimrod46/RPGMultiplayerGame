@@ -16,17 +16,18 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
     {
         protected T visualEffect;
 
-        public WeaponEffectWithVisual(Entity entity, IDamageInflicter damageInflicter, double delaySec, int loopCount, bool allowMultiple, T visualEffect) : base(entity, damageInflicter, delaySec, loopCount, allowMultiple)
+        public WeaponEffectWithVisual(Entity entity, IDamageInflicter damageInflicter, double delaySec, int loopCount, T visualEffect) : base(entity, damageInflicter, delaySec, loopCount)
         {
             this.visualEffect = visualEffect;
             visualEffect.GetType();
             visualEffect.SyncParent = entity;
         }
 
-        public override void Activated()
+        public override void OnActivated()
         {
             if (entity.isInServer)
             {
+                visualEffect.GetType();
                 visualEffect = ServerManager.Instance.Spawn(visualEffect);
             }
 
