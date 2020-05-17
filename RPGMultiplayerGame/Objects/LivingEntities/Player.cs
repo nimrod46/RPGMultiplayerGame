@@ -373,10 +373,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     Attack();
                 }
             }
-            else
-            {
-
-            }
         }
 
         private void OnAnswerKeyPressed(int index)
