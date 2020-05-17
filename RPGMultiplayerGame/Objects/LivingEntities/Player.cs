@@ -368,7 +368,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (isDown)
             {
-                if (EquippedWeapon != null && !(GetCurrentEnitytState<State>() == State.Attacking))
+                if (!SyncIsDead && EquippedWeapon != null && !(GetCurrentEnitytState<State>() == State.Attacking))
                 {
                     Attack();
                 }

@@ -15,8 +15,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 {
     public abstract class Weapon : InteractiveItem, IDamageInflicter
     {
-        public float X { get; set; }
-        public float Y { get; set; }
         public float Damage { get; set; }
         [XmlIgnore]
         public Entity Attacker { get; set; }

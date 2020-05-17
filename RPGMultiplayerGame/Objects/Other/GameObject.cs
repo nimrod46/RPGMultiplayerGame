@@ -70,7 +70,7 @@ namespace RPGMultiplayerGame.Objects.Other
             return Vector2.Distance(gameObject.GetBaseCenter(), GetBaseCenter());
         }
 
-        protected bool IsObjectInInteractingRadius(GameObject gameObject, float minDistanceForObjectInteraction)
+        public bool IsObjectInInteractingRadius(GameObject gameObject, float minDistanceForObjectInteraction)
         {
             return GetDistanceFrom(gameObject) <= minDistanceForObjectInteraction;
         }

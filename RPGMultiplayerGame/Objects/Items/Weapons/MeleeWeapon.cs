@@ -33,29 +33,31 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             switch (entity.SyncCurrentDirection)
             {
                 case Direction.Left:
-                    X = entity.GetBoundingRectangle().Left;
-                    Y = entity.GetCenter().Y;
+                    SyncX = entity.GetBoundingRectangle().Left;
+                    SyncY = entity.GetCenter().Y;
                     break;
                 case Direction.Up:
-                    Y = entity.GetBoundingRectangle().Top;
-                    X = entity.GetCenter().X;
+                    SyncY = entity.GetBoundingRectangle().Top;
+                    SyncX = entity.GetCenter().X;
                     break;
                 case Direction.Right:
-                    X = entity.GetBoundingRectangle().Right - DamageAreaSize.X;
-                    Y = entity.GetCenter().Y;
+                    SyncX = entity.GetBoundingRectangle().Right - DamageAreaSize.X;
+                    SyncY = entity.GetCenter().Y;
                     break;
                 case Direction.Down:
-                    Y = entity.GetBoundingRectangle().Bottom - DamageAreaSize.Y;
-                    X = entity.GetCenter().X;
+                    SyncY = entity.GetBoundingRectangle().Bottom - DamageAreaSize.Y;
+                    SyncX = entity.GetCenter().X;
                     break;
                 case Direction.Idle:
                     break;
             }
         }
 
-        public Rectangle GetBoundingRectangle()
+        public override Rectangle GetBoundingRectangle()
         {
-            return new Rectangle((int)X, (int)Y, DamageAreaSize.X, DamageAreaSize.Y);
+            Rectangle rect =  base.GetBoundingRectangle();
+            rect.Size = new Point(DamageAreaSize.X, DamageAreaSize.Y);
+            return rect;
         }
 
         public override string ToString()
