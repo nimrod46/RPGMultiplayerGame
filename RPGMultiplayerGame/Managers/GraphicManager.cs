@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static RPGMultiplayerGame.Objects.LivingEntities.Entity;
+using static RPGMultiplayerGame.Objects.MapObjects.Door;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 using static RPGMultiplayerGame.Objects.VisualEffects.VisualEffect;
 
@@ -36,6 +37,10 @@ namespace RPGMultiplayerGame.Managers
             Bat
         }
 
+        public enum DoorType
+        {
+            MetalDoor
+        }
 
         public enum WeaponAmmunitionId
         {
@@ -60,8 +65,9 @@ namespace RPGMultiplayerGame.Managers
 
         public Dictionary<EntityId, Dictionary<int, List<GameTexture>>> AnimationsByEntities { get; set; }
         public Dictionary<WeaponAmmunitionId, Dictionary<int, List<GameTexture>>> AnimationsByEffects { get; set; }
-        public Dictionary<VisualEffectId, Dictionary<int, List<GameTexture>>> AnimationsByVisualEffect { get; set; }
-        public List<Texture2D> Textures { get; set; }
+        public Dictionary<VisualEffectId, Dictionary<int, List<GameTexture>>> AnimationsByVisualEffects { get; set; }
+        public Dictionary<DoorType, Dictionary<int, List<GameTexture>>> AnimationsByDoors { get; set; }
+        public List<Dictionary<int, List<GameTexture>>> Textures { get; set; }
         public Texture2D HealthBar { get; set; }
         public Texture2D HealthBarBackground { get; set; }
         public SpriteFont PlayerNameFont { get; set; }
@@ -73,9 +79,8 @@ namespace RPGMultiplayerGame.Managers
         {
             AnimationsByEntities = new Dictionary<EntityId, Dictionary<int, List<GameTexture>>>();
             AnimationsByEffects = new Dictionary<WeaponAmmunitionId, Dictionary<int, List<GameTexture>>>();
-            AnimationsByVisualEffect = new Dictionary<VisualEffectId, Dictionary<int, List<GameTexture>>>();
-            Textures = new List<Texture2D>();
-
+            AnimationsByVisualEffects = new Dictionary<VisualEffectId, Dictionary<int, List<GameTexture>>>();
+            Textures = new List<Dictionary<int, List<GameTexture>>>();
         }
 
         public void Init(Game1 game)
@@ -87,7 +92,9 @@ namespace RPGMultiplayerGame.Managers
         {
             AnimationsByEntities = GetGameTextureByEnum<EntityId, EntityAnimation>(content);
             AnimationsByEffects = GetGameTextureByEnum<WeaponAmmunitionId, EntityAnimation>(content);
-            AnimationsByVisualEffect = GetGameTextureByEnum<VisualEffectId, VisualEffectAnimation>(content);
+            AnimationsByVisualEffects = GetGameTextureByEnum<VisualEffectId, VisualEffectAnimation>(content);
+            AnimationsByDoors = GetGameTextureByEnum<DoorType, DoorAnimation>(content);
+
             HealthBar = content.Load<Texture2D>("Graphics\\HealthBar");
             HealthBarBackground = content.Load<Texture2D>("Graphics\\HealthBarBackground");
             PlayerNameFont = content.Load<SpriteFont>("Graphics\\PlayerNameFont");
@@ -104,7 +111,11 @@ namespace RPGMultiplayerGame.Managers
                     Color[] data = new Color[c];
                     spriteTextures.GetData(0, cloneRect, data, 0, c);
                     texture.SetData(data);
-                    Textures.Add(texture);
+                    Dictionary<int, List<GameTexture>> dict = new Dictionary<int, List<GameTexture>>
+                    {
+                        { 0, new List<GameTexture> {new GameTexture(texture, Vector2.Zero) } }
+                    };
+                    Textures.Add(dict);
                     count++;
                 }
             }

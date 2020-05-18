@@ -26,7 +26,7 @@ namespace RPGMultiplayerGame
             {
                 return;
             }
-            XmlManager<GameMap> xml = new XmlManager<GameMap>();
+            XmlManager<GameMapLib> xml = new XmlManager<GameMapLib>();
             ServerManager.Instance.LoadMap(xml.Load(openFileDialog.FileName));
         }
 

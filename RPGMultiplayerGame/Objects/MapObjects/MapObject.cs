@@ -1,14 +1,19 @@
 ﻿using Map;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Other;
+using System.Collections.Generic;
 
 namespace RPGMultiplayerGame.Objects.MapObjects
 {
-    public abstract class MapObject : GraphicObject
+    public abstract class MapObject : AnimatedObject
     {
         private int syncLayer;
         private bool syncHasUnder;
         private bool syncHasAbove;
+
+        public MapObject(Dictionary<int, List<GameTexture>> animationsByType) : base(animationsByType)
+        {
+        }
 
         public int SyncLayer
         {
@@ -40,18 +45,8 @@ namespace RPGMultiplayerGame.Objects.MapObjects
         public override void OnNetworkInitialize()
         {
             Layer -= SyncLayer / 1000.0f;
+            GameManager.Instance.Map.AddBlock(this);
             base.OnNetworkInitialize();
         }
-
-        protected void Init<T>() where T : MapObjectLib
-        {
-            if (!isInServer)
-            {
-                MapObjectLib obj = CreateMapObject();
-                GameManager.Instance.map.AddObjectAt(obj);
-            }
-        }
-
-        protected abstract MapObjectLib CreateMapObject();
     }
 }

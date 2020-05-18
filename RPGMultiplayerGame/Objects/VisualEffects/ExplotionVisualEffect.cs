@@ -11,7 +11,7 @@ namespace RPGMultiplayerGame.Objects.VisualEffects
 {
     public class ExplotionVisualEffect : VisualEffect
     {
-        public ExplotionVisualEffect() : base(GraphicManager.Instance.AnimationsByVisualEffect[VisualEffectId.Explotion])
+        public ExplotionVisualEffect() : base(GraphicManager.Instance.AnimationsByVisualEffects[VisualEffectId.Explotion])
         {
             Scale *= 0.5f;
             SyncSpeed *= 2;

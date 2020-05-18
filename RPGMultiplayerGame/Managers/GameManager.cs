@@ -1,6 +1,7 @@
 ﻿using Map;
 using Microsoft.Xna.Framework;
 using Networking;
+using RPGMultiplayerGame.Objects;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
@@ -54,7 +55,7 @@ namespace RPGMultiplayerGame.Managers
         public Camera Camera { get; set; }
         public GameChat GameChat { get; set; }
 
-        public GameMap map; //TODO: Create GameMap with the relevent project class.
+        public GameMap Map { get; set; }
         private readonly List<IGameUpdateable> updateObjects = new List<IGameUpdateable>();
         private readonly List<Entity> entities = new List<Entity>();
         private Game1 game;
@@ -63,7 +64,7 @@ namespace RPGMultiplayerGame.Managers
 
         private GameManager()
         {
-            map = new GameMap();
+            Map = new GameMap();
 
             IsMouseInteractable = false;
             isMouseVisibleCounter = 0;

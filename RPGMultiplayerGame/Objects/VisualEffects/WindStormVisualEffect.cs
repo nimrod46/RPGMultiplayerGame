@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects.VisualEffects
 {
     public class StormVisualEffect : VisualEffect
     {
-        public StormVisualEffect() : base(GraphicManager.Instance.AnimationsByVisualEffect[VisualEffectId.WindStorm])
+        public StormVisualEffect() : base(GraphicManager.Instance.AnimationsByVisualEffects[VisualEffectId.WindStorm])
         {
         }
 

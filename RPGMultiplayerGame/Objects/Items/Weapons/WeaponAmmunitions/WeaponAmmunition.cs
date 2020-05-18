@@ -78,7 +78,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
             }
         }
 
-        protected override void OnCollidingWithBlock(BlockLib block)
+        protected override void OnCollidingWithBlock(Block block)
         {
             base.OnCollidingWithBlock(block);
             if(hasAuthority)

@@ -37,6 +37,7 @@ namespace RPGMultiplayerGame.Managers
         public event PlayerContorlKeyPressed OnPotionUseKeyPressed;
         public event PlayerContorlKeyPressed OnStartInteractWithNpcKeyPressed;
         public event PlayerContorlKeyPressed OnPickUpItemKeyPressed;
+        public event PlayerContorlKeyPressed OnInteractWithMapElement;
 
         public delegate void PlayerContorlIndexKeyPressed(int index);
         public event PlayerContorlIndexKeyPressed OnUsableItemSlotKeyPressed;
@@ -239,6 +240,11 @@ namespace RPGMultiplayerGame.Managers
                 if (KeyPressed(Keys.D1, Keys.D9, out Keys pressedKey))
                 {
                     OnAnswerKeyPressed(pressedKey - Keys.D1);
+                }
+
+                if (KeyPressed(Keys.E))
+                {
+                    OnInteractWithMapElement?.Invoke();
                 }
             }
         }

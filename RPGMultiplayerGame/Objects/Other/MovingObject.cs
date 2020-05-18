@@ -100,22 +100,20 @@ namespace RPGMultiplayerGame.Objects.Other
                     newLocation.X += speed;
                     break;
             }
-            MapObjectLib block = null;
             Rectangle newLocationRect;
-            
-            newLocationRect = GetCollisionRect(newLocation, CollisionSize);
-            System.Drawing.Rectangle rectt;
-            rectt = new System.Drawing.Rectangle(newLocationRect.X, newLocationRect.Y, newLocationRect.Width, newLocationRect.Height);
-            for (int i = 0; i < GameManager.Instance.map.GraphicObjects.Count; i++)
-            {
-                if (GameManager.Instance.map.GraphicObjects[i] is BlockLib && GameManager.Instance.map.GraphicObjects[i].Layer > 0 && GameManager.Instance.map.GraphicObjects[i].Rectangle.IntersectsWith(rectt))
-                {
-                    block = GameManager.Instance.map.GraphicObjects[i];
-                    break;
-                }
-            }
 
-            if (block == null)
+            newLocationRect = GetCollisionRect(newLocation, CollisionSize);
+            // System.Drawing.Rectangle rectt;
+            //rectt = new System.Drawing.Rectangle(newLocationRect.X, newLocationRect.Y, newLocationRect.Width, newLocationRect.Height);
+            //for (int i = 0; i < GameManager.Instance.Map.GraphicObjects.Count; i++)
+            //{
+            //    if (GameManager.Instance.Map.GraphicObjects[i] is BlockLib && GameManager.Instance.Map.GraphicObjects[i].Layer > 0 && GameManager.Instance.Map.GraphicObjects[i].Rectangle.IntersectsWith(rectt))
+            //    {
+            //        block = GameManager.Instance.Map.GraphicObjects[i];
+            //        break;
+            //    }
+            //}
+            if (!GameManager.Instance.Map.TryGetHighBlockAt(newLocationRect, out Block block))
             {
                 Location = newLocation;
                 if (hasAuthority)
@@ -126,11 +124,11 @@ namespace RPGMultiplayerGame.Objects.Other
             }
             else
             {
-                OnCollidingWithBlock(block as BlockLib);
+                OnCollidingWithBlock(block);
             }
         }
 
-        protected virtual void OnCollidingWithBlock(BlockLib block)
+        protected virtual void OnCollidingWithBlock(Block block)
         {
         }
 

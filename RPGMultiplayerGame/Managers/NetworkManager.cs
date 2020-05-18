@@ -5,6 +5,7 @@ using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.MapObjects;
 using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using RPGMultiplayerGame.Objects.VisualEffects;
 using RPGMultiplayerGame.Ui;
@@ -33,7 +34,7 @@ namespace RPGMultiplayerGame.Managers
 
         private void RegisterNetworkElements()
         {
-            new Block();
+            new SimpleBlock();
             new Player();
             new SpawnPoint();
             new Joe();
@@ -56,6 +57,7 @@ namespace RPGMultiplayerGame.Managers
             new StormBow();
             new StormArrow();
             new GameChat();
+            new MetalDoor();
         }
 
         public void AddServer()

@@ -1,40 +1,35 @@
 ﻿using Map;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.MapObjects;
+using System.Collections.Generic;
 
 namespace RPGMultiplayerGame.Objects
 {
-    public class Block : MapObject
+    public abstract class Block : MapObject
     {
-
         public int SyncTextureIndex
         {
-            get => syncTextureIndex; set
+            get => textureIndex; set
             {
-                syncTextureIndex = value;
+                textureIndex = value;
                 InvokeSyncVarNetworkly(nameof(SyncTextureIndex), value);
                 OnTextureIndexSet();
             }
         }
+        private int textureIndex;
 
-        private int syncTextureIndex;
+        public Block(Dictionary<int, List<GameTexture>> animationsByType) : base(animationsByType)
+        {
+        }
 
 
         public override void OnNetworkInitialize()
         {
-            Texture = GraphicManager.Instance.Textures[SyncTextureIndex];
+            //animationsByType = GraphicManager.Instance.Textures[SyncTextureIndex];
             base.OnNetworkInitialize();
-            Init<BlockLib>();
+            //Init<BlockLib>();
         }
-
-        public void OnTextureIndexSet()
-        {
-            Texture = GraphicManager.Instance.Textures[SyncTextureIndex];
-        }
-
-        protected override MapObjectLib CreateMapObject()
-        {
-            return new BlockLib(SyncTextureIndex, new System.Drawing.Rectangle((int)SyncX, (int)SyncY, Texture.Width, Texture.Height), SyncLayer);
-        }
+        
+        public abstract void OnTextureIndexSet();
     }
 }

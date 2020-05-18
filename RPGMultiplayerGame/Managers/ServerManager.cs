@@ -10,6 +10,7 @@ using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using RPGMultiplayerGame.Objects.LivingEntities;
+using RPGMultiplayerGame.Objects.MapObjects;
 using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 using RPGMultiplayerGame.Objects.VisualEffects;
@@ -19,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using static NetworkingLib.Server;
+using static RPGMultiplayerGame.Managers.GraphicManager;
 using static RPGMultiplayerGame.Objects.LivingEntities.PathEntity;
 
 namespace RPGMultiplayerGame.Managers
@@ -256,9 +258,9 @@ namespace RPGMultiplayerGame.Managers
             }
         }
 
-        public void LoadMap(GameMap gameMap)
+        public void LoadMap(GameMapLib gameMap)
         {
-            GameManager.Instance.map = gameMap;
+            //GameManager.Instance.Map = gameMap;
             lock (players)
             {
                 foreach (MapObjectLib obj in gameMap.GraphicObjects)
@@ -277,17 +279,7 @@ namespace RPGMultiplayerGame.Managers
                             SyncX = obj.Rectangle.X,
                             SyncY = obj.Rectangle.Y
                         };
-                        for (int i = 0; i < 10; i++)
-                        {
-                            Bat bat = new Bat
-                            {
-                                SyncX = obj.Rectangle.X,
-                                SyncY = obj.Rectangle.Y
-                            };
-                            Bat spawnedBat = NetBehavior.SpawnWithServerAuthority(bat);
-                            BatClaw batClaw = NetBehavior.SpawnWithServerAuthority(typeof(BatClaw));
-                            spawnedBat.EquipeWith(batClaw);
-                        }
+                     
                         NetworkIdentity identity = NetBehavior.SpawnWithServerAuthority(gObject);
                         PathEntity npcMark = identity as PathEntity;
                         foreach (WaypointLib waypoint in objP.waypoints)
@@ -295,7 +287,7 @@ namespace RPGMultiplayerGame.Managers
                             npcMark.AddWaypoint(new Waypoint(new Point(waypoint.Point.X, waypoint.Point.Y), (float)waypoint.Time));
                         }
                     }
-                    else if (obj is SpawnLib)
+                    else if (obj is PlayerSpawnLib)
                     {
                         SpawnPoint gObject = new SpawnPoint
                         {
@@ -305,16 +297,61 @@ namespace RPGMultiplayerGame.Managers
                         gObject = NetBehavior.SpawnWithServerAuthority(gObject);
                         UpdatePlayersSpawnLocation(gObject);
                     }
-                    else if (obj is BlockLib)
+                    else if (obj is BlockLib blockLib)
                     {
-                        Block gObject = new Block
+                        if (string.IsNullOrWhiteSpace(blockLib.SpecialBlockType))
                         {
-                            SyncX = obj.Rectangle.X,
-                            SyncY = obj.Rectangle.Y,
-                            SyncTextureIndex = (obj as BlockLib).ImageIndex,
-                            SyncLayer = obj.Layer
-                        };
-                        NetBehavior.SpawnWithServerAuthority(gObject);
+                            SimpleBlock gObject = new SimpleBlock
+                            {
+                                SyncX = obj.Rectangle.X,
+                                SyncY = obj.Rectangle.Y,
+                                SyncTextureIndex = blockLib.ImageIndex,
+                                SyncLayer = obj.Layer
+                            };
+                            NetBehavior.SpawnWithServerAuthority(gObject);
+                        }
+                        else
+                        {
+                            if(Enum.TryParse(blockLib.SpecialBlockType, out DoorType specialBlockType))
+                            {
+                                switch (specialBlockType)
+                                {
+                                    case DoorType.MetalDoor:
+                                        MetalDoor gObject = new MetalDoor
+                                        {
+                                            SyncX = obj.Rectangle.X,
+                                            SyncY = obj.Rectangle.Y,
+                                            SyncTextureIndex = blockLib.ImageIndex,
+                                            SyncLayer = obj.Layer
+                                        };
+                                        NetBehavior.SpawnWithServerAuthority(gObject);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception("No special block type named: " + blockLib.SpecialBlockType + " was found");
+                            }
+                        }
+                    }
+                    else if(obj is MonsterSpawnLib monsterSpawnLib)
+                    {
+                        if (monsterSpawnLib.MonsterType.Equals("Bat"))
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                Bat bat = new Bat
+                                {
+                                    SyncX = obj.Rectangle.X,
+                                    SyncY = obj.Rectangle.Y
+                                };
+                                Bat spawnedBat = NetBehavior.SpawnWithServerAuthority(bat);
+                                BatClaw batClaw = NetBehavior.SpawnWithServerAuthority(typeof(BatClaw));
+                                spawnedBat.EquipeWith(batClaw);
+                            }
+                        }
                     }
                 }
             }

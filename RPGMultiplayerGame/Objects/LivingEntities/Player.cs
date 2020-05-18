@@ -6,6 +6,7 @@ using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.MapObjects;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 using RPGMultiplayerGame.Ui;
 using System;
@@ -85,8 +86,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 InputManager.Instance.OnStartInteractWithNpcKeyPressed += OnStartInteractWithNpcKeyPressed;
                 InputManager.Instance.OnUsableItemSlotKeyPressed += OnUsableItemSlotKeyPressed;
                 InputManager.Instance.OnPickUpItemKeyPressed += OnPickUpItemKeyPressed;
+                InputManager.Instance.OnInteractWithMapElement += OnInteractWithMapElement;
             }
             base.OnNetworkInitialize();
+        }
+
+        private void OnInteractWithMapElement()
+        {
+            Rectangle rectangle = GetBoundingRectangle();
+            rectangle.Inflate(2, 2);
+            if (GameManager.Instance.Map.TryGetBlockAt(rectangle, 0, out SpecialBlock specialBlock))
+            {
+                specialBlock.Engage(this);
+            }
         }
 
         private void OnInputStateChange(InputManager.InputState inputState)
