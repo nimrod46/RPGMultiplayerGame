@@ -31,6 +31,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public bool IsInventoryVisible { get { return inventory.IsVisible; } set { inventory.IsVisible = value; } }
 
+        public bool SyncIsInteractingWithNpc
+        {
+            get => isInteractingWithNpc; set
+            {
+                isInteractingWithNpc = value;
+                InvokeSyncVarNetworkly(nameof(SyncIsInteractingWithNpc), isInteractingWithNpc);
+            }
+        }
+
         public long SyncGold
         {
             get => syncGold;
@@ -50,6 +59,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private UiTextComponent goldText;
         private long syncGold;
         private HealthBar uiHealthBar;
+        private bool isInteractingWithNpc;
 
         public Player() : base(GraphicManager.EntityId.Player, 0, 8, 100, GraphicManager.Instance.PlayerNameFont, true, Color.DarkOrange)
         {
@@ -103,7 +113,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void OnInputStateChange(InputManager.InputState inputState)
         {
-            if(inputState != InputManager.InputState.PlayerControl)
+            if (inputState != InputManager.InputState.PlayerControl)
             {
                 ClearArrowsState();
             }
@@ -131,7 +141,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void Respawn(float x, float y)
         {
-            base.Respawn(x,y);
+            base.Respawn(x, y);
             InputManager.Instance.OnArrowsKeysStateChange += Instance_OnArrowsKeysStateChange;
             usableItems.IsVisible = true;
             equippedItems.IsVisible = true;
@@ -157,7 +167,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        private void UsableItems_OnItemClickedEvent(Inventory<GameItem> inv,ItemSlotUi<GameItem> itemSlotUi)
+        private void UsableItems_OnItemClickedEvent(Inventory<GameItem> inv, ItemSlotUi<GameItem> itemSlotUi)
         {
             if (itemSlotUi.Item is InteractiveItem)
             {
@@ -237,16 +247,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             interactingWith = null;
             requestingInteraction = null;
+            SyncIsInteractingWithNpc = false;
         }
 
         public void InteractWithNpc(Npc npc)
         {
+            SyncIsInteractingWithNpc = true;
             requestingInteraction = null;
             interactingWith = npc;
         }
 
         public void InteractRequestWithNpc(Npc npc)
         {
+            SyncIsInteractingWithNpc = true;
             requestingInteraction = npc;
         }
 
@@ -310,7 +323,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 InputManager.Instance.OnArrowsKeysStateChange -= Instance_OnArrowsKeysStateChange;
                 ClearArrowsState();
                 inventory.IsVisible = false;
-                usableItems.IsVisible = false; 
+                usableItems.IsVisible = false;
                 equippedItems.IsVisible = false;
                 playerQuests.IsVisible = false;
                 uiHealthBar.IsVisible = false;

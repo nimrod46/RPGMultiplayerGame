@@ -26,6 +26,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             List<Player> currentInteractingPlayers = GetCurrentPlayersInRadius();
 
+            currentInteractingPlayers.RemoveAll(p => !curentInteractingPlayersDialogs.ContainsKey(p) && p.SyncIsInteractingWithNpc);
+
             foreach (var player in curentInteractingPlayersDialogs.Keys.ToList().Where(pl => !currentInteractingPlayers.Contains(pl)))
             {
                 StopLookingAtGameObject(player);
@@ -93,7 +95,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void CmdInteractWithPlayer(Player player, int dialogIndex)
         {
-
             currentComplexDialog = dialog.GetDialogByIndex(dialogIndex);
             currentComplexDialog.IsVisible = true;
             player.InteractWithNpc(this);
@@ -154,9 +155,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public override void AssignQuestTo(Player player, Quest quest)
         {
-            Console.WriteLine(dialog.GetDialogByIndex(playersProgress[player.GetName()] - 2));
            (dialog.GetDialogByIndex(playersProgress[player.GetName()] - 2) as QuestDialog).AssignPlayer(player, quest);
         }
-
     }
 }

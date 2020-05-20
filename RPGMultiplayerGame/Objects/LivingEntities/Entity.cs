@@ -113,18 +113,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             this.EntityId = entityId;
             this.maxHealth = maxHealth;
             this.IsDamageable = damageable;
-            SyncIsDead = false;
             healthBar = GraphicManager.Instance.HealthBar;
             healthBarBackground = GraphicManager.Instance.HealthBarBackground;
             specielWeaponEffect = new List<ISpecielWeaponEffect>();
             healthBarSize = new Vector2(healthBar.Width, healthBar.Height);
-            SyncHealth = maxHealth;
-            SyncCurrentAnimationType = (int)EntityAnimation.IdleDown;
-            SyncCurrentEntityState = (int)State.Idle;
             Layer = GraphicManager.ENTITY_LAYER;
             isHidenCompletely = false;
             flickerCount = 5;
             healthBarOffset = Vector2.Zero;
+            SyncHealth = maxHealth;
+            SyncIsDead = false;
+            SyncCurrentAnimationType = (int)EntityAnimation.IdleDown;
+            SyncCurrentEntityState = (int)State.Idle;
         }
 
         public override void OnNetworkInitialize()
@@ -302,6 +302,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             SyncHealth = maxHealth;
             SyncIsDead = false;
             SyncIsVisible = true;
+            InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), (int)State.Idle, Direction.Down);
         }
     }
 }

@@ -75,11 +75,11 @@ namespace RPGMultiplayerGame.Extention
         }
 
 
-        public static void DoTaskWithDelay(Action action, int delayMillisec)
+        public static void DoTaskWithDelay(Action action, float delaySec)
         {
             new Thread(new ThreadStart(() =>
             {
-                Thread.Sleep(delayMillisec);
+                Thread.Sleep((int) (delaySec * 1000));
                 action();
             })).Start();
         }

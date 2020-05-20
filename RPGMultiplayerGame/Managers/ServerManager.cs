@@ -71,7 +71,7 @@ namespace RPGMultiplayerGame.Managers
                 Operations.DoTaskWithDelay(() => {
                     monster.Respawn(monster.SyncSpawnPoint.SyncX, monster.SyncSpawnPoint.SyncY);
                     NetBehavior.SpawnWithServerAuthority(monster);
-                }, 1000);
+                }, 1);
 
                 
             }

@@ -91,7 +91,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (isInServer)
             {
                 attacker.OnEnitytKillEvent?.Invoke(this);
-                Operations.DoTaskWithDelay(() => BroadcastDestroy(), 5000);
+                Operations.DoTaskWithDelay(() => BroadcastDestroy(), 5);
             }
         }
 

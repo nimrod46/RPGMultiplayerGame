@@ -42,10 +42,6 @@ namespace RPGMultiplayerGame.Objects.Other
                 {
                     if (mapObject is T block && mapObject.SyncLayer >= layer && mapObject.GetBoundingRectangle().Intersects(rectangle))
                     {
-                        if(mapObject is SpecialBlock s)
-                        {
-                            Console.WriteLine(s.Isblocking());
-                        }
                         if (!onlyBlocking || !(mapObject is SpecialBlock specialBlock) || specialBlock.Isblocking())
                         {
                             outBlock = block;
