@@ -4,7 +4,7 @@ using Networking;
 using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Graphics.Ui;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.MathExtention;
+using RPGMultiplayerGame.Extention;
 using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Xml.Serialization;

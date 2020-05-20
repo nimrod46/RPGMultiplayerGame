@@ -45,7 +45,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         public delegate void EntityKill(Entity killedEntity);
         public EntityKill OnEnitytKillEvent;
-        protected SpawnPoint SyncSpawnPoint
+        public SpawnPoint SyncSpawnPoint
         {
             get => syncSpawnPoint; set
             {
@@ -75,7 +75,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public Weapon EquippedWeapon { get; set; }
+        public Weapon SyncEquippedWeapon { get; set; }
 
         public EntityId EntityId { get; }
 
@@ -171,8 +171,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public virtual void EquipeWith(Weapon weapon)
         {
             InvokeCommandMethodNetworkly(nameof(EquipeWith), weapon);
-            EquippedWeapon = weapon;
-            EquippedWeapon.Attacker = this;
+            SyncEquippedWeapon = weapon;
+            SyncEquippedWeapon.Attacker = this;
         }
 
         public override void Update(GameTime gameTime)
@@ -184,7 +184,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             if (hasAuthority)
             {
-                EquippedWeapon?.Update(gameTime);
+                SyncEquippedWeapon?.Update(gameTime);
             }
             base.Update(gameTime);
         }
@@ -281,10 +281,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected void Attack()
         {
-            if (EquippedWeapon.IsAbleToAttack())
+            if (SyncEquippedWeapon.IsAbleToAttack())
             {
                 InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (object)(int)State.Attacking, SyncCurrentDirection);
-                CmdAttack(EquippedWeapon);
+                CmdAttack(SyncEquippedWeapon);
             }
         }
 
@@ -301,6 +301,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             SyncY = y;
             SyncHealth = maxHealth;
             SyncIsDead = false;
+            SyncIsVisible = true;
         }
     }
 }

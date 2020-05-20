@@ -4,10 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
-namespace RPGMultiplayerGame.MathExtention
+namespace RPGMultiplayerGame.Extention
 {
     public class Operations
     {
@@ -71,6 +72,16 @@ namespace RPGMultiplayerGame.MathExtention
             Texture2D outTexture = new Texture2D(graphicsDevice, texture.Width, texture.Height, false, SurfaceFormat.Color);
             outTexture.SetData<Color>(pixels);
             return outTexture;
+        }
+
+
+        public static void DoTaskWithDelay(Action action, int delayMillisec)
+        {
+            new Thread(new ThreadStart(() =>
+            {
+                Thread.Sleep(delayMillisec);
+                action();
+            })).Start();
         }
     }
 }

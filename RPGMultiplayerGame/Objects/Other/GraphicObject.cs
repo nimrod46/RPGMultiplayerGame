@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Networking;
 using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.MathExtention;
+using RPGMultiplayerGame.Extention;
 using System;
 using System.Xml.Serialization;
 

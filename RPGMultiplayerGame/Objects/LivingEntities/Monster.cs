@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RPGMultiplayerGame.Extention;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using System;
@@ -51,8 +52,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
                 if (targetPlayers.GetMaxElement().HasValue)
                 {
-                    EquippedWeapon.UpdateWeaponLocation(this);
-                    if (EquippedWeapon is MeleeWeapon meleeWeapon)
+                    SyncEquippedWeapon.UpdateWeaponLocation(this);
+                    if (SyncEquippedWeapon is MeleeWeapon meleeWeapon)
                     {
                         if (GameManager.Instance.GetEntitiesHitBy(meleeWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
                         {
@@ -90,12 +91,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             if (isInServer)
             {
                 attacker.OnEnitytKillEvent?.Invoke(this);
-                new Thread(new ThreadStart(() => 
-                {
-                    Thread.Sleep(5000);
-                    //InvokeBroadcastMethodNetworkly(nameof(Destroy)); 
-                    Respawn(SyncX, SyncY);
-                })).Start();
+                Operations.DoTaskWithDelay(() => BroadcastDestroy(), 5000);
             }
         }
 

@@ -1,6 +1,7 @@
 ﻿using Map;
 using Microsoft.Xna.Framework;
 using Networking;
+using RPGMultiplayerGame.Extention;
 using RPGMultiplayerGame.GameSaver;
 using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.MapObjects;
@@ -55,13 +56,26 @@ namespace RPGMultiplayerGame.Managers
             serverBehavior.OnLocalIdentityInitialize += GameManager.Instance.OnIdentityInitialize;
             serverBehavior.OnRemoteIdentityInitialize += OnIdentityInitialize;
             serverBehavior.OnLocalIdentityInitialize += OnIdentityInitialize;
+            serverBehavior.OnLocalIdentityDestroy += OnIdentityDestroy;
+            serverBehavior.OnRemoteIdentityDestroy += OnIdentityDestroy;
             NetBehavior = serverBehavior;
             NetBehavior.SpawnWithServerAuthority(typeof(GameChat));
             IsRunning = true;
             gameSave = new GameSave();
         }
 
+        private void OnIdentityDestroy(NetworkIdentity identity)
+        {
+            if (identity is Monster monster)
+            {
+                Operations.DoTaskWithDelay(() => {
+                    monster.Respawn(monster.SyncSpawnPoint.SyncX, monster.SyncSpawnPoint.SyncY);
+                    NetBehavior.SpawnWithServerAuthority(monster);
+                }, 1000);
 
+                
+            }
+        }
 
         private void OnIdentityInitialize(NetworkIdentity identity)
         {
@@ -358,14 +372,18 @@ namespace RPGMultiplayerGame.Managers
                     }
                     else if(obj is MonsterSpawnLib monsterSpawnLib)
                     {
+                        SpawnPoint spawnPoint = new SpawnPoint() { SyncX = obj.Rectangle.X, SyncY = obj.Rectangle.Y };
+                        spawnPoint = NetBehavior.SpawnWithServerAuthority(spawnPoint);
+
                         if (monsterSpawnLib.MonsterType.Equals("Bat"))
                         {
-                            for (int i = 0; i < 1; i++)
+                            for (int i = 1; i <= 2; i++)
                             {
                                 Bat bat = new Bat
                                 {
                                     SyncX = obj.Rectangle.X,
-                                    SyncY = obj.Rectangle.Y
+                                    SyncY = obj.Rectangle.Y,
+                                    SyncSpawnPoint = spawnPoint
                                 };
                                 Bat spawnedBat = NetBehavior.SpawnWithServerAuthority(bat);
                                 BatClaw batClaw = NetBehavior.SpawnWithServerAuthority(typeof(BatClaw));

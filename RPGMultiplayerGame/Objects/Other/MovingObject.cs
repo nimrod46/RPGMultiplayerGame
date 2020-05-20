@@ -1,7 +1,7 @@
 ﻿using Map;
 using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.MathExtention;
+using RPGMultiplayerGame.Extention;
 using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using System;
 using System.Collections.Generic;
