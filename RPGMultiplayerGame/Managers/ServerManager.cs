@@ -314,21 +314,41 @@ namespace RPGMultiplayerGame.Managers
                         {
                             if(Enum.TryParse(blockLib.SpecialBlockType, out DoorType specialBlockType))
                             {
+                                SpecialBlock gObject = null;
                                 switch (specialBlockType)
                                 {
                                     case DoorType.MetalDoor:
-                                        MetalDoor gObject = new MetalDoor
+                                        gObject = new MetalDoor
                                         {
                                             SyncX = obj.Rectangle.X,
                                             SyncY = obj.Rectangle.Y,
                                             SyncTextureIndex = blockLib.ImageIndex,
                                             SyncLayer = obj.Layer
                                         };
-                                        NetBehavior.SpawnWithServerAuthority(gObject);
+                                        break;
+                                       
+                                    case DoorType.WoodDoor:
+                                        gObject = new WoodDoor
+                                        {
+                                            SyncX = obj.Rectangle.X,
+                                            SyncY = obj.Rectangle.Y,
+                                            SyncTextureIndex = blockLib.ImageIndex,
+                                            SyncLayer = obj.Layer
+                                        };
+                                        break;
+                                    case DoorType.Chest:
+                                        gObject = new Chest
+                                        {
+                                            SyncX = obj.Rectangle.X,
+                                            SyncY = obj.Rectangle.Y,
+                                            SyncTextureIndex = blockLib.ImageIndex,
+                                            SyncLayer = obj.Layer
+                                        };
                                         break;
                                     default:
                                         break;
                                 }
+                                NetBehavior.SpawnWithServerAuthority(gObject);
                             }
                             else
                             {
@@ -340,7 +360,7 @@ namespace RPGMultiplayerGame.Managers
                     {
                         if (monsterSpawnLib.MonsterType.Equals("Bat"))
                         {
-                            for (int i = 0; i < 10; i++)
+                            for (int i = 0; i < 1; i++)
                             {
                                 Bat bat = new Bat
                                 {

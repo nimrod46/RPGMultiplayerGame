@@ -201,7 +201,7 @@ namespace RPGMultiplayerGame.Managers
         public List<Entity> GetEntitiesIntersectsWith(GameObject gameObject)
         {
             List<Entity> entitiesIntersects = new List<Entity>();
-            lock (updateObjects)
+            lock (entities)
             {
                 foreach (var entity in entities)
                 {
@@ -211,7 +211,23 @@ namespace RPGMultiplayerGame.Managers
                     }
                 }
             }
-            return (entitiesIntersects);
+            return entitiesIntersects;
+        }
+
+        public List<Entity> GetEntitiesAt(Block block)
+        {
+            List<Entity> entitiesIntersects = new List<Entity>();
+            lock (entities)
+            {
+                foreach (var entity in entities)
+                {
+                    if(!entity.SyncIsDead && entity.GetCollisionRect().Intersects(block.GetBoundingRectangle()))
+                    {
+                        entitiesIntersects.Add(entity);
+                    }
+                }
+            }
+            return entitiesIntersects;
         }
 
         public List<Entity> GetEntities()

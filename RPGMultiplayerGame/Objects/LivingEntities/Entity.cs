@@ -142,7 +142,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
             lock (this.specielWeaponEffect)
             {
-                //this.specielWeaponEffect.ForEach(a => { if (!a.AllowMultiple && a.GetType() == specielWeaponEffect.GetType()) a.IsDestroyed = true; } );
                 this.specielWeaponEffect.ForEach(a => { if (a.GetType() == specielWeaponEffect.GetType()) a.IsDestroyed = true; } );
                 specielWeaponEffect.Activate();
                 this.specielWeaponEffect.Add(specielWeaponEffect);
@@ -292,6 +291,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected void CmdAttack(Weapon weapon)
         {
             InvokeCommandMethodNetworkly(nameof(CmdAttack), weapon);
+            Console.WriteLine("ATTTTTTTTTT");
             weapon.Attack();
         }
 

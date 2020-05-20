@@ -13,6 +13,8 @@ namespace RPGMultiplayerGame.Objects.MapObjects
         {
         }
 
-        public abstract void Engage(Entity initiator);
+        public abstract void CmdEngage(Entity initiator);
+
+        public abstract bool Isblocking();
     }
 }

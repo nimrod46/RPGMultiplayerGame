@@ -94,10 +94,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         private void OnInteractWithMapElement()
         {
             Rectangle rectangle = GetBoundingRectangle();
-            rectangle.Inflate(2, 2);
-            if (GameManager.Instance.Map.TryGetBlockAt(rectangle, 0, out SpecialBlock specialBlock))
+            rectangle.Inflate(4, 4);
+            if (GameManager.Instance.Map.TryGetBlockAt(rectangle, 0, false, out SpecialBlock specialBlock))
             {
-                specialBlock.Engage(this);
+                specialBlock.CmdEngage(this);
             }
         }
 

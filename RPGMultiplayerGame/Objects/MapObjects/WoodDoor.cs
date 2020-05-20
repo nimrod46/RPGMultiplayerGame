@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace RPGMultiplayerGame.Objects.MapObjects
 {
-    public class MetalDoor : Door
+    public class WoodDoor : Door
     {
-        public MetalDoor() : base(GraphicManager.Instance.AnimationsByDoors[GraphicManager.DoorType.MetalDoor])
+        public WoodDoor() : base(GraphicManager.Instance.AnimationsByDoors[GraphicManager.DoorType.WoodDoor])
         {
         }    
     }

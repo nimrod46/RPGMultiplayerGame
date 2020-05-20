@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static RPGMultiplayerGame.Objects.LivingEntities.Entity;
-using static RPGMultiplayerGame.Objects.MapObjects.Door;
+using static RPGMultiplayerGame.Objects.MapObjects.CloseOpenBlock;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 using static RPGMultiplayerGame.Objects.VisualEffects.VisualEffect;
 
@@ -39,7 +39,9 @@ namespace RPGMultiplayerGame.Managers
 
         public enum DoorType
         {
-            MetalDoor
+            MetalDoor,
+            WoodDoor,
+            Chest
         }
 
         public enum WeaponAmmunitionId

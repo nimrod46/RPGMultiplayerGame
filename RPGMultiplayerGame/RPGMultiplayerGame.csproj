@@ -125,7 +125,10 @@
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\ExplodingArrow.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\FreezingArrow.cs" />
     <Compile Include="Objects\Items\Weapons\WeaponAmmunitions\CommonArrow.cs" />
+    <Compile Include="Objects\MapObjects\Chest.cs" />
+    <Compile Include="Objects\MapObjects\CloseOpenBlock.cs" />
     <Compile Include="Objects\MapObjects\Door.cs" />
+    <Compile Include="Objects\MapObjects\WoodDoor.cs" />
     <Compile Include="Objects\MapObjects\MetalDoor.cs" />
     <Compile Include="Objects\MapObjects\SimpleBlock.cs" />
     <Compile Include="Objects\MapObjects\SpecialBlock.cs" />

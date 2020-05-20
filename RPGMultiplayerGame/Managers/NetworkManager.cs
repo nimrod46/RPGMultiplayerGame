@@ -58,6 +58,8 @@ namespace RPGMultiplayerGame.Managers
             new StormArrow();
             new GameChat();
             new MetalDoor();
+            new WoodDoor();
+            new Chest();
         }
 
         public void AddServer()

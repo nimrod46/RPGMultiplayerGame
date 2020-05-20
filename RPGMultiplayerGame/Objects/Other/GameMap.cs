@@ -14,31 +14,47 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public void AddBlock(MapObject mapObject)
         {
-            mapObjects.Add(mapObject);
+            lock (mapObjects)
+            {
+                mapObjects.Add(mapObject);
+            }
         }
 
         public void RemoveBlock(MapObject mapObject)
         {
-            mapObjects.Add(mapObject);
+            lock (mapObjects)
+            {
+                mapObjects.Remove(mapObject);
+            }
         }
 
         public bool TryGetHighBlockAt<T>(Rectangle rectangle, out T outBlock) where T : MapObject
         {
-            return TryGetBlockAt(rectangle, 1, out outBlock);
+            return TryGetBlockAt(rectangle, 1, true, out outBlock);
         }
 
-        public bool TryGetBlockAt<T>(Rectangle rectangle, int layer, out T outBlock) where T : MapObject
+        public bool TryGetBlockAt<T>(Rectangle rectangle, int layer, bool onlyBlocking, out T outBlock) where T : MapObject
         {
-            outBlock = null;
-            foreach (var mapObject in mapObjects)
+            lock (mapObjects)
             {
-                if (mapObject is T type && mapObject.SyncLayer >= layer && mapObject.GetBoundingRectangle().Intersects(rectangle))
+                outBlock = null;
+                foreach (var mapObject in mapObjects)
                 {
-                    outBlock = type;
-                    return true;
+                    if (mapObject is T block && mapObject.SyncLayer >= layer && mapObject.GetBoundingRectangle().Intersects(rectangle))
+                    {
+                        if(mapObject is SpecialBlock s)
+                        {
+                            Console.WriteLine(s.Isblocking());
+                        }
+                        if (!onlyBlocking || !(mapObject is SpecialBlock specialBlock) || specialBlock.Isblocking())
+                        {
+                            outBlock = block;
+                            return true;
+                        }
+                    }
                 }
+                return false;
             }
-            return false;
         }
     }
 }
