@@ -291,7 +291,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected void CmdAttack(Weapon weapon)
         {
             InvokeCommandMethodNetworkly(nameof(CmdAttack), weapon);
-            Console.WriteLine("ATTTTTTTTTT");
             weapon.Attack();
         }
 

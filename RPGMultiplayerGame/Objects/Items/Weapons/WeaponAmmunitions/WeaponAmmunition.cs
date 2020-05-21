@@ -53,8 +53,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
                     CollisionSizeType = Ui.UiComponent.PositionType.Centered;
                     CollisionSize = new Vector2(1f, Size.Y);
                     break;
-                case Direction.Idle:
-                    break;
                 default:
                     break;
             }

@@ -26,7 +26,6 @@ namespace RPGMultiplayerGame.Objects.Other
             Up,
             Right,
             Down,
-            Idle, //TODO: Delete
         }
 
         public int SyncCurrentAnimationType

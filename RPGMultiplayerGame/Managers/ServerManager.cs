@@ -377,7 +377,7 @@ namespace RPGMultiplayerGame.Managers
 
                         if (monsterSpawnLib.MonsterType.Equals("Bat"))
                         {
-                            for (int i = 1; i <= 2; i++)
+                            for (int i = 1; i <= 1; i++)
                             {
                                 Bat bat = new Bat
                                 {

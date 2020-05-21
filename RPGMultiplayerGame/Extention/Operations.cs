@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Extention
@@ -72,6 +73,34 @@ namespace RPGMultiplayerGame.Extention
             Texture2D outTexture = new Texture2D(graphicsDevice, texture.Width, texture.Height, false, SurfaceFormat.Color);
             outTexture.SetData<Color>(pixels);
             return outTexture;
+        }
+        
+        public static Direction GetDirection(Vector2 heading)
+        {
+            Direction direction;
+            if (Math.Abs(heading.X) > Math.Abs(heading.Y))
+            {
+                if (heading.X > 0)
+                {
+                    direction = Direction.Left;
+                }
+                else
+                {
+                    direction = Direction.Right;
+                }
+            }
+            else
+            {
+                if (heading.Y > 0)
+                {
+                    direction = Direction.Up;
+                }
+                else
+                {
+                    direction = Direction.Down;
+                }
+            }
+            return direction;
         }
 
 

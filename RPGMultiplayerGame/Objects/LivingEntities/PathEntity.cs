@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RPGMultiplayerGame.Extention;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.MapObjects;
 using RPGMultiplayerGame.Objects.Other;
@@ -26,7 +27,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public bool IsLookingAtObject { get; set; }
 
         protected float minDistanceForObjectInteraction;
-        private readonly List<Waypoint> path = new List<Waypoint>();
+        protected readonly List<Waypoint> path = new List<Waypoint>();
         private double currentTime = 0;
         private double currentPointTime = 0;
         private int nextWaypointIndex = 0;
@@ -77,7 +78,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                             return;
                         }
 
-                        if (path.Count == nextWaypointIndex + 1)
+                        if (path.Count <= nextWaypointIndex + 1)
                         {
                             unit = -1;
                         }
@@ -86,10 +87,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                             unit = 1;
                         }
 
-                        nextWaypointIndex += unit;
-
                         currentPointTime = path[nextWaypointIndex].Time;
                         nextPoint = path[nextWaypointIndex].Point.ToVector2();
+                        nextWaypointIndex += unit;
                         currentTime = 0;
                     }
                 }
@@ -130,7 +130,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             IsLookingAtObject = true;
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
-            Direction direction = GetDirection(heading);
+            Direction direction = Operations.GetDirection(heading);
             if (direction != SyncCurrentDirection || SyncCurrentEntityState != entityState)
             {
                 InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, entityState, direction);
@@ -140,6 +140,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected virtual void StopLookingAtGameObject(GameObject gameObject)
         {
             IsLookingAtObject = false;
+        }
+
+        protected void ClearPath()
+        {
+            path.Clear();
+            nextWaypointIndex = 0;
         }
 
         protected bool HavePathToFollow()
@@ -157,40 +163,12 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
 
             Vector2 heading = new Vector2(SyncX, SyncY) - point;
-            Direction direction = GetDirection(heading);
+            Direction direction = Operations.GetDirection(heading);
             if (GetCurrentEnitytState<State>() != State.Moving || direction != SyncCurrentDirection)
             {
                 InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (int)State.Moving, direction);
             }
-        }
-
-        protected Direction GetDirection(Vector2 heading)
-        {
-            Direction direction;
-            if (Math.Abs(heading.X) > Math.Abs(heading.Y))
-            {
-                if (heading.X > 0)
-                {
-                    direction = Direction.Left;
-                }
-                else
-                {
-                    direction = Direction.Right;
-                }
-            }
-            else
-            {
-                if (heading.Y > 0)
-                {
-                    direction = Direction.Up;
-                }
-                else
-                {
-                    direction = Direction.Down;
-                }
-            }
-            return direction;
-        }
+        }    
 
         public void AddWaypoint(Waypoint waypoint)
         {

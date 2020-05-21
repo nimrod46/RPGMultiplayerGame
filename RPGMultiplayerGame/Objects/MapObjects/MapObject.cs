@@ -41,6 +41,8 @@ namespace RPGMultiplayerGame.Objects.MapObjects
             }
         }
 
+        public abstract bool Isblocking();
+
 
         public override void OnNetworkInitialize()
         {

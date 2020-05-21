@@ -48,8 +48,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
                     SyncY = entity.GetBoundingRectangle().Bottom - DamageAreaSize.Y;
                     SyncX = entity.GetCenter().X;
                     break;
-                case Direction.Idle:
-                    break;
             }
         }
 

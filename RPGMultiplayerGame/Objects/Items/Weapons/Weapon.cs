@@ -87,7 +87,10 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         {
             if (isInServer)
             {
-                PreformeAttack();
+                if (IsAbleToAttack())
+                {
+                    PreformeAttack();
+                }
             }
             if(hasAuthority)
             {

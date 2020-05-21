@@ -16,6 +16,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected double generatePointTimeDelay = 5f;
         protected double timeSinceLastGeneratePoint;
         private readonly DictionarySortedByValue<Entity, float> targetPlayers = new DictionarySortedByValue<Entity, float>();
+        private bool FollowingAlternativeRoute;
 
         public Monster(GraphicManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, true, Color.DarkRed)
         {
@@ -52,22 +53,36 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
                 if (targetPlayers.GetMaxElement().HasValue)
                 {
-                    SyncEquippedWeapon.UpdateWeaponLocation(this);
-                    if (SyncEquippedWeapon is MeleeWeapon meleeWeapon)
+                    if (!FollowingAlternativeRoute)
                     {
-                        if (GameManager.Instance.GetEntitiesHitBy(meleeWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
+                        SyncEquippedWeapon.UpdateWeaponLocation(this);
+                        if (SyncEquippedWeapon is MeleeWeapon meleeWeapon)
                         {
-                            LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
-                            Attack();
+                            if (GameManager.Instance.GetEntitiesHitBy(meleeWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
+                            {
+                                LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
+                                Attack();
+                            }
+                            else
+                            {
+                                LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
+                            }
                         }
                         else
                         {
-                            LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
+                            throw new NotImplementedException();
                         }
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        if (GameManager.Instance.Map.GetPathTo(Location, targetPlayers.GetMaxElement().Value.Key.Location, out List<Vector2> waypoints))
+                        {
+                            ClearPath();
+                            foreach (var item in waypoints)
+                            {
+                                AddWaypoint(new Waypoint(item.ToPoint(), 0));
+                            }
+                        }
                     }
                 }
                 else
@@ -82,6 +97,16 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                         }
                     }
                 }
+            }
+        }
+
+        protected override void OnCollidingWithBlock(Block block)
+        {
+            base.OnCollidingWithBlock(block);
+            if(targetPlayers.GetMaxElement().HasValue)
+            {
+                FollowingAlternativeRoute = true;
+                StopLookingAtGameObject(targetPlayers.GetMaxElement().Value.Key);
             }
         }
 

@@ -13,6 +13,11 @@ namespace RPGMultiplayerGame.Objects.MapObjects
         {
         }
 
+        public override bool Isblocking()
+        {
+            return SyncLayer >= 1;
+        }
+
         public override void OnTextureIndexSet()
         {
             animationsByType = GraphicManager.Instance.Textures[SyncTextureIndex];
