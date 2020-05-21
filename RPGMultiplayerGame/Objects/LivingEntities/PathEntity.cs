@@ -80,6 +80,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
                         currentPointTime = path[nextWaypointIndex].Time;
                         nextPoint = path[nextWaypointIndex].Point.ToVector2();
+                        NextPointChanged();
                         if (path.Count <= nextWaypointIndex + 1)
                         {
                             unit = -1;
@@ -94,6 +95,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
+        }
+
+        protected virtual void NextPointChanged()
+        {
         }
 
         protected virtual void FinishedPath()

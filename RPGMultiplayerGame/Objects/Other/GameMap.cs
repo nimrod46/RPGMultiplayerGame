@@ -33,10 +33,10 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public bool TryGetHighBlockAt<T>(Rectangle rectangle, out T outBlock) where T : MapObject
         {
-            return TryGetBlockAt(rectangle, 1, true, out outBlock);
+            return TryGetBlockAt(rectangle, true, out outBlock);
         }
 
-        public bool TryGetBlockAt<T>(Rectangle rectangle, int layer, bool onlyBlocking, out T outMapObject) where T : MapObject
+        public bool TryGetBlockAt<T>(Rectangle rectangle, bool onlyBlocking, out T outMapObject) where T : MapObject
         {
             //lock (mapObjects)
             //{
@@ -86,7 +86,7 @@ namespace RPGMultiplayerGame.Objects.Other
             destination = new Vector2(Round((int)destination.X, 16), Round((int)destination.Y, 16));
             alreadyChecked.Clear();
             Vector2 refSource = source;
-            if (GetPathTo(ref refSource, destination, Operations.GetDirection(source - destination), waypoints))
+            if (GetPathTo(ref refSource, destination, Operations.GetDirection(source - destination), ref waypoints))
             {
                 Console.WriteLine("----------------");
                 waypoints.Insert(0, source);
@@ -108,7 +108,7 @@ namespace RPGMultiplayerGame.Objects.Other
 
         readonly List<Vector2> alreadyChecked = new List<Vector2>();
 
-        public bool GetPathTo(ref Vector2 source, Vector2 destination, Direction direction, List<Vector2> waypoints)
+        public bool GetPathTo(ref Vector2 source, Vector2 destination, Direction direction, ref List<Vector2> waypoints)
         {
             if (GetMapObjectAt(source) == null || GetMapObjectAt(source).Isblocking())
             {
@@ -127,14 +127,14 @@ namespace RPGMultiplayerGame.Objects.Other
             {
                 if (source.X == destination.X)
                 {
-                    return GetPathTo(ref source, destination, Operations.GetDirection(source - destination), waypoints);
+                    return GetPathTo(ref source, destination, Operations.GetDirection(source - destination), ref waypoints);
                 }
             }
             else
             {
                 if (source.Y == destination.Y)
                 {
-                    return GetPathTo(ref source, destination, Operations.GetDirection(source - destination), waypoints);
+                    return GetPathTo(ref source, destination, Operations.GetDirection(source - destination), ref waypoints);
                 }
             }
             Vector2 vector2 = MoveVectorByDirection(source, 16, direction);
@@ -156,29 +156,57 @@ namespace RPGMultiplayerGame.Objects.Other
                 }
                 waypoints.Remove(vector2);
                 vector2 = MoveVectorByDirection(vector2, -16, direction);
-                if (GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 1), waypoints))
+                List<Vector2> tempWaypoints = new List<Vector2>(waypoints);
+                List<Vector2> tempWaypoints1 = new List<Vector2>(waypoints);
+                List<Vector2> tempWaypoints2 = new List<Vector2>(waypoints);
+                if (!GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 1), ref tempWaypoints))
                 {
+                    // return true;
+                    tempWaypoints.Clear();
+                }
+                 if (!GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 2), ref tempWaypoints1))
+                {
+                    // return true;
+                    tempWaypoints1.Clear();
+                }
+                 if (!GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 3), ref tempWaypoints2))
+                {
+                    //  return true;
+                    tempWaypoints2.Clear();
+                }
+                if(!tempWaypoints.Any() && !tempWaypoints1.Any() && !tempWaypoints2.Any())
+                {
+                    return false;
+                }
+                else
+                {
+                    if (tempWaypoints.Any() && tempWaypoints1.Any())
+                    {
+                        tempWaypoints = tempWaypoints.Count < tempWaypoints1.Count ? tempWaypoints : tempWaypoints1;
+                    }
+                    else if(tempWaypoints1.Any())
+                    {
+                        tempWaypoints = tempWaypoints1;
+                    }
+
+                    if (tempWaypoints.Any() && tempWaypoints2.Any())
+                    {
+                        tempWaypoints = tempWaypoints.Count < tempWaypoints2.Count ? tempWaypoints : tempWaypoints2;
+                    }
+                    else if (tempWaypoints2.Any())
+                    {
+                        tempWaypoints = tempWaypoints2;
+                    }
+
+
+                    waypoints = tempWaypoints;
                     return true;
                 }
-                else if (GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 2), waypoints))
-                {
-                    return true;
-                }
-                else if (GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 3), waypoints))
-                {
-                    return true;
-                }
-                return false;
             }
             else
             {
-                return GetPathTo(ref vector2, destination, direction, waypoints);
+                return GetPathTo(ref vector2, destination, direction, ref waypoints);
             }
-        }
-
-        private ValueTuple<Direction, Direction> GetAlternativeDirections(Direction direction)
-        {
-            return new ValueTuple<Direction, Direction>(GetDirectionByIndex((int)direction - 1), GetDirectionByIndex((int)direction + 1));
         }
 
         private Direction GetDirectionByIndex(int index) 
@@ -196,19 +224,14 @@ namespace RPGMultiplayerGame.Objects.Other
 
         private Vector2 MoveVectorByDirection(Vector2 source, int amount, Direction direction)
         {
-            switch (direction)
+            return direction switch
             {
-                case Direction.Left:
-                    return source + new Vector2(-amount, 0);
-                case Direction.Up:
-                    return source + new Vector2(0, -amount);
-                case Direction.Right:
-                    return source + new Vector2(amount, 0);
-                case Direction.Down:
-                    return source + new Vector2(0, amount);
-                default:
-                    return Vector2.Zero;
-            }
+                Direction.Left => source + new Vector2(-amount, 0),
+                Direction.Up => source + new Vector2(0, -amount),
+                Direction.Right => source + new Vector2(amount, 0),
+                Direction.Down => source + new Vector2(0, amount),
+                _ => Vector2.Zero,
+            };
         }
 
         public MapObject GetMapObjectAt(Vector2 location)

@@ -105,7 +105,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             Rectangle rectangle = GetBoundingRectangle();
             rectangle.Inflate(4, 4);
-            if (GameManager.Instance.Map.TryGetBlockAt(rectangle, 0, false, out SpecialBlock specialBlock))
+            if (GameManager.Instance.Map.TryGetBlockAt(rectangle, false, out SpecialBlock specialBlock))
             {
                 specialBlock.CmdEngage(this);
             }

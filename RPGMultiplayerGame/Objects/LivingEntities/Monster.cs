@@ -86,6 +86,10 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                                 }
                             }
                         }
+                        else
+                        {
+                           
+                        }
                     }
                 }
                 else
@@ -101,6 +105,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
+        }
+
+        protected override void NextPointChanged()
+        {
+            base.NextPointChanged();
+            Console.WriteLine("AT X: " + (int)SyncX / 16);
+            Console.WriteLine("AT Y: " + (int)SyncY / 16);
+            Console.WriteLine("Going to block X: " + (int)nextPoint.X / 16);
+            Console.WriteLine("Going to block Y: " + (int)nextPoint.Y / 16);
         }
 
         public override void Draw(SpriteBatch sprite)
@@ -123,6 +136,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             {
                 FollowingAlternativeRoute = true;
                 StopLookingAtGameObject(targetPlayers.GetMaxElement().Value.Key);
+            }
+            if (FollowingAlternativeRoute)
+            {
+                Console.WriteLine("AT X: " + (int)SyncX / 16);
+                Console.WriteLine("AT Y: " + (int)SyncY / 16);
+                Console.WriteLine("Stuck going to block X: " + (int)nextPoint.X / 16);
+                Console.WriteLine("Stuck going to block Y: " + (int)nextPoint.Y / 16);
             }
         }
 
