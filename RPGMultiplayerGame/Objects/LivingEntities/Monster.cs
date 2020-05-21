@@ -75,12 +75,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                     else
                     {
-                        if (GameManager.Instance.Map.GetPathTo(Location, targetPlayers.GetMaxElement().Value.Key.Location, out List<Vector2> waypoints))
+                        if (!HavePathToFollow())
                         {
-                            ClearPath();
-                            foreach (var item in waypoints)
+                            if (GameManager.Instance.Map.GetPathTo(Location, targetPlayers.GetMaxElement().Value.Key.Location, out List<Vector2> waypoints))
                             {
-                                AddWaypoint(new Waypoint(item.ToPoint(), 0));
+                                ClearPath();
+                                foreach (var item in waypoints)
+                                {
+                                    AddWaypoint(new Waypoint(item.ToPoint(), 0));
+                                }
                             }
                         }
                     }
@@ -98,6 +101,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
+        }
+
+        public override void Draw(SpriteBatch sprite)
+        {
+            base.Draw(sprite);
+            sprite.Draw(Operations.TintTextureByColor(sprite.GraphicsDevice, new Texture2D(sprite.GraphicsDevice, 16,16), Color.Red, 0), nextPoint + offset, null, Color.White, 0, Vector2.Zero, Scale, SpriteEffects.None, 0);
+        }
+
+        protected override void FinishedPath()
+        {
+            base.FinishedPath();
+            ClearPath();
+            FollowingAlternativeRoute = false;
         }
 
         protected override void OnCollidingWithBlock(Block block)

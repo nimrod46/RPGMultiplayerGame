@@ -63,7 +63,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     return;
                 }
                 MoveToPoint(nextPoint.X, nextPoint.Y);
-
+                
                 if (Vector2.Distance(new Vector2(SyncX, SyncY), nextPoint) <= 2f) //next point
                 {
                     if (HavePathToFollow())
@@ -78,22 +78,26 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                             return;
                         }
 
+                        currentPointTime = path[nextWaypointIndex].Time;
+                        nextPoint = path[nextWaypointIndex].Point.ToVector2();
                         if (path.Count <= nextWaypointIndex + 1)
                         {
                             unit = -1;
+                            FinishedPath();
                         }
                         else if (nextWaypointIndex == 0)
                         {
                             unit = 1;
                         }
-
-                        currentPointTime = path[nextWaypointIndex].Time;
-                        nextPoint = path[nextWaypointIndex].Point.ToVector2();
                         nextWaypointIndex += unit;
                         currentTime = 0;
                     }
                 }
             }
+        }
+
+        protected virtual void FinishedPath()
+        {
         }
 
         public override void Kill(Entity attacker)

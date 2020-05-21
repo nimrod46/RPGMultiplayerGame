@@ -124,6 +124,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.Update(gameTime);
             if (hasAuthority)
             {
+                Console.WriteLine(GameManager.Instance.Map.GetMapObjectAt(Location));
+                Console.WriteLine((int)Location.X / 16);
+                Console.WriteLine((int)Location.Y / 16);
                 if (GetCurrentEnitytState<State>() == State.Attacking)
                 {
                     if (IsLoopAnimationFinished())
