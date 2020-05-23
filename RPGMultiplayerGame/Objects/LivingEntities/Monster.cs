@@ -53,43 +53,39 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
                 if (targetPlayers.GetMaxElement().HasValue)
                 {
-                    if (!FollowingAlternativeRoute)
+                    SyncEquippedWeapon.UpdateWeaponLocation(this);
+                    if (SyncEquippedWeapon is MeleeWeapon meleeWeapon)
                     {
-                        SyncEquippedWeapon.UpdateWeaponLocation(this);
-                        if (SyncEquippedWeapon is MeleeWeapon meleeWeapon)
+                        if (GameManager.Instance.GetEntitiesHitBy(meleeWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
                         {
-                            if (GameManager.Instance.GetEntitiesHitBy(meleeWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
+                            LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
+                            Attack();
+                        }
+                        else
+                        {
+                            if (FollowingAlternativeRoute)
                             {
-                                LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
-                                Attack();
+                                if (!HavePathToFollow())
+                                {
+                                    if (GameManager.Instance.Map.GetPathTo(Location, targetPlayers.GetMaxElement().Value.Key.Location, out List<Vector2> waypoints))
+                                    {
+                                        ClearPath();
+                                        foreach (var item in waypoints)
+                                        {
+                                            AddWaypoint(new Waypoint(Operations.GetTopLeftPositionByPorsitionType(Ui.UiComponent.PositionType.Centered, Operations.GetPositionByTopLeftPosition(Ui.UiComponent.PositionType.Centered, item, new Vector2(16, 16)), Size.ToVector2()).ToPoint(), 0));
+                                        }
+                                    }
+                                }
                             }
                             else
                             {
                                 LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
                             }
                         }
-                        else
-                        {
-                            throw new NotImplementedException();
-                        }
                     }
                     else
                     {
-                        if (!HavePathToFollow())
-                        {
-                            if (GameManager.Instance.Map.GetPathTo(Location, targetPlayers.GetMaxElement().Value.Key.Location, out List<Vector2> waypoints))
-                            {
-                                ClearPath();
-                                foreach (var item in waypoints)
-                                {
-                                    AddWaypoint(new Waypoint(item.ToPoint(), 0));
-                                }
-                            }
-                        }
-                        else
-                        {
-                           
-                        }
+                        throw new NotImplementedException();
                     }
                 }
                 else

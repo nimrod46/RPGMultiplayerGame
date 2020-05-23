@@ -141,7 +141,7 @@ namespace RPGMultiplayerGame.Objects.Other
             else
             {
                 location = Operations.GetPositionByTopLeftPosition(CollisionSizeType, location, Size.ToVector2());
-                location = Operations.GetTopLeftPositionByPorsitionType(PositionType.Centered, location, CollisionSize);
+                location = Operations.GetTopLeftPositionByPorsitionType(CollisionSizeType, location, CollisionSize);
             }
             return new Rectangle((int)location.X + collisionOffsetX, (int)location.Y + collisionOffsetY, (int)CollisionSize.X - collisionOffsetX, (int)CollisionSize.Y - collisionOffsetY);
         }
