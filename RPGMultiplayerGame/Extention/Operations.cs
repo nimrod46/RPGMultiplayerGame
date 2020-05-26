@@ -77,30 +77,39 @@ namespace RPGMultiplayerGame.Extention
         
         public static Direction GetDirection(Vector2 heading)
         {
-            Direction direction;
             if (Math.Abs(heading.X) > Math.Abs(heading.Y))
             {
-                if (heading.X > 0)
-                {
-                    direction = Direction.Left;
-                }
-                else
-                {
-                    direction = Direction.Right;
-                }
+                return GetDirectionOnXAxis(heading);
+
             }
             else
             {
-                if (heading.Y > 0)
-                {
-                    direction = Direction.Up;
-                }
-                else
-                {
-                    direction = Direction.Down;
-                }
+                return GetDirectionOnYAxis(heading);
             }
-            return direction;
+        }
+
+        public static Direction GetDirectionOnXAxis(Vector2 heading)
+        {
+            if (heading.X > 0)
+            {
+                return Direction.Left;
+            }
+            else
+            {
+                return Direction.Right;
+            }
+        }
+
+        public static Direction GetDirectionOnYAxis(Vector2 heading)
+        {
+            if (heading.Y > 0)
+            {
+                return Direction.Up;
+            }
+            else
+            {
+                return Direction.Down;
+            }
         }
 
 

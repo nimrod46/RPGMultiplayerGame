@@ -67,7 +67,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                             {
                                 if (!HavePathToFollow())
                                 {
-                                    if (GameManager.Instance.Map.GetPathTo(Location, targetPlayers.GetMaxElement().Value.Key.Location, out List<Vector2> waypoints))
+                                    if (GameManager.Instance.Map.GetPathTo(GetCenter(), targetPlayers.GetMaxElement().Value.Key.GetCenter(), out List<Vector2> waypoints))
                                     {
                                         ClearPath();
                                         foreach (var item in waypoints)
@@ -101,13 +101,14 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
+            //Console.WriteLine(FollowingAlternativeRoute + " " + HavePathToFollow());
         }
 
         protected override void NextPointChanged()
         {
             base.NextPointChanged();
-            Console.WriteLine("AT X: " + (int)SyncX / 16);
-            Console.WriteLine("AT Y: " + (int)SyncY / 16);
+            Console.WriteLine("AT X: " + (int)GetCenter().X / 16);
+            Console.WriteLine("AT Y: " + (int)GetCenter().Y / 16);
             Console.WriteLine("Going to block X: " + (int)nextPoint.X / 16);
             Console.WriteLine("Going to block Y: " + (int)nextPoint.Y / 16);
         }
@@ -133,12 +134,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 FollowingAlternativeRoute = true;
                 StopLookingAtGameObject(targetPlayers.GetMaxElement().Value.Key);
             }
-            if (FollowingAlternativeRoute)
+            //if (FollowingAlternativeRoute)
             {
-                Console.WriteLine("AT X: " + (int)SyncX / 16);
-                Console.WriteLine("AT Y: " + (int)SyncY / 16);
-                Console.WriteLine("Stuck going to block X: " + (int)nextPoint.X / 16);
-                Console.WriteLine("Stuck going to block Y: " + (int)nextPoint.Y / 16);
+                //Console.WriteLine("AT X: " + (int)SyncX / 16 +  " " + SyncX);
+                //Console.WriteLine("AT Y: " + (int)SyncY / 16 + " " + SyncY);
+                //Console.WriteLine("Stuck going to block X: " + (int)block.SyncX / 16 + " " + block.SyncX);
+                //Console.WriteLine("Stuck going to block Y: " + (int)block.SyncY / 16 + " " + block.SyncX);
+                //Console.WriteLine(SyncCurrentDirection);
             }
         }
 

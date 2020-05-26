@@ -38,22 +38,6 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public bool TryGetBlockAt<T>(Rectangle rectangle, bool onlyBlocking, out T outMapObject) where T : MapObject
         {
-            //lock (mapObjects)
-            //{
-            //    outBlock = null;
-            //    foreach (var mapObject in mapObjects)
-            //    {
-            //        if (mapObject is T block && mapObject.SyncLayer >= layer && mapObject.GetBoundingRectangle().Intersects(rectangle))
-            //        {
-            //            if (!onlyBlocking || !(mapObject is SpecialBlock specialBlock) || specialBlock.Isblocking())
-            //            {
-            //                outBlock = block;
-            //                return true;
-            //            }
-            //        }
-            //    }
-            //    return false;
-            //}
             outMapObject = null;
             for (int i = rectangle.X / 16; i <= rectangle.X / 16 + rectangle.Width / 16 + 1; i++)
             {
@@ -86,7 +70,8 @@ namespace RPGMultiplayerGame.Objects.Other
             destination = new Vector2(Round((int)destination.X, 16), Round((int)destination.Y, 16));
             alreadyChecked.Clear();
             Vector2 refSource = source;
-            if (GetPathTo(ref refSource, destination, Operations.GetDirection(source - destination), ref waypoints))
+            Console.WriteLine("start: " + source);
+            if (GetPathTo(ref refSource, destination, Operations.GetDirection(source - destination), ref waypoints, false))
             {
                 Console.WriteLine("----------------");
                 waypoints.Insert(0, source);
@@ -108,105 +93,165 @@ namespace RPGMultiplayerGame.Objects.Other
 
         readonly List<Vector2> alreadyChecked = new List<Vector2>();
 
-        public bool GetPathTo(ref Vector2 source, Vector2 destination, Direction direction, ref List<Vector2> waypoints)
+        public bool GetPathTo(ref Vector2 source, Vector2 destination, Direction direction, ref List<Vector2> waypoints, bool shouldCheck)
         {
-            if (GetMapObjectAt(source) == null || GetMapObjectAt(source).Isblocking())
+            if (shouldCheck)
             {
-                Console.WriteLine("NOPE");
-                return false;
+                Vector2 tempSource = MoveVectorByDirection(source, 16, direction);
+                if (alreadyChecked.Contains(tempSource))
+                {
+                    return false;
+                }
+                alreadyChecked.Add(tempSource);
+                if (GetMapObjectAt(tempSource) == null || GetMapObjectAt(tempSource).Isblocking())
+                {
+                    return false;
+                }
+                source = tempSource;
+                waypoints.Add(source);
             }
 
             if (source == destination)
             {
-                waypoints.Add(source);
                 return true;
             }
-            //if(GetMapObjectAt(source) != null)
 
-            if (direction == Direction.Left || direction == Direction.Right)
+            Vector2 heading = source - destination;
+            
+            Direction nextBestDirection = Operations.GetDirection(heading);
+            List<Vector2> tempWaypoints = new List<Vector2>(waypoints);
+            if (GetPathTo(ref source, destination, nextBestDirection, ref tempWaypoints, true))
             {
-                if (source.X == destination.X)
-                {
-                    return GetPathTo(ref source, destination, Operations.GetDirection(source - destination), ref waypoints);
-                }
+                waypoints = tempWaypoints;
+                return true;
+            }
+            Direction nextGoodDirection;
+            if (nextBestDirection == Direction.Left || nextBestDirection == Direction.Right)
+            {
+                nextGoodDirection = Operations.GetDirectionOnYAxis(heading);
             }
             else
             {
-                if (source.Y == destination.Y)
-                {
-                    return GetPathTo(ref source, destination, Operations.GetDirection(source - destination), ref waypoints);
-                }
+                nextGoodDirection = Operations.GetDirectionOnXAxis(heading);
             }
-            Vector2 vector2 = MoveVectorByDirection(source, 16, direction);
-            if (waypoints.Contains(vector2))
+
+            if(GetPathTo(ref source, destination, nextGoodDirection, ref tempWaypoints, true))
             {
-                return false;
+                waypoints = tempWaypoints;
+                return true;
             }
 
-            waypoints.Add(vector2);
-            if (GetMapObjectAt(vector2) == null || GetMapObjectAt(vector2).Isblocking())
+            if(GetPathTo(ref source, destination, GetDirectionByIndex((int)nextBestDirection + 2), ref tempWaypoints, true))
             {
-                if (alreadyChecked.Contains(vector2))
-                {
-                    return false;
-                }
-                else
-                {
-                    alreadyChecked.Add(vector2);
-                }
-                waypoints.Remove(vector2);
-                vector2 = MoveVectorByDirection(vector2, -16, direction);
-                List<Vector2> tempWaypoints = new List<Vector2>(waypoints);
-                List<Vector2> tempWaypoints1 = new List<Vector2>(waypoints);
-                List<Vector2> tempWaypoints2 = new List<Vector2>(waypoints);
-                if (!GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 1), ref tempWaypoints))
-                {
-                    // return true;
-                    tempWaypoints.Clear();
-                }
-                 if (!GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 2), ref tempWaypoints1))
-                {
-                    // return true;
-                    tempWaypoints1.Clear();
-                }
-                 if (!GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 3), ref tempWaypoints2))
-                {
-                    //  return true;
-                    tempWaypoints2.Clear();
-                }
-                if(!tempWaypoints.Any() && !tempWaypoints1.Any() && !tempWaypoints2.Any())
-                {
-                    return false;
-                }
-                else
-                {
-                    if (tempWaypoints.Any() && tempWaypoints1.Any())
-                    {
-                        tempWaypoints = tempWaypoints.Count < tempWaypoints1.Count ? tempWaypoints : tempWaypoints1;
-                    }
-                    else if(tempWaypoints1.Any())
-                    {
-                        tempWaypoints = tempWaypoints1;
-                    }
-
-                    if (tempWaypoints.Any() && tempWaypoints2.Any())
-                    {
-                        tempWaypoints = tempWaypoints.Count < tempWaypoints2.Count ? tempWaypoints : tempWaypoints2;
-                    }
-                    else if (tempWaypoints2.Any())
-                    {
-                        tempWaypoints = tempWaypoints2;
-                    }
-
-
-                    waypoints = tempWaypoints;
-                    return true;
-                }
+                waypoints = tempWaypoints;
+                return true;
             }
-            else
+
+            if (GetPathTo(ref source, destination, GetDirectionByIndex((int)nextGoodDirection + 2), ref tempWaypoints, true))
             {
-                return GetPathTo(ref vector2, destination, direction, ref waypoints);
+                waypoints = tempWaypoints;
+                return true;
             }
+            return false;
+
+
+            //if (GetMapObjectAt(source) == null || GetMapObjectAt(source).Isblocking())
+            //{
+            //    Console.WriteLine("NOPE");
+            //    return false;
+            //}
+
+            //if (source == destination)
+            //{
+            //    waypoints.Add(source);
+            //    return true;
+            //}
+            ////if(GetMapObjectAt(source) != null)
+
+            //if (direction == Direction.Left || direction == Direction.Right)
+            //{
+            //    if (source.X == destination.X)
+            //    {
+            //        return GetPathTo(ref source, destination, Operations.GetDirection(source - destination), ref waypoints);
+            //    }
+            //}
+            //else
+            //{
+            //    if (source.Y == destination.Y)
+            //    {
+            //        return GetPathTo(ref source, destination, Operations.GetDirection(source - destination), ref waypoints);
+            //    }
+            //}
+            //Vector2 vector2 = MoveVectorByDirection(source, 16, direction);
+            //if (waypoints.Contains(vector2))
+            //{
+            //    return false;
+            //}
+
+            //waypoints.Add(vector2);
+            //if (GetMapObjectAt(vector2) == null || GetMapObjectAt(vector2).Isblocking())
+            //{
+            //    if (alreadyChecked.Contains(vector2))
+            //    {
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        alreadyChecked.Add(vector2);
+            //    }
+            //    waypoints.Remove(vector2);
+            //    vector2 = MoveVectorByDirection(vector2, -16, direction);
+            //    List<Vector2> tempWaypoints = new List<Vector2>(waypoints);
+            //    List<Vector2> tempWaypoints1 = new List<Vector2>(waypoints);
+            //    List<Vector2> tempWaypoints2 = new List<Vector2>(waypoints);
+            //    if (!GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 1), ref tempWaypoints))
+            //    {
+            //        // return true;
+            //        tempWaypoints.Clear();
+            //    }
+            //     if (!GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 2), ref tempWaypoints1))
+            //    {
+            //        // return true;
+            //        tempWaypoints1.Clear();
+            //    }
+            //     if (!GetPathTo(ref vector2, destination, GetDirectionByIndex((int)direction + 3), ref tempWaypoints2))
+            //    {
+            //        //  return true;
+            //        tempWaypoints2.Clear();
+            //    }
+            //    if(!tempWaypoints.Any() && !tempWaypoints1.Any() && !tempWaypoints2.Any())
+            //    {
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        if (tempWaypoints.Any() && tempWaypoints1.Any())
+            //        {
+            //            tempWaypoints = tempWaypoints.Count < tempWaypoints1.Count ? tempWaypoints : tempWaypoints1;
+            //        }
+            //        else if(tempWaypoints1.Any())
+            //        {
+            //            tempWaypoints = tempWaypoints1;
+            //        }
+
+            //        if (tempWaypoints.Any() && tempWaypoints2.Any())
+            //        {
+            //            tempWaypoints = tempWaypoints.Count < tempWaypoints2.Count ? tempWaypoints : tempWaypoints2;
+            //        }
+            //        else if (tempWaypoints2.Any())
+            //        {
+            //            tempWaypoints = tempWaypoints2;
+            //        }
+
+
+            //        waypoints = tempWaypoints;
+            //        return true;
+            //    }
+            //}
+            //else
+            //{
+            //    return GetPathTo(ref vector2, destination, direction, ref waypoints);
+            //}
         }
 
         private Direction GetDirectionByIndex(int index) 
