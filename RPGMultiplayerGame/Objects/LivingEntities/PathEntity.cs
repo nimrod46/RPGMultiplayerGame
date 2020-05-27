@@ -137,6 +137,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void LookAtGameObject(GameObject gameObject, int entityState)
         {
+            Console.WriteLine("START LOOKING");
             IsLookingAtObject = true;
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = Operations.GetDirection(heading);
@@ -148,6 +149,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void StopLookingAtGameObject(GameObject gameObject)
         {
+            Console.WriteLine("STOP LOOKING");
             IsLookingAtObject = false;
         }
 

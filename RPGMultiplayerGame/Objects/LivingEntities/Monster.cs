@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Extention;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.Items.Weapons;
+using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,16 +102,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                     }
                 }
             }
-            //Console.WriteLine(FollowingAlternativeRoute + " " + HavePathToFollow());
-        }
-
-        protected override void NextPointChanged()
-        {
-            base.NextPointChanged();
-            Console.WriteLine("AT X: " + (int)GetCenter().X / 16);
-            Console.WriteLine("AT Y: " + (int)GetCenter().Y / 16);
-            Console.WriteLine("Going to block X: " + (int)nextPoint.X / 16);
-            Console.WriteLine("Going to block Y: " + (int)nextPoint.Y / 16);
         }
 
         public override void Draw(SpriteBatch sprite)
@@ -126,21 +117,19 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             FollowingAlternativeRoute = false;
         }
 
+        protected override void LookAtGameObject(GameObject gameObject, int entityState)
+        {
+            base.LookAtGameObject(gameObject, entityState);
+            FinishedPath();
+        }
+
         protected override void OnCollidingWithBlock(Block block)
         {
             base.OnCollidingWithBlock(block);
-            if(targetPlayers.GetMaxElement().HasValue)
+            if (targetPlayers.GetMaxElement().HasValue)
             {
                 FollowingAlternativeRoute = true;
                 StopLookingAtGameObject(targetPlayers.GetMaxElement().Value.Key);
-            }
-            //if (FollowingAlternativeRoute)
-            {
-                //Console.WriteLine("AT X: " + (int)SyncX / 16 +  " " + SyncX);
-                //Console.WriteLine("AT Y: " + (int)SyncY / 16 + " " + SyncY);
-                //Console.WriteLine("Stuck going to block X: " + (int)block.SyncX / 16 + " " + block.SyncX);
-                //Console.WriteLine("Stuck going to block Y: " + (int)block.SyncY / 16 + " " + block.SyncX);
-                //Console.WriteLine(SyncCurrentDirection);
             }
         }
 
