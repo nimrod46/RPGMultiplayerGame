@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 72" width="450" height="72">
+	<defs>
+		<image width="450" height="72" id="img1" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABICAMAAABSmgV9AAAAAXNSR0IB2cksfwAAAHhQTFRFAAAANxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUNxwUWYFtJwAAACh0Uk5TABXM//GVBCnYjzLc6UPs/U7y/gBb82H7kgmp2+8av8MfOetK6uiQl2Y5Zi8AAAFBSURBVHic7d1bTgJBGAXhVnG8oaMNiDoiXmH/OxTUxBnepvvhTyX1reAktYCT0tDR8YlAJqfNQcGz8+hNGuliWPDyKnqQxpoOCl7fRO/RaG2/4O1d9ByNl/8DzuaL6DUq0Et4v4weoxK9hA/RW1TEhHh/CR+fuu45eouK/CZcvUTvULGfhKt19AyV2yd87aJXqMIu4dt79AjVyOnjM3qDquQ0iZ6gOjnl6AmqY0I8E+KZEM+EeCbEMyGeCfFMiGdCPBPimRDPhHgmxDMhngnxTIhnQjwT4pkQz4R4JsQzIZ4J8UyIZ0I8E+KZEM+EeCbEMyGeCfFMiGdCPBPimRDPhHgmxDMhngnxTIhnQjwT4pkQz4R4JsQzIZ4J8UyIZ0I8E+KZEC+nNnqC6rTpK3qC6kzTJnqC6mxSs/U8FGyxbb4BL3SEqjq/1wgAAAAASUVORK5CYII="/>
+		<image width="450" height="72" id="img2" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAcIAAABICAMAAABSmgV9AAAAAXNSR0IB2cksfwAAAQVQTFRFAAAAdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpdTIpr/J8dwAAAFd0Uk5TAA3B/+eDAB7OfijS3DXlz9v1/D/u/sYmOepM77cYeFX5qgttkv2gCIEGnfZ0AxOz61wCELlOF9HpNC7j1io85MK+GacOkQ/6j3XzY09B3jDQa5ck+3+F8wUUOwAAAdZJREFUeJzt3VdPwlAchvEqigsRceJA3OLee+89cHz/j6IGtT2YmLZc/H2T53fLzZs8OWl7bvA8V01tAkLq6pMVBRsarTchoia3YHOL9SBElXIKtqadH+vaMvjP2j8rZYMFOzqDAbu6ezz8a725ioR9/c4ZHBg0m4aQ8m7CoYJzBodH7JYhpFE34Viw4PjEpN0whPVHwsIUBRUEEhanM5nAk3Bmds52GsLxE84vOC8yi0vLxtMQzk/ClVW34BoFRXwnXN9wCm5uWQ9DWF8Jt3ecgrt71rsQWjnh/oHzOXjYbD0L4ZUTLjqfg0fH1qsQQTlhNngGT06tRyGKXwmzZ+fWmxBJZcKLy6L1JERTkbBwZT0IUbkJr2+4VJPjJEzfciWjJ5jw4M56DWIIJLx/sB6DOPyEj1yqafITPllPQTx+wlHrKYiHhPJIKI+E8kgoj4TySCiPhPJIKI+E8kgoj4TySCiPhPJIKI+E8kgoj4TySCiPhPJIKI+E8kgoj4TySCiPhPJIKI+E8kgoj4TySCiPhPJIKI+E8kgoj4TySCiPhPJIKI+E8vyEJespiKf0kzCRf4agzz9O+0j4koC0rJexnoDqpLwm6wmozquXfMtZj0B8ubfkO4x6+rhqn7y3AAAAAElFTkSuQmCC"/>
+		<image width="436" height="58" id="img3" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbQAAAA6CAMAAADvJ1xoAAAAAXNSR0IB2cksfwAAALRQTFRFAAAAroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYroVYOxDUaAAAADx0Uk5TAAnC/v3bJPyVBR3B/9wlYB/PbQA34UHnR/Fc+gNzevkInQurDbUW1QRykn40gU/wWvZsApqh+EQXrLRFDCPVPQAAAWdJREFUeJzt3NdOAlEUheGjIAg2PGNvWMCOvfv+72WLOuC5cJK9c7LC/z3ArB3+kJC5IISkicla3dJUo2n6vHE23Uo3a8/M2pqbrxk/cYwtJJt1Fq13iGYoJpIVS8vmO0QzlIq2smq/QzRDiWhr6w47RDP0N9rGpscO0QyNRtvarrvsEM3QSLTWTtdnh2iGhqPt7vl8z4hmaija/oHbJ0s0Q+Vovb7fDtEMlaIdmr8GKSGaod9o7SPPHaIZ+ol2fHLq6axBNDPf0c6jswHRzHxFKy4ucx+C//uMVlxd574DFXxEK25yX4FK3qPdDrxeg8BHDL07fiKIieE+9wmoKobcF6AyogkimiCiCSKaIKIJIpogogkimiCiCSKaIKIJIpogogkimiCiCSKaIKIJIpogogkimiCiCSKaIKIJIpogogkimiCiCSKaIKIJIpogogkimiCiCYrB8x+x4OHhMTw9v0BJ/zW8AUk06ZIqRyWeAAAAAElFTkSuQmCC"/>
+		<image width="8" height="5" id="img4" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAFCAMAAABPT11nAAAAAXNSR0IB2cksfwAAAFFQTFRFNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PAAAANQ8PNQ8PNQ8PNQ8PNQ8PNQ8PJ2M/zAAAABt0Uk5TP0pQTFloaTJy+P7//bAMAmrzsg4A9sgfAVEAkvMmZQAAADNJREFUeJxjYGBkYmZhZWNn4ODk4ubi4eVj4BcQ5OYWEhZhEOEXEBUTFwEyRCQkxaVERAAlYgJCknwtiwAAAABJRU5ErkJggg=="/>
+		<image width="71" height="13" id="img5" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAAANCAMAAADMrYMnAAAAAXNSR0IB2cksfwAAAEJQTFRFAAAANg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PNg8PEsU1LAAAABZ0Uk5TACVZLz3o/4dJ8Fr9AG76CYr+0KLGaRfLCJkAAABKSURBVHicY2AAA0YmygAzxBgWVjbKADvYGA5OCo2BmMPFTakxIHN4ePkoNgZoDr8A5a4BmcMuSAVjgOYIUcOYUXMImiMsQg0gCgARERiaInhNEQAAAABJRU5ErkJggg=="/>
+		<image width="71" height="13" id="img6" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAAANAgMAAACGHZuGAAAAAXNSR0IB2cksfwAAAAxQTFRFNQ8PNQ8PNQ8PNQ8PK10JrQAAAAR0Uk5T/20kEMHGydoAAAAVSURBVHicY2BABywYIkNeaBU6WAMAid8MJ3C6Z0QAAAAASUVORK5CYII="/>
+		<image width="71" height="13" id="img7" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAAANBAMAAAAJXW4mAAAAAXNSR0IB2cksfwAAABJQTFRFNQ8PNQ8PNQ8PNQ8PNQ8PNQ8PryyIIAAAAAZ0Uk5T217/bZI+jWAxZgAAABpJREFUeJxjYCAMBBiUCAODUUV0V+RCGAQAAMCFPt8SRSHnAAAAAElFTkSuQmCC"/>
+	</defs>
+	<style>
+		tspan { white-space:pre }
+		.txt0 { font-size: 33px;fill: #350f0f;font-family: "Arial Narrow" } 
+		.txt1 { font-size: 33px;fill: #350f0f;font-family: "20 db";font-weight: 400 } 
+		.txt2 { font-size: 29px;fill: #f5ebeb;font-family: "Arial Narrow" } 
+	</style>
+	<use id="Rounded Rectangle 1 copy 2" href="#img1" x="0" y="0" />
+	<use id="Rounded Rectangle 1 copy 3" href="#img2" x="0" y="0" />
+	<use id="Rounded Rectangle 1 copy" href="#img3" x="7" y="7" />
+	<text id="Name" style="transform: matrix(0.316,0,0,0.317,48.277,17.547)" >
+		<tspan x="0" y="0" class="txt0" dx="0" > </tspan>
+	</text>
+	<text id="Text" style="transform: matrix(0.316,0,0,0.317,124.824,17.974)" >
+		<tspan x="0" y="33.333" class="txt1" dx="0" > </tspan>
+	</text>
+	<use id="Rectangle 1" href="#img4" x="422" y="58" />
+	<use id="Layer 7" style="opacity: 0.722" href="#img5" x="7" y="22" />
+	<use id="Rectangle 2" style="opacity: 0.722" href="#img6" x="7" y="36" />
+	<use id="Rectangle 2 copy" style="opacity: 0.722" href="#img7" x="7" y="49" />
+	<text id="Option1" style="transform: matrix(0.316,0,0,0.317,30.001,31.749)" >
+		<tspan x="0" y="0" class="txt2" dx="0" > </tspan>
+	</text>
+	<text id="Option2" style="transform: matrix(0.316,0,0,0.317,30.481,45.194)" >
+		<tspan x="0" y="0" class="txt2" dx="0" > </tspan>
+	</text>
+	<text id="Option3" style="transform: matrix(0.316,0,0,0.317,30.139,58.676)" >
+		<tspan x="0" y="0" class="txt2" dx="0" > </tspan>
+	</text>
+</svg>
