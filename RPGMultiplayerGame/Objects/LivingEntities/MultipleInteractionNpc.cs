@@ -24,7 +24,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
-            List<Player> currentInteractingPlayers = GetCurrentPlayersInRadius();
+            List<Player> currentInteractingPlayers = GetCurrentPlayersInRadiusAndSight();
 
             currentInteractingPlayers.RemoveAll(p => !curentInteractingPlayersDialogs.ContainsKey(p) && p.SyncIsInteractingWithNpc);
 

@@ -29,7 +29,6 @@ namespace RPGMultiplayerGame.Managers
             LobbyList = lobbyList;
             lobby = new Lobby(ref LobbyList, 1331, "RPG Game");
             RegisterNetworkElements();
-            RegisterNetworkElements();
         }
 
         private void RegisterNetworkElements()
