@@ -73,7 +73,6 @@ namespace RPGMultiplayerGame.GameSaver
         {
             if (objectsByName.Where(s => s.Key == gameObject.GetName()).Any())
             {
-                Console.WriteLine(gameObject.GetName());
                 objectsByName.Where(s => s.Key == gameObject.GetName()).First().Value.LoadObjectData(gameObject);
                 return true;
             }

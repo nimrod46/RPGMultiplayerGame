@@ -16,7 +16,10 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 
         public override void OnActivated()
         {
-            entity.SyncIsVisible = false;
+            if (entity.hasAuthority)
+            {
+                entity.SyncIsVisible = false;
+            }
         }
 
         public override void Update()
@@ -25,7 +28,6 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
             {
                 entity.SyncIsVisible = !entity.SyncIsVisible;
             }
-
         }
 
         public override void End()

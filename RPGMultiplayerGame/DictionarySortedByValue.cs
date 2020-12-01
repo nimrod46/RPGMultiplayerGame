@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RPGMultiplayerGame.Objects.LivingEntities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,72 +30,65 @@ namespace RPGMultiplayerGame
             }
         }
 
-        private readonly SortedSet<ValueWrapper> orderedElements;
+        private readonly List<ValueWrapper> orderedElements;
         private readonly Dictionary<TKey, TValue> innerDict;
-        private ValueWrapper maxValue;
 
         public DictionarySortedByValue()
         {
-            this.orderedElements = new SortedSet<ValueWrapper>();
+            this.orderedElements = new List<ValueWrapper>();
             this.innerDict = new Dictionary<TKey, TValue>();
-            maxValue = null;
         }
 
         public void Add(TKey key, TValue value)
         {
+            innerDict.Add(key, value);
             var wrap = new ValueWrapper(key, value);
-            this.innerDict.Add(key, value);
-            this.orderedElements.Add(wrap);
-            if (maxValue == null)
+            if (orderedElements.Count == 0)
             {
-                maxValue = wrap;
+                orderedElements.Add(wrap);
+                return;
             }
-            else
+            if (orderedElements[0].CompareTo(wrap) >= 0)
             {
-                maxValue = (wrap.CompareTo(maxValue) == 1 ? wrap : maxValue);
+                orderedElements.Insert(0, wrap);
+                return;
             }
+            if (orderedElements[orderedElements.Count - 1].CompareTo(wrap) <= 0)
+            {
+                orderedElements.Add(wrap);
+                return;
+            }
+            int index = orderedElements.BinarySearch(wrap);
+            if (index < 0)
+                index = ~index;
+            orderedElements.Insert(index, wrap);
         }
 
         public KeyValuePair<TKey, TValue>? GetMaxElement()
         {
-            if (maxValue == null)
+            if (orderedElements.Count == 0)
             {
                 return null;
             }
-            return new KeyValuePair<TKey, TValue>(maxValue.Key, maxValue.Value);
+            return new KeyValuePair<TKey, TValue>(orderedElements[orderedElements.Count - 1].Key, orderedElements[orderedElements.Count - 1].Value);
         }
 
         public bool ContainsKey(TKey key)
         {
-            return this.innerDict.ContainsKey(key);
+            return orderedElements.Any(i => i.Key.Equals(key));
         }
 
         public ICollection<TKey> Keys
         {
-            get { return this.innerDict.Keys; }
+            get { return orderedElements.Select(i => i.Key).ToList(); }
         }
 
         public bool Remove(TKey key)
         {
             if (this.TryGetValue(key, out TValue val))
             {
-                var wrap = new ValueWrapper(key, val);
-                this.orderedElements.Remove(wrap);
+                this.orderedElements.RemoveAll(i => i.Key.Equals(key));
                 this.innerDict.Remove(key);
-                if (maxValue != null)
-                {
-                    if (maxValue.Key.Equals(key))
-                    {
-                        if (orderedElements.Count != 0)
-                        {
-                            maxValue = orderedElements.ElementAt(orderedElements.Count - 1);
-                        }
-                        else
-                        {
-                            maxValue = null;
-                        }
-                    }
-                }
                 return true;
             }
             return false;
@@ -132,13 +126,11 @@ namespace RPGMultiplayerGame
         {
             this.innerDict.Clear();
             this.orderedElements.Clear();
-            maxValue = null;
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            var wrap = new ValueWrapper(item.Key, item.Value);
-            return this.orderedElements.Contains(wrap);
+            return this.innerDict.Contains(item);
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
