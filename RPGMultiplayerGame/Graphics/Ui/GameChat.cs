@@ -64,7 +64,7 @@ namespace RPGMultiplayerGame.Ui
 
         public void BoardcastlyAddPlayerMassage(string massage)
         {
-            InvokeBroadcastMethodNetworkly(nameof(LocallyAddPlayerMassage), massage, LocalPlayer);
+            InvokeBroadcastMethodNetworkly(nameof(LocallyAddPlayerMassage), LocalPlayer, massage);
         }
 
         public void LocallyAddPlayerMassage(Player player, string massage)
