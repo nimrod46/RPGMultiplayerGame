@@ -93,8 +93,8 @@ namespace RPGMultiplayerGame.Objects.Other
             }
         }
 
-        public virtual void OnDestroyed(NetworkIdentity identity)
-        {
-        }
+        public abstract void OnDestroyed(NetworkIdentity identity);
+       
     }
 }
+    

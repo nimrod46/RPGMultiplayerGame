@@ -27,8 +27,7 @@ namespace RPGMultiplayerGame.Managers
         public void Init(ref ListView lobbyList)
         {
             LobbyList = lobbyList;
-            lobby = new Lobby(ref LobbyList, 1331, "RPG Game");
-            RegisterNetworkElements();
+            lobby = new Lobby(ref LobbyList, 1332, "RPG Game");
             RegisterNetworkElements();
         }
 

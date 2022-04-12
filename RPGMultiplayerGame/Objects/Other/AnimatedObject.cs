@@ -33,7 +33,7 @@ namespace RPGMultiplayerGame.Objects.Other
             get => currentAnimationType; set
             {
                 currentAnimationType = value;
-                UpdateTexture();
+                OnCurrentAnimationTypeSet();
             }
         }
 
@@ -104,8 +104,8 @@ namespace RPGMultiplayerGame.Objects.Other
 
         public void OnCurrentAnimationTypeSet()
         {
-            currentAnimationIndex = 0;
             timeSinceLastFrame = 0;
+            currentAnimationIndex = 0;
             UpdateTexture();
         }
 
@@ -116,7 +116,6 @@ namespace RPGMultiplayerGame.Objects.Other
 
         protected void AnimationAtDir(Direction direction, int dirToAnimationIndex, bool shouldLoopAnimation)
         {
-            currentAnimationIndex = 0;
             SyncCurrentDirection = direction;
             SyncCurrentAnimationType = (int)SyncCurrentDirection + dirToAnimationIndex;
             this.shouldLoopAnimation = shouldLoopAnimation;

@@ -111,18 +111,18 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             IsLookingAtObject = false;
         }
 
-        protected List<Player> GetCurrentPlayersInRadius()
+        protected List<Player> GetCurrentPlayersInRadiusAndSight()
         {
-            return GetCurrentPlayersInRadius(minDistanceForObjectInteraction);
+            return GetCurrentPlayersInRadiusAndSight(minDistanceForObjectInteraction);
         }
 
-        protected List<Player> GetCurrentPlayersInRadius(float minDistance)
+        protected List<Player> GetCurrentPlayersInRadiusAndSight(float minDistance)
         {
             List<Player> currentInteractingPlayers = new List<Player>();
             for (int i = 0; i < ServerManager.Instance.players.Count; i++)
             {
                 Player player = ServerManager.Instance.players[i];
-                if (!player.SyncIsDead && IsObjectInInteractingRadius(player, minDistance))
+                if (IsPlayerInRadiusAndSight(player, minDistance))
                 {
                     currentInteractingPlayers.Add(player);
                 }
@@ -130,14 +130,23 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             return currentInteractingPlayers;
         }
 
+        protected bool IsPlayerInRadiusAndSight(Player player, float minDistance)
+        {
+            return !player.SyncIsDead && IsObjectInInteractingRadius(player, minDistance) && IsObjectInSight(player);
+        }
+
         protected bool IsObjectInInteractingRadius(GameObject gameObject)
         {
             return IsObjectInInteractingRadius(gameObject, minDistanceForObjectInteraction);
         }
 
+        protected bool IsObjectInSight(GameObject gameObject)
+        {
+            return GameManager.Instance.Map.HasClearSight(Location, gameObject.Location);
+        }
+
         protected virtual void LookAtGameObject(GameObject gameObject, int entityState)
         {
-            Console.WriteLine("START LOOKING");
             IsLookingAtObject = true;
             Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
             Direction direction = Operations.GetDirection(heading);
@@ -149,7 +158,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected virtual void StopLookingAtGameObject(GameObject gameObject)
         {
-            Console.WriteLine("STOP LOOKING");
             IsLookingAtObject = false;
         }
 

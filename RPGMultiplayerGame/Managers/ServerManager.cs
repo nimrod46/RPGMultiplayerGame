@@ -49,7 +49,7 @@ namespace RPGMultiplayerGame.Managers
 
         public void StartServer()
         {
-            ServerBehavior serverBehavior = new ServerBehavior(1331);
+            ServerBehavior serverBehavior = new ServerBehavior(1332);
             serverBehavior.Run();
             serverBehavior.OnClientEventHandlerSynchronizedEvent += OnClientSynchronized;
             serverBehavior.OnRemoteIdentityInitialize += GameManager.Instance.OnIdentityInitialize;
@@ -70,7 +70,9 @@ namespace RPGMultiplayerGame.Managers
             {
                 Operations.DoTaskWithDelay(() => {
                     monster.Respawn(monster.SyncSpawnPoint.SyncX, monster.SyncSpawnPoint.SyncY);
-                    NetBehavior.SpawnWithServerAuthority(monster);
+                    monster = NetBehavior.SpawnWithServerAuthority(monster);
+                    monster.EquipeWith(NetBehavior.SpawnWithServerAuthority(monster.SyncEquippedWeapon));
+                   
                 }, 1);
 
                 

@@ -17,7 +17,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected double generatePointTimeDelay = 5f;
         protected double timeSinceLastGeneratePoint;
         private readonly DictionarySortedByValue<Entity, float> targetPlayers = new DictionarySortedByValue<Entity, float>();
-        private bool FollowingAlternativeRoute;
 
         public Monster(GraphicManager.EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, true, Color.DarkRed)
         {
@@ -32,7 +31,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 return;
             }
 
-            List<Player> currentInteractingPlayers = GetCurrentPlayersInRadius();
+            List<Player> currentInteractingPlayers = GetCurrentPlayersInRadiusAndSight();
             lock (targetPlayers)
             {
                 foreach (var player in currentInteractingPlayers)
@@ -54,39 +53,27 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
                 if (targetPlayers.GetMaxElement().HasValue)
                 {
-                    SyncEquippedWeapon.UpdateWeaponLocation(this);
-                    if (SyncEquippedWeapon is MeleeWeapon meleeWeapon)
+                    if (IsObjectInSight(targetPlayers.GetMaxElement().Value.Key))
                     {
-                        if (GameManager.Instance.GetEntitiesHitBy(meleeWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
+                        LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
+                        SyncEquippedWeapon.UpdateWeaponLocation(this);
+                        if (SyncEquippedWeapon is MeleeWeapon meleeWeapon)
                         {
-                            LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
-                            Attack();
+                            if (GameManager.Instance.GetEntitiesHitBy(meleeWeapon, this).Any(e => e is Player player && player == targetPlayers.GetMaxElement().Value.Key))
+                            {
+                                LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Idle);
+                                Attack();
+                            }
                         }
                         else
                         {
-                            if (FollowingAlternativeRoute)
-                            {
-                                if (!HavePathToFollow())
-                                {
-                                    if (GameManager.Instance.Map.GetPathTo(GetCenter(), targetPlayers.GetMaxElement().Value.Key.GetCenter(), out List<Vector2> waypoints))
-                                    {
-                                        ClearPath();
-                                        foreach (var item in waypoints)
-                                        {
-                                            AddWaypoint(new Waypoint(Operations.GetTopLeftPositionByPorsitionType(Ui.UiComponent.PositionType.Centered, Operations.GetPositionByTopLeftPosition(Ui.UiComponent.PositionType.Centered, item, new Vector2(16, 16)), Size.ToVector2()).ToPoint(), 0));
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                LookAtGameObject(targetPlayers.GetMaxElement().Value.Key, (int)State.Moving);
-                            }
+                            throw new NotImplementedException();
                         }
                     }
                     else
                     {
-                        throw new NotImplementedException();
+                        StopLookingAtGameObject(targetPlayers.GetMaxElement().Value.Key);
+                        targetPlayers.Remove(targetPlayers.GetMaxElement().Value.Key);
                     }
                 }
                 else
@@ -110,13 +97,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             sprite.Draw(Operations.TintTextureByColor(sprite.GraphicsDevice, new Texture2D(sprite.GraphicsDevice, 16,16), Color.Red, 0), nextPoint + offset, null, Color.White, 0, Vector2.Zero, Scale, SpriteEffects.None, 0);
         }
 
-        protected override void FinishedPath()
-        {
-            base.FinishedPath();
-            ClearPath();
-            FollowingAlternativeRoute = false;
-        }
-
         protected override void LookAtGameObject(GameObject gameObject, int entityState)
         {
             base.LookAtGameObject(gameObject, entityState);
@@ -128,7 +108,6 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.OnCollidingWithBlock(block);
             if (targetPlayers.GetMaxElement().HasValue)
             {
-                FollowingAlternativeRoute = true;
                 StopLookingAtGameObject(targetPlayers.GetMaxElement().Value.Key);
             }
         }
