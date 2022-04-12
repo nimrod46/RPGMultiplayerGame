@@ -7,7 +7,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
     {
         public Arrow(WeaponAmmunitionId weaponAmmunitionId, int maxHitCount) : base(weaponAmmunitionId, maxHitCount)
         {
-            SyncSpeed *= 1.5f;
+            SetDefaultSpeed(SyncSpeed * 1.5f);
         }
 
         public override void OnNetworkInitialize()

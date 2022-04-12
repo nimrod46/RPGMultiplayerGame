@@ -72,10 +72,7 @@ namespace RPGMultiplayerGame.Managers
                     monster.Respawn(monster.SyncSpawnPoint.SyncX, monster.SyncSpawnPoint.SyncY);
                     monster = NetBehavior.SpawnWithServerAuthority(monster);
                     monster.EquipeWith(NetBehavior.SpawnWithServerAuthority(monster.SyncEquippedWeapon));
-                   
                 }, 1);
-
-                
             }
         }
 
@@ -125,7 +122,7 @@ namespace RPGMultiplayerGame.Managers
         private void Player_OnPlayerPickUpItemEvent(Player player)
         {
             GameItem gameItem = GetGameItems().FirstOrDefault(g => player.IsIntersectingWith(g));
-            if (gameItem != null && gameItem.isServerAuthority)
+            if (gameItem is { isServerAuthority: true })
             {
                 GivePlayerExistingItem(player, gameItem, "You picked up: ");
             }

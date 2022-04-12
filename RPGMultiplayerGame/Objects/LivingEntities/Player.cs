@@ -64,7 +64,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public Player() : base(GraphicManager.EntityId.Player, 0, 8, 100, GraphicManager.Instance.PlayerNameFont, true, Color.DarkOrange)
         {
             Scale = 1;
-            SyncSpeed *= 2;
+            SetDefaultSpeed(SyncSpeed * 2f);
             SyncName = "null";
         }
 

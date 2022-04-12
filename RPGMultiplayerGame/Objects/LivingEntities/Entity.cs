@@ -294,8 +294,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             weapon.Attack();
         }
 
-        public virtual void Respawn(float x, float y)
+        public override void Respawn(float x, float y)
         {
+            base.Respawn(x, y);
             SyncX = x;
             SyncY = y;
             SyncHealth = maxHealth;

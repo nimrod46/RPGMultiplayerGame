@@ -42,6 +42,10 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             get => speed; set
             {
+                if (this is Bat)
+                {
+                    Console.WriteLine("s");
+                }
                 speed = value;
                 minDistanceToUpdate = defaultMinDistanceToUpdate * speed * 5;
                 InvokeSyncVarNetworkly(nameof(SyncSpeed), speed);
@@ -54,16 +58,23 @@ namespace RPGMultiplayerGame.Objects.Other
         protected int currentAnimationIndex;
         protected bool shouldLoopAnimation;
         private float speed;
+        private float defaultSpeed;
         private int currentAnimationType;
 
         public AnimatedObject(Dictionary<int, List<GameTexture>> animationsByType)
         {
             this.animationsByType = animationsByType;
-            SyncSpeed = 0.5f / 10;
+            SetDefaultSpeed(0.5f / 10);
             animationTimeDelay = 100;
             shouldLoopAnimation = true;
             SyncCurrentDirection = Direction.Down;
             currentAnimationIndex = 0;
+        }
+
+        public void SetDefaultSpeed(float s)
+        {
+            defaultSpeed = s;
+            SyncSpeed = defaultSpeed;
         }
 
         public override void OnNetworkInitialize()
@@ -119,6 +130,11 @@ namespace RPGMultiplayerGame.Objects.Other
             SyncCurrentDirection = direction;
             SyncCurrentAnimationType = (int)SyncCurrentDirection + dirToAnimationIndex;
             this.shouldLoopAnimation = shouldLoopAnimation;
+        }
+
+        public virtual void Respawn(float x, float y)
+        {
+            SyncSpeed = defaultSpeed;
         }
     }
 }

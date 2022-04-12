@@ -27,7 +27,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
         {
             this.effectId = effectId;
             this.maxHitCount = maxHitCount;
-            SyncSpeed *= 6;
+            SetDefaultSpeed(SyncSpeed * 6);
             animationTimeDelay *= 12;
         }
 

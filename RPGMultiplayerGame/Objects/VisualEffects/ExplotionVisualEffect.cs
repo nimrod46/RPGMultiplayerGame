@@ -14,7 +14,7 @@ namespace RPGMultiplayerGame.Objects.VisualEffects
         public ExplotionVisualEffect() : base(GraphicManager.Instance.AnimationsByVisualEffects[VisualEffectId.Explotion])
         {
             Scale *= 0.5f;
-            SyncSpeed *= 2;
+            SetDefaultSpeed(SyncSpeed * 2f);
         }
 
         public override void OnNetworkInitialize()
