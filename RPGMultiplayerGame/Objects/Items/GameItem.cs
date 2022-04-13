@@ -30,7 +30,7 @@ namespace RPGMultiplayerGame.Objects.Items
             get => itemType; set
             {
                 itemType = value;
-                Texture = UiManager.Instance.GetItemTextureByType(value);
+                Texture = UiManager.Instance.GetItemTextureByType(value).TextureUi ?? UiManager.Instance.GetItemTextureByType(value).Texture;
                 InvokeSyncVarNetworkly(nameof(SyncItemType), itemType);
             }
         }
@@ -40,7 +40,7 @@ namespace RPGMultiplayerGame.Objects.Items
         [XmlIgnore]
         public float UiScale { get { return uiItem.Scale; } set { uiItem.Scale = value; } }
 
-        protected UiTextureComponent uiItem;
+        protected readonly UiTextureComponent uiItem;
 
         private ItemType itemType;
         public GameItem()
@@ -50,6 +50,7 @@ namespace RPGMultiplayerGame.Objects.Items
             Scale = 1;
             Layer = GraphicManager.ITEM_LAYER;
             uiItem = new UiTextureComponent((g) => Vector2.Zero, PositionType.Centered, false, ITEM_LAYER, Texture);
+            SyncIsVisible = false;
         }
 
         public GameItem(ItemType itemType, string name)
@@ -59,6 +60,7 @@ namespace RPGMultiplayerGame.Objects.Items
             Scale = 1;
             Layer = GraphicManager.ITEM_LAYER;
             uiItem = new UiTextureComponent((g) => Vector2.Zero, PositionType.Centered, false, ITEM_LAYER, Texture);
+            SyncIsVisible = false;
         }
 
         public virtual void SetAsUiItem(UiComponent uiParent, Func<Point, Vector2> origin, PositionType originType)
@@ -103,15 +105,15 @@ namespace RPGMultiplayerGame.Objects.Items
             SyncItemType = ItemType.None;
         }
 
-        public override string ToString()
-        {
-            return ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.DarkBlue, SyncName);
-        }
-
         public override void OnDestroyed(NetworkIdentity identity)
         {
             base.OnDestroyed(identity);
             uiItem.Delete();
+        }
+
+        public override string ToString()
+        {
+            return ColoredTextRenderer.ColorToColorCode(System.Drawing.KnownColor.DarkBlue, SyncName);
         }
     }
 }

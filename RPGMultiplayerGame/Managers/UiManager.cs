@@ -29,7 +29,7 @@ namespace RPGMultiplayerGame.Managers
         public const char COLOR_CODE_SPLITTER = '#';
         public const float GUI_LAYER = 0.01f;
 
-        public Dictionary<ItemType, Texture2D> ItemTextures { get; set; }
+        public Dictionary<ItemType, ItemTextures> ItemTextures { get; set; }
         public Texture2D UiHealthBar { get; set; }
         public Texture2D UiHealthBarBackground { get; set; }
         public Texture2D ItemDescriptionBackground { get; set; }
@@ -49,7 +49,7 @@ namespace RPGMultiplayerGame.Managers
 
         private UiManager()
         {
-            ItemTextures = new Dictionary<ItemType, Texture2D>();
+            ItemTextures = new Dictionary<ItemType, ItemTextures>();
             dialogBackgroundPath = "Content\\Ui\\DialogBackground.svg";
             questBackgroundPath = "Content\\Ui\\QuestBackground.svg";
         }
@@ -73,11 +73,22 @@ namespace RPGMultiplayerGame.Managers
             GoldTextFont = content.Load<SpriteFont>("Ui\\GoldTextFont");
             foreach (ItemType gameItemType in Enum.GetValues(typeof(ItemType)))
             {
-                ItemTextures.Add(gameItemType, content.Load<Texture2D>("Ui\\" + gameItemType.ToString()));
+                ItemTextures textures = new ItemTextures();
+                textures.Texture = content.Load<Texture2D>(@$"Ui\{gameItemType}");
+                try
+                {
+                    textures.Texture = content.Load<Texture2D>(@$"Ui\{gameItemType}Ui");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"No Ui texture for: {gameItemType}");
+                }
+
+                ItemTextures.Add(gameItemType, textures);
             }
         }
 
-        internal Texture2D GetItemTextureByType(ItemType value)
+        internal ItemTextures GetItemTextureByType(ItemType value)
         {
             return ItemTextures[value];
         }
@@ -199,5 +210,11 @@ namespace RPGMultiplayerGame.Managers
                 uiComponents.Remove(uiComponent);
             }
         }
+    }
+
+    public struct ItemTextures
+    {
+        public Texture2D Texture { get; set; }
+        public Texture2D? TextureUi { get; set; }
     }
 }

@@ -75,7 +75,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public Weapon SyncEquippedWeapon { get; set; }
+        public Weapon? SyncEquippedWeapon { get; set; }
 
         public EntityId EntityId { get; }
 
@@ -168,7 +168,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        public virtual void EquipeWith(Weapon weapon)
+        public void EquipeWith(Weapon weapon)
         {
             InvokeCommandMethodNetworkly(nameof(EquipeWith), weapon);
             SyncEquippedWeapon = weapon;

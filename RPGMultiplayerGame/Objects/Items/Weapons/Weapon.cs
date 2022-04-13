@@ -25,7 +25,8 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
         protected double coolDownTime;
         private readonly UiTextureComponent coolDownCover;
         private double currentCoolDownTime;
-        private bool isInCoolDown;
+        [XmlIgnore]
+        public bool IsInCoolDown { get; private set; }
 
         public Weapon(ItemType itemType, string name, float damage, double coolDownTime) : base(itemType, name)
         {
@@ -33,7 +34,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             SyncName = name;
             this.coolDownTime = coolDownTime;
             currentCoolDownTime = 0;
-            isInCoolDown = false;
+            IsInCoolDown = false;
             specielWeaponEffects = new List<Type>();
             AddSpecielWeaponEffect<FlickerEffect>();
             coolDownCover = new UiTextureComponent((g) => Vector2.Zero, UiComponent.PositionType.TopLeft, false, ITEM_LAYER * 0.1f, UiManager.Instance.CoolDownCover);
@@ -57,12 +58,12 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             {
                 return;
             }
-            if (isInCoolDown)
+            if (IsInCoolDown)
             {
                 currentCoolDownTime += gameTime.ElapsedGameTime.TotalSeconds;
                 if (currentCoolDownTime >= coolDownTime)
                 {
-                    isInCoolDown = false;
+                    IsInCoolDown = false;
                     currentCoolDownTime = 0;
                 }
                 else
@@ -80,7 +81,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public bool IsAbleToAttack()
         {
-            return !isInCoolDown;
+            return !IsInCoolDown;
         }
 
         public void Attack()
@@ -94,7 +95,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
             }
             if(hasAuthority)
             {
-                isInCoolDown = true;
+                IsInCoolDown = true;
             }
         }
 

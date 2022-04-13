@@ -13,7 +13,7 @@ namespace RPGMultiplayerGame.Objects.Other
     {
         public float Layer { get; set; }
         public float DefaultLayer { get; set; }
-        public virtual bool SyncIsVisible
+        public bool SyncIsVisible
         {
             get => syncIsVisible; set
             {

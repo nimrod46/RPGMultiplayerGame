@@ -299,10 +299,13 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (usableItems.TryGetItemInSlot(slot, out GameItem item))
             {
-                usableItems.TryRemoveItem(item);
                 int equippedSlot = 0;
                 if (item is Weapon weapon)
                 {
+                    if (SyncEquippedWeapon is not null && SyncEquippedWeapon.IsInCoolDown)
+                    {
+                        return;
+                    }
                     EquipeWith(weapon);
                     equippedSlot = 2;
                 }
@@ -310,6 +313,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 {
                     equippedSlot = 1;
                 }
+                usableItems.TryRemoveItem(item);
                 if (equippedItems.TryGetItemInSlot(equippedSlot, out GameItem otherItem))
                 {
                     usableItems.TryAddItem(otherItem);

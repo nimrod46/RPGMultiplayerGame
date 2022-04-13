@@ -71,7 +71,7 @@ namespace RPGMultiplayerGame.Managers
                 Operations.DoTaskWithDelay(() => {
                     monster.Respawn(monster.SyncSpawnPoint.SyncX, monster.SyncSpawnPoint.SyncY);
                     monster = NetBehavior.SpawnWithServerAuthority(monster);
-                    monster.EquipeWith(NetBehavior.SpawnWithServerAuthority(monster.SyncEquippedWeapon));
+                    monster.EquipeWith(NetBehavior.SpawnWithServerAuthority(typeof(BatClaw)));
                 }, 1);
             }
         }
@@ -122,7 +122,7 @@ namespace RPGMultiplayerGame.Managers
         private void Player_OnPlayerPickUpItemEvent(Player player)
         {
             GameItem gameItem = GetGameItems().FirstOrDefault(g => player.IsIntersectingWith(g));
-            if (gameItem is { isServerAuthority: true })
+            if (gameItem is { isServerAuthority: true,  })
             {
                 GivePlayerExistingItem(player, gameItem, "You picked up: ");
             }

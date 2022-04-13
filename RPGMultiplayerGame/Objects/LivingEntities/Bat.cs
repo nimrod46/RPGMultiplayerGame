@@ -17,5 +17,15 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             CollisionSizeType = Ui.UiComponent.PositionType.TopLeft;
             CollisionSize = new Vector2(6, 6);
         }
+
+        public override void Kill(Entity attacker)
+        {
+            base.Kill(attacker);
+            if (!isInServer) 
+                return;
+            
+            SyncEquippedWeapon?.SetAsMapItem(Location);
+            SyncEquippedWeapon = null;
+        }
     }
 }
