@@ -12,23 +12,45 @@ namespace RPGMultiplayerGame.Objects.Other
 {
     public class GameMap
     {
-        private readonly MapObject[,] mapObjects = new MapObject[10000,10000];
+        private readonly List<List<MapObject?>> mapObjects = new();
 
         public void AddBlock(MapObject mapObject)
         {
-            if(mapObjects[(int)mapObject.SyncX / 16, (int)mapObject.SyncY / 16] != null)
+            int xAxisIndex = (int)mapObject.SyncX / 16;
+            int yAxisIndex = (int)mapObject.SyncY / 16;
+            if(xAxisIndex + 1 > mapObjects.Count)
             {
-                if(mapObjects[(int)mapObject.SyncX / 16, (int)mapObject.SyncY / 16].SyncLayer > mapObject.SyncLayer)
+                for (int i = mapObjects.Count; i < xAxisIndex + 1; i++)
+                {
+                    mapObjects.Add(new List<MapObject?>());
+                }
+            }
+            
+            if( mapObjects.Any(i => i.Count < yAxisIndex + 1))
+            {
+                for (var i = 0; i < mapObjects.Count; i++)
+                {
+                    var t = mapObjects[i];
+                    for (int j = mapObjects[i].Count; j < yAxisIndex + 1; j++)
+                    {
+                        t.Add(null);
+                    }
+                }
+            }
+            
+            if(mapObjects[xAxisIndex][yAxisIndex] != null)
+            {
+                if(mapObjects[xAxisIndex][yAxisIndex]!.SyncLayer > mapObject.SyncLayer)
                 {
                     return;
                 }
             }
-            mapObjects[(int)mapObject.SyncX / 16, (int)mapObject.SyncY / 16] = mapObject;
+            mapObjects[xAxisIndex][yAxisIndex] = mapObject;
         }
 
         public void RemoveBlock(MapObject mapObject)
         {
-            mapObjects[(int)mapObject.SyncX / 16, (int)mapObject.SyncY / 16] = null;
+            mapObjects[(int)mapObject.SyncX / 16][(int)mapObject.SyncY / 16] = null;
         }
 
         public bool TryGetHighBlockAt<T>(Rectangle rectangle, out T outBlock) where T : MapObject
@@ -43,11 +65,11 @@ namespace RPGMultiplayerGame.Objects.Other
             {
                 for (int j = rectangle.Y / 16; j <= rectangle.Y / 16 + rectangle.Height / 16 + 1; j++)
                 {
-                    if (i < 0 || i >= mapObjects.GetLength(0) || j < 0 ||  j >= mapObjects.GetLength(1))
+                    if (i < 0 || i >= mapObjects.Count || j < 0 ||  j >= mapObjects[0].Count)
                     {
                         continue;
                     }
-                    if (mapObjects[i, j] is T mapObj)
+                    if (mapObjects[i][j] is T mapObj)
                     {
                         if (mapObj.GetBoundingRectangle().Intersects(rectangle))
                         {
@@ -116,7 +138,7 @@ namespace RPGMultiplayerGame.Objects.Other
             return false;
         }
 
-        readonly List<Vector2> alreadyChecked = new List<Vector2>();
+        readonly HashSet<Vector2> alreadyChecked = new();
 
         public bool GetPathTo(Vector2 source, Vector2 destination, Direction direction, ref List<Vector2> waypoints, bool shouldCheck)
         {
@@ -224,11 +246,11 @@ namespace RPGMultiplayerGame.Objects.Other
         {
             int i = (int)location.X / 16;
             int j = (int)location.Y / 16;
-            if (i < 0 || i >= mapObjects.GetLength(0) || j < 0 || j >= mapObjects.GetLength(1))
+            if (i < 0 || i >= mapObjects.Count || j < 0 || j >= mapObjects[0].Count)
             {
                 return null;
             }
-            return mapObjects[i, j];
+            return mapObjects[i][j];
         }
 
         private int Round(int a, int b)
