@@ -19,7 +19,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
         Direction IDamageInflicter.Direction { get => SyncCurrentDirection; set => SyncCurrentDirection = value; }
         public Entity Attacker { get => SyncAttacker; set => SyncAttacker = value; }
 
-        private readonly List<IdentityId> victimsEntitiesId = new List<IdentityId>();
+        private readonly HashSet<IdentityId> victimsEntitiesId = new();
         private int maxHitCount;
         protected WeaponAmmunitionId effectId;
 
@@ -89,19 +89,23 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 
         public void Hit(Entity victim)
         {
-            if (victim.IsDamageable && maxHitCount != 0)
+            if (!victim.IsDamageable || maxHitCount == 0)
             {
-                if (!victimsEntitiesId.Contains(victim.Id))
-                {
-                    SyncWeapon.InvokeBroadcastMethodNetworkly(nameof(SyncWeapon.ActivateEffectsOn), victim, this);
-                    victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), Attacker, Damage);
-                    victimsEntitiesId.Add(victim.Id);
-                    maxHitCount--;
-                    if (maxHitCount == 0)
-                    {
-                        InvokeBroadcastMethodNetworkly(nameof(Destroy));
-                    }
-                }
+                return;
+            }
+
+            if (victimsEntitiesId.Contains(victim.Id))
+            {
+                return;
+            }
+            
+            SyncWeapon.InvokeBroadcastMethodNetworkly(nameof(SyncWeapon.ActivateEffectsOn), victim, this);
+            victim.InvokeBroadcastMethodNetworkly(nameof(victim.OnAttackedBy), Attacker, Damage);
+            victimsEntitiesId.Add(victim.Id);
+            maxHitCount--;
+            if (maxHitCount == 0)
+            {
+                InvokeBroadcastMethodNetworkly(nameof(Destroy));
             }
         }
 

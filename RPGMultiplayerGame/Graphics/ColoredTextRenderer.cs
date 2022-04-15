@@ -108,8 +108,6 @@ namespace RPGMultiplayerGame.Graphics
                                 textLine = textLine.Substring(lastIndexOfCmd + 1, textLine.Length - lastIndexOfCmd - 1);
                             }
 
-                            int color = (int)System.Drawing.KnownColor.White;
-
                             {
                                 textSize = Font.MeasureString(subTextPart);
                                 reachTexts.Add(new ReachText(subTextPart, nextColor, new Vector2(xSum, size.Y)));
@@ -118,7 +116,7 @@ namespace RPGMultiplayerGame.Graphics
                                 //nextColor = defaultColor;
                             }
 
-                            if (int.TryParse(colorCode, out color))
+                            if (int.TryParse(colorCode, out var color))
                             {
                                 lastColors.Push(nextColor);
                                 System.Drawing.Color systemColor = System.Drawing.Color.FromKnownColor((System.Drawing.KnownColor)color);

@@ -14,8 +14,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
 
         public override string ToString()
         {
-            return base.ToString() + "\n" +
-                "Speciel effect: blows away enemies for " + StormWeaponEffect.LASTING_TIME + " seconds";
+            return $"{base.ToString()}\nSpeciel effect: blows away enemies for {StormWeaponEffect.LASTING_TIME} seconds";
         }
     }
 }

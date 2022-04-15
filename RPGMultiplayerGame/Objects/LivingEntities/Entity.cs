@@ -281,9 +281,9 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         protected void Attack()
         {
-            if (SyncEquippedWeapon.IsAbleToAttack())
+            if (SyncEquippedWeapon != null && SyncEquippedWeapon.IsAbleToAttack())
             {
-                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (object)(int)State.Attacking, SyncCurrentDirection);
+                InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, (int)State.Attacking, SyncCurrentDirection);
                 CmdAttack(SyncEquippedWeapon);
             }
         }

@@ -400,7 +400,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         {
             if (isDown)
             {
-                if (!SyncIsDead && SyncEquippedWeapon != null && !(GetCurrentEnitytState<State>() == State.Attacking))
+                if (!SyncIsDead && SyncEquippedWeapon != null && GetCurrentEnitytState<State>() != State.Attacking)
                 {
                     Attack();
                 }

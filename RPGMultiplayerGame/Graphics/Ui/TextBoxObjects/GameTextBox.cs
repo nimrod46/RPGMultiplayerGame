@@ -281,7 +281,7 @@ namespace MonoGame_Textbox
 
         public static bool IsLegalCharacter(SpriteFont font, char c)
         {
-            return font.Characters.Contains(c) || c == '\r' || c == '\n';
+            return font.Characters.Contains(c) || c is '\r' or '\n';
         }
 
         public static int IndexOfNextCharAfterWhitespace(int pos, char[] characters)

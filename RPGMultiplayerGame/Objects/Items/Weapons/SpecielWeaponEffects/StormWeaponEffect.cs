@@ -12,7 +12,7 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.SpecielWeaponEffects
 {
     public class StormWeaponEffect : WeaponEffectWithVisual<StormVisualEffect>
     {
-        public const float LASTING_TIME = 1.5f;
+        public const float LASTING_TIME = 0.5f;
 
         public StormWeaponEffect(Entity entity, IDamageInflicter damageInflicter) : base(entity, damageInflicter, LASTING_TIME, 1, new StormVisualEffect())
         {

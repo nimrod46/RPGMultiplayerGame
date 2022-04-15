@@ -17,9 +17,9 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons
     {
         public float Damage { get; set; }
         [XmlIgnore]
-        public Entity Attacker { get; set; }
+        public Entity? Attacker { get; set; }
         [XmlIgnore]
-        public Direction Direction { get => Attacker.SyncCurrentDirection; set => Attacker.SyncCurrentDirection = value; }
+        public Direction Direction { get => Attacker!.SyncCurrentDirection; set => Attacker!.SyncCurrentDirection = value; }
 
         protected List<Type> specielWeaponEffects;
         protected double coolDownTime;

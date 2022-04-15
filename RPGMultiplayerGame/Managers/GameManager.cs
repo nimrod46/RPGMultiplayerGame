@@ -184,7 +184,7 @@ namespace RPGMultiplayerGame.Managers
             {
                 foreach (var entity in entities)
                 {
-                    if (entity.SyncIsDead || attacker == entity || attacker.GetType().IsAssignableFrom(entity.GetType()))
+                    if (entity.SyncIsDead || attacker == entity)
                     {
                         continue;
                     }
