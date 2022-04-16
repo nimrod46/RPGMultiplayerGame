@@ -10,6 +10,7 @@ using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Xml.Serialization;
+using RPGMultiplayerGame.Graphics.Ui;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.Items

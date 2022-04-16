@@ -8,6 +8,7 @@ using RPGMultiplayerGame.Objects.Items.Potions;
 using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Other;
 using System;
+using RPGMultiplayerGame.Graphics.Ui.Dialogs;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities

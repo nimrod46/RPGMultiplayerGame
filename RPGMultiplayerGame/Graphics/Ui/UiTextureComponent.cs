@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
+﻿using System;
 using System.Xml.Serialization;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using RPGMultiplayerGame.Ui;
 
-namespace RPGMultiplayerGame.Ui
+namespace RPGMultiplayerGame.Graphics.Ui
 {
     public class UiTextureComponent : UiComponent
     {

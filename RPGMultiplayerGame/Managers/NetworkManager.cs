@@ -6,11 +6,11 @@ using RPGMultiplayerGame.Objects.Items.Weapons;
 using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.MapObjects;
-using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using RPGMultiplayerGame.Objects.VisualEffects;
 using RPGMultiplayerGame.Ui;
 using ServerLobby;
 using System.Windows.Forms;
+using RPGMultiplayerGame.Graphics.Ui.QuestsObjects.Quests;
 
 namespace RPGMultiplayerGame.Managers
 {

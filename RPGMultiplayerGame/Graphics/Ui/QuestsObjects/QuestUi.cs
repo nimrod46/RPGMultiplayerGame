@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Managers;
 using System;
+using RPGMultiplayerGame.Graphics.Ui;
 
 namespace RPGMultiplayerGame.Ui
 {

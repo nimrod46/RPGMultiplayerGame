@@ -1,7 +1,7 @@
-﻿using RPGMultiplayerGame.Objects.LivingEntities;
-using System;
+﻿using System;
+using RPGMultiplayerGame.Objects.LivingEntities;
 
-namespace RPGMultiplayerGame.Objects.Dialogs
+namespace RPGMultiplayerGame.Graphics.Ui.Dialogs
 {
     public class DialogByAnswerIndex : ComplexDialog
     {

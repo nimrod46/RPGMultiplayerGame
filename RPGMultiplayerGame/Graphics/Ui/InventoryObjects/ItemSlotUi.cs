@@ -5,6 +5,7 @@ using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Ui;
 using RPGMultiplayerGame.Ui.InventoryObjects;
 using System;
+using RPGMultiplayerGame.Graphics.Ui;
 
 namespace RPGMultiplayerGame.Objects.InventoryObjects
 {

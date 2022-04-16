@@ -1,13 +1,13 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Ui;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace RPGMultiplayerGame.Objects.Dialogs
+namespace RPGMultiplayerGame.Graphics.Ui.Dialogs
 {
     public class ComplexDialog : UiTextureComponent
     {
@@ -19,7 +19,8 @@ namespace RPGMultiplayerGame.Objects.Dialogs
         public string Name { get; private set; }
         public bool IsProgressing { get; }
 
-        private readonly List<KeyValuePair<string, ComplexDialog>> dialogsByAnswers = new List<KeyValuePair<string, ComplexDialog>>();
+        private readonly List<KeyValuePair<string, ComplexDialog>> dialogsByAnswers = new();
+        
         public ComplexDialog(string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, UiManager.GUI_LAYER, UiManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
         {
             Index = 0;
@@ -54,7 +55,7 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             return AddAnswerOption<ComplexDialog>(optionText, text, isProgressing);
         }
 
-        public ComplexDialog AddAnswerOption<T>(string optionText, params object[] args) where T : ComplexDialog
+        private ComplexDialog AddAnswerOption<T>(string optionText, params object[] args) where T : ComplexDialog
         {
             T dialog = (T)Activator.CreateInstance(typeof(T), args);
             return AddAnswerOption(optionText, dialog);
@@ -68,8 +69,6 @@ namespace RPGMultiplayerGame.Objects.Dialogs
             Texture = UiManager.Instance.GetDialogBackgroundByProperties(Name, Text, Color.White, dialogsByAnswers.Select(i => i.Key).ToArray());
             return dialog.GetLast();
         }
-
-
 
         public virtual ComplexDialog GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
         {

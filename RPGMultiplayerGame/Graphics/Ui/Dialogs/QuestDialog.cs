@@ -1,9 +1,9 @@
 ﻿using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.QuestsObjects;
-using System;
 
-namespace RPGMultiplayerGame.Objects.Dialogs
+namespace RPGMultiplayerGame.Graphics.Ui.Dialogs
 {
     public class QuestDialog : ComplexDialog
     {
@@ -30,33 +30,33 @@ namespace RPGMultiplayerGame.Objects.Dialogs
         public override ComplexDialog GetLast()
         {
             ComplexDialog dialog = AddAnswerOption("Got it", new ActionDialog(questText,
-                new Action<Player, int>((interactivePlayer, answerIndex) =>
-            {
-                if (answerIndex == 0)
+                (interactivePlayer, answerIndex) =>
                 {
-                    AssignPlayer(interactivePlayer, quest);
-                }
-            })));
+                    if (answerIndex == 0)
+                    {
+                        AssignPlayer(interactivePlayer, quest);
+                    }
+                }));
             ComplexDialog inProgressDialog = dialog.AddAnswerOption("Okay", new DialogByAnswerIndex(inQuestText,
-                new Func<Player, int, int>((interactivePlayer, answerIndex) =>
-            {
-                if (answerIndex > 0)
+                (_, answerIndex) =>
                 {
-                    return -1;
-                }
+                    if (answerIndex > 0)
+                    {
+                        return -1;
+                    }
 
-                if (!quest.SyncIsFinished)
-                {
-                    return answerIndex;
-                }
-                return answerIndex + 1;
-            })));
+                    if (!quest.SyncIsFinished)
+                    {
+                        return answerIndex;
+                    }
+                    return answerIndex + 1;
+                }));
             inProgressDialog.AddAnswerOption("Ok finished", notFinishedText, false);
-            return inProgressDialog.AddAnswerOption("", new ActionDialog(finishedText, new Action<Player, int>((interactivePlayer, answerIndex) =>
-           {
-               quest.RewardPlayer();
-               quest.Unassign();
-           })));
+            return inProgressDialog.AddAnswerOption("", new ActionDialog(finishedText, (_, _) =>
+            {
+                quest.RewardPlayer();
+                quest.Unassign();
+            }));
         }
     }
 }

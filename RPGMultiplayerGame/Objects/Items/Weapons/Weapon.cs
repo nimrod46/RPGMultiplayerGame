@@ -9,6 +9,7 @@ using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using RPGMultiplayerGame.Graphics.Ui;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons

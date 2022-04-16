@@ -1,5 +1,6 @@
 ﻿using RPGMultiplayerGame.Objects.LivingEntities;
 using System;
+using RPGMultiplayerGame.Graphics.Ui.Dialogs;
 
 namespace RPGMultiplayerGame.Objects.Dialogs
 {

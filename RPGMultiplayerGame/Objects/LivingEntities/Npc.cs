@@ -4,6 +4,7 @@ using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.Other;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 using System.Collections.Generic;
+using RPGMultiplayerGame.Graphics.Ui.Dialogs;
 using static RPGMultiplayerGame.Managers.GraphicManager;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities

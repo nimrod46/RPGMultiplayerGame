@@ -2,10 +2,10 @@
 using Networking;
 using RPGMultiplayerGame.Graphics.Ui.QuestsObjects;
 using RPGMultiplayerGame.Objects.LivingEntities;
-using RPGMultiplayerGame.Objects.QuestsObjects.Quests;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Xml.Serialization;
+using RPGMultiplayerGame.Graphics.Ui.QuestsObjects.Quests;
 using static RPGMultiplayerGame.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.QuestsObjects

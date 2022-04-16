@@ -6,6 +6,7 @@ using RPGMultiplayerGame.Objects.Other;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using RPGMultiplayerGame.Graphics.Ui.Dialogs;
 using RPGMultiplayerGame.Objects.QuestsObjects;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
