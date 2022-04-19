@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static RPGMultiplayerGame.Objects.Other.AnimatedObject;
-using static RPGMultiplayerGame.Ui.UiComponent;
+using static RPGMultiplayerGame.Graphics.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Extention
 {
@@ -71,7 +71,7 @@ namespace RPGMultiplayerGame.Extention
                 pixels[i] = new Color(r, g, b, pixels[i].A);
             }
             Texture2D outTexture = new Texture2D(graphicsDevice, texture.Width, texture.Height, false, SurfaceFormat.Color);
-            outTexture.SetData<Color>(pixels);
+            outTexture.SetData(pixels);
             return outTexture;
         }
         
@@ -115,11 +115,11 @@ namespace RPGMultiplayerGame.Extention
 
         public static void DoTaskWithDelay(Action action, float delaySec)
         {
-            new Thread(new ThreadStart(() =>
+            new Thread(() =>
             {
                 Thread.Sleep((int) (delaySec * 1000));
                 action();
-            })).Start();
+            }).Start();
         }
     }
 }

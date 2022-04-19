@@ -1,16 +1,16 @@
-﻿using RPGMultiplayerGame.Managers;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using RPGMultiplayerGame.Managers;
 
-namespace RPGMultiplayerGame
+namespace RPGMultiplayerGame.Forms
 {
     public partial class LobbyMenu : Form
     {
         Form gameForm;
         public delegate void ConnectingEvent(Form form);
-        public event ConnectingEvent OnConnectionEstablished;
+        public event ConnectingEvent? OnConnectionEstablished;
         public delegate void ServerOnline(Form form);
-        public event ConnectingEvent OnServerOnline;
+        public event ConnectingEvent? OnServerOnline;
 
         public LobbyMenu(Form gameForm)
         {
@@ -23,7 +23,7 @@ namespace RPGMultiplayerGame
         {
             if (ClientManager.Instance.Connect())
             {
-                OnConnectionEstablished.Invoke(this);
+                OnConnectionEstablished?.Invoke(this);
             }
         }
 
@@ -51,7 +51,7 @@ namespace RPGMultiplayerGame
         private void StartServer_Click(object sender, EventArgs e)
         {
             ServerManager.Instance.StartServer();
-            OnServerOnline.Invoke(this);
+            OnServerOnline?.Invoke(this);
         }
 
         private void LobbyMenu_Shown(object sender, EventArgs e)

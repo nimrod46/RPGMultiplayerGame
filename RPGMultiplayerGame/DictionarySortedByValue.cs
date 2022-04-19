@@ -1,5 +1,5 @@
-﻿using RPGMultiplayerGame.Objects.LivingEntities;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,25 +7,25 @@ namespace RPGMultiplayerGame
 {
     public class DictionarySortedByValue<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        class ValueWrapper : IComparable, IComparable<ValueWrapper>
+        private class ValueWrapper : IComparable, IComparable<ValueWrapper>
         {
-            public TKey Key { get; private set; }
-            public TValue Value { get; private set; }
+            public TKey Key { get; }
+            public TValue Value { get; }
 
             public ValueWrapper(TKey k, TValue v)
             {
-                this.Key = k;
-                this.Value = v;
+                Key = k;
+                Value = v;
             }
             public int CompareTo(object obj)
             {
-                if (!(obj is ValueWrapper))
+                if (obj is not ValueWrapper wrapper)
                     throw new ArgumentException("obj is not a ValueWrapper type object");
-                return this.CompareTo(obj as ValueWrapper);
+                return CompareTo(wrapper);
             }
             public int CompareTo(ValueWrapper other)
             {
-                int c = Comparer<TValue>.Default.Compare(this.Value, other.Value);
+                int c = Comparer<TValue>.Default.Compare(Value, other.Value);
                 return c;
             }
         }
@@ -35,8 +35,8 @@ namespace RPGMultiplayerGame
 
         public DictionarySortedByValue()
         {
-            this.orderedElements = new List<ValueWrapper>();
-            this.innerDict = new Dictionary<TKey, TValue>();
+            orderedElements = new List<ValueWrapper>();
+            innerDict = new Dictionary<TKey, TValue>();
         }
 
         public void Add(TKey key, TValue value)
@@ -75,7 +75,7 @@ namespace RPGMultiplayerGame
 
         public bool ContainsKey(TKey key)
         {
-            return orderedElements.Any(i => i.Key.Equals(key));
+            return orderedElements.Any(i => i.Key!.Equals(key));
         }
 
         public ICollection<TKey> Keys
@@ -85,10 +85,10 @@ namespace RPGMultiplayerGame
 
         public bool Remove(TKey key)
         {
-            if (this.TryGetValue(key, out TValue val))
+            if (TryGetValue(key, out _))
             {
-                this.orderedElements.RemoveAll(i => i.Key.Equals(key));
-                this.innerDict.Remove(key);
+                orderedElements.RemoveAll(i => i.Key!.Equals(key));
+                innerDict.Remove(key);
                 return true;
             }
             return false;
@@ -96,41 +96,41 @@ namespace RPGMultiplayerGame
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            return this.innerDict.TryGetValue(key, out value);
+            return innerDict.TryGetValue(key, out value);
         }
 
         public ICollection<TValue> Values
         {
-            get { return this.innerDict.Values; }
+            get { return innerDict.Values; }
         }
 
         public TValue this[TKey key]
         {
             get
             {
-                return this.innerDict[key];
+                return innerDict[key];
             }
             set
             {
-                _ = this.Remove(key);
-                this.Add(key, value);
+                _ = Remove(key);
+                Add(key, value);
             }
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            this.Add(item.Key, item.Value);
+            Add(item.Key, item.Value);
         }
 
         public void Clear()
         {
-            this.innerDict.Clear();
-            this.orderedElements.Clear();
+            innerDict.Clear();
+            orderedElements.Clear();
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            return this.innerDict.Contains(item);
+            return innerDict.Contains(item);
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
@@ -140,7 +140,7 @@ namespace RPGMultiplayerGame
 
         public int Count
         {
-            get { return this.innerDict.Count; }
+            get { return innerDict.Count; }
         }
 
         public bool IsReadOnly
@@ -150,20 +150,20 @@ namespace RPGMultiplayerGame
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            if (this.Contains(item))
-                return this.Remove(item.Key);
+            if (Contains(item))
+                return Remove(item.Key);
             return false;
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            foreach (var el in this.orderedElements)
+            foreach (var el in orderedElements)
                 yield return new KeyValuePair<TKey, TValue>(el.Key, el.Value);
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

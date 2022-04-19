@@ -15,7 +15,7 @@ using System.Linq;
 using System.Threading;
 using static NetworkingLib.Server;
 using static RPGMultiplayerGame.Managers.GameManager;
-using static RPGMultiplayerGame.Ui.UiComponent;
+using static RPGMultiplayerGame.Graphics.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {

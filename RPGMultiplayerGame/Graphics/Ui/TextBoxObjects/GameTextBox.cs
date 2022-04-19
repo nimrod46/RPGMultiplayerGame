@@ -31,10 +31,10 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame_Textbox;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Ui;
 
-namespace MonoGame_Textbox
+namespace RPGMultiplayerGame.Graphics.Ui.TextBoxObjects
 {
     public class GameTextBox : UiComponent
     {

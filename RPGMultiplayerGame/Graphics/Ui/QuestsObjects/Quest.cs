@@ -6,7 +6,7 @@ using RPGMultiplayerGame.Ui;
 using System;
 using System.Xml.Serialization;
 using RPGMultiplayerGame.Graphics.Ui.QuestsObjects.Quests;
-using static RPGMultiplayerGame.Ui.UiComponent;
+using static RPGMultiplayerGame.Graphics.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.QuestsObjects
 {

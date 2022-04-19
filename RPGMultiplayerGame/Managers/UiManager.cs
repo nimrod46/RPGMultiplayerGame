@@ -81,7 +81,7 @@ namespace RPGMultiplayerGame.Managers
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"No Ui texture for: {gameItemType}");
+                    Console.WriteLine($@"No Ui texture for: {gameItemType}");
                 }
 
                 ItemTextures.Add(gameItemType, textures);

@@ -45,7 +45,7 @@ namespace RPGMultiplayerGame.Objects.Other
             {
                 if (this is Bat)
                 {
-                    Console.WriteLine("s");
+                    Console.WriteLine(@"s");
                 }
                 speed = value;
                 minDistanceToUpdate = defaultMinDistanceToUpdate * speed * 5;

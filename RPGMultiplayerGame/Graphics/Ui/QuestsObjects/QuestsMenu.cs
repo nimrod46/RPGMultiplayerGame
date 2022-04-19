@@ -3,6 +3,7 @@ using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
+using RPGMultiplayerGame.Graphics.Ui;
 
 namespace RPGMultiplayerGame.Objects.QuestsObjects
 {

@@ -1,15 +1,12 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Networking;
-using RPGMultiplayerGame.Graphics;
-using RPGMultiplayerGame.Graphics.Ui;
-using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Extention;
-using RPGMultiplayerGame.Objects.Other;
-using System;
+﻿using System;
 using System.Xml.Serialization;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using RPGMultiplayerGame.Extention;
+using RPGMultiplayerGame.Managers;
+using RPGMultiplayerGame.Objects.Other;
 
-namespace RPGMultiplayerGame.Ui
+namespace RPGMultiplayerGame.Graphics.Ui
 {
     public abstract class UiComponent : IUiComponent, IGameUpdateable
     {
@@ -25,16 +22,13 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
-        public Vector2 Position { get; set; }
+        public Vector2 Position { get; private set; }
 
-        public Vector2 DrawPosition { get; set; }
+        protected Vector2 DrawPosition { get; private set; }
 
         public Vector2 Size
         {
-            get
-            {
-                return size * Scale;
-            }
+            get => size * Scale;
 
             set
             {
@@ -43,7 +37,7 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
-        public Vector2 Origin
+        private Vector2 Origin
         {
             get => origin; set
             {
@@ -62,20 +56,21 @@ namespace RPGMultiplayerGame.Ui
             }
         }
 
-        public virtual bool IsVisible { get { return Parent == null ? isVisible : Parent.IsVisible && isVisible; } set => isVisible = value; }
+        public virtual bool IsVisible { get => Parent == null ? isVisible : Parent.IsVisible && isVisible;
+            set => isVisible = value; }
 
-        public float Layer { get; set; }
+        protected float Layer { get; }
 
         public float Scale { get; set; }
         public bool IsDestroyed { get; set; }
         public bool IsEnabled { get; set; }
 
-        public UiComponent Parent;
+        public UiComponent? Parent { get; set; }
 
-        protected PositionType originType;
-        protected Vector2 origin;
-        private Func<Point, Vector2> originFunc;
         protected bool isVisible;
+        private PositionType originType;
+        private Vector2 origin;
+        private Func<Point, Vector2> originFunc;
         private Vector2 size;
 
         public enum PositionType
@@ -97,8 +92,8 @@ namespace RPGMultiplayerGame.Ui
         public UiComponent(Func<Point, Vector2> originFunc, PositionType originType, float layer)
         {
             Scale = 1;
-            this.OriginFunc = originFunc;
-            Origin = this.OriginFunc.Invoke(UiManager.Instance.GetScreenSize());
+            OriginFunc = originFunc;
+            Origin = originFunc.Invoke(UiManager.Instance.GetScreenSize());
             OriginType = originType;
             isVisible = false;
             Layer = layer;
@@ -110,7 +105,7 @@ namespace RPGMultiplayerGame.Ui
         {
             Scale = 1;
             Origin = Vector2.Zero;
-            this.OriginFunc = (g) => Vector2.Zero;
+            OriginFunc = _ => Vector2.Zero;
             Size = Vector2.Zero;
             OriginType = PositionType.TopLeft;
             isVisible = false;

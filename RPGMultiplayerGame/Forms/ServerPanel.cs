@@ -1,9 +1,9 @@
-﻿using Map;
-using RPGMultiplayerGame.Managers;
-using System;
+﻿using System;
 using System.Windows.Forms;
+using Map;
+using RPGMultiplayerGame.Managers;
 
-namespace RPGMultiplayerGame
+namespace RPGMultiplayerGame.Forms
 {
     public partial class ServerPanel : Form
     {
@@ -20,9 +20,9 @@ namespace RPGMultiplayerGame
             }
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "xml|*.xml"
+                Filter = @"xml|*.xml"
             };
-            if (!(openFileDialog.ShowDialog() == DialogResult.OK))
+            if (openFileDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }

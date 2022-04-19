@@ -138,7 +138,7 @@ namespace RPGMultiplayerGame.Graphics
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Warning: failed to parse color text with exception:");
+                        Console.WriteLine(@"Warning: failed to parse color text with exception:");
                         Console.WriteLine(e);
                         textLine = textLine.Replace(COLOR_CODE_CHAR_SPLITTER.ToString(), "");
                         textSize = Font.MeasureString(textLine);

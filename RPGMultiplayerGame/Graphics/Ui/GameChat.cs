@@ -9,9 +9,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Networking;
 using RPGMultiplayerGame.Graphics.Ui;
-using static RPGMultiplayerGame.Ui.UiComponent;
+using static RPGMultiplayerGame.Graphics.Ui.UiComponent;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Graphics;
+using RPGMultiplayerGame.Graphics.Ui.TextBoxObjects;
 using RPGMultiplayerGame.Managers;
 using static NetworkingLib.Server;
 

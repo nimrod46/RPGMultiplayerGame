@@ -7,6 +7,7 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.Other;
 using System;
 using System.Collections.Generic;
+using RPGMultiplayerGame.Graphics.Ui;
 using static RPGMultiplayerGame.Managers.GraphicManager;
 
 namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
@@ -38,19 +39,19 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
             switch (SyncCurrentDirection)
             {
                 case Direction.Left:
-                    CollisionSizeType = Ui.UiComponent.PositionType.Centered;
+                    CollisionSizeType = UiComponent.PositionType.Centered;
                     CollisionSize = new Vector2(Size.X, 1f);
                     break;
                 case Direction.Up:
-                    CollisionSizeType = Ui.UiComponent.PositionType.Centered;
+                    CollisionSizeType = UiComponent.PositionType.Centered;
                     CollisionSize = new Vector2(1f, Size.Y);
                     break;
                 case Direction.Right:
-                    CollisionSizeType = Ui.UiComponent.PositionType.Centered;
+                    CollisionSizeType = UiComponent.PositionType.Centered;
                     CollisionSize = new Vector2(Size.X, 1f);
                     break;
                 case Direction.Down:
-                    CollisionSizeType = Ui.UiComponent.PositionType.Centered;
+                    CollisionSizeType = UiComponent.PositionType.Centered;
                     CollisionSize = new Vector2(1f, Size.Y);
                     break;
                 default:
@@ -111,8 +112,8 @@ namespace RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions
 
         public void SetLocation()
         {
-            Vector2 location = Operations.GetPositionByTopLeftPosition(Ui.UiComponent.PositionType.Centered, new Vector2(SyncAttacker.SyncX, SyncAttacker.SyncY), SyncAttacker.Size.ToVector2());
-            location = Operations.GetTopLeftPositionByPorsitionType(Ui.UiComponent.PositionType.Centered, location, Size.ToVector2());
+            Vector2 location = Operations.GetPositionByTopLeftPosition(UiComponent.PositionType.Centered, new Vector2(SyncAttacker.SyncX, SyncAttacker.SyncY), SyncAttacker.Size.ToVector2());
+            location = Operations.GetTopLeftPositionByPorsitionType(UiComponent.PositionType.Centered, location, Size.ToVector2());
             SyncX = location.X;
             SyncY = location.Y;
         }

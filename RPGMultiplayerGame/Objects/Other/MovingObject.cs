@@ -5,7 +5,7 @@ using RPGMultiplayerGame.Extention;
 using RPGMultiplayerGame.Objects.Items.Weapons.WeaponAmmunitions;
 using System;
 using System.Collections.Generic;
-using static RPGMultiplayerGame.Ui.UiComponent;
+using static RPGMultiplayerGame.Graphics.Ui.UiComponent;
 
 namespace RPGMultiplayerGame.Objects.Other
 {

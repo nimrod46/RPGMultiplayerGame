@@ -1,4 +1,4 @@
-﻿namespace RPGMultiplayerGame
+﻿namespace RPGMultiplayerGame.Forms
 {
     partial class LobbyMenu
     {

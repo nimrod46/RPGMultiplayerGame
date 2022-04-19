@@ -7,6 +7,7 @@ using Networking;
 using RPGMultiplayerGame.Managers;
 using System;
 using System.Windows.Forms;
+using RPGMultiplayerGame.Forms;
 
 namespace RPGMultiplayerGame
 {
@@ -18,14 +19,14 @@ namespace RPGMultiplayerGame
 
         private readonly GraphicsDeviceManager graphics;
         private readonly Form gameForm;
-        private SpriteBatch spriteBatch;
-        private SpriteBatch uiSpriteBatch;
+        private SpriteBatch spriteBatch = null!;
+        private SpriteBatch uiSpriteBatch = null!;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             //this.Content = new ContentManager(Services, "yourDirectoryHere");
             Content.RootDirectory = "Content";
-            gameForm = Control.FromHandle(Window.Handle) as Form;
+            gameForm = (Control.FromHandle(Window.Handle) as Form)!;
             IsFixedTimeStep = true;
             InactiveSleepTime = new TimeSpan(0);
             Window.AllowUserResizing = true;
@@ -44,13 +45,13 @@ namespace RPGMultiplayerGame
             GraphicManager.Instance.Init(this);
             UiManager.Instance.Init(this);
             base.Initialize();
-            gameForm.Shown += (e, s) => gameForm.Hide();
+            gameForm.Shown += (_, _) => gameForm.Hide();
             LobbyMenu lobby = new LobbyMenu(gameForm);
             lobby.Show();
             lobby.OnConnectionEstablished += Lobby_OnConnecting;
-            lobby.OnServerOnline += Lobby_OnServerCreated; ;
-            lobby.FormClosing += (e, s) => Exit();
-            Window.ClientSizeChanged += (r, e) => UiManager.Instance.OnResize();
+            lobby.OnServerOnline += Lobby_OnServerCreated;
+            lobby.FormClosing += (_, _) => Exit();
+            Window.ClientSizeChanged += (_, _) => UiManager.Instance.OnResize();
             InputManager.Instance.Initialize(this, 500f, 20);
         }
 
@@ -105,7 +106,7 @@ namespace RPGMultiplayerGame
             
             if (gameTime.IsRunningSlowly)
             {
-               Console.WriteLine("RUNNING SLOWWWW");
+               Console.WriteLine(@"RUNNING SLOWWWW");
             }
             GameManager.Instance.Update(gameTime);
             if (ServerManager.Instance.IsRunning)

@@ -4,6 +4,7 @@ using Networking;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Ui;
 using System;
+using RPGMultiplayerGame.Graphics.Ui;
 
 namespace RPGMultiplayerGame.Objects.Items
 {

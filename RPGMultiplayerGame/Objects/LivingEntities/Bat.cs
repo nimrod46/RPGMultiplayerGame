@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RPGMultiplayerGame.Graphics.Ui;
 using RPGMultiplayerGame.Managers;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
@@ -14,7 +15,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         public override void OnNetworkInitialize()
         {
             base.OnNetworkInitialize();
-            CollisionSizeType = Ui.UiComponent.PositionType.TopLeft;
+            CollisionSizeType = UiComponent.PositionType.TopLeft;
             CollisionSize = new Vector2(6, 6);
         }
 

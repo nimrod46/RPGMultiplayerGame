@@ -27,6 +27,7 @@
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RPGMultiplayerGame.Graphics.Ui.TextBoxObjects;
 
 namespace MonoGame_Textbox
 {
