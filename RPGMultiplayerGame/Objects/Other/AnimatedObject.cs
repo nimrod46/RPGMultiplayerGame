@@ -4,6 +4,7 @@ using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Objects.VisualEffects;
 using System;
 using System.Collections.Generic;
+using RPGMultiplayerGame.Extention;
 
 namespace RPGMultiplayerGame.Objects.Other
 {
@@ -130,6 +131,13 @@ namespace RPGMultiplayerGame.Objects.Other
             SyncCurrentDirection = direction;
             SyncCurrentAnimationType = (int)SyncCurrentDirection + dirToAnimationIndex;
             this.shouldLoopAnimation = shouldLoopAnimation;
+        }
+        
+        public Direction GetDirectionToGameObject(GameObject gameObject)
+        {
+            Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
+            Direction direction = Operations.GetDirection(heading);
+            return direction;
         }
 
         public virtual void Respawn(float x, float y)

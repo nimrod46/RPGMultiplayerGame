@@ -51,7 +51,7 @@ namespace RPGMultiplayerGame.Managers
 
         public event EventHandler OnStartGame;
         public bool HideMouse { get; set; }
-        public Player Player { get; set; }
+        public Player? Player { get; set; }
         public Camera Camera { get; set; }
         public GameChat GameChat { get; set; }
 

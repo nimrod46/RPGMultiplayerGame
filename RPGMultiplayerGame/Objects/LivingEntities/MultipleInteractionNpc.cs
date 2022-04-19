@@ -49,6 +49,17 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             base.LookAtGameObject(gameObject, entityState);
         }
 
+        public override void SetCurrentEntityState(int entityState, Direction direction)
+        {
+            if (GameManager.Instance.Player is not null && entityState == (int) State.Idle &&
+                GameManager.Instance.Player.IsInteractingWith(this))
+            {
+                base.SetCurrentEntityState(entityState, GetDirectionToGameObject(GameManager.Instance.Player));
+                return;
+            }
+            base.SetCurrentEntityState(entityState, direction);
+        }
+
         protected override void StopLookingAtGameObject(GameObject gameObject)
         {
             if (gameObject is Player player)
@@ -127,7 +138,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
                 Parent = this,
                 DrawOffset = dialogOffset
             };
-            currentComplexDialog.IsVisible = false;
+            currentComplexDialog!.IsVisible = false;
             currentComplexDialog = dialog.GetDialogByIndex(dialogIndex);
             currentComplexDialog.IsVisible = true;
         }

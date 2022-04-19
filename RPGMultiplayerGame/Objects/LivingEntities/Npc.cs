@@ -11,11 +11,11 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 {
     public abstract class Npc : Human
     {
-        protected readonly Dictionary<Player, ComplexDialog> curentInteractingPlayersDialogs = new Dictionary<Player, ComplexDialog>();
-        protected Dictionary<string, int> playersProgress = new Dictionary<string, int>();
+        protected readonly Dictionary<Player, ComplexDialog> curentInteractingPlayersDialogs = new();
+        protected Dictionary<string, int> playersProgress = new();
         protected ComplexDialog dialog;
-        protected ComplexDialog currentComplexDialog;
-        protected InteractionText currentSimpleDialog;
+        protected ComplexDialog? currentComplexDialog;
+        protected InteractionText? currentSimpleDialog;
         protected Vector2 dialogOffset;
 
         public Npc(EntityId entityID, int collisionOffsetX, int collisionOffsetY, float maxHealth, SpriteFont nameFont) : base(entityID, collisionOffsetX, collisionOffsetY, maxHealth, nameFont, false, Color.BlueViolet)

@@ -148,8 +148,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
         protected virtual void LookAtGameObject(GameObject gameObject, int entityState)
         {
             IsLookingAtObject = true;
-            Vector2 heading = GetBaseCenter() - gameObject.GetBaseCenter();
-            Direction direction = Operations.GetDirection(heading);
+            Direction direction = GetDirectionToGameObject(gameObject);
             if (direction != SyncCurrentDirection || SyncCurrentEntityState != entityState)
             {
                 InvokeBroadcastMethodNetworkly(nameof(SetCurrentEntityState), NetworkingLib.Server.NetworkInterfaceType.UDP, false, entityState, direction);

@@ -97,13 +97,11 @@ namespace RPGMultiplayerGame.Objects.Other
             source = MoveVectorByDirection(source, 16, direction);
             if (GetMapObjectAt(source) == null || GetMapObjectAt(source).Isblocking())
             {
-                Console.WriteLine("No clear sight");
                 return false;
             }
 
             if (source == destination)
             {
-                Console.WriteLine("CLEAR SIGHT!");
                 return true;
             }
             return HasClearSight(source, destination, Operations.GetDirection(source - destination));

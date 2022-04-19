@@ -50,8 +50,8 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
             }
         }
 
-        private Npc interactingWith;
-        private Npc requestingInteraction;
+        private Npc? interactingWith;
+        private Npc? requestingInteraction;
         private QuestsMenu playerQuests;
         private Inventory<GameItem> inventory;
         private Inventory<GameItem> usableItems;
@@ -358,10 +358,7 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void OnStartInteractWithNpcKeyPressed()
         {
-            if (requestingInteraction != null)
-            {
-                requestingInteraction.InvokeCommandMethodNetworkly(nameof(requestingInteraction.InteractionAcceptedByPlayer), this);
-            }
+            requestingInteraction?.InvokeCommandMethodNetworkly(nameof(requestingInteraction.InteractionAcceptedByPlayer), this);
         }
 
         private void OnRespawnKeyPressed()
@@ -398,21 +395,20 @@ namespace RPGMultiplayerGame.Objects.LivingEntities
 
         private void OnAttackKeyPressed(bool isDown)
         {
-            if (isDown)
+            if (!isDown)
             {
-                if (!SyncIsDead && SyncEquippedWeapon != null && GetCurrentEnitytState<State>() != State.Attacking)
-                {
-                    Attack();
-                }
+                return;
+            }
+            
+            if (!SyncIsDead && SyncEquippedWeapon != null && GetCurrentEnitytState<State>() != State.Attacking)
+            {
+                Attack();
             }
         }
 
         private void OnAnswerKeyPressed(int index)
         {
-            if (interactingWith != null)
-            {
-                interactingWith.InvokeCommandMethodNetworkly(nameof(interactingWith.CmdChooseDialogOption), this, index);
-            }
+            interactingWith?.InvokeCommandMethodNetworkly(nameof(interactingWith.CmdChooseDialogOption), this, index);
         }
 
         protected void CmdCheckName(Player client, string name)
