@@ -9,6 +9,7 @@ using RPGMultiplayerGame.Ui;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using RPGMultiplayerGame.Graphics.Ui;
 
 namespace RPGMultiplayerGame.Managers
 {

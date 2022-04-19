@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
 using RPGMultiplayerGame.Objects.LivingEntities;
 using RPGMultiplayerGame.Ui;
@@ -83,11 +82,6 @@ namespace RPGMultiplayerGame.Graphics.Ui.Dialogs
         public int AnswersCount()
         {
             return dialogsByAnswers.Count;
-        }
-
-        public override void Draw(SpriteBatch sprite)
-        {
-            base.Draw(sprite);
         }
 
         public ComplexDialog GetDialogByIndex(int index)

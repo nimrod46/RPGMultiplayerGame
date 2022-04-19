@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace RPGMultiplayerGame.Ui
+namespace RPGMultiplayerGame.Graphics.Ui
 {
     public class Camera
     {
@@ -45,12 +45,6 @@ namespace RPGMultiplayerGame.Ui
             UpdateVisibleArea();
         }
 
-        public void MoveCamera(Vector2 movePosition)
-        {
-            Vector2 newPosition = Position + movePosition;
-            Position = newPosition;
-        }
-
         public void Update(Viewport viewport, Vector2 position)
         {
             UpdateMatrix();
@@ -59,6 +53,12 @@ namespace RPGMultiplayerGame.Ui
             Vector2 cameraMovement = position - Position;
 
             MoveCamera(cameraMovement);
+        }
+
+        private void MoveCamera(Vector2 movePosition)
+        {
+            Vector2 newPosition = Position + movePosition;
+            Position = newPosition;
         }
     }
 }

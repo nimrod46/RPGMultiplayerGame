@@ -1,7 +1,6 @@
 ﻿using RPGMultiplayerGame.Graphics.Ui.Dialogs;
 using RPGMultiplayerGame.Graphics.Ui.QuestsObjects.Quests;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.Dialogs;
 
 namespace RPGMultiplayerGame.Objects.LivingEntities
 {

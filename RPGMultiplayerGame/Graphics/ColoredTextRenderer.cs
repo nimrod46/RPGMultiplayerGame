@@ -33,29 +33,32 @@ namespace RPGMultiplayerGame.Graphics
             set
             {
                 text = value;
-                reachTexts = GetGenerateTextParts(text);
+                lock (reachTexts)
+                {
+                    reachTexts = GetGenerateTextParts(text);
+                }
             }
         }
 
         public Vector2 Position { get; set; }
 
-        public Vector2 Size { get; protected set; }
+        public Vector2 Size { get; private set; }
 
-        public float Layer { get; }
+        private float Layer { get; }
 
-        public SpriteFont Font { get; }
+        private SpriteFont Font { get; }
 
         public int MaxNumberOfLines { get; set; }
 
         private const char COLOR_CODE_CHAR_SPLITTER = '#';
         private readonly Color defaultColor;
-        private List<ReachText> reachTexts = new List<ReachText>();
-        private readonly Stack<Color> lastColors = new Stack<Color>();
+        private List<ReachText> reachTexts = new();
+        private readonly Stack<Color> lastColors = new();
         private string text;
 
         public ColoredTextRenderer(SpriteFont font, string text, Vector2 position, Color defaultColor, float layer)
         {
-            this.Font = font;
+            Font = font;
             Size = Vector2.Zero;
             Text = text;
             Position = position;
@@ -64,18 +67,18 @@ namespace RPGMultiplayerGame.Graphics
             MaxNumberOfLines = int.MaxValue;
         }
 
-        private List<ReachText> GetGenerateTextParts(string text)
+        private List<ReachText> GetGenerateTextParts(string newText)
         {
             lock (reachTexts)
             {
-                if (string.IsNullOrWhiteSpace(text))
+                if (string.IsNullOrWhiteSpace(newText))
                 {
                     return new List<ReachText>();
                 }
                 Vector2 size = Vector2.Zero;
-                List<ReachText> reachTexts = new List<ReachText>();
+                List<ReachText> rTexts = new List<ReachText>();
                 Color nextColor = defaultColor;
-                foreach (var t in text.Split('\n'))
+                foreach (var t in newText.Split('\n'))
                 {
                     string textLine = t.Trim();
                     Vector2 textSize = Vector2.Zero;
@@ -110,7 +113,7 @@ namespace RPGMultiplayerGame.Graphics
 
                             {
                                 textSize = Font.MeasureString(subTextPart);
-                                reachTexts.Add(new ReachText(subTextPart, nextColor, new Vector2(xSum, size.Y)));
+                                rTexts.Add(new ReachText(subTextPart, nextColor, new Vector2(xSum, size.Y)));
                                 yMax = Math.Max(yMax, textSize.Y);
                                 xSum += textSize.X;
                                 //nextColor = defaultColor;
@@ -124,16 +127,8 @@ namespace RPGMultiplayerGame.Graphics
                             }
                             else if (string.IsNullOrWhiteSpace(colorCode))
                             {
-                                if (lastColors.Count > 0)
-                                {
-                                    nextColor = lastColors.Pop();
-                                }
-                                else
-                                {
-                                    nextColor = defaultColor;
-                                }
+                                nextColor = lastColors.Count > 0 ? lastColors.Pop() : defaultColor;
                             }
-
                         }
                     }
                     catch (Exception e)
@@ -142,14 +137,14 @@ namespace RPGMultiplayerGame.Graphics
                         Console.WriteLine(e);
                         textLine = textLine.Replace(COLOR_CODE_CHAR_SPLITTER.ToString(), "");
                         textSize = Font.MeasureString(textLine);
-                        reachTexts.Add(new ReachText(textLine, nextColor, new Vector2(0, size.Y)));
+                        rTexts.Add(new ReachText(textLine, nextColor, new Vector2(0, size.Y)));
                         yMax = Math.Max(yMax, textSize.Y);
                         nextColor = defaultColor;
                     }
                     size = new Vector2(Math.Max(textSize.X, size.X), size.Y + yMax);
                 }
                 Size = size;
-                return reachTexts;
+                return rTexts;
             }
         }
 

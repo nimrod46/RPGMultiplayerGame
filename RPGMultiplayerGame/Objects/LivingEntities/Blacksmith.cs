@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RPGMultiplayerGame.Graphics;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.InventoryObjects;
 using RPGMultiplayerGame.Objects.Items;
 using RPGMultiplayerGame.Objects.Items.Potions;

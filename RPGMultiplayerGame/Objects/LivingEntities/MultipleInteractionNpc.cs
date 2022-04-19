@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RPGMultiplayerGame.Managers;
-using RPGMultiplayerGame.Objects.Dialogs;
 using RPGMultiplayerGame.Objects.Other;
 using System.Collections.Generic;
 using System.Linq;

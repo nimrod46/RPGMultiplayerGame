@@ -2,7 +2,7 @@
 
 namespace RPGMultiplayerGame.GameSaver
 {
-    interface IObjectSave<T> where T : Human
+    internal interface IObjectSave<in T> where T : Human
     {
         public void ResetData();
 

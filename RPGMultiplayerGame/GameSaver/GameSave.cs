@@ -8,22 +8,22 @@ namespace RPGMultiplayerGame.GameSaver
     public class GameSave
     {
         [Serializable]
-        public struct SerializableKeyValuePair<K, V>
+        public struct SerializableKeyValuePair<TKey, TValue>
         {
-            public K Key
+            public TKey Key
             { get; set; }
 
-            public V Value
+            public TValue Value
             { get; set; }
-            public SerializableKeyValuePair(K key, V value)
+            public SerializableKeyValuePair(TKey key, TValue value)
             {
                 Key = key;
                 Value = value;
             }
         }
 
-        public List<SerializableKeyValuePair<string, PlayerSave>> playersSaveByName;
-        public List<SerializableKeyValuePair<string, NpcSave>> npcsSaveByName;
+        private readonly List<SerializableKeyValuePair<string, PlayerSave>> playersSaveByName;
+        private readonly List<SerializableKeyValuePair<string, NpcSave>> npcsSaveByName;
 
         public GameSave()
         {
@@ -43,19 +43,6 @@ namespace RPGMultiplayerGame.GameSaver
             }
         }
 
-        private void SaveDataByList<T, V>(T gameObject, List<SerializableKeyValuePair<string, V>> objectsByName) where T : Human where V : IObjectSave<T>
-        {
-            if (!objectsByName.Where(s => s.Key == gameObject.GetName()).Any())
-            {
-                objectsByName.Add(new SerializableKeyValuePair<string, V>(gameObject.GetName(), Activator.CreateInstance<V>()));
-            }
-            else
-            {
-                objectsByName.Where(s => s.Key == gameObject.GetName()).First().Value.ResetData();
-            }
-            objectsByName.Where(s => s.Key == gameObject.GetName()).First().Value.SaveObjectData(gameObject);
-        }
-
         internal bool LoadObjectSave(Human gameObject)
         {
             if (gameObject is Player player)
@@ -69,14 +56,27 @@ namespace RPGMultiplayerGame.GameSaver
             return false;
         }
 
-        private bool LoadDataByList<T, V>(T gameObject, List<SerializableKeyValuePair<string, V>> objectsByName) where T : Human where V : IObjectSave<T>
+        private static bool LoadDataByList<TKey, TValue>(TKey gameObject, List<SerializableKeyValuePair<string, TValue>> objectsByName) where TKey : Human where TValue : IObjectSave<TKey>
         {
-            if (objectsByName.Where(s => s.Key == gameObject.GetName()).Any())
+            if (objectsByName.Any(s => s.Key == gameObject.GetName()))
             {
-                objectsByName.Where(s => s.Key == gameObject.GetName()).First().Value.LoadObjectData(gameObject);
+                objectsByName.First(s => s.Key == gameObject.GetName()).Value.LoadObjectData(gameObject);
                 return true;
             }
             return false;
+        }
+
+        private static void SaveDataByList<TKey, TValue>(TKey gameObject, List<SerializableKeyValuePair<string, TValue>> objectsByName) where TKey : Human where TValue : IObjectSave<TKey>
+        {
+            if (objectsByName.All(s => s.Key != gameObject.GetName()))
+            {
+                objectsByName.Add(new SerializableKeyValuePair<string, TValue>(gameObject.GetName(), Activator.CreateInstance<TValue>()));
+            }
+            else
+            {
+                objectsByName.First(s => s.Key == gameObject.GetName()).Value.ResetData();
+            }
+            objectsByName.First(s => s.Key == gameObject.GetName()).Value.SaveObjectData(gameObject);
         }
     }
 }

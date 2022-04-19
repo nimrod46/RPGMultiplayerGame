@@ -1,8 +1,7 @@
-﻿using RPGMultiplayerGame.Objects.LivingEntities;
-using System;
-using RPGMultiplayerGame.Graphics.Ui.Dialogs;
+﻿using System;
+using RPGMultiplayerGame.Objects.LivingEntities;
 
-namespace RPGMultiplayerGame.Objects.Dialogs
+namespace RPGMultiplayerGame.Graphics.Ui.Dialogs
 {
     public class ActionDialog : ComplexDialog
     {
