@@ -20,7 +20,7 @@ namespace RPGMultiplayerGame.Graphics.Ui.Dialogs
 
         private readonly List<KeyValuePair<string, ComplexDialog>> dialogsByAnswers = new();
         
-        public ComplexDialog(string name, string text, bool isProgressing) : base((screenSize) => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, UiManager.GUI_LAYER, UiManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
+        public ComplexDialog(string name, string text, bool isProgressing) : base(screenSize => new Vector2(screenSize.X / 2, screenSize.Y / 4), PositionType.Centered, false, UiManager.GUI_LAYER, UiManager.Instance.GetDialogBackgroundByProperties(name, text, Color.White))
         {
             Index = 0;
             Name = name;
@@ -69,7 +69,7 @@ namespace RPGMultiplayerGame.Graphics.Ui.Dialogs
             return dialog.GetLast();
         }
 
-        public virtual ComplexDialog GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
+        public virtual ComplexDialog? GetNextDialogByAnswer(Player interactivePlayer, int answerIndex)
         {
             if (answerIndex >= dialogsByAnswers.Count || dialogsByAnswers.Count == 0 || answerIndex < 0)
             {
@@ -84,19 +84,11 @@ namespace RPGMultiplayerGame.Graphics.Ui.Dialogs
             return dialogsByAnswers.Count;
         }
 
-        public ComplexDialog GetDialogByIndex(int index)
+        public ComplexDialog? GetDialogByIndex(int index)
         {
             if (Index == index) return this;
-            ComplexDialog result;
-            foreach (var item in dialogsByAnswers)
-            {
-                result = item.Value.GetDialogByIndex(index);
-                if (result != null)
-                {
-                    return result;
-                }
-            }
-            return null;
+            return dialogsByAnswers.Select(item => item.Value.GetDialogByIndex(index))
+                .FirstOrDefault(result => result != null);
         }
 
         private static int GetDialogsCount(ComplexDialog dialog)
